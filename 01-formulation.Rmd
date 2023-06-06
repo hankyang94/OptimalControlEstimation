@@ -1,0 +1,2 @@
+# The Optimal Control Formulation {#formulation}
+
