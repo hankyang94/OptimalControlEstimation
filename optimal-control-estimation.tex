@@ -87,8 +87,25 @@
 
 \title{Optimal Control and Estimation}
 \author{Heng Yang}
-\date{2023-06-05}
+\date{2023-06-07}
 
+\usepackage{amsthm}
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{lemma}{Lemma}[chapter]
+\newtheorem{corollary}{Corollary}[chapter]
+\newtheorem{proposition}{Proposition}[chapter]
+\newtheorem{conjecture}{Conjecture}[chapter]
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[chapter]
+\theoremstyle{definition}
+\newtheorem{example}{Example}[chapter]
+\theoremstyle{definition}
+\newtheorem{exercise}{Exercise}[chapter]
+\theoremstyle{definition}
+\newtheorem{hypothesis}{Hypothesis}[chapter]
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+\newtheorem*{solution}{Solution}
 \begin{document}
 \maketitle
 
@@ -122,6 +139,59 @@ This is the textbook for Harvard ES/AM 158: Introduction to Optimal Control and 
 
 \hypertarget{formulation}{%
 \chapter{The Optimal Control Formulation}\label{formulation}}
+
+\hypertarget{the-basic-problem}{%
+\section{The Basic Problem}\label{the-basic-problem}}
+
+Consider a discrete-time dynamical system
+\begin{equation}
+x_{k+1} = f_k (x_k, u_k, w_k), \quad k =0,1,\dots,N-1
+\label{eq:discrete-time-dynamics}
+\end{equation}
+where
+
+\begin{itemize}
+\item
+  \(x_k \in \mathbb{X} \subseteq \mathbb{R}^n\) is the \emph{state} of the system,
+\item
+  \(u_k \in \mathbb{U} \subseteq \mathbb{R}^m\) is the \emph{control} we wish to design,
+\item
+  \(w_k \in \mathbb{W} \subseteq \mathbb{R}^p\) a random \emph{disturbance} or noise (e.g., due to unmodelled dynamics) which is described by a probability distribution \(P_k(\cdot \mid x_k, u_k)\) that may depend on \(x_k\) and \(u_k\) but not on prior disturbances \(w_0,\dots,w_{k-1}\),
+\item
+  \(k\) indexes the discrete time,
+\item
+  \(N\) denotes the horizon,
+\item
+  \(f_k\) models the transition function of the system (typically \(f_k \equiv f\) is time-invariant, especially for robotics systems; we use \(f_k\) here to keep full generality).
+\end{itemize}
+
+\begin{remark}[Deterministic v.s. Stochastic]
+When \(w_k \equiv 0\) for all \(k\), we say the system \eqref{eq:discrete-time-dynamics} is \emph{deterministic}; otherwise we say the system is \emph{stochastic}. In the following we will deal with the stochastic case, but most of the methodology should carry over to the deterministic setup.
+\end{remark}
+
+We consider the class of \emph{controllers} (also called \emph{policies}) that consist of a sequence of functions
+\[
+\pi = \{ \mu_0,\dots,\mu_{N-1} \},
+\]
+where \(\mu_k (x_k) \in \mathbb{U}\) for all \(x_k\), i.e., \(\mu_k\) is a \emph{feedback} controller that maps the state to an admissible control. Given an initial state \(x_0\) and an admissible policy \(\pi\), the state \emph{trajectory} of the system is a sequence of random variables that evolve according to
+\begin{equation}
+x_{k+1} = f_k(x_k,\mu_k(x_k),w_k), \quad k=0,\dots,N-1
+\label{eq:closed-loop-state-trajectory}
+\end{equation}
+where the randomness comes from the disturbance \(w_k\).
+
+We assume the state-control trajectory \(\{u_k\}_{k=0}^{N-1}\) and \(\{x_k \}_{k=0}^{N}\) induce an \emph{additive cost}
+\begin{equation}
+g_N(x_N) + \sum_{k=0}^{N-1} g_k(x_k,u_k)
+\label{eq:additive-cost}
+\end{equation}
+where \(g_k,k=0,\dots,N\) are some user-designed functions.
+
+With \eqref{eq:closed-loop-state-trajectory} and \eqref{eq:additive-cost}, for any admissible policy \(\pi\), we denote its induced \emph{expected cost} with initial state \(x_0\) as
+\[
+J_\pi (x_0) = \mathbb{E} \left\{ g_N(x_N) + \sum_{k=0}^{N-1} g_k (x_k, \mu_k(x_k))  \right\},
+\]
+where the expectation is taken over the randomness of \(w_k\).
 
 \hypertarget{literature}{%
 \chapter{Literature}\label{literature}}
