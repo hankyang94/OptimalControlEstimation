@@ -147,10 +147,17 @@ g_N(x_N) + \sum_{k=0}^{N-1} g_k(x_k,u_k)
 \end{equation}\]</span>
 where <span class="math inline">\(g_k,k=0,\dots,N\)</span> are some user-designed functions.</p>
 <p>With <a href="formulation.html#eq:closed-loop-state-trajectory">(1.2)</a> and <a href="formulation.html#eq:additive-cost">(1.3)</a>, for any admissible policy <span class="math inline">\(\pi\)</span>, we denote its induced <em>expected cost</em> with initial state <span class="math inline">\(x_0\)</span> as
-<span class="math display">\[
+<span class="math display" id="eq:expected-cost">\[\begin{equation}
 J_\pi (x_0) = \mathbb{E} \left\{ g_N(x_N) + \sum_{k=0}^{N-1} g_k (x_k, \mu_k(x_k))  \right\},
-\]</span>
+\tag{1.4}
+\end{equation}\]</span>
 where the expectation is taken over the randomness of <span class="math inline">\(w_k\)</span>.</p>
+<div class="definition">
+<p><span id="def:basicproblem" class="definition"><strong>Definition 1.1  (Discrete-time, Finite-horizon Optimal Control) </strong></span>Find the best admissible controller that minimizes the expected cost in <a href="formulation.html#eq:expected-cost">(1.4)</a>
+<span class="math display">\[\begin{equation}
+\min_{\pi \in \Pi} J_\pi(x_0).
+\end{equation}\]</span></p>
+</div>
 
 </div>
 </div>

@@ -188,10 +188,18 @@ g_N(x_N) + \sum_{k=0}^{N-1} g_k(x_k,u_k)
 where \(g_k,k=0,\dots,N\) are some user-designed functions.
 
 With \eqref{eq:closed-loop-state-trajectory} and \eqref{eq:additive-cost}, for any admissible policy \(\pi\), we denote its induced \emph{expected cost} with initial state \(x_0\) as
-\[
+\begin{equation}
 J_\pi (x_0) = \mathbb{E} \left\{ g_N(x_N) + \sum_{k=0}^{N-1} g_k (x_k, \mu_k(x_k))  \right\},
-\]
+\label{eq:expected-cost}
+\end{equation}
 where the expectation is taken over the randomness of \(w_k\).
+
+\begin{definition}[Discrete-time, Finite-horizon Optimal Control]
+\protect\hypertarget{def:basicproblem}{}\label{def:basicproblem}Find the best admissible controller that minimizes the expected cost in \eqref{eq:expected-cost}
+\begin{equation}
+\min_{\pi \in \Pi} J_\pi(x_0).
+\end{equation}
+\end{definition}
 
 \hypertarget{literature}{%
 \chapter{Literature}\label{literature}}

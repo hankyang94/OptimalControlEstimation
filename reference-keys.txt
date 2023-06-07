@@ -1,6 +1,7 @@
 eq:discrete-time-dynamics
 eq:closed-loop-state-trajectory
 eq:additive-cost
+eq:expected-cost
 formulation
 the-basic-problem
 literature
