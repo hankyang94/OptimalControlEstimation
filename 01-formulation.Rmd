@@ -1,2 +1,45 @@
 # The Optimal Control Formulation {#formulation}
 
+Consider a discrete-time dynamical system
+\begin{equation}
+x_{k+1} = f_k (x_k, u_k, w_k), \quad k =0,1,\dots,N-1
+(\#eq:discrete-time-dynamics)
+\end{equation}
+where $x_k \in \mathbb{X} \subseteq \mathbb{R}^n$ the **state** of the system, $u_k \in \mathbb{U} \subseteq \mathbb{R}^m$ the **control**, $w_k \in \mathbb{W} \subseteq \mathbb{R}^p$ a random **disturbance** or noise (e.g., due to unmodelled dynamics), $k$ indexes the discrete time, $N$ denotes the horizon, and $f_k$ models the transition function of the system. 
+
+It is worth noting that typically $f_k \equiv f$ (especially for robotics problems), i.e., the transition function is time-invariant. However, we use $f_k$ here to keep full generality. 
+
+The random disturbance $w_k$ is described by a probability distribution $P_k(\cdot \mid x_k, u_k)$ that may depend on $x_k$ and $u_k$ but not on prior disturbances $w_0,\dots,w_{k-1}$.
+
+
+::: {.remark}
+When $w_k \equiv 0$ for all $k$, we say the system \@ref(eq:discrete-time-dynamics) is **deterministic**; otherwise we say the system is **stochastic**. In the following we will deal with the stochastic case, but most of the methodology should carry over to the deterministic setup.
+:::
+
+We consider the class of **controllers** (also called **policies**) that consist of a sequence of functions
+$$
+\pi = \{ \mu_0,\dots,\mu_{N-1} \},
+$$
+where $\mu_k (x_k) \in \mathbb{U}$ for all $x_k$, i.e., $\mu_k$ is a **feedback** controller that maps the state to an admissible control. Given an initial state $x_0$ and an admissible policy $\pi$, the **state trajectory** of the system is a sequence of random variables that evolve according to
+\begin{equation}
+x_{k+1} = f_k(x_k,\mu_k(x_k),w_k), \quad k=0,\dots,N-1
+(\#eq:closed-loop-state-trajectory)
+\end{equation}
+where the randomness comes from the disturbance $w_k$.
+
+We assume the state-control trajectory $\{u_k\}_{k=0}^{N-1}$ and $\{x_k \}_{k=0}^{N}$ induce an **additive cost**
+\begin{equation}
+g_N(x_N) + \sum_{k=0}^{N-1} g_k(x_k,u_k)
+(\#eq:additive-cost)
+\end{equation}
+where $g_k,k=0,\dots,N$ are some user-designed functions. 
+
+With \@ref(eq:closed-loop-state-trajectory) and \@ref(eq:additive-cost), for any admissible policy $\pi$, we denote its induced **expected cost** with initial state $x_0$ as 
+$$
+J_\pi (x_0) = \mathbb{E} \left\{ g_N(x_N) + \sum_{k=0}^{N-1} g_k (x_k, \mu_k(x_k))  \right\},
+$$
+where the expectation is taken over the randomness of $w_k$.
+
+
+
+
