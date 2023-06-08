@@ -52,10 +52,14 @@ where the expectation is taken over the randomness of $w_k$.
 ::: {.definition #basicproblem name="Discrete-time, Finite-horizon Optimal Control"} 
 Find the best admissible controller that minimizes the expected cost in \@ref(eq:expected-cost)
 \begin{equation}
-\min_{\pi \in \Pi} J_\pi(x_0).
+\pi^\star \in \arg\min_{\pi \in \Pi} J_\pi(x_0),
 \end{equation}
+where $\Pi$ is the set of all admissible controllers.
+The cost attained by the optimal controller, i.e., $J^\star = J_{\pi^\star}(x_0)$ is called the optimal _cost-to-go_, or the optimal _value function_.
 :::
 
+## Open-Loop v.s. Closed-Loop 
+An important feature of the basic problem in Definition \@ref(def:basicproblem)
 
 
 
