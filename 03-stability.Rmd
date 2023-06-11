@@ -1,0 +1,30 @@
+# Stability Analysis {#stability}
+
+::: {.lemma #Barbalat name="Barbalat's Lemma"}
+Let $f(t)$ be differentiable, if 
+
+- $\lim_{t \rightarrow \infty} f(t)$ is finite, and  
+
+- $\dot{f}(t)$ is uniformly continuous,^[A sufficient condition for this to hold is that $\ddot{f}$ exists and is bounded.]
+
+then 
+$$
+\lim_{t \rightarrow \infty} \dot{f}(t) = 0.
+$$
+:::
+
+::: {.theorem #BarbalatStability name="Barbalat's Stability Certificate"}
+If a scalar function $V(x,t)$ satisfies
+
+- $V(x,t)$ is lower bounded,
+
+- $\dot{V}(x,t)$ is negative semidefinite 
+
+- $\dot{V}(x,t)$ is uniformly continuous
+
+then $\dot{V}(x,t) \rightarrow 0$ as $t \rightarrow \infty$.
+:::
+::: {.proof}
+$V(x,t)$ is lower bounded and $\dot{V}$ is negative semidefinite implies the limit of $V$ as $t \rightarrow \infty$ is finite (note that $V(x,t) \leq V(x(0),0)$). Then the theorem clearly follows from Barbalat's Lemma \@ref(lem:Barbalat).
+:::
+
