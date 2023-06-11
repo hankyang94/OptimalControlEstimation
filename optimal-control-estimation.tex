@@ -87,7 +87,7 @@
 
 \title{Optimal Control and Estimation}
 \author{Heng Yang}
-\date{2023-06-07}
+\date{2023-06-11}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -197,54 +197,204 @@ where the expectation is taken over the randomness of \(w_k\).
 \begin{definition}[Discrete-time, Finite-horizon Optimal Control]
 \protect\hypertarget{def:basicproblem}{}\label{def:basicproblem}Find the best admissible controller that minimizes the expected cost in \eqref{eq:expected-cost}
 \begin{equation}
-\min_{\pi \in \Pi} J_\pi(x_0).
+\pi^\star \in \arg\min_{\pi \in \Pi} J_\pi(x_0),
 \end{equation}
+where \(\Pi\) is the set of all admissible controllers.
+The cost attained by the optimal controller, i.e., \(J^\star = J_{\pi^\star}(x_0)\) is called the optimal \emph{cost-to-go}, or the optimal \emph{value function}.
 \end{definition}
 
-\hypertarget{literature}{%
-\chapter{Literature}\label{literature}}
+\hypertarget{open-loop-v.s.-closed-loop}{%
+\section{Open-Loop v.s. Closed-Loop}\label{open-loop-v.s.-closed-loop}}
 
-Here is a review of existing methods.
+An important feature of the basic problem in Definition \ref{def:basicproblem}
 
-\hypertarget{methods}{%
-\chapter{Methods}\label{methods}}
+\hypertarget{stability}{%
+\chapter{Stability Analysis}\label{stability}}
 
-We describe our methods in this chapter.
+\begin{lemma}[Barbalat's Lemma]
+\protect\hypertarget{lem:Barbalat}{}\label{lem:Barbalat}Let \(f(t)\) be differentiable, if
 
-Math can be added in body using usual syntax like this
+\begin{itemize}
+\item
+  \(\lim_{t \rightarrow \infty} f(t)\) is finite, and
+\item
+  \(\dot{f}(t)\) is uniformly continuous,\footnote{A sufficient condition for this to hold is that \(\ddot{f}\) exists and is bounded.}
+\end{itemize}
 
-\hypertarget{math-example}{%
-\section{math example}\label{math-example}}
-
-\(p\) is unknown but expected to be around 1/3. Standard error will be approximated
-
+then
 \[
-SE = \sqrt(\frac{p(1-p)}{n}) \approx \sqrt{\frac{1/3 (1 - 1/3)} {300}} = 0.027
+\lim_{t \rightarrow \infty} \dot{f}(t) = 0.
 \]
+\end{lemma}
 
-You can also use math in footnotes like this\footnote{where we mention \(p = \frac{a}{b}\)}.
+\begin{theorem}[Barbalat's Stability Certificate]
+\protect\hypertarget{thm:BarbalatStability}{}\label{thm:BarbalatStability}If a scalar function \(V(x,t)\) satisfies
 
-We will approximate standard error to 0.027\footnote{\(p\) is unknown but expected to be around 1/3. Standard error will be approximated
+\begin{itemize}
+\item
+  \(V(x,t)\) is lower bounded,
+\item
+  \(\dot{V}(x,t)\) is negative semidefinite
+\item
+  \(\dot{V}(x,t)\) is uniformly continuous
+\end{itemize}
 
-  \[
-  SE = \sqrt(\frac{p(1-p)}{n}) \approx \sqrt{\frac{1/3 (1 - 1/3)} {300}} = 0.027
-  \]}
+then \(\dot{V}(x,t) \rightarrow 0\) as \(t \rightarrow \infty\).
+\end{theorem}
 
-\hypertarget{applications}{%
-\chapter{Applications}\label{applications}}
+\begin{proof}
+\(V(x,t)\) is lower bounded and \(\dot{V}\) is negative semidefinite implies the limit of \(V\) as \(t \rightarrow \infty\) is finite (note that \(V(x,t) \leq V(x(0),0)\)). Then the theorem clearly follows from Barbalat's Lemma \ref{lem:Barbalat}.
+\end{proof}
 
-Some \emph{significant} applications are demonstrated in this chapter.
+\hypertarget{adaptivecontrol}{%
+\chapter{Adaptive Control}\label{adaptivecontrol}}
 
-\hypertarget{example-one}{%
-\section{Example one}\label{example-one}}
+\begin{lemma}[Basic Lemma]
+\protect\hypertarget{lem:adaptivecontrolbasic}{}\label{lem:adaptivecontrolbasic}Let two signals \(e(t)\) and \(\phi(t)\) be related by
+\begin{equation}
+e(t) = H(p)[k \phi(t)^T v(t)]
+\label{eq:acbasiclemmaephi}
+\end{equation}
+where \(e(t)\) a scalar output signal, \(H(p)\) a strictly positive real (SPR) transfer function, \(k\) an unknown real number with known sign, \(\phi(t) \in \mathbb{R}^m\) a control signal, and \(v(t) \in \mathbb{R}^m\) a measurable input signal.
 
-\hypertarget{example-two}{%
-\section{Example two}\label{example-two}}
+If the control signal \(\phi(t)\) satisfies
+\begin{equation}
+\dot{\phi}(t) = - \mathrm{sgn}(k) \gamma e(t) v(t)
+\label{eq:acbasiclemmaphilaw}
+\end{equation}
+with \(\gamma > 0\) a positive constant, then \(e(t)\) and \(\phi(t)\) are globally bounded. Moreover, if \(v(t)\) is bounded, then
+\[
+\lim_{t \rightarrow \infty} e(t) = 0.
+\]
+\end{lemma}
 
-\hypertarget{final-words}{%
-\chapter{Final Words}\label{final-words}}
+\begin{proof}
+Let the state-space representation of \eqref{eq:acbasiclemmaephi} be
+\begin{equation}
+\dot{x} = A x + b [k \phi^T v], \quad e = c^T x.
+\label{eq:acbasiclemmastatespace}
+\end{equation}
+Since \(H(p)\) is SPR, it follows from the Kalman-Yakubovich Lemma \ref{lem:KalmanYakubovich} that there exist \(P,Q \succ 0\) such that
+\[
+A^T P + P A = -Q, \quad Pb = c.
+\]
+Let
+\[
+V(x,\phi) = x^T P x + \frac{|k|}{\gamma} \phi^T \phi,
+\]
+clearly V is positive definite (i.e., \(V(0,0)=0\), and \(V(x,\phi) > 0\) for all \(x \neq 0, \phi \neq 0\)). The time derivative of \(V\) along the trajectory defined by \eqref{eq:acbasiclemmastatespace} with \(\phi\) chosen as in \eqref{eq:acbasiclemmaphilaw} is
+\begin{align}
+\dot{V} & = \frac{\partial V}{\partial x} \dot{x} + \frac{\partial V}{\partial \phi} \dot{\phi} \\
+&= x^T (PA + A^T P) x + 2 x^T P b (k \phi^T v) + \frac{2|k|}{\gamma} \phi^T (- \mathrm{sgn}(k) \gamma e v) \\
+& = - x^T Q x + 2 (x^T c)(k\phi^T v) - 2 \phi^T (e v) \\
+& = - x^T Q x \leq 0.
+\end{align}
+As a result, we know \(x\) and \(\phi\) must be bounded (\(V(x(t),\phi(t)) \leq V(x(0),\phi(0))\) is bounded). Since \(e = c^T x\), we know \(e\) must be bounded as well.
 
-We have finished a nice book.
+If the input signal \(v\) is also bounded, then \(\dot{x}\) is bounded as seen from \eqref{eq:acbasiclemmastatespace}. Because \(\ddot{V} = -2x^T Q \dot{x}\) is now bounded, we know \(\dot{V}\) is uniformly continuous. Therefore, by Barbalat's stability certificate (Theorem \ref{thm:BarbalatStability}), we know \(\dot{V}\) tends to zero as \(t\) tends to infinity, which implies \(\lim_{t \rightarrow \infty} x(t) = 0\) and hence \(\lim_{t \rightarrow \infty} e(t) = 0\).
+\end{proof}
+
+\hypertarget{first-order-systems}{%
+\section{First-Order Systems}\label{first-order-systems}}
+
+\hypertarget{linear-systems}{%
+\subsection{Linear Systems}\label{linear-systems}}
+
+Consider the first-order single-input single-output (SISO) system
+\begin{equation}
+\dot{x} = - a x + b u
+\label{eq:ac-first-linear}
+\end{equation}
+where \(a\) and \(b\) are unknown groundtruth parameters. However, we do assume that the sign of \(b\) is known. {What if the sign of \(b\) is unknown too?}
+
+Let \(r(t)\) be a reference trajectory, e.g., a step function or a sinusoidal function, and \(x_d(t)\) be a desired system trajectory that tracks the reference
+\begin{equation}
+\dot{x}_d = - a_d x_d + b_d r(t),
+\label{eq:ac-first-linear-desired}
+\end{equation}
+where \(a_d,b_d > 0\) are user-defined constants. Note that the transfer function from \(r\) to \(x_d\) is
+\[
+x_d = \frac{b_d}{p + a_d} r
+\]
+and the system is stable. {Review basics of transfer function.}
+
+The goal of adaptive control is to design a control law and an adaptation law such that the tracking error of the system \(x(t) - x_d(t)\) converges to zero.
+
+\textbf{Control law}. We design the control law as
+\begin{equation}
+u = \hat{a}_r(t) r + \hat{a}_x(t) x 
+\label{eq:ac-first-linear-control}
+\end{equation}
+where \(\hat{a}_r(t)\) and \(\hat{a}_x(t)\) are time-varying feedback gains that we wish to adapt. The closed-loop dynamics of system \eqref{eq:ac-first-linear} with the controller \eqref{eq:ac-first-linear-control} is
+\[
+\dot{x} = - a x + b (\hat{a}_r r + \hat{a}_x x) = - (a - b \hat{a}_x) x + b \hat{a}_r r. 
+\]
+With the equation above,
+the reason for choosing the control law \eqref{eq:ac-first-linear-control} is clear: if the system parameters \((a,b)\) were known, then choosing
+\begin{equation}
+a_r^\star = \frac{b_d}{b}, \quad a_x^\star = \frac{a - a_d}{b}
+\label{eq:ac-first-linear-optimal-gain}
+\end{equation}
+leads to the closed-loop dynamics \(\dot{x} = - a_d x + b_d r\) that is exactly what we want in \eqref{eq:ac-first-linear-desired}.
+
+However, in adaptive control, since the true parameters \((a,b)\) are not revealed to the control designer, an adaptation law is needed to dynamically adjust the gains \(\hat{a}_r\) and \(\hat{a}_x\) based on the tracking error \(x(t) - x_d(t)\).
+
+\textbf{Adaptation law}. Let \(e(t) = x(t) - x_d(t)\) be the tracking error, and we develop its time derivative
+\begin{align}
+\dot{e} &= \dot{x} - \dot{x}_d \\
+        &= - a_d (x - x_d) + (a_d - a + b\hat{a}_x)x + (b \hat{a}_r - b_d) r \\
+        & = - a_d e + b\underbrace{(\hat{a}_x - \hat{a}_x^\star)}_{=:\tilde{a}_x} x + b \underbrace{(\hat{a}_r - \hat{a}_r^\star )}_{=:\tilde{a}_r} r \\
+        & = - a_d e + b (\tilde{a}_x x + \tilde{a}_r r) \label{eq:ac-first-linear-error-dynamics}
+\end{align}
+where \(\tilde{a}_x\) and \(\tilde{a}_r\) are the gain errors w.r.t. the optimal gains in \eqref{eq:ac-first-linear-optimal-gain} if the true parameters were known. The error dynamics \eqref{eq:ac-first-linear-error-dynamics} is equivalent to the following transfer function
+\[
+e = \frac{1}{p + a_d} b(\tilde{a}_x x + \tilde{a}_r r) = \frac{1}{p + a_d} \left(b 
+\begin{bmatrix} \tilde{a}_x \\ \tilde{a}_r \end{bmatrix}^T 
+\begin{bmatrix} x \\ r \end{bmatrix}
+\right),
+\]
+which is in the form of \eqref{eq:acbasiclemmaephi}. Therefore, we choose the adaptation law
+\begin{equation}
+\begin{bmatrix} \dot{\tilde{a}}_x \\ \dot{\tilde{a}}_r \end{bmatrix} = - \mathrm{sgn}(b) \gamma e \begin{bmatrix} x \\ r \end{bmatrix}.
+\label{eq:ac-first-linear-adaptation-law}
+\end{equation}
+
+\textbf{Tracking convergence}. With the control law \eqref{eq:ac-first-linear-control} and the adaptation law \eqref{eq:ac-first-linear-adaptation-law}, we can prove that the tracking error converges to zero, using Lemma \ref{lem:adaptivecontrolbasic}. With \(\tilde{a}=[\tilde{a}_x, \tilde{a}_r]^T\), let
+\[
+V(e,\tilde{a}) = e^2 + \frac{|b|}{\gamma} \tilde{a}^T \tilde{a}
+\]
+be a positive definite Lyapunov function candidate with time derivative
+\[
+\dot{V} = - 2a_d e^2 \leq 0.
+\]
+Clearly, \(e\) and \(\tilde{a}\) are both bounded. Assuming the reference trajectory \(r\) is bounded, we know \(x_d\) is bounded (due to \eqref{eq:ac-first-linear-desired}) and hence \(x\) is bounded (due to \(e = x - x_d\) being bounded). Consequently, from the error dynamics \eqref{eq:ac-first-linear-error-dynamics} we know \(\dot{e}\) is bounded, which implies \(\ddot{V} = -4a_d e \dot{e}\) is bounded and \(\dot{V}\) is uniformly continuous. By Barbalat's stability certificate \ref{thm:BarbalatStability}, we conlude \(e(t) \rightarrow 0\) as \(t \rightarrow \infty\).
+
+\hypertarget{nonlinear-systems}{%
+\subsection{Nonlinear Systems}\label{nonlinear-systems}}
+
+\hypertarget{appendix-appendix}{%
+\appendix}
+
+
+\hypertarget{the-kalman-yakubovich-lemma}{%
+\chapter{The Kalman-Yakubovich Lemma}\label{the-kalman-yakubovich-lemma}}
+
+\begin{lemma}[Kalman-Yakubovich]
+\protect\hypertarget{lem:KalmanYakubovich}{}\label{lem:KalmanYakubovich}Consider a controllable linear time-invariant system
+\[
+\dot{x} = A x + b u \\
+y = c^T x.
+\]
+The transfer function
+\[
+h(p) = c^T (p I - A)^{-1} b 
+\]
+is strictly positive real (SPR) if and only if there exist positive definite matrices \(P\) and \(Q\) such that
+\[
+A^T P + P A = - Q \\
+Pb = c.
+\]
+\end{lemma}
 
   \bibliography{book.bib,packages.bib}
 

@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>References | Optimal Control and Estimation</title>
+  <title>Chapter 2 Stability Analysis | Optimal Control and Estimation</title>
   <meta name="description" content="Lecture notes for Harvard ES/AM 158 Introduction to Optimal Control and Estimation." />
   <meta name="generator" content="bookdown 0.33 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="References | Optimal Control and Estimation" />
+  <meta property="og:title" content="Chapter 2 Stability Analysis | Optimal Control and Estimation" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Lecture notes for Harvard ES/AM 158 Introduction to Optimal Control and Estimation." />
   <meta name="github-repo" content="hankyang94/OptimalControlEstimation" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="References | Optimal Control and Estimation" />
+  <meta name="twitter:title" content="Chapter 2 Stability Analysis | Optimal Control and Estimation" />
   
   <meta name="twitter:description" content="Lecture notes for Harvard ES/AM 158 Introduction to Optimal Control and Estimation." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="stability.html"/>
-<link rel="next" href="adaptivecontrol.html"/>
+<link rel="prev" href="formulation.html"/>
+<link rel="next" href="references.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -110,17 +110,46 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="references" class="section level1 unnumbered hasAnchor">
-<h1>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="stability" class="section level1 hasAnchor" number="2">
+<h1><span class="header-section-number">Chapter 2</span> Stability Analysis<a href="stability.html#stability" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div class="lemma">
+<p><span id="lem:Barbalat" class="lemma"><strong>Lemma 2.1  (Barbalat's Lemma) </strong></span>Let <span class="math inline">\(f(t)\)</span> be differentiable, if</p>
+<ul>
+<li><p><span class="math inline">\(\lim_{t \rightarrow \infty} f(t)\)</span> is finite, and</p></li>
+<li><p><span class="math inline">\(\dot{f}(t)\)</span> is uniformly continuous,<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p></li>
+</ul>
+<p>then
+<span class="math display">\[
+\lim_{t \rightarrow \infty} \dot{f}(t) = 0.
+\]</span></p>
+</div>
+<div class="theorem">
+<p><span id="thm:BarbalatStability" class="theorem"><strong>Theorem 2.1  (Barbalat's Stability Certificate) </strong></span>If a scalar function <span class="math inline">\(V(x,t)\)</span> satisfies</p>
+<ul>
+<li><p><span class="math inline">\(V(x,t)\)</span> is lower bounded,</p></li>
+<li><p><span class="math inline">\(\dot{V}(x,t)\)</span> is negative semidefinite</p></li>
+<li><p><span class="math inline">\(\dot{V}(x,t)\)</span> is uniformly continuous</p></li>
+</ul>
+<p>then <span class="math inline">\(\dot{V}(x,t) \rightarrow 0\)</span> as <span class="math inline">\(t \rightarrow \infty\)</span>.</p>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-2" class="proof"><em>Proof</em>. </span><span class="math inline">\(V(x,t)\)</span> is lower bounded and <span class="math inline">\(\dot{V}\)</span> is negative semidefinite implies the limit of <span class="math inline">\(V\)</span> as <span class="math inline">\(t \rightarrow \infty\)</span> is finite (note that <span class="math inline">\(V(x,t) \leq V(x(0),0)\)</span>). Then the theorem clearly follows from Barbalat’s Lemma <a href="stability.html#lem:Barbalat">2.1</a>.</p>
+</div>
 
+</div>
+<div class="footnotes">
+<hr />
+<ol start="1">
+<li id="fn1"><p>A sufficient condition for this to hold is that <span class="math inline">\(\ddot{f}\)</span> exists and is bounded.<a href="stability.html#fnref1" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="stability.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="adaptivecontrol.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="formulation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -151,7 +180,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/hankyang94/OptimalControlEstimation/blob/main/06-references.Rmd",
+"link": "https://github.com/hankyang94/OptimalControlEstimation/blob/main/03-stability.Rmd",
 "text": "Edit"
 },
 "history": {

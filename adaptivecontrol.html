@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 3 Adaptive Control | Optimal Control and Estimation</title>
+  <meta name="description" content="Lecture notes for Harvard ES/AM 158 Introduction to Optimal Control and Estimation." />
+  <meta name="generator" content="bookdown 0.33 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 3 Adaptive Control | Optimal Control and Estimation" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Lecture notes for Harvard ES/AM 158 Introduction to Optimal Control and Estimation." />
+  <meta name="github-repo" content="hankyang94/OptimalControlEstimation" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 3 Adaptive Control | Optimal Control and Estimation" />
+  
+  <meta name="twitter:description" content="Lecture notes for Harvard ES/AM 158 Introduction to Optimal Control and Estimation." />
+  
+
+<meta name="author" content="Heng Yang" />
+
+
+<meta name="date" content="2023-06-11" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="references.html"/>
+<link rel="next" href="the-kalman-yakubovich-lemma.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Optimal Control and Estimation</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="formulation.html"><a href="formulation.html"><i class="fa fa-check"></i><b>1</b> The Optimal Control Formulation</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="formulation.html"><a href="formulation.html#the-basic-problem"><i class="fa fa-check"></i><b>1.1</b> The Basic Problem</a></li>
+<li class="chapter" data-level="1.2" data-path="formulation.html"><a href="formulation.html#open-loop-v.s.-closed-loop"><i class="fa fa-check"></i><b>1.2</b> Open-Loop v.s. Closed-Loop</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="stability.html"><a href="stability.html"><i class="fa fa-check"></i><b>2</b> Stability Analysis</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="3" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html"><i class="fa fa-check"></i><b>3</b> Adaptive Control</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#first-order-systems"><i class="fa fa-check"></i><b>3.1</b> First-Order Systems</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#linear-systems"><i class="fa fa-check"></i><b>3.1.1</b> Linear Systems</a></li>
+<li class="chapter" data-level="3.1.2" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#nonlinear-systems"><i class="fa fa-check"></i><b>3.1.2</b> Nonlinear Systems</a></li>
+</ul></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="the-kalman-yakubovich-lemma.html"><a href="the-kalman-yakubovich-lemma.html"><i class="fa fa-check"></i><b>A</b> The Kalman-Yakubovich Lemma</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Optimal Control and Estimation</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="adaptivecontrol" class="section level1 hasAnchor" number="3">
+<h1><span class="header-section-number">Chapter 3</span> Adaptive Control<a href="adaptivecontrol.html#adaptivecontrol" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div class="lemma">
+<p><span id="lem:adaptivecontrolbasic" class="lemma"><strong>Lemma 3.1  (Basic Lemma) </strong></span>Let two signals <span class="math inline">\(e(t)\)</span> and <span class="math inline">\(\phi(t)\)</span> be related by
+<span class="math display" id="eq:acbasiclemmaephi">\[\begin{equation}
+e(t) = H(p)[k \phi(t)^T v(t)]
+\tag{3.1}
+\end{equation}\]</span>
+where <span class="math inline">\(e(t)\)</span> a scalar output signal, <span class="math inline">\(H(p)\)</span> a strictly positive real (SPR) transfer function, <span class="math inline">\(k\)</span> an unknown real number with known sign, <span class="math inline">\(\phi(t) \in \mathbb{R}^m\)</span> a control signal, and <span class="math inline">\(v(t) \in \mathbb{R}^m\)</span> a measurable input signal.</p>
+<p>If the control signal <span class="math inline">\(\phi(t)\)</span> satisfies
+<span class="math display" id="eq:acbasiclemmaphilaw">\[\begin{equation}
+\dot{\phi}(t) = - \mathrm{sgn}(k) \gamma e(t) v(t)
+\tag{3.2}
+\end{equation}\]</span>
+with <span class="math inline">\(\gamma &gt; 0\)</span> a positive constant, then <span class="math inline">\(e(t)\)</span> and <span class="math inline">\(\phi(t)\)</span> are globally bounded. Moreover, if <span class="math inline">\(v(t)\)</span> is bounded, then
+<span class="math display">\[
+\lim_{t \rightarrow \infty} e(t) = 0.
+\]</span></p>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-3" class="proof"><em>Proof</em>. </span>Let the state-space representation of <a href="adaptivecontrol.html#eq:acbasiclemmaephi">(3.1)</a> be
+<span class="math display" id="eq:acbasiclemmastatespace">\[\begin{equation}
+\dot{x} = A x + b [k \phi^T v], \quad e = c^T x.
+\tag{3.3}
+\end{equation}\]</span>
+Since <span class="math inline">\(H(p)\)</span> is SPR, it follows from the Kalman-Yakubovich Lemma <a href="the-kalman-yakubovich-lemma.html#lem:KalmanYakubovich">A.1</a> that there exist <span class="math inline">\(P,Q \succ 0\)</span> such that
+<span class="math display">\[
+A^T P + P A = -Q, \quad Pb = c.
+\]</span>
+Let
+<span class="math display">\[
+V(x,\phi) = x^T P x + \frac{|k|}{\gamma} \phi^T \phi,
+\]</span>
+clearly V is positive definite (i.e., <span class="math inline">\(V(0,0)=0\)</span>, and <span class="math inline">\(V(x,\phi) &gt; 0\)</span> for all <span class="math inline">\(x \neq 0, \phi \neq 0\)</span>). The time derivative of <span class="math inline">\(V\)</span> along the trajectory defined by <a href="adaptivecontrol.html#eq:acbasiclemmastatespace">(3.3)</a> with <span class="math inline">\(\phi\)</span> chosen as in <a href="adaptivecontrol.html#eq:acbasiclemmaphilaw">(3.2)</a> is
+<span class="math display">\[\begin{align}
+\dot{V} &amp; = \frac{\partial V}{\partial x} \dot{x} + \frac{\partial V}{\partial \phi} \dot{\phi} \\
+&amp;= x^T (PA + A^T P) x + 2 x^T P b (k \phi^T v) + \frac{2|k|}{\gamma} \phi^T (- \mathrm{sgn}(k) \gamma e v) \\
+&amp; = - x^T Q x + 2 (x^T c)(k\phi^T v) - 2 \phi^T (e v) \\
+&amp; = - x^T Q x \leq 0.
+\end{align}\]</span>
+As a result, we know <span class="math inline">\(x\)</span> and <span class="math inline">\(\phi\)</span> must be bounded (<span class="math inline">\(V(x(t),\phi(t)) \leq V(x(0),\phi(0))\)</span> is bounded). Since <span class="math inline">\(e = c^T x\)</span>, we know <span class="math inline">\(e\)</span> must be bounded as well.</p>
+<p>If the input signal <span class="math inline">\(v\)</span> is also bounded, then <span class="math inline">\(\dot{x}\)</span> is bounded as seen from <a href="adaptivecontrol.html#eq:acbasiclemmastatespace">(3.3)</a>. Because <span class="math inline">\(\ddot{V} = -2x^T Q \dot{x}\)</span> is now bounded, we know <span class="math inline">\(\dot{V}\)</span> is uniformly continuous. Therefore, by Barbalat’s stability certificate (Theorem <a href="stability.html#thm:BarbalatStability">2.1</a>), we know <span class="math inline">\(\dot{V}\)</span> tends to zero as <span class="math inline">\(t\)</span> tends to infinity, which implies <span class="math inline">\(\lim_{t \rightarrow \infty} x(t) = 0\)</span> and hence <span class="math inline">\(\lim_{t \rightarrow \infty} e(t) = 0\)</span>.</p>
+</div>
+<div id="first-order-systems" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> First-Order Systems<a href="adaptivecontrol.html#first-order-systems" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="linear-systems" class="section level3 hasAnchor" number="3.1.1">
+<h3><span class="header-section-number">3.1.1</span> Linear Systems<a href="adaptivecontrol.html#linear-systems" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Consider the first-order single-input single-output (SISO) system
+<span class="math display" id="eq:ac-first-linear">\[\begin{equation}
+\dot{x} = - a x + b u
+\tag{3.4}
+\end{equation}\]</span>
+where <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> are unknown groundtruth parameters. However, we do assume that the sign of <span class="math inline">\(b\)</span> is known. <span style="color:red">What if the sign of <span class="math inline">\(b\)</span> is unknown too?</span></p>
+<p>Let <span class="math inline">\(r(t)\)</span> be a reference trajectory, e.g., a step function or a sinusoidal function, and <span class="math inline">\(x_d(t)\)</span> be a desired system trajectory that tracks the reference
+<span class="math display" id="eq:ac-first-linear-desired">\[\begin{equation}
+\dot{x}_d = - a_d x_d + b_d r(t),
+\tag{3.5}
+\end{equation}\]</span>
+where <span class="math inline">\(a_d,b_d &gt; 0\)</span> are user-defined constants. Note that the transfer function from <span class="math inline">\(r\)</span> to <span class="math inline">\(x_d\)</span> is
+<span class="math display">\[
+x_d = \frac{b_d}{p + a_d} r
+\]</span>
+and the system is stable. <span style="color:red">Review basics of transfer function.</span></p>
+<p>The goal of adaptive control is to design a control law and an adaptation law such that the tracking error of the system <span class="math inline">\(x(t) - x_d(t)\)</span> converges to zero.</p>
+<p><strong>Control law</strong>. We design the control law as
+<span class="math display" id="eq:ac-first-linear-control">\[\begin{equation}
+u = \hat{a}_r(t) r + \hat{a}_x(t) x
+\tag{3.6}
+\end{equation}\]</span>
+where <span class="math inline">\(\hat{a}_r(t)\)</span> and <span class="math inline">\(\hat{a}_x(t)\)</span> are time-varying feedback gains that we wish to adapt. The closed-loop dynamics of system <a href="adaptivecontrol.html#eq:ac-first-linear">(3.4)</a> with the controller <a href="adaptivecontrol.html#eq:ac-first-linear-control">(3.6)</a> is
+<span class="math display">\[
+\dot{x} = - a x + b (\hat{a}_r r + \hat{a}_x x) = - (a - b \hat{a}_x) x + b \hat{a}_r r.
+\]</span>
+With the equation above,
+the reason for choosing the control law <a href="adaptivecontrol.html#eq:ac-first-linear-control">(3.6)</a> is clear: if the system parameters <span class="math inline">\((a,b)\)</span> were known, then choosing
+<span class="math display" id="eq:ac-first-linear-optimal-gain">\[\begin{equation}
+a_r^\star = \frac{b_d}{b}, \quad a_x^\star = \frac{a - a_d}{b}
+\tag{3.7}
+\end{equation}\]</span>
+leads to the closed-loop dynamics <span class="math inline">\(\dot{x} = - a_d x + b_d r\)</span> that is exactly what we want in <a href="adaptivecontrol.html#eq:ac-first-linear-desired">(3.5)</a>.</p>
+<p>However, in adaptive control, since the true parameters <span class="math inline">\((a,b)\)</span> are not revealed to the control designer, an adaptation law is needed to dynamically adjust the gains <span class="math inline">\(\hat{a}_r\)</span> and <span class="math inline">\(\hat{a}_x\)</span> based on the tracking error <span class="math inline">\(x(t) - x_d(t)\)</span>.</p>
+<p><strong>Adaptation law</strong>. Let <span class="math inline">\(e(t) = x(t) - x_d(t)\)</span> be the tracking error, and we develop its time derivative
+<span class="math display" id="eq:ac-first-linear-error-dynamics">\[\begin{align}
+\dot{e} &amp;= \dot{x} - \dot{x}_d \\
+        &amp;= - a_d (x - x_d) + (a_d - a + b\hat{a}_x)x + (b \hat{a}_r - b_d) r \\
+        &amp; = - a_d e + b\underbrace{(\hat{a}_x - \hat{a}_x^\star)}_{=:\tilde{a}_x} x + b \underbrace{(\hat{a}_r - \hat{a}_r^\star )}_{=:\tilde{a}_r} r \\
+        &amp; = - a_d e + b (\tilde{a}_x x + \tilde{a}_r r) \tag{3.8}
+\end{align}\]</span>
+where <span class="math inline">\(\tilde{a}_x\)</span> and <span class="math inline">\(\tilde{a}_r\)</span> are the gain errors w.r.t. the optimal gains in <a href="adaptivecontrol.html#eq:ac-first-linear-optimal-gain">(3.7)</a> if the true parameters were known. The error dynamics <a href="adaptivecontrol.html#eq:ac-first-linear-error-dynamics">(3.8)</a> is equivalent to the following transfer function
+<span class="math display">\[
+e = \frac{1}{p + a_d} b(\tilde{a}_x x + \tilde{a}_r r) = \frac{1}{p + a_d} \left(b
+\begin{bmatrix} \tilde{a}_x \\ \tilde{a}_r \end{bmatrix}^T
+\begin{bmatrix} x \\ r \end{bmatrix}
+\right),
+\]</span>
+which is in the form of <a href="adaptivecontrol.html#eq:acbasiclemmaephi">(3.1)</a>. Therefore, we choose the adaptation law
+<span class="math display" id="eq:ac-first-linear-adaptation-law">\[\begin{equation}
+\begin{bmatrix} \dot{\tilde{a}}_x \\ \dot{\tilde{a}}_r \end{bmatrix} = - \mathrm{sgn}(b) \gamma e \begin{bmatrix} x \\ r \end{bmatrix}.
+\tag{3.9}
+\end{equation}\]</span></p>
+<p><strong>Tracking convergence</strong>. With the control law <a href="adaptivecontrol.html#eq:ac-first-linear-control">(3.6)</a> and the adaptation law <a href="adaptivecontrol.html#eq:ac-first-linear-adaptation-law">(3.9)</a>, we can prove that the tracking error converges to zero, using Lemma <a href="adaptivecontrol.html#lem:adaptivecontrolbasic">3.1</a>. With <span class="math inline">\(\tilde{a}=[\tilde{a}_x, \tilde{a}_r]^T\)</span>, let
+<span class="math display">\[
+V(e,\tilde{a}) = e^2 + \frac{|b|}{\gamma} \tilde{a}^T \tilde{a}
+\]</span>
+be a positive definite Lyapunov function candidate with time derivative
+<span class="math display">\[
+\dot{V} = - 2a_d e^2 \leq 0.
+\]</span>
+Clearly, <span class="math inline">\(e\)</span> and <span class="math inline">\(\tilde{a}\)</span> are both bounded. Assuming the reference trajectory <span class="math inline">\(r\)</span> is bounded, we know <span class="math inline">\(x_d\)</span> is bounded (due to <a href="adaptivecontrol.html#eq:ac-first-linear-desired">(3.5)</a>) and hence <span class="math inline">\(x\)</span> is bounded (due to <span class="math inline">\(e = x - x_d\)</span> being bounded). Consequently, from the error dynamics <a href="adaptivecontrol.html#eq:ac-first-linear-error-dynamics">(3.8)</a> we know <span class="math inline">\(\dot{e}\)</span> is bounded, which implies <span class="math inline">\(\ddot{V} = -4a_d e \dot{e}\)</span> is bounded and <span class="math inline">\(\dot{V}\)</span> is uniformly continuous. By Barbalat’s stability certificate <a href="stability.html#thm:BarbalatStability">2.1</a>, we conlude <span class="math inline">\(e(t) \rightarrow 0\)</span> as <span class="math inline">\(t \rightarrow \infty\)</span>.</p>
+</div>
+<div id="nonlinear-systems" class="section level3 hasAnchor" number="3.1.2">
+<h3><span class="header-section-number">3.1.2</span> Nonlinear Systems<a href="adaptivecontrol.html#nonlinear-systems" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+
+</div>
+</div>
+</div>
+
+
+
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="references.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="the-kalman-yakubovich-lemma.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/hankyang94/OptimalControlEstimation/blob/main/07-adaptivecontrol.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["optimal-control-estimation.pdf", "optimal-control-estimation.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

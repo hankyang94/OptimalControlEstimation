@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>References | Optimal Control and Estimation</title>
+  <title>A The Kalman-Yakubovich Lemma | Optimal Control and Estimation</title>
   <meta name="description" content="Lecture notes for Harvard ES/AM 158 Introduction to Optimal Control and Estimation." />
   <meta name="generator" content="bookdown 0.33 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="References | Optimal Control and Estimation" />
+  <meta property="og:title" content="A The Kalman-Yakubovich Lemma | Optimal Control and Estimation" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Lecture notes for Harvard ES/AM 158 Introduction to Optimal Control and Estimation." />
   <meta name="github-repo" content="hankyang94/OptimalControlEstimation" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="References | Optimal Control and Estimation" />
+  <meta name="twitter:title" content="A The Kalman-Yakubovich Lemma | Optimal Control and Estimation" />
   
   <meta name="twitter:description" content="Lecture notes for Harvard ES/AM 158 Introduction to Optimal Control and Estimation." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="stability.html"/>
-<link rel="next" href="adaptivecontrol.html"/>
+<link rel="prev" href="adaptivecontrol.html"/>
+
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -110,17 +110,39 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="references" class="section level1 unnumbered hasAnchor">
-<h1>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="the-kalman-yakubovich-lemma" class="section level1 hasAnchor" number="4">
+<h1><span class="header-section-number">A</span> The Kalman-Yakubovich Lemma<a href="the-kalman-yakubovich-lemma.html#the-kalman-yakubovich-lemma" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div class="lemma">
+<p><span id="lem:KalmanYakubovich" class="lemma"><strong>Lemma A.1  (Kalman-Yakubovich) </strong></span>Consider a controllable linear time-invariant system
+<span class="math display">\[
+\dot{x} = A x + b u \\
+y = c^T x.
+\]</span>
+The transfer function
+<span class="math display">\[
+h(p) = c^T (p I - A)^{-1} b
+\]</span>
+is strictly positive real (SPR) if and only if there exist positive definite matrices <span class="math inline">\(P\)</span> and <span class="math inline">\(Q\)</span> such that
+<span class="math display">\[
+A^T P + P A = - Q \\
+Pb = c.
+\]</span></p>
+</div>
 
 </div>
+
+
+
+
+
+
             </section>
 
           </div>
         </div>
       </div>
-<a href="stability.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="adaptivecontrol.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="adaptivecontrol.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -151,7 +173,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/hankyang94/OptimalControlEstimation/blob/main/06-references.Rmd",
+"link": "https://github.com/hankyang94/OptimalControlEstimation/blob/main/08-appendix.Rmd",
 "text": "Edit"
 },
 "history": {
