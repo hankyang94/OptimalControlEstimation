@@ -245,7 +245,75 @@ V(s,\phi) = |h| s^2 + \frac{1}{\gamma} \phi^T \phi, \quad \dot{V}(s,\phi) -2|k| 
 $$
 the global convergence of $s$ to zero can be easily shown. For parameter convergence, it is easy to see that when $v$ satisfies the persistent excitation condition, we have that $\phi$ converges to zero. (However, the relationship between the reference trajectory $q_d(t)$ and the persistent excitation of $v$ becomes nontrivial due to the nonlinearities $f_i$.)
 
+### Robotic Manipulator
+So far our focus has been on systems with a single input ($u \in \mathbb{R}$). In the following, we will show that similar techniques can be applied to adapative control of systems with multiple inputs, particularly, trajectory control of a robotic manipulator.
 
+Let $q \in \mathbb{R}^n$ be the joint angles of a multi-link robotic arm, and $\dot{q} \in \mathbb{R}^n$ be the joint velocities. The dynamics of a robotic manipulator reads
+\begin{equation}
+H(q) \ddot{q} + C(q,\dot{q})\dot{q} + g(q) = \tau,
+(\#eq:ac-mrac-manipulator-dynamics)
+\end{equation} 
+where $H(q) \in \mathbb{S}^{n}_{++}$ is the manipulator inertia matrix (that is positive definite), $C(q,\dot{q})\dot{q}$ is a vector of centripetal and Coriolis torques (with $C(q,\dot{q}) \in \mathbb{R}^{n \times n}$), and $g(q)$ denotes gravitational torques.  
+
+::: {.example #planartwolinkmanipulator name="Planar Two-link Manipulator"}
+The dynamics of a planar two-link manipulator is given as 
+\begin{equation}
+\begin{bmatrix} H_{11} & H_{12} \\ H_{21} & H_{22} \end{bmatrix}
+\begin{bmatrix} \ddot{q}_1 \\ \ddot{q}_2 \end{bmatrix}
++ 
+\begin{bmatrix} - h \dot{q}_2 & -h (\dot{q}_1 + \dot{q}_2) \\ h \dot{q}_1 & 0 \end{bmatrix}
+\begin{bmatrix} \dot{q}_1 \\ \dot{q}_2 \end{bmatrix}
+=
+\begin{bmatrix} \tau_1 \\ \tau_2 \end{bmatrix},
+(\#eq:ac-mrac-manipulator-dynamics-planartwolink)
+\end{equation}
+where 
+\begin{align}
+H_{11} & = a_1 + 2 a_3 \cos q_2 + 2 a_4 \sin q_2 \\
+H_{12} & = H_{21} = a_2 + a_3 \cos q_2 + a_4 \sin q_2 \\
+H_{22} &= a_2 \\
+h &= a_3 \sin q_2 - a_4 \cos q_2 
+\end{align}
+with 
+\begin{align}
+a_1 &= I_1 + m_1 l_{c1}^2 + I_e + m_e l_{ce}^2 + m_e l_1^2 \\
+a_2 &= I_e + m_e l_{ce}^2 \\
+a_3 &= m_e l_1 l_{ce} \cos \delta_e \\
+a_4 &= m_e l_1 l_{ce} \sin \delta_e.
+\end{align}
+:::
+
+As seen from the above example, the parameters $a$ (which are nonlinear functions of the physical parameters such as mass and length) enter linearly in $H$ and $C$ ($g(q)$ is ignored because the manipulator is on a horizontal plane). 
+
+The goal of the control design is to have the manipulator track a desired trajectory $q_d(t)$.
+
+**Known parameters**. When the parameters are known, we follow the sliding control design framework. Let $\tilde{q} = q(t) - q_d(t)$ be the tracking error, and define the combined error 
+$$
+s = \dot{\tilde{q}} + \Lambda \tilde{q} = \dot{q} - \underbrace{\left( \dot{q}_d - \Lambda \tilde{q} \right)}_{\dot{q}_r}
+$$
+where $\Lambda \in \mathbb{S}^n_{++}$ is a user-chosen positive definite matrix (in general we want $-\Lambda$ to be Hurwitz). In this case, $s \rightarrow 0$ implies $\tilde{q} \rightarrow 0$ as $t \rightarrow \infty$. Choosing the control law 
+\begin{equation}
+\tau = H \ddot{q}_r - K_D s + C \dot{q} + g(q)
+(\#eq:ac-mrac-manipulator-controller-knownparam)
+\end{equation}
+leads to the closed-loop dynamics 
+$$
+H s + K_D s = 0.
+$$
+Therefore, designing $K_D = \lambda H$ with $\lambda > 0$ guarantees the convergence of $s$ to zero.
+
+**Control law**. A closer look at the controller \@ref(eq:ac-mrac-manipulator-controller-knownparam) allows us to write it in the following form 
+$$
+\tau = Y (q,\dot{q},\dot{q}_r,\ddot{q}_r) a - K_D s
+$$
+where $a \in \mathbb{R}^m$ contains all the parameters and $Y \in \mathbb{R}^{n \times m}$ is the matrix that collects all the coeffients of $a$. As a result, the adapative control law is naturally
+\begin{equation}
+\tau = Y \hat{a} - K_D s,
+(\#eq:ac-mrac-manipulator-controller-unknownparam)
+\end{equation}
+with $\hat{a}$ the time-varying parameter that we wish to adapt.
+
+**Adaptation law**. 
 
 
 ## Certainty-Equivalent Adaptive Control
