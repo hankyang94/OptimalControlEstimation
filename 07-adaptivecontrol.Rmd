@@ -94,12 +94,13 @@ However, in adaptive control, since the true parameters $(a,b)$ are not revealed
         & = - a_d e + b (\tilde{a}_x x + \tilde{a}_r r) (\#eq:ac-first-linear-error-dynamics)
 \end{align}
 where $\tilde{a}_x$ and $\tilde{a}_r$ are the gain errors w.r.t. the optimal gains in \@ref(eq:ac-first-linear-optimal-gain) if the true parameters were known. The error dynamics \@ref(eq:ac-first-linear-error-dynamics) is equivalent to the following transfer function 
-$$
+\begin{equation}
 e = \frac{1}{p + a_d} b(\tilde{a}_x x + \tilde{a}_r r) = \frac{1}{p + a_d} \left(b 
 \begin{bmatrix} \tilde{a}_x \\ \tilde{a}_r \end{bmatrix}^T 
 \begin{bmatrix} x \\ r \end{bmatrix}
 \right),
-$$
+(\#eq:ac-first-linear-error-dynamics-transfer)
+\end{equation}
 which is in the form of \@ref(eq:acbasiclemmaephi). Therefore, we choose the adaptation law 
 \begin{equation}
 \begin{bmatrix} \dot{\tilde{a}}_x \\ \dot{\tilde{a}}_r \end{bmatrix} = - \mathrm{sgn}(b) \gamma e \begin{bmatrix} x \\ r \end{bmatrix}.
@@ -114,6 +115,37 @@ be a positive definite Lyapunov function candidate with time derivative
 $$
 \dot{V} = - 2a_d e^2 \leq 0.
 $$
-Clearly, $e$ and $\tilde{a}$ are both bounded. Assuming the reference trajectory $r$ is bounded, we know $x_d$ is bounded (due to \@ref(eq:ac-first-linear-desired)) and hence $x$ is bounded (due to $e = x - x_d$ being bounded). Consequently, from the error dynamics \@ref(eq:ac-first-linear-error-dynamics) we know $\dot{e}$ is bounded, which implies $\ddot{V} = -4a_d e \dot{e}$ is bounded and $\dot{V}$ is uniformly continuous. By Barbalat's stability certificate \@ref(thm:BarbalatStability), we conlude $e(t) \rightarrow 0$ as $t \rightarrow \infty$.
+Clearly, $e$ and $\tilde{a}$ are both bounded. Assuming the reference trajectory $r$ is bounded, we know $x_d$ is bounded (due to \@ref(eq:ac-first-linear-desired)) and hence $x$ is bounded (due to $e = x - x_d$ being bounded). Consequently, from the error dynamics \@ref(eq:ac-first-linear-error-dynamics) we know $\dot{e}$ is bounded, which implies $\ddot{V} = -4a_d e \dot{e}$ is bounded and $\dot{V}$ is uniformly continuous. By Barbalat's stability certificate \@ref(thm:BarbalatStability), we conlude $e(t) \rightarrow 0$ as $t \rightarrow \infty$. 
+
+It is always better to combine mathematical analysis with intuitive understanding. Can you explain intuitively why the adaptation law \@ref(eq:ac-first-linear-adaptation-law) makes sense? (Hint: think about how the control should react to a negative/positive tracking error.)
+
+**Parameter convergence**. We have shown the control law \@ref(eq:ac-first-linear-control) and the adaptation law \@ref(eq:ac-first-linear-adaptation-law) guarantee to track the reference trajectory. However, is it guaranteed that the gains of the controller \@ref(eq:ac-first-linear-control) also converge to the optimal gains in \@ref(eq:ac-first-linear-optimal-gain)? 
+
+We will now show that the answer is indefinite and it depends on the reference trajectory $r(t)$. Because the tracking error $e$ converges to zero, and $e$ is the output of a stable filter \@ref(eq:ac-first-linear-error-dynamics-transfer), we know the input $b(\tilde{a}_x x + \tilde{a}_r r)$ must also converge to zero. On the other hand, the adaptation law \@ref(eq:ac-first-linear-adaptation-law) shows that both $\dot{\tilde{a}}_x$ and $\dot{\tilde{a}}_r$ converge to zero (due to $e$ converging to zero and $x$, $r$ being bounded). As a result, we know $\tilde{a} = [\tilde{a}_x,\tilde{a}_r]^T$ converges to a constant that satisfies
+\begin{equation}
+v^T \tilde{a} = 0, \quad v = \begin{bmatrix} x \\ r \end{bmatrix},
+(\#eq:ac-first-linear-parameter-equation)
+\end{equation}
+which is a single linear equation of $\tilde{a}$ with time-varying coeffients. 
+
+- **Constant reference: no guaranteed convergence**. Suppose $r(t) \equiv r_0 \neq 0$ for all $t$. From \@ref(eq:ac-first-linear-desired) we know $x = x_d = \alpha r_0$ when $t \rightarrow \infty$, where $\alpha$ is the constant DC gain of the stable filter. Therefore, the linear equation \@ref(eq:ac-first-linear-parameter-equation) reduces to 
+$$
+\alpha \tilde{a}_x + \tilde{a}_r  = 0. 
+$$
+This implies that $\tilde{a}$ does not necessarily converge to zero. In fact, it converges to a straight line in the parameter space. 
+
+- **Persistent excitation: guaranteed convergence**. However, when the signal $v$ satisfies the so-called _persistent excitation_ condition, which states that for any $t$, there exists $T, \beta > 0$ such that 
+\begin{equation}
+\int_{t}^{t+T} v v^T d\tau \geq \beta I,
+(\#eq:ac-first-linear-persistent-excitation)
+\end{equation}
+then $\tilde{a}$ is guaranteed to converge to zero. To see this, we multiply \@ref(eq:ac-first-linear-parameter-equation) by $v$ and integrate it from $t$ to $t+T$, which gives rise to
+$$
+\left( \int_{t}^{t+T} vv^T d\tau \right) \tilde{a} = 0.
+$$
+By the persistent excitation condition \@ref(eq:ac-first-linear-persistent-excitation), we infer that $\tilde{a} = 0$ is the only solution. 
+
+It remains to understand under what conditions of the reference trajectory $r(t)$ can we guarantee the persistent excitation of $v$. We leave it as an exercise for the reader to show, if $r(t)$ contains at least one sinusoidal component, then the persistent excitation condition of $v$ is guaranteed. 
+
 
 ### Nonlinear Systems 
