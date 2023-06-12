@@ -87,7 +87,7 @@
 
 \title{Optimal Control and Estimation}
 \author{Heng Yang}
-\date{2023-06-11}
+\date{2023-06-12}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -249,6 +249,27 @@ then \(\dot{V}(x,t) \rightarrow 0\) as \(t \rightarrow \infty\).
 \hypertarget{adaptivecontrol}{%
 \chapter{Adaptive Control}\label{adaptivecontrol}}
 
+\hypertarget{model-reference-adaptive-control}{%
+\section{Model-Reference Adaptive Control}\label{model-reference-adaptive-control}}
+
+Basic flow for designing an adaptive controller
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Design a control law with variable parameters
+\item
+  Design an adaptation law for adjusting the control parameters
+\item
+  Analyze the convergence of the closed-loop system
+\end{enumerate}
+
+The control law design at the first step typically requires the designer to know what a good controller is if the true parameters were actually known, e.g., from feedback linearization (Appendix \ref{feedbacklinearization}), sliding control (Appendix \ref{slidingcontrol}) etc.
+
+The design of the adaptation law typically comes from analyzing the dynamics of the tracking error, which as we will see often appears in the form of Lemma \ref{lem:adaptivecontrolbasic}.
+
+The convergence of the closed-loop system is usually analyzed with the help of a Lyapunov-like function introduced in Chapter \ref{stability}.
+
 \begin{lemma}[Basic Lemma]
 \protect\hypertarget{lem:adaptivecontrolbasic}{}\label{lem:adaptivecontrolbasic}Let two signals \(e(t)\) and \(\phi(t)\) be related by
 \begin{equation}
@@ -295,10 +316,7 @@ If the input signal \(v\) is also bounded, then \(\dot{x}\) is bounded as seen f
 \end{proof}
 
 \hypertarget{first-order-systems}{%
-\section{First-Order Systems}\label{first-order-systems}}
-
-\hypertarget{linear-systems}{%
-\subsection{Linear Systems}\label{linear-systems}}
+\subsection{First-Order Systems}\label{first-order-systems}}
 
 Consider the first-order single-input single-output (SISO) system
 \begin{equation}
@@ -403,8 +421,95 @@ which is a single linear equation of \(\tilde{a}\) with time-varying coeffients.
 
 It remains to understand under what conditions of the reference trajectory \(r(t)\) can we guarantee the persistent excitation of \(v\). We leave it as an exercise for the reader to show, if \(r(t)\) contains at least one sinusoidal component, then the persistent excitation condition of \(v\) is guaranteed.
 
-\hypertarget{nonlinear-systems}{%
-\subsection{Nonlinear Systems}\label{nonlinear-systems}}
+\begin{exercise}[Extension to Nonlinear Systems]
+\protect\hypertarget{exr:adaptivecontrolfirstordernonlinearsystem}{}\label{exr:adaptivecontrolfirstordernonlinearsystem}Design a control law and an adaptation law for the following system
+\[
+\dot{x} = - a x - c f(x) + b u
+\]
+with unknown true parameters \((a,b,c)\) (assume the sign of \(b\) is known) and known nonlinearity \(f(x)\) to track a reference trajectory \(r(t)\). Analyze the convergence of tracking error and parameter estimation error.
+\end{exercise}
+
+\hypertarget{high-order-systems}{%
+\subsection{High-Order Systems}\label{high-order-systems}}
+
+Consider an \(n\)-th order nonlinear system
+\begin{equation}
+q^{(n)} + \sum_{i=1}^n \alpha_i f_i(x,t) = bu
+\label{eq:ac-singleinput-nonlinear}
+\end{equation}
+where \(x=[q,\dot{q},\ddot{q},\dots,q^{(n-1)}]^T\) is the state of the system, \(f_i\)'s are known nonlinearities, \((\alpha_1,\dots,\alpha_n,b)\) are unknown parameters of the system (with \(\mathrm{sgn}(b)\) known).
+
+The goal of adaptive control is to control the system \eqref{eq:ac-singleinput-nonlinear} trajectory to follow a desired trajectory \(q_d(t)\) despite no knowing the true parameters.
+
+To facilitate the derivation of the adaptive controller, let us divide both sides of \eqref{eq:ac-singleinput-nonlinear} by \(b\)
+\begin{equation}
+h q^{(n)} + \sum_{i=1}^n a_i f_i(x,t) = u
+\label{eq:ac-singleinput-nonlinear-equivalent}
+\end{equation}
+where \(h = 1 / b\) and \(a_i = \alpha_i / b\).
+
+\textbf{Control law}. Recall that the choice of the control law is tyically inspired by the control design if the true system parameters were known. We will borrow ideas from sliding control (Appendix \ref{slidingcontrol}).
+
+\begin{itemize}
+\item
+  \textbf{Known parameters}. Let \(e = q(t) - q_d(t)\) be the tracking error, and define the following combined error
+  \[
+  s = e^{(n-1)} + \lambda_{n-2} e^{(n-2)} + \dots + \lambda_0 e = \Delta(p) e 
+  \]
+  where \(\Delta(p) = p^{n-1} + \lambda_{n-2} p^{(n-2)} + \dots + \lambda_0\) is a stable polynomial with user-chosen coeffients \(\lambda_0,\dots,\lambda_{n-2}\). The rationale for defining the combined error \(s\) is that the convergence of \(e\) to zero can be guaranteed by the convergence of \(s\) to zero (when \(\Delta(p)\) is stable).
+  Note that \(s\) can be equivalently written as
+  \begin{align}
+  s & = (q^{(n-1)} - q_d^{(n-1)}) + \lambda_{n-2} e^{(n-2)} + \dots + \lambda_0 e \\
+  & = q^{(n-1)} - \underbrace{ \left( q_d^{(n-1)} - \lambda_{n-2} e^{(n-2)} - \dots - \lambda_0 e  \right) }_{q_r^{(n-1)}}.
+  \end{align}
+  Now consider the control law
+  \begin{equation}
+  u = h q_r^{(n)} - ks + \sum_{i=1}^n a_i f_i(x,t)
+  \label{eq:ac-singleinput-nonlinear-control-law-knownparam}
+  \end{equation}
+  where
+  \[
+  q_r^{(n)} = q_d^{(n)} - \lambda_{n-2} e^{(n-1)} - \dots - \lambda_0 \dot{e}
+  \]
+  and \(k\) is a design constant that has the same sign as \(h\). This choice of control, plugged into the system dynamics \eqref{eq:ac-singleinput-nonlinear-equivalent}, leads to
+  \begin{align}
+  h q^{(n)} + \sum_{i=1}^n a_i f_i(x,t) = h q_r^{(n)} - ks + \sum_{i=1}^n a_i f_i(x,t) \Longleftrightarrow \\
+  h \left( q^{(n)} - q_r^{(n)} \right) + ks = 0 \Longleftrightarrow \\
+  h \dot{s} + ks = 0,
+  \end{align}
+  which guarantees the exponential convergence of \(s\) to zero (note that \(h\) and \(k\) have the same sign), and hence the convergence of \(e\) to zero.
+\item
+  \textbf{Unknown parameters}. Inspired by the control law with known parameters in \eqref{eq:ac-singleinput-nonlinear-control-law-knownparam}, we design the adapative control law as
+  \begin{equation}
+  u = \hat{h} q_r^{(n)} - ks + \sum_{i=1}^n \hat{a}_i f_i(x,t),
+  \label{eq:ac-singleinput-nonlinear-control-law-unknownparam}
+  \end{equation}
+  where the time-varying gains \(\hat{h},\hat{a}_1,\dots,\hat{a}_n\) will be adjusted by an adaptation law.
+\end{itemize}
+
+\textbf{Adaptation law}. Inserting the adapative control law \eqref{eq:ac-singleinput-nonlinear-control-law-unknownparam} into the system dynamics \eqref{eq:ac-singleinput-nonlinear-equivalent}, we obtain
+\begin{align}
+h \dot{s} + ks = \tilde{h} q_r^{(n)} + \sum_{i=1}^n \tilde{a}_i f_i (x,t) \Longleftrightarrow \\
+s = \frac{1}{p + k/h} \frac{1}{h} \underbrace{ \left( 
+    \begin{bmatrix} \tilde{h} \\ \tilde{a}_1 \\ \vdots \\ \tilde{a}_n \end{bmatrix}^T
+    \begin{bmatrix} q_r^{(n)} \\ f_1(x,t) \\ \vdots \\ f_n(x,t) \end{bmatrix}
+    \right)}_{=:\phi^T v}
+\label{eq:ac-singleinput-nonlinear-error-dynamics}
+\end{align}
+where \(\tilde{h} = \hat{h} - h\) and \(\tilde{a}_i = \hat{a}_i - a_i,i=1,\dots,n\). Again, \eqref{eq:ac-singleinput-nonlinear-error-dynamics} is in the familiar form of \eqref{eq:acbasiclemmaephi}, which naturally leads to the following adaptation law with \(\gamma > 0\) a chosen constant
+\begin{equation}
+\dot{\phi} = \begin{bmatrix} \dot{\tilde{h}} \\ \dot{\tilde{a}}_1 \\ \vdots \\ \dot{\tilde{a}}_n \end{bmatrix} = - \mathrm{sgn}(h) \gamma s \begin{bmatrix} q_r^{(n)} \\ f_1(x,t) \\ \vdots \\ f_n(x,t) \end{bmatrix}.
+\label{eq:ac-singleinput-nonlinear-adaptation-law}
+\end{equation}
+
+\textbf{Tracking and parameter convergence}. With the following Lyapunov function
+\[
+V(s,\phi) = |h| s^2 + \frac{1}{\gamma} \phi^T \phi, \quad \dot{V}(s,\phi) -2|k| s^2,
+\]
+the global convergence of \(s\) to zero can be easily shown. For parameter convergence, it is easy to see that when \(v\) satisfies the persistent excitation condition, we have that \(\phi\) converges to zero. (However, the relationship between the reference trajectory \(q_d(t)\) and the persistent excitation of \(v\) becomes nontrivial due to the nonlinearities \(f_i\).)
+
+\hypertarget{certainty-equivalent-adaptive-control}{%
+\section{Certainty-Equivalent Adaptive Control}\label{certainty-equivalent-adaptive-control}}
 
 \hypertarget{appendix-appendix}{%
 \appendix}
@@ -429,6 +534,12 @@ A^T P + P A = - Q \\
 Pb = c.
 \]
 \end{lemma}
+
+\hypertarget{feedbacklinearization}{%
+\chapter{Feedback Linearization}\label{feedbacklinearization}}
+
+\hypertarget{slidingcontrol}{%
+\chapter{Sliding Control}\label{slidingcontrol}}
 
   \bibliography{book.bib,packages.bib}
 

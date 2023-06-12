@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>A The Kalman-Yakubovich Lemma | Optimal Control and Estimation</title>
+  <title>Chapter 4 High-Order Systems | Optimal Control and Estimation</title>
   <meta name="description" content="Lecture notes for Harvard ES/AM 158 Introduction to Optimal Control and Estimation." />
   <meta name="generator" content="bookdown 0.33 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="A The Kalman-Yakubovich Lemma | Optimal Control and Estimation" />
+  <meta property="og:title" content="Chapter 4 High-Order Systems | Optimal Control and Estimation" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Lecture notes for Harvard ES/AM 158 Introduction to Optimal Control and Estimation." />
   <meta name="github-repo" content="hankyang94/OptimalControlEstimation" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="A The Kalman-Yakubovich Lemma | Optimal Control and Estimation" />
+  <meta name="twitter:title" content="Chapter 4 High-Order Systems | Optimal Control and Estimation" />
   
   <meta name="twitter:description" content="Lecture notes for Harvard ES/AM 158 Introduction to Optimal Control and Estimation." />
   
@@ -31,7 +31,7 @@
   
   
 <link rel="prev" href="adaptivecontrol.html"/>
-<link rel="next" href="feedbacklinearization.html"/>
+<link rel="next" href="the-kalman-yakubovich-lemma.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -82,17 +82,11 @@
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="chapter" data-level="3" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html"><i class="fa fa-check"></i><b>3</b> Adaptive Control</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#model-reference-adaptive-control"><i class="fa fa-check"></i><b>3.1</b> Model-Reference Adaptive Control</a>
-<ul>
-<li class="chapter" data-level="3.1.1" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#first-order-systems"><i class="fa fa-check"></i><b>3.1.1</b> First-Order Systems</a></li>
-<li class="chapter" data-level="3.1.2" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#high-order-systems"><i class="fa fa-check"></i><b>3.1.2</b> High-Order Systems</a></li>
+<li class="chapter" data-level="3.1" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#first-order-systems"><i class="fa fa-check"></i><b>3.1</b> First-Order Systems</a></li>
 </ul></li>
-<li class="chapter" data-level="3.2" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#certainty-equivalent-adaptive-control"><i class="fa fa-check"></i><b>3.2</b> Certainty-Equivalent Adaptive Control</a></li>
-</ul></li>
+<li class="chapter" data-level="4" data-path="high-order-systems.html"><a href="high-order-systems.html"><i class="fa fa-check"></i><b>4</b> High-Order Systems</a></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
 <li class="chapter" data-level="A" data-path="the-kalman-yakubovich-lemma.html"><a href="the-kalman-yakubovich-lemma.html"><i class="fa fa-check"></i><b>A</b> The Kalman-Yakubovich Lemma</a></li>
-<li class="chapter" data-level="B" data-path="feedbacklinearization.html"><a href="feedbacklinearization.html"><i class="fa fa-check"></i><b>B</b> Feedback Linearization</a></li>
-<li class="chapter" data-level="C" data-path="slidingcontrol.html"><a href="slidingcontrol.html"><i class="fa fa-check"></i><b>C</b> Sliding Control</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -113,32 +107,26 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="the-kalman-yakubovich-lemma" class="section level1 hasAnchor" number="4">
-<h1><span class="header-section-number">A</span> The Kalman-Yakubovich Lemma<a href="the-kalman-yakubovich-lemma.html#the-kalman-yakubovich-lemma" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<div class="lemma">
-<p><span id="lem:KalmanYakubovich" class="lemma"><strong>Lemma A.1  (Kalman-Yakubovich) </strong></span>Consider a controllable linear time-invariant system
-<span class="math display">\[
-\dot{x} = A x + b u \\
-y = c^T x.
-\]</span>
-The transfer function
-<span class="math display">\[
-h(p) = c^T (p I - A)^{-1} b
-\]</span>
-is strictly positive real (SPR) if and only if there exist positive definite matrices <span class="math inline">\(P\)</span> and <span class="math inline">\(Q\)</span> such that
-<span class="math display">\[
-A^T P + P A = - Q \\
-Pb = c.
-\]</span></p>
+<div id="high-order-systems" class="section level1 hasAnchor" number="4">
+<h1><span class="header-section-number">Chapter 4</span> High-Order Systems<a href="high-order-systems.html#high-order-systems" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Consider an <span class="math inline">\(n\)</span>-th order nonlinear system
+<span class="math display" id="eq:ac-singleinput-nonlinear">\[\begin{equation}
+q^{(n)} + \sum_{i=1}^n \alpha_i f_i(x,t) = bu
+\tag{4.1}
+\end{equation}\]</span>
+where <span class="math inline">\(x=[q,\dot{q},\ddot{q},\dots,q^{(n-1)}]^T\)</span> is the state of the system, <span class="math inline">\(f_i\)</span>’s are known nonlinearities, <span class="math inline">\((\alpha_1,\dots,\alpha_n,b)\)</span> are unknown parameters of the system (with <span class="math inline">\(\mathrm{sgn}(b)\)</span> known).</p>
+
 </div>
-</div>
+
+
+
             </section>
 
           </div>
         </div>
       </div>
 <a href="adaptivecontrol.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="feedbacklinearization.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="the-kalman-yakubovich-lemma.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -169,7 +157,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/hankyang94/OptimalControlEstimation/blob/main/08-appendix.Rmd",
+"link": "https://github.com/hankyang94/OptimalControlEstimation/blob/main/07-adaptivecontrol.Rmd",
 "text": "Edit"
 },
 "history": {

@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-06-11" />
+<meta name="date" content="2023-06-12" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -82,14 +82,17 @@
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="chapter" data-level="3" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html"><i class="fa fa-check"></i><b>3</b> Adaptive Control</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#first-order-systems"><i class="fa fa-check"></i><b>3.1</b> First-Order Systems</a>
+<li class="chapter" data-level="3.1" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#model-reference-adaptive-control"><i class="fa fa-check"></i><b>3.1</b> Model-Reference Adaptive Control</a>
 <ul>
-<li class="chapter" data-level="3.1.1" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#linear-systems"><i class="fa fa-check"></i><b>3.1.1</b> Linear Systems</a></li>
-<li class="chapter" data-level="3.1.2" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#nonlinear-systems"><i class="fa fa-check"></i><b>3.1.2</b> Nonlinear Systems</a></li>
+<li class="chapter" data-level="3.1.1" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#first-order-systems"><i class="fa fa-check"></i><b>3.1.1</b> First-Order Systems</a></li>
+<li class="chapter" data-level="3.1.2" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#high-order-systems"><i class="fa fa-check"></i><b>3.1.2</b> High-Order Systems</a></li>
 </ul></li>
+<li class="chapter" data-level="3.2" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#certainty-equivalent-adaptive-control"><i class="fa fa-check"></i><b>3.2</b> Certainty-Equivalent Adaptive Control</a></li>
 </ul></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
 <li class="chapter" data-level="A" data-path="the-kalman-yakubovich-lemma.html"><a href="the-kalman-yakubovich-lemma.html"><i class="fa fa-check"></i><b>A</b> The Kalman-Yakubovich Lemma</a></li>
+<li class="chapter" data-level="B" data-path="feedbacklinearization.html"><a href="feedbacklinearization.html"><i class="fa fa-check"></i><b>B</b> Feedback Linearization</a></li>
+<li class="chapter" data-level="C" data-path="slidingcontrol.html"><a href="slidingcontrol.html"><i class="fa fa-check"></i><b>C</b> Sliding Control</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -112,6 +115,17 @@
             <section class="normal" id="section-">
 <div id="adaptivecontrol" class="section level1 hasAnchor" number="3">
 <h1><span class="header-section-number">Chapter 3</span> Adaptive Control<a href="adaptivecontrol.html#adaptivecontrol" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="model-reference-adaptive-control" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> Model-Reference Adaptive Control<a href="adaptivecontrol.html#model-reference-adaptive-control" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Basic flow for designing an adaptive controller</p>
+<ol style="list-style-type: decimal">
+<li><p>Design a control law with variable parameters</p></li>
+<li><p>Design an adaptation law for adjusting the control parameters</p></li>
+<li><p>Analyze the convergence of the closed-loop system</p></li>
+</ol>
+<p>The control law design at the first step typically requires the designer to know what a good controller is if the true parameters were actually known, e.g., from feedback linearization (Appendix <a href="feedbacklinearization.html#feedbacklinearization">B</a>), sliding control (Appendix <a href="slidingcontrol.html#slidingcontrol">C</a>) etc.</p>
+<p>The design of the adaptation law typically comes from analyzing the dynamics of the tracking error, which as we will see often appears in the form of Lemma <a href="adaptivecontrol.html#lem:adaptivecontrolbasic">3.1</a>.</p>
+<p>The convergence of the closed-loop system is usually analyzed with the help of a Lyapunov-like function introduced in Chapter <a href="stability.html#stability">2</a>.</p>
 <div class="lemma">
 <p><span id="lem:adaptivecontrolbasic" class="lemma"><strong>Lemma 3.1  (Basic Lemma) </strong></span>Let two signals <span class="math inline">\(e(t)\)</span> and <span class="math inline">\(\phi(t)\)</span> be related by
 <span class="math display" id="eq:acbasiclemmaephi">\[\begin{equation}
@@ -153,10 +167,9 @@ clearly V is positive definite (i.e., <span class="math inline">\(V(0,0)=0\)</sp
 As a result, we know <span class="math inline">\(x\)</span> and <span class="math inline">\(\phi\)</span> must be bounded (<span class="math inline">\(V(x(t),\phi(t)) \leq V(x(0),\phi(0))\)</span> is bounded). Since <span class="math inline">\(e = c^T x\)</span>, we know <span class="math inline">\(e\)</span> must be bounded as well.</p>
 <p>If the input signal <span class="math inline">\(v\)</span> is also bounded, then <span class="math inline">\(\dot{x}\)</span> is bounded as seen from <a href="adaptivecontrol.html#eq:acbasiclemmastatespace">(3.3)</a>. Because <span class="math inline">\(\ddot{V} = -2x^T Q \dot{x}\)</span> is now bounded, we know <span class="math inline">\(\dot{V}\)</span> is uniformly continuous. Therefore, by Barbalat’s stability certificate (Theorem <a href="stability.html#thm:BarbalatStability">2.1</a>), we know <span class="math inline">\(\dot{V}\)</span> tends to zero as <span class="math inline">\(t\)</span> tends to infinity, which implies <span class="math inline">\(\lim_{t \rightarrow \infty} x(t) = 0\)</span> and hence <span class="math inline">\(\lim_{t \rightarrow \infty} e(t) = 0\)</span>.</p>
 </div>
-<div id="first-order-systems" class="section level2 hasAnchor" number="3.1">
-<h2><span class="header-section-number">3.1</span> First-Order Systems<a href="adaptivecontrol.html#first-order-systems" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div id="linear-systems" class="section level3 hasAnchor" number="3.1.1">
-<h3><span class="header-section-number">3.1.1</span> Linear Systems<a href="adaptivecontrol.html#linear-systems" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="first-order-systems" class="section level3 hasAnchor" number="3.1.1">
+<h3><span class="header-section-number">3.1.1</span> First-Order Systems<a href="adaptivecontrol.html#first-order-systems" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<!-- ### Linear Systems  -->
 <p>Consider the first-order single-input single-output (SISO) system
 <span class="math display" id="eq:ac-first-linear">\[\begin{equation}
 \dot{x} = - a x + b u
@@ -246,11 +259,89 @@ then <span class="math inline">\(\tilde{a}\)</span> is guaranteed to converge to
 By the persistent excitation condition <a href="adaptivecontrol.html#eq:ac-first-linear-persistent-excitation">(3.12)</a>, we infer that <span class="math inline">\(\tilde{a} = 0\)</span> is the only solution.</p></li>
 </ul>
 <p>It remains to understand under what conditions of the reference trajectory <span class="math inline">\(r(t)\)</span> can we guarantee the persistent excitation of <span class="math inline">\(v\)</span>. We leave it as an exercise for the reader to show, if <span class="math inline">\(r(t)\)</span> contains at least one sinusoidal component, then the persistent excitation condition of <span class="math inline">\(v\)</span> is guaranteed.</p>
+<!-- ### Nonlinear Systems  -->
+<div class="exercise">
+<p><span id="exr:adaptivecontrolfirstordernonlinearsystem" class="exercise"><strong>Exercise 3.1  (Extension to Nonlinear Systems) </strong></span>Design a control law and an adaptation law for the following system
+<span class="math display">\[
+\dot{x} = - a x - c f(x) + b u
+\]</span>
+with unknown true parameters <span class="math inline">\((a,b,c)\)</span> (assume the sign of <span class="math inline">\(b\)</span> is known) and known nonlinearity <span class="math inline">\(f(x)\)</span> to track a reference trajectory <span class="math inline">\(r(t)\)</span>. Analyze the convergence of tracking error and parameter estimation error.</p>
 </div>
-<div id="nonlinear-systems" class="section level3 hasAnchor" number="3.1.2">
-<h3><span class="header-section-number">3.1.2</span> Nonlinear Systems<a href="adaptivecontrol.html#nonlinear-systems" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+</div>
+<div id="high-order-systems" class="section level3 hasAnchor" number="3.1.2">
+<h3><span class="header-section-number">3.1.2</span> High-Order Systems<a href="adaptivecontrol.html#high-order-systems" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Consider an <span class="math inline">\(n\)</span>-th order nonlinear system
+<span class="math display" id="eq:ac-singleinput-nonlinear">\[\begin{equation}
+q^{(n)} + \sum_{i=1}^n \alpha_i f_i(x,t) = bu
+\tag{3.13}
+\end{equation}\]</span>
+where <span class="math inline">\(x=[q,\dot{q},\ddot{q},\dots,q^{(n-1)}]^T\)</span> is the state of the system, <span class="math inline">\(f_i\)</span>’s are known nonlinearities, <span class="math inline">\((\alpha_1,\dots,\alpha_n,b)\)</span> are unknown parameters of the system (with <span class="math inline">\(\mathrm{sgn}(b)\)</span> known).</p>
+<p>The goal of adaptive control is to control the system <a href="adaptivecontrol.html#eq:ac-singleinput-nonlinear">(3.13)</a> trajectory to follow a desired trajectory <span class="math inline">\(q_d(t)\)</span> despite no knowing the true parameters.</p>
+<p>To facilitate the derivation of the adaptive controller, let us divide both sides of <a href="adaptivecontrol.html#eq:ac-singleinput-nonlinear">(3.13)</a> by <span class="math inline">\(b\)</span>
+<span class="math display" id="eq:ac-singleinput-nonlinear-equivalent">\[\begin{equation}
+h q^{(n)} + \sum_{i=1}^n a_i f_i(x,t) = u
+\tag{3.14}
+\end{equation}\]</span>
+where <span class="math inline">\(h = 1 / b\)</span> and <span class="math inline">\(a_i = \alpha_i / b\)</span>.</p>
+<p><strong>Control law</strong>. Recall that the choice of the control law is tyically inspired by the control design if the true system parameters were known. We will borrow ideas from sliding control (Appendix <a href="slidingcontrol.html#slidingcontrol">C</a>).</p>
+<ul>
+<li><p><strong>Known parameters</strong>. Let <span class="math inline">\(e = q(t) - q_d(t)\)</span> be the tracking error, and define the following combined error
+<span class="math display">\[
+s = e^{(n-1)} + \lambda_{n-2} e^{(n-2)} + \dots + \lambda_0 e = \Delta(p) e
+\]</span>
+where <span class="math inline">\(\Delta(p) = p^{n-1} + \lambda_{n-2} p^{(n-2)} + \dots + \lambda_0\)</span> is a stable polynomial with user-chosen coeffients <span class="math inline">\(\lambda_0,\dots,\lambda_{n-2}\)</span>. The rationale for defining the combined error <span class="math inline">\(s\)</span> is that the convergence of <span class="math inline">\(e\)</span> to zero can be guaranteed by the convergence of <span class="math inline">\(s\)</span> to zero (when <span class="math inline">\(\Delta(p)\)</span> is stable).
+Note that <span class="math inline">\(s\)</span> can be equivalently written as
+<span class="math display">\[\begin{align}
+s &amp; = (q^{(n-1)} - q_d^{(n-1)}) + \lambda_{n-2} e^{(n-2)} + \dots + \lambda_0 e \\
+&amp; = q^{(n-1)} - \underbrace{ \left( q_d^{(n-1)} - \lambda_{n-2} e^{(n-2)} - \dots - \lambda_0 e  \right) }_{q_r^{(n-1)}}.
+\end{align}\]</span>
+Now consider the control law
+<span class="math display" id="eq:ac-singleinput-nonlinear-control-law-knownparam">\[\begin{equation}
+u = h q_r^{(n)} - ks + \sum_{i=1}^n a_i f_i(x,t)
+\tag{3.15}
+\end{equation}\]</span>
+where
+<span class="math display">\[
+q_r^{(n)} = q_d^{(n)} - \lambda_{n-2} e^{(n-1)} - \dots - \lambda_0 \dot{e}
+\]</span>
+and <span class="math inline">\(k\)</span> is a design constant that has the same sign as <span class="math inline">\(h\)</span>. This choice of control, plugged into the system dynamics <a href="adaptivecontrol.html#eq:ac-singleinput-nonlinear-equivalent">(3.14)</a>, leads to
+<span class="math display">\[\begin{align}
+h q^{(n)} + \sum_{i=1}^n a_i f_i(x,t) = h q_r^{(n)} - ks + \sum_{i=1}^n a_i f_i(x,t) \Longleftrightarrow \\
+h \left( q^{(n)} - q_r^{(n)} \right) + ks = 0 \Longleftrightarrow \\
+h \dot{s} + ks = 0,
+\end{align}\]</span>
+which guarantees the exponential convergence of <span class="math inline">\(s\)</span> to zero (note that <span class="math inline">\(h\)</span> and <span class="math inline">\(k\)</span> have the same sign), and hence the convergence of <span class="math inline">\(e\)</span> to zero.</p></li>
+<li><p><strong>Unknown parameters</strong>. Inspired by the control law with known parameters in <a href="adaptivecontrol.html#eq:ac-singleinput-nonlinear-control-law-knownparam">(3.15)</a>, we design the adapative control law as
+<span class="math display" id="eq:ac-singleinput-nonlinear-control-law-unknownparam">\[\begin{equation}
+u = \hat{h} q_r^{(n)} - ks + \sum_{i=1}^n \hat{a}_i f_i(x,t),
+\tag{3.16}
+\end{equation}\]</span>
+where the time-varying gains <span class="math inline">\(\hat{h},\hat{a}_1,\dots,\hat{a}_n\)</span> will be adjusted by an adaptation law.</p></li>
+</ul>
+<p><strong>Adaptation law</strong>. Inserting the adapative control law <a href="adaptivecontrol.html#eq:ac-singleinput-nonlinear-control-law-unknownparam">(3.16)</a> into the system dynamics <a href="adaptivecontrol.html#eq:ac-singleinput-nonlinear-equivalent">(3.14)</a>, we obtain
+<span class="math display" id="eq:ac-singleinput-nonlinear-error-dynamics">\[\begin{align}
+h \dot{s} + ks = \tilde{h} q_r^{(n)} + \sum_{i=1}^n \tilde{a}_i f_i (x,t) \Longleftrightarrow \\
+s = \frac{1}{p + k/h} \frac{1}{h} \underbrace{ \left(
+    \begin{bmatrix} \tilde{h} \\ \tilde{a}_1 \\ \vdots \\ \tilde{a}_n \end{bmatrix}^T
+    \begin{bmatrix} q_r^{(n)} \\ f_1(x,t) \\ \vdots \\ f_n(x,t) \end{bmatrix}
+    \right)}_{=:\phi^T v}
+\tag{3.17}
+\end{align}\]</span>
+where <span class="math inline">\(\tilde{h} = \hat{h} - h\)</span> and <span class="math inline">\(\tilde{a}_i = \hat{a}_i - a_i,i=1,\dots,n\)</span>. Again, <a href="adaptivecontrol.html#eq:ac-singleinput-nonlinear-error-dynamics">(3.17)</a> is in the familiar form of <a href="adaptivecontrol.html#eq:acbasiclemmaephi">(3.1)</a>, which naturally leads to the following adaptation law with <span class="math inline">\(\gamma &gt; 0\)</span> a chosen constant
+<span class="math display" id="eq:ac-singleinput-nonlinear-adaptation-law">\[\begin{equation}
+\dot{\phi} = \begin{bmatrix} \dot{\tilde{h}} \\ \dot{\tilde{a}}_1 \\ \vdots \\ \dot{\tilde{a}}_n \end{bmatrix} = - \mathrm{sgn}(h) \gamma s \begin{bmatrix} q_r^{(n)} \\ f_1(x,t) \\ \vdots \\ f_n(x,t) \end{bmatrix}.
+\tag{3.18}
+\end{equation}\]</span></p>
+<p><strong>Tracking and parameter convergence</strong>. With the following Lyapunov function
+<span class="math display">\[
+V(s,\phi) = |h| s^2 + \frac{1}{\gamma} \phi^T \phi, \quad \dot{V}(s,\phi) -2|k| s^2,
+\]</span>
+the global convergence of <span class="math inline">\(s\)</span> to zero can be easily shown. For parameter convergence, it is easy to see that when <span class="math inline">\(v\)</span> satisfies the persistent excitation condition, we have that <span class="math inline">\(\phi\)</span> converges to zero. (However, the relationship between the reference trajectory <span class="math inline">\(q_d(t)\)</span> and the persistent excitation of <span class="math inline">\(v\)</span> becomes nontrivial due to the nonlinearities <span class="math inline">\(f_i\)</span>.)</p>
+</div>
+</div>
+<div id="certainty-equivalent-adaptive-control" class="section level2 hasAnchor" number="3.2">
+<h2><span class="header-section-number">3.2</span> Certainty-Equivalent Adaptive Control<a href="adaptivecontrol.html#certainty-equivalent-adaptive-control" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 
-</div>
 </div>
 </div>
 
