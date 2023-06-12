@@ -199,18 +199,19 @@ leads to the closed-loop dynamics <span class="math inline">\(\dot{x} = - a_d x 
         &amp; = - a_d e + b (\tilde{a}_x x + \tilde{a}_r r) \tag{3.8}
 \end{align}\]</span>
 where <span class="math inline">\(\tilde{a}_x\)</span> and <span class="math inline">\(\tilde{a}_r\)</span> are the gain errors w.r.t. the optimal gains in <a href="adaptivecontrol.html#eq:ac-first-linear-optimal-gain">(3.7)</a> if the true parameters were known. The error dynamics <a href="adaptivecontrol.html#eq:ac-first-linear-error-dynamics">(3.8)</a> is equivalent to the following transfer function
-<span class="math display">\[
+<span class="math display" id="eq:ac-first-linear-error-dynamics-transfer">\[\begin{equation}
 e = \frac{1}{p + a_d} b(\tilde{a}_x x + \tilde{a}_r r) = \frac{1}{p + a_d} \left(b
 \begin{bmatrix} \tilde{a}_x \\ \tilde{a}_r \end{bmatrix}^T
 \begin{bmatrix} x \\ r \end{bmatrix}
 \right),
-\]</span>
+\tag{3.9}
+\end{equation}\]</span>
 which is in the form of <a href="adaptivecontrol.html#eq:acbasiclemmaephi">(3.1)</a>. Therefore, we choose the adaptation law
 <span class="math display" id="eq:ac-first-linear-adaptation-law">\[\begin{equation}
 \begin{bmatrix} \dot{\tilde{a}}_x \\ \dot{\tilde{a}}_r \end{bmatrix} = - \mathrm{sgn}(b) \gamma e \begin{bmatrix} x \\ r \end{bmatrix}.
-\tag{3.9}
+\tag{3.10}
 \end{equation}\]</span></p>
-<p><strong>Tracking convergence</strong>. With the control law <a href="adaptivecontrol.html#eq:ac-first-linear-control">(3.6)</a> and the adaptation law <a href="adaptivecontrol.html#eq:ac-first-linear-adaptation-law">(3.9)</a>, we can prove that the tracking error converges to zero, using Lemma <a href="adaptivecontrol.html#lem:adaptivecontrolbasic">3.1</a>. With <span class="math inline">\(\tilde{a}=[\tilde{a}_x, \tilde{a}_r]^T\)</span>, let
+<p><strong>Tracking convergence</strong>. With the control law <a href="adaptivecontrol.html#eq:ac-first-linear-control">(3.6)</a> and the adaptation law <a href="adaptivecontrol.html#eq:ac-first-linear-adaptation-law">(3.10)</a>, we can prove that the tracking error converges to zero, using Lemma <a href="adaptivecontrol.html#lem:adaptivecontrolbasic">3.1</a>. With <span class="math inline">\(\tilde{a}=[\tilde{a}_x, \tilde{a}_r]^T\)</span>, let
 <span class="math display">\[
 V(e,\tilde{a}) = e^2 + \frac{|b|}{\gamma} \tilde{a}^T \tilde{a}
 \]</span>
@@ -219,6 +220,32 @@ be a positive definite Lyapunov function candidate with time derivative
 \dot{V} = - 2a_d e^2 \leq 0.
 \]</span>
 Clearly, <span class="math inline">\(e\)</span> and <span class="math inline">\(\tilde{a}\)</span> are both bounded. Assuming the reference trajectory <span class="math inline">\(r\)</span> is bounded, we know <span class="math inline">\(x_d\)</span> is bounded (due to <a href="adaptivecontrol.html#eq:ac-first-linear-desired">(3.5)</a>) and hence <span class="math inline">\(x\)</span> is bounded (due to <span class="math inline">\(e = x - x_d\)</span> being bounded). Consequently, from the error dynamics <a href="adaptivecontrol.html#eq:ac-first-linear-error-dynamics">(3.8)</a> we know <span class="math inline">\(\dot{e}\)</span> is bounded, which implies <span class="math inline">\(\ddot{V} = -4a_d e \dot{e}\)</span> is bounded and <span class="math inline">\(\dot{V}\)</span> is uniformly continuous. By Barbalat’s stability certificate <a href="stability.html#thm:BarbalatStability">2.1</a>, we conlude <span class="math inline">\(e(t) \rightarrow 0\)</span> as <span class="math inline">\(t \rightarrow \infty\)</span>.</p>
+<p>It is always better to combine mathematical analysis with intuitive understanding. Can you explain intuitively why the adaptation law <a href="adaptivecontrol.html#eq:ac-first-linear-adaptation-law">(3.10)</a> makes sense? (Hint: think about how the control should react to a negative/positive tracking error.)</p>
+<p><strong>Parameter convergence</strong>. We have shown the control law <a href="adaptivecontrol.html#eq:ac-first-linear-control">(3.6)</a> and the adaptation law <a href="adaptivecontrol.html#eq:ac-first-linear-adaptation-law">(3.10)</a> guarantee to track the reference trajectory. However, is it guaranteed that the gains of the controller <a href="adaptivecontrol.html#eq:ac-first-linear-control">(3.6)</a> also converge to the optimal gains in <a href="adaptivecontrol.html#eq:ac-first-linear-optimal-gain">(3.7)</a>?</p>
+<p>We will now show that the answer is indefinite and it depends on the reference trajectory <span class="math inline">\(r(t)\)</span>. Because the tracking error <span class="math inline">\(e\)</span> converges to zero, and <span class="math inline">\(e\)</span> is the output of a stable filter <a href="adaptivecontrol.html#eq:ac-first-linear-error-dynamics-transfer">(3.9)</a>, we know the input <span class="math inline">\(b(\tilde{a}_x x + \tilde{a}_r r)\)</span> must also converge to zero. On the other hand, the adaptation law <a href="adaptivecontrol.html#eq:ac-first-linear-adaptation-law">(3.10)</a> shows that both <span class="math inline">\(\dot{\tilde{a}}_x\)</span> and <span class="math inline">\(\dot{\tilde{a}}_r\)</span> converge to zero (due to <span class="math inline">\(e\)</span> converging to zero and <span class="math inline">\(x\)</span>, <span class="math inline">\(r\)</span> being bounded). As a result, we know <span class="math inline">\(\tilde{a} = [\tilde{a}_x,\tilde{a}_r]^T\)</span> converges to a constant that satisfies
+<span class="math display" id="eq:ac-first-linear-parameter-equation">\[\begin{equation}
+v^T \tilde{a} = 0, \quad v = \begin{bmatrix} x \\ r \end{bmatrix},
+\tag{3.11}
+\end{equation}\]</span>
+which is a single linear equation of <span class="math inline">\(\tilde{a}\)</span> with time-varying coeffients.</p>
+<ul>
+<li><p><strong>Constant reference: no guaranteed convergence</strong>. Suppose <span class="math inline">\(r(t) \equiv r_0 \neq 0\)</span> for all <span class="math inline">\(t\)</span>. From <a href="adaptivecontrol.html#eq:ac-first-linear-desired">(3.5)</a> we know <span class="math inline">\(x = x_d = \alpha r_0\)</span> when <span class="math inline">\(t \rightarrow \infty\)</span>, where <span class="math inline">\(\alpha\)</span> is the constant DC gain of the stable filter. Therefore, the linear equation <a href="adaptivecontrol.html#eq:ac-first-linear-parameter-equation">(3.11)</a> reduces to
+<span class="math display">\[
+\alpha \tilde{a}_x + \tilde{a}_r  = 0.
+\]</span>
+This implies that <span class="math inline">\(\tilde{a}\)</span> does not necessarily converge to zero. In fact, it converges to a straight line in the parameter space.</p></li>
+<li><p><strong>Persistent excitation: guaranteed convergence</strong>. However, when the signal <span class="math inline">\(v\)</span> satisfies the so-called <em>persistent excitation</em> condition, which states that for any <span class="math inline">\(t\)</span>, there exists <span class="math inline">\(T, \beta &gt; 0\)</span> such that
+<span class="math display" id="eq:ac-first-linear-persistent-excitation">\[\begin{equation}
+\int_{t}^{t+T} v v^T d\tau \geq \beta I,
+\tag{3.12}
+\end{equation}\]</span>
+then <span class="math inline">\(\tilde{a}\)</span> is guaranteed to converge to zero. To see this, we multiply <a href="adaptivecontrol.html#eq:ac-first-linear-parameter-equation">(3.11)</a> by <span class="math inline">\(v\)</span> and integrate it from <span class="math inline">\(t\)</span> to <span class="math inline">\(t+T\)</span>, which gives rise to
+<span class="math display">\[
+\left( \int_{t}^{t+T} vv^T d\tau \right) \tilde{a} = 0.
+\]</span>
+By the persistent excitation condition <a href="adaptivecontrol.html#eq:ac-first-linear-persistent-excitation">(3.12)</a>, we infer that <span class="math inline">\(\tilde{a} = 0\)</span> is the only solution.</p></li>
+</ul>
+<p>It remains to understand under what conditions of the reference trajectory <span class="math inline">\(r(t)\)</span> can we guarantee the persistent excitation of <span class="math inline">\(v\)</span>. We leave it as an exercise for the reader to show, if <span class="math inline">\(r(t)\)</span> contains at least one sinusoidal component, then the persistent excitation condition of <span class="math inline">\(v\)</span> is guaranteed.</p>
 </div>
 <div id="nonlinear-systems" class="section level3 hasAnchor" number="3.1.2">
 <h3><span class="header-section-number">3.1.2</span> Nonlinear Systems<a href="adaptivecontrol.html#nonlinear-systems" class="anchor-section" aria-label="Anchor link to header"></a></h3>
