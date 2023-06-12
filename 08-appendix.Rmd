@@ -19,3 +19,10 @@ Pb = c.
 $$
 :::
 
+
+
+# Feedback Linearization {#feedbacklinearization}
+
+
+# Sliding Control {#slidingcontrol}
+
