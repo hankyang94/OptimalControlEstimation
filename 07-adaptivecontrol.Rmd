@@ -123,9 +123,10 @@ which is in the form of \@ref(eq:acbasiclemmaephi). Therefore, we choose the ada
 \end{equation}
 
 **Tracking convergence**. With the control law \@ref(eq:ac-first-linear-control) and the adaptation law \@ref(eq:ac-first-linear-adaptation-law), we can prove that the tracking error converges to zero, using Lemma \@ref(lem:adaptivecontrolbasic). With $\tilde{a}=[\tilde{a}_x, \tilde{a}_r]^T$, let 
-$$
+\begin{equation}
 V(e,\tilde{a}) = e^2 + \frac{|b|}{\gamma} \tilde{a}^T \tilde{a}
-$$
+(\#eq:ac-first-linear-lyapunov)
+\end{equation}
 be a positive definite Lyapunov function candidate with time derivative
 $$
 \dot{V} = - 2a_d e^2 \leq 0.
@@ -240,9 +241,10 @@ where $\tilde{h} = \hat{h} - h$ and $\tilde{a}_i = \hat{a}_i - a_i,i=1,\dots,n$.
 \end{equation}
 
 **Tracking and parameter convergence**. With the following Lyapunov function 
-$$
+\begin{equation}
 V(s,\phi) = |h| s^2 + \frac{1}{\gamma} \phi^T \phi, \quad \dot{V}(s,\phi) -2|k| s^2,
-$$
+(\#eq:ac-singleinput-nonlinear-lyapunov)
+\end{equation}
 the global convergence of $s$ to zero can be easily shown. For parameter convergence, it is easy to see that when $v$ satisfies the persistent excitation condition, we have that $\phi$ converges to zero. (However, the relationship between the reference trajectory $q_d(t)$ and the persistent excitation of $v$ becomes nontrivial due to the nonlinearities $f_i$.)
 
 ### Robotic Manipulator
@@ -255,8 +257,12 @@ H(q) \ddot{q} + C(q,\dot{q})\dot{q} + g(q) = \tau,
 \end{equation} 
 where $H(q) \in \mathbb{S}^{n}_{++}$ is the manipulator inertia matrix (that is positive definite), $C(q,\dot{q})\dot{q}$ is a vector of centripetal and Coriolis torques (with $C(q,\dot{q}) \in \mathbb{R}^{n \times n}$), and $g(q)$ denotes gravitational torques.  
 
+```{r planar-two-link, out.width='60%', fig.show='hold', fig.cap='Planar two-link manipulator', fig.align='center', echo=FALSE}
+knitr::include_graphics('images/drawme.png')
+```
+
 ::: {.example #planartwolinkmanipulator name="Planar Two-link Manipulator"}
-The dynamics of a planar two-link manipulator is given as 
+The dynamics of a planar two-link manipulator in Fig. \@ref(fig:planar-two-link) is 
 \begin{equation}
 \begin{bmatrix} H_{11} & H_{12} \\ H_{21} & H_{22} \end{bmatrix}
 \begin{bmatrix} \ddot{q}_1 \\ \ddot{q}_2 \end{bmatrix}
@@ -291,29 +297,83 @@ The goal of the control design is to have the manipulator track a desired trajec
 $$
 s = \dot{\tilde{q}} + \Lambda \tilde{q} = \dot{q} - \underbrace{\left( \dot{q}_d - \Lambda \tilde{q} \right)}_{\dot{q}_r}
 $$
-where $\Lambda \in \mathbb{S}^n_{++}$ is a user-chosen positive definite matrix (in general we want $-\Lambda$ to be Hurwitz). In this case, $s \rightarrow 0$ implies $\tilde{q} \rightarrow 0$ as $t \rightarrow \infty$. Choosing the control law 
+where $\Lambda \in \mathbb{S}^n_{++}$ is a user-chosen positive definite matrix (in general we want $-\Lambda$ to be Hurwitz). In this case, $s \rightarrow 0$ implies $\tilde{q} \rightarrow 0$ as $t \rightarrow \infty$. Choosing the control law (coming from feedback linearization Appendix \@ref(feedbacklinearization)) 
 \begin{equation}
 \tau = H \ddot{q}_r - K_D s + C \dot{q} + g(q)
 (\#eq:ac-mrac-manipulator-controller-knownparam)
 \end{equation}
-leads to the closed-loop dynamics 
+with $K_D \in \mathbb{S}^n_{++}$ positive definite leads to the closed-loop dynamics 
 $$
-H s + K_D s = 0.
+H \dot{s} + K_D s = 0 \Longleftrightarrow \dot{s} = - H^{-1} K_D s.
 $$
-Therefore, designing $K_D = \lambda H$ with $\lambda > 0$ guarantees the convergence of $s$ to zero.
+Because the matrix $H^{-1} K_D$ is the product of two positive definite matrices (recall $H$ is positive definite and so is $H^{-1}$), it has strictly positive real eigenvalues.^[Consider two positive definite matrices $A$ and $B$, let $B = B^{1/2}B^{1/2}$. The product $AB$ can be written as $AB = A B^{1/2}B^{1/2} = B^{-1/2} (B^{1/2} A B^{1/2}) B^{1/2}$. Therefore $AB$ is [similar](https://en.wikipedia.org/wiki/Matrix_similarity) to $B^{1/2} A B^{1/2}$ and is positive definite.] Hence, $- H^{-1} K_D$ is [Hurwitz](https://en.wikipedia.org/wiki/Hurwitz_matrix) and $s$ is guaranteed to converge to zero.
 
 **Control law**. A closer look at the controller \@ref(eq:ac-mrac-manipulator-controller-knownparam) allows us to write it in the following form 
-$$
-\tau = Y (q,\dot{q},\dot{q}_r,\ddot{q}_r) a - K_D s
-$$
-where $a \in \mathbb{R}^m$ contains all the parameters and $Y \in \mathbb{R}^{n \times m}$ is the matrix that collects all the coeffients of $a$ (i.e., $Ya = H \ddot{q}_r + C \dot{q} + g(q)$). As a result, the adapative control law is naturally
+\begin{align}
+\tau &= H \ddot{q}_r + C(s + \dot{q}_r) + g(q) - K_D s  \\
+&= H \ddot{q}_r + C \dot{q}_r + g(q) + (C - K_D) s \\
+&= Y (q,\dot{q},\dot{q}_r,\ddot{q}_r) a + (C - K_D) s
+\end{align}
+where $a \in \mathbb{R}^m$ contains all the parameters and $Y \in \mathbb{R}^{n \times m}$ is the matrix that collects all the coeffients of $a$ in $H \ddot{q}_r + C \dot{q}_r + g(q)$. As a result, we design the adapative control law to be
 \begin{equation}
 \tau = Y \hat{a} - K_D s,
 (\#eq:ac-mrac-manipulator-controller-unknownparam)
 \end{equation}
-with $\hat{a}$ the time-varying parameter that we wish to adapt.
+with $\hat{a}$ the time-varying parameter that we wish to adapt. Note that here we have done something strange: the adapative control law does not exactly follow the controller \@ref(eq:ac-mrac-manipulator-controller-knownparam) in the known-parameter case. We first separated $s$ from $\dot{q}$ and wrote $Ya = H \ddot{q}_r + C \dot{q}_r + g$ instead of $Ya = H \ddot{q}_r + C \dot{q} + g$; then we dropped the "$C$" matrix in front of $s$ in the adapative control law. The reason for doing this will soon become clear when we analyze the tracking convergence.
 
-**Adaptation law and tracking convergence**. With the adapative control law \@ref(eq:ac-mrac-manipulator-controller-unknownparam), the closed-loop dynamics becomes 
+**Adaptation law and tracking convergence**. 
+Recall that the key of adapative control is to design a control law and an adaptation law such that global converge of the tracking error $s$ can be guaranteed by a Lyapunov function. Looking at the previous Lyapunov functions in \@ref(eq:ac-first-linear-lyapunov) and \@ref(eq:ac-singleinput-nonlinear-lyapunov), we see that they both contain a positive definite term in the tracking error $s$ (or $e$ if in first-order systems) and another positive definite term in the parameter error $\tilde{a}$. This hints us that we may try a Lyapunov candidate function of the following form 
+\begin{equation}
+V = \frac{1}{2} \left( s^T H s + \tilde{a} \Gamma^{-1} \tilde{a} \right),
+(\#eq:ac-mrac-manipulator-controller-unknownparam-lyapunov)
+\end{equation}
+where $\Gamma \in \mathbb{S}^m_{++}$ is a constant positive definite matrix, and $\tilde{a} = \hat{a} - a$ is the parameter error.
+
+The next step would be to derive the time derivative of $V$, which, as we can expect, will contain a term that involves $\dot{H}$ and complicates our analysis. Fortunately, the following lemma will help us.
+
+::: {.lemma #skewsymmetricmanipulator}
+For the manipulator dynamics \@ref(eq:ac-mrac-manipulator-dynamics), there exists a way to define $C$ such that $\dot{H} - 2C$ is skew-symmetric.
+:::
+::: {.proof}
+See Section 9.1, page 399-402 in [@slotine91book-applied]. You should also check if this is true for the planar two-link manipulator dynamics in Example \@ref(exm:planartwolinkmanipulator).
+:::
+
+With Lemma \@ref(lem:skewsymmetricmanipulator), the time derivative of $V$ in \@ref(eq:ac-mrac-manipulator-controller-unknownparam-lyapunov) reads 
+\begin{align}
+\dot{V} & = s^T H \dot{s} + \frac{1}{2} s^T \dot{H} s + \tilde{a}^T \Gamma^{-1} \dot{\tilde{a}} \\
+&= s^T (H \ddot{q} - H \ddot{q}_r) + \frac{1}{2} s^T \dot{H} s + \tilde{a}^T \Gamma^{-1} \dot{\tilde{a}} \\
+&= 
+s^T (\tau - C \dot{q} - g - H \ddot{q}_r ) + \frac{1}{2} s^T \dot{H} s + \tilde{a}^T \Gamma^{-1} \dot{\tilde{a}} (\#eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative-1) \\
+&= s^T (\tau - H \ddot{q}_r - C (s + \dot{q}_r) - g) + \frac{1}{2} s^T \dot{H} s + \tilde{a}^T \Gamma^{-1} \dot{\tilde{a}} \\
+&= s^T (\tau - H \ddot{q}_r - C \dot{q}_r - g) + \frac{1}{2} s^T (\dot{H}- 2C)s + \tilde{a}^T \Gamma^{-1} \dot{\tilde{a}} (\#eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative-2)\\
+&= s^T (\tau - H \ddot{q}_r - C \dot{q}_r - g) + \tilde{a}^T \Gamma^{-1} \dot{\tilde{a}} \\
+&=s^T(Y\hat{a} - K_D s - Ya) + \tilde{a}^T \Gamma^{-1} \dot{\tilde{a}} (\#eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative-3)\\
+&=s^T Y \tilde{a} + \tilde{a}^T \Gamma^{-1} \dot{\tilde{a}} - s^T K_D s (\#eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative),
+\end{align}
+where we used the manipulator dynamics \@ref(eq:ac-mrac-manipulator-dynamics) to rewrite $H\ddot{q}$ in \@ref(eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative-1), used $\dot{H} - 2C$ is skew-symmetric in \@ref(eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative-2), invoked the adapative control law \@ref(eq:ac-mrac-manipulator-controller-unknownparam) and reused $Ya = H \ddot{q}_r + C \dot{q}_r + g(q)$ in \@ref(eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative-3). The derivation above explains why the choice of the control law in \@ref(eq:ac-mrac-manipulator-controller-unknownparam) did not exactly follow its counterpart when the parameters are known: we need to use $s^T Cs$ to cancel $\frac{1}{2} s^T \dot{H} s$ in \@ref(eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative-2). 
+
+We then wonder if we can design $\dot{\tilde{a}}$ such that $\dot{V}$ in \@ref(eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative) is negative semidefinie? This turns out to be straightforward with the adaptation law 
+\begin{equation}
+\dot{\tilde{a}} = -\Gamma Y^T s,
+(\#eq:ac-mrac-manipulator-controller-unknownparam-adaptation-law)
+\end{equation} 
+to make $s^T Y \tilde{a} + \tilde{a}^T \Gamma^{-1} \dot{\tilde{a}}$ vanish and so 
+$$
+\dot{V} = - s^T K_D s \leq 0.
+$$
+
+We are not done yet. To show $s$ converges to zero (which is implied by $\dot{V}$ converges to zero), by Barbalat's stability certificate \@ref(thm:BarbalatStability), it suffices to show
+$$
+\ddot{V} = -2 s^T K_D \dot{s}
+$$ 
+is bounded. We already know $s$ and $\tilde{a}$ are bounded, due to the fact that $V$ in \@ref(eq:ac-mrac-manipulator-controller-unknownparam-lyapunov) is bounded. Therefore, we only need to show $\dot{s}$ is bounded. To do so, we plug the adapative control law \@ref(eq:ac-mrac-manipulator-controller-unknownparam) into the manipulator dynamics \@ref(eq:ac-mrac-manipulator-dynamics) and obtain 
+$$
+H \dot{s} + (C + K_D) s = Y\tilde{a},
+$$
+which implies the boundedness of $\dot{s}$ (note that $H$ is uniformly positive definite, i.e., $H \succeq \alpha I$ for some $\alpha > 0$). This concludes the analysis of the tracking convergence $s \rightarrow 0$ as $t \rightarrow \infty$.
+
+
+<!-- With the adapative control law \@ref(eq:ac-mrac-manipulator-controller-unknownparam), the closed-loop dynamics becomes 
 \begin{align}
 H \ddot{q} + C \dot{q} + g(q) = \tau = Y \hat{a} - K_D s \Longleftrightarrow \\
 H \ddot{q} + C \dot{q} + g(q) = Y(\hat{a} - a) + Y a - K_D s \Longleftrightarrow \\
@@ -321,37 +381,9 @@ H \ddot{q} + C \dot{q} + g(q) = Y \tilde{a} - K_D s + \underbrace{(H \ddot{q}_r 
 H \dot{s} + K_D s = Y \tilde{a} (\#eq:ac-mrac-manipulator-controller-unknownparam-error-dynamics)
 \end{align}
 with $\tilde{a} = \hat{a} - a$ the parameter error. The above equation \@ref(eq:ac-mrac-manipulator-controller-unknownparam-error-dynamics), however, no longer has the familiar form \@ref(eq:acbasiclemmaephi). How do we design the adaptation law to ensure tracking convergence?
-
 Let us try the following function as a Lyapunov function candidate
-\begin{equation}
-V = \frac{1}{2} \left( s^T H s + \tilde{a} \Gamma^{-1} \tilde{a} \right),
-(\#eq:ac-mrac-manipulator-controller-unknownparam-lyapunov)
-\end{equation}
 where $\Gamma \in \mathbb{S}^m_{++}$ is a positive definite constant matrix.
-
-To derive the time-derivative of $V$, we need the following lemma.
-
-::: {.lemma #skewsymmetricmanipulator}
-For the manipulator dynamics \@ref(eq:ac-mrac-manipulator-dynamics), there exists a way to define $C$ such that $\dot{H} - 2C$ is skew-symmetric.
-:::
-::: {.proof}
-<span style="color:red">TBD or add reference.</span>
-:::
-
-With Lemma \@ref(lem:skewsymmetricmanipulator), the time derivative of $V$ in \@ref(eq:ac-mrac-manipulator-controller-unknownparam-lyapunov) reads 
-\begin{align}
-\dot{V} & = s^T H \dot{s} + \frac{1}{2} s^T \dot{H} s + \tilde{a}^T \Gamma^{-1} \dot{\tilde{a}} \\
-&= s^T H (\ddot{q} - \ddot{q}_r) + \frac{1}{2} s^T \dot{H} s + \tilde{a}^T \Gamma^{-1} \dot{\tilde{a}} \\
-&= s^T (\tau - H \ddot{q}_r - C \dot{q} - g) + \frac{1}{2} s^T \dot{H} s + \tilde{a}^T \Gamma^{-1} \dot{\tilde{a}} \\
-&= s^T (\tau - H \ddot{q}_r - C (s + \dot{q}_r) - g) + \frac{1}{2} s^T \dot{H} s + \tilde{a}^T \Gamma^{-1} \dot{\tilde{a}} \\
-&= s^T (\tau - H \ddot{q}_r - C \dot{q}_r - g) + \frac{1}{2} s^T (\dot{H}- 2C)s + \tilde{a}^T \Gamma^{-1} \dot{\tilde{a}} \\
-&= s^T (\tau - H \ddot{q}_r - C \dot{q}_r - g) + \tilde{a}^T \Gamma^{-1} \dot{\tilde{a}}. 
-\end{align}
-Further, with the control law \@ref(eq:ac-mrac-manipulator-controller-unknownparam), we have
-\begin{align}
-\dot{V} &= s^T ( Y\tilde{a} - K_D s + Y a - H \ddot{q}_r - C \dot{q}_r - g) + \tilde{a}^T \Gamma^{-1} \dot{\tilde{a}} \\
-& = s^T (Y\tilde{a} - K_D s + Cs ) + \tilde{a}^T \Gamma^{-1} \dot{\tilde{a}}
-\end{align}
+To derive the time-derivative of $V$, we need the following lemma. -->
 
 ## Certainty-Equivalent Adaptive Control
 
