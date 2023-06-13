@@ -12,6 +12,7 @@ eq:ac-first-linear-optimal-gain
 eq:ac-first-linear-error-dynamics
 eq:ac-first-linear-error-dynamics-transfer
 eq:ac-first-linear-adaptation-law
+eq:ac-first-linear-lyapunov
 eq:ac-first-linear-parameter-equation
 eq:ac-first-linear-persistent-excitation
 eq:ac-singleinput-nonlinear
@@ -20,6 +21,18 @@ eq:ac-singleinput-nonlinear-control-law-knownparam
 eq:ac-singleinput-nonlinear-control-law-unknownparam
 eq:ac-singleinput-nonlinear-error-dynamics
 eq:ac-singleinput-nonlinear-adaptation-law
+eq:ac-singleinput-nonlinear-lyapunov
+eq:ac-mrac-manipulator-dynamics
+fig:planar-two-link
+eq:ac-mrac-manipulator-dynamics-planartwolink
+eq:ac-mrac-manipulator-controller-knownparam
+eq:ac-mrac-manipulator-controller-unknownparam
+eq:ac-mrac-manipulator-controller-unknownparam-lyapunov
+eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative-1
+eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative-2
+eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative-3
+eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative
+eq:ac-mrac-manipulator-controller-unknownparam-adaptation-law
 formulation
 the-basic-problem
 open-loop-v.s.-closed-loop
@@ -28,6 +41,7 @@ adaptivecontrol
 model-reference-adaptive-control
 first-order-systems
 high-order-systems
+robotic-manipulator
 certainty-equivalent-adaptive-control
 the-kalman-yakubovich-lemma
 feedbacklinearization
