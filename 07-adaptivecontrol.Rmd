@@ -48,7 +48,7 @@ Let
 $$
 V(x,\phi) = x^T P x + \frac{|k|}{\gamma} \phi^T \phi,
 $$
-clearly V is positive definite (i.e., $V(0,0)=0$, and $V(x,\phi) > 0$ for all $x \neq 0, \phi \neq 0$). The time derivative of $V$ along the trajectory defined by \@ref(eq:acbasiclemmastatespace) with $\phi$ chosen as in \@ref(eq:acbasiclemmaphilaw) is 
+clearly $V$ is positive definite (i.e., $V(0,0)=0$, and $V(x,\phi) > 0$ for all $x \neq 0, \phi \neq 0$). The time derivative of $V$ along the trajectory defined by \@ref(eq:acbasiclemmastatespace) with $\phi$ chosen as in \@ref(eq:acbasiclemmaphilaw) is 
 \begin{align}
 \dot{V} & = \frac{\partial V}{\partial x} \dot{x} + \frac{\partial V}{\partial \phi} \dot{\phi} \\
 &= x^T (PA + A^T P) x + 2 x^T P b (k \phi^T v) + \frac{2|k|}{\gamma} \phi^T (- \mathrm{sgn}(k) \gamma e v) \\
@@ -306,15 +306,52 @@ Therefore, designing $K_D = \lambda H$ with $\lambda > 0$ guarantees the converg
 $$
 \tau = Y (q,\dot{q},\dot{q}_r,\ddot{q}_r) a - K_D s
 $$
-where $a \in \mathbb{R}^m$ contains all the parameters and $Y \in \mathbb{R}^{n \times m}$ is the matrix that collects all the coeffients of $a$. As a result, the adapative control law is naturally
+where $a \in \mathbb{R}^m$ contains all the parameters and $Y \in \mathbb{R}^{n \times m}$ is the matrix that collects all the coeffients of $a$ (i.e., $Ya = H \ddot{q}_r + C \dot{q} + g(q)$). As a result, the adapative control law is naturally
 \begin{equation}
 \tau = Y \hat{a} - K_D s,
 (\#eq:ac-mrac-manipulator-controller-unknownparam)
 \end{equation}
 with $\hat{a}$ the time-varying parameter that we wish to adapt.
 
-**Adaptation law**. 
+**Adaptation law and tracking convergence**. With the adapative control law \@ref(eq:ac-mrac-manipulator-controller-unknownparam), the closed-loop dynamics becomes 
+\begin{align}
+H \ddot{q} + C \dot{q} + g(q) = \tau = Y \hat{a} - K_D s \Longleftrightarrow \\
+H \ddot{q} + C \dot{q} + g(q) = Y(\hat{a} - a) + Y a - K_D s \Longleftrightarrow \\
+H \ddot{q} + C \dot{q} + g(q) = Y \tilde{a} - K_D s + \underbrace{(H \ddot{q}_r + C \dot{q} + g(q))}_{\text{recall this is }Ya} \Longleftrightarrow \\
+H \dot{s} + K_D s = Y \tilde{a} (\#eq:ac-mrac-manipulator-controller-unknownparam-error-dynamics)
+\end{align}
+with $\tilde{a} = \hat{a} - a$ the parameter error. The above equation \@ref(eq:ac-mrac-manipulator-controller-unknownparam-error-dynamics), however, no longer has the familiar form \@ref(eq:acbasiclemmaephi). How do we design the adaptation law to ensure tracking convergence?
 
+Let us try the following function as a Lyapunov function candidate
+\begin{equation}
+V = \frac{1}{2} \left( s^T H s + \tilde{a} \Gamma^{-1} \tilde{a} \right),
+(\#eq:ac-mrac-manipulator-controller-unknownparam-lyapunov)
+\end{equation}
+where $\Gamma \in \mathbb{S}^m_{++}$ is a positive definite constant matrix.
+
+To derive the time-derivative of $V$, we need the following lemma.
+
+::: {.lemma #skewsymmetricmanipulator}
+For the manipulator dynamics \@ref(eq:ac-mrac-manipulator-dynamics), there exists a way to define $C$ such that $\dot{H} - 2C$ is skew-symmetric.
+:::
+::: {.proof}
+<span style="color:red">TBD or add reference.</span>
+:::
+
+With Lemma \@ref(lem:skewsymmetricmanipulator), the time derivative of $V$ in \@ref(eq:ac-mrac-manipulator-controller-unknownparam-lyapunov) reads 
+\begin{align}
+\dot{V} & = s^T H \dot{s} + \frac{1}{2} s^T \dot{H} s + \tilde{a}^T \Gamma^{-1} \dot{\tilde{a}} \\
+&= s^T H (\ddot{q} - \ddot{q}_r) + \frac{1}{2} s^T \dot{H} s + \tilde{a}^T \Gamma^{-1} \dot{\tilde{a}} \\
+&= s^T (\tau - H \ddot{q}_r - C \dot{q} - g) + \frac{1}{2} s^T \dot{H} s + \tilde{a}^T \Gamma^{-1} \dot{\tilde{a}} \\
+&= s^T (\tau - H \ddot{q}_r - C (s + \dot{q}_r) - g) + \frac{1}{2} s^T \dot{H} s + \tilde{a}^T \Gamma^{-1} \dot{\tilde{a}} \\
+&= s^T (\tau - H \ddot{q}_r - C \dot{q}_r - g) + \frac{1}{2} s^T (\dot{H}- 2C)s + \tilde{a}^T \Gamma^{-1} \dot{\tilde{a}} \\
+&= s^T (\tau - H \ddot{q}_r - C \dot{q}_r - g) + \tilde{a}^T \Gamma^{-1} \dot{\tilde{a}}. 
+\end{align}
+Further, with the control law \@ref(eq:ac-mrac-manipulator-controller-unknownparam), we have
+\begin{align}
+\dot{V} &= s^T ( Y\tilde{a} - K_D s + Y a - H \ddot{q}_r - C \dot{q}_r - g) + \tilde{a}^T \Gamma^{-1} \dot{\tilde{a}} \\
+& = s^T (Y\tilde{a} - K_D s + Cs ) + \tilde{a}^T \Gamma^{-1} \dot{\tilde{a}}
+\end{align}
 
 ## Certainty-Equivalent Adaptive Control
 
