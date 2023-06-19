@@ -58,8 +58,41 @@ where $\Pi$ is the set of all admissible controllers.
 The cost attained by the optimal controller, i.e., $J^\star = J_{\pi^\star}(x_0)$ is called the optimal _cost-to-go_, or the optimal _value function_.
 :::
 
-## Open-Loop v.s. Closed-Loop 
-An important feature of the basic problem in Definition \@ref(def:basicproblem)
+::: {.remark name="Open-loop v.s. Closed-loop"}
+An important feature of the basic problem in Definition \@ref(def:basicproblem) is that the problem seeks _feedback policies_, instead of numerical values of the controls, i.e., $u_k = \mu_k(x_k)$ is in general a function of the state $x_k$. In other words, the controls are executed sequentially, one at a time after observing the state at each time. This is called closed-loop control, and is in general better than open-loop control
+$$
+\min_{u_0,\dots,u_{N-1}} \mathbb{E} \left\{ g_N(x_N) + \sum_{k=0}^{N-1} g_k (x_k, u_k)  \right\}
+$$
+where all the controls are planned at $k=0$. Intuitively, a closed-loop policy is able to utilize the extra information received at each timestep (i.e., it observes $x_{k+1}$ and hence also observes the disturbance $w_k$) to obtain a lower cost than an open-loop controller. Example 1.2.1 in [@bertsekas12book-dpocI] gives a concrete application where a closed-loop policy attains a lower cost than an open-loop policy.
+
+In deterministic control (i.e., when $w_k \equiv 0,\forall k$), however, a closed-loop policy has no advantage over an open-loop controller. This is obvious because at $k=0$, even the open-loop controller predicts perfectly the consequences of all its actions and there is no extra information to be observed at later time steps. In fact, even in stochastic problems, a closed-loop policy may not be advantageous, see Exercise 1.27 in [@bertsekas12book-dpocI].
+:::
+
+## Dynamic Programming and Principle of Optimality
+
+We now introduce a general and powerful algorithm, namely _dynamic programming_ (DP), for solving the optimal control problem \@ref(def:basicproblem). The DP algorithm builds upon a quite simple intuition called the _Bellman principle of optimality_.
+
+::: {.theorem #bellmanoptimality name="Bellman Principle of Optimality"}
+Let $\pi^\star = \{ \mu_0^\star,\mu_1^\star,\dots,\mu_{N-1}^\star \}$ be an optimal policy for the optimal control problem \@ref(def:basicproblem). Assume that when using $\pi^\star$, a given state $x_i$ occurs at timestep $i$ with positive probability (i.e., $x_i$ is reachable at time $i$). 
+
+Now consider the following subproblem where we are at $x_i$ at time $i$ and wish to minimize the cost-to-go from time $i$ to time $N$
+$$
+\min_{\mu_i,\dots,\mu_{N-1}} \mathbb{E} \left\{ g_N(x_N) + \sum_{k=i}^{N-1} g_k (x_k, \mu_k(x_k)) \right\}.
+$$
+Then the truncated policy $\{\mu^\star_i,\mu^\star_{i+1},\dots, \mu^\star_{N-1}\}$ must be optimal for the subproblem.
+:::
+
+Theorem \@ref(thm:bellmanoptimality) can be proved intuitively by contradiction: if the truncated policy $\{\mu^\star_i,\mu^\star_{i+1},\dots, \mu^\star_{N-1}\}$ is not optimal for the subproblem, say there exists a different policy $\{\mu_i',\mu_{i+1}',\dots, \mu_{N-1}'\}$ that attains a lower cost for the subproblem starting at $x_i$ at time $i$. Then the combined policy $\{\mu_0^\star,\dots,\mu^\star_{i-1},\mu_i',\dots,\mu_{N-1}'\}$ must attain a lower cost for the original optimal control problem \@ref(def:basicproblem) due to the additive cost structure, contradicting the optimality of $\pi^\star$. 
+
+The Bellman principle of optimality is not just a principle, but is actually an algorithm. It suggests that, to build an optimal policy, one can start by solving the last-stage subproblem to obtain $\{\mu^\star_{N-1} \}$, and then proceed to solve the subproblem containing the last two stages to obtain $\{ \mu^\star_{N-2},\mu^\star_{N-1} \}$. The recursion continues until optimal policies at all stages are computed. The following theorem formalizes this concept.
+
+::: {.theorem #dynamicprogramming name="Dynamic Programming"}
+The optimal value function $J^\star(x_0)$ of the optimal control problem \@ref(def:basicproblem) (starting from any given initial condition $x_0$) is equal to $J_0(x_0)$, which can be computed as
+\begin{align}
+J_N(X_N) &= g_N(x_N) \\
+J_k(x_k) &= \min_{u_k \in \mathbb{U}} \displaystyle \mathbb{E}_{w_k \sim P_k(\cdot \mid x_k, u_k)} \displaystyle \left\{ g_k(x_k,u_k) + J_{k+1}(f_k(x_k,u_k,w_k) ) \right\}, \ k=N-1,\dots,1,0.
+\end{align}
+:::
 
 
 
