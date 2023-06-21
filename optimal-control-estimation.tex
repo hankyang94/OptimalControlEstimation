@@ -65,6 +65,7 @@
 \setcounter{secnumdepth}{5}
 \usepackage{booktabs}
 \usepackage{amsthm}
+\usepackage[pagebackref=false,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
 \makeatletter
 \def\thm@space@setup{%
   \thm@preskip=8pt plus 2pt minus 4pt
@@ -87,7 +88,7 @@
 
 \title{Optimal Control and Estimation}
 \author{Heng Yang}
-\date{2023-06-13}
+\date{2023-06-20}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -203,10 +204,73 @@ where \(\Pi\) is the set of all admissible controllers.
 The cost attained by the optimal controller, i.e., \(J^\star = J_{\pi^\star}(x_0)\) is called the optimal \emph{cost-to-go}, or the optimal \emph{value function}.
 \end{definition}
 
-\hypertarget{open-loop-v.s.-closed-loop}{%
-\section{Open-Loop v.s. Closed-Loop}\label{open-loop-v.s.-closed-loop}}
+\begin{remark}[Open-loop v.s. Closed-loop]
+An important feature of the basic problem in Definition \ref{def:basicproblem} is that the problem seeks \emph{feedback policies}, instead of numerical values of the controls, i.e., \(u_k = \mu_k(x_k)\) is in general a function of the state \(x_k\). In other words, the controls are executed sequentially, one at a time after observing the state at each time. This is called closed-loop control, and is in general better than open-loop control
+\[
+\min_{u_0,\dots,u_{N-1}} \mathbb{E} \left\{ g_N(x_N) + \sum_{k=0}^{N-1} g_k (x_k, u_k)  \right\}
+\]
+where all the controls are planned at \(k=0\). Intuitively, a closed-loop policy is able to utilize the extra information received at each timestep (i.e., it observes \(x_{k+1}\) and hence also observes the disturbance \(w_k\)) to obtain a lower cost than an open-loop controller. Example 1.2.1 in \citep{bertsekas12book-dpocI} gives a concrete application where a closed-loop policy attains a lower cost than an open-loop policy.
 
-An important feature of the basic problem in Definition \ref{def:basicproblem}
+In deterministic control (i.e., when \(w_k \equiv 0,\forall k\)), however, a closed-loop policy has no advantage over an open-loop controller. This is obvious because at \(k=0\), even the open-loop controller predicts perfectly the consequences of all its actions and there is no extra information to be observed at later time steps. In fact, even in stochastic problems, a closed-loop policy may not be advantageous, see Exercise 1.27 in \citep{bertsekas12book-dpocI}.
+\end{remark}
+
+\hypertarget{dynamic-programming-and-principle-of-optimality}{%
+\section{Dynamic Programming and Principle of Optimality}\label{dynamic-programming-and-principle-of-optimality}}
+
+We now introduce a general and powerful algorithm, namely \emph{dynamic programming} (DP), for solving the optimal control problem \ref{def:basicproblem}. The DP algorithm builds upon a quite simple intuition called the \emph{Bellman principle of optimality}.
+
+\begin{theorem}[Bellman Principle of Optimality]
+\protect\hypertarget{thm:bellmanoptimality}{}\label{thm:bellmanoptimality}Let \(\pi^\star = \{ \mu_0^\star,\mu_1^\star,\dots,\mu_{N-1}^\star \}\) be an optimal policy for the optimal control problem \ref{def:basicproblem}. Assume that when using \(\pi^\star\), a given state \(x_i\) occurs at timestep \(i\) with positive probability (i.e., \(x_i\) is reachable at time \(i\)).
+
+Now consider the following subproblem where we are at \(x_i\) at time \(i\) and wish to minimize the cost-to-go from time \(i\) to time \(N\)
+\[
+\min_{\mu_i,\dots,\mu_{N-1}} \mathbb{E} \left\{ g_N(x_N) + \sum_{k=i}^{N-1} g_k (x_k, \mu_k(x_k)) \right\}.
+\]
+Then the truncated policy \(\{\mu^\star_i,\mu^\star_{i+1},\dots, \mu^\star_{N-1}\}\) must be optimal for the subproblem.
+\end{theorem}
+
+Theorem \ref{thm:bellmanoptimality} can be proved intuitively by contradiction: if the truncated policy \(\{\mu^\star_i,\mu^\star_{i+1},\dots, \mu^\star_{N-1}\}\) is not optimal for the subproblem, say there exists a different policy \(\{\mu_i',\mu_{i+1}',\dots, \mu_{N-1}'\}\) that attains a lower cost for the subproblem starting at \(x_i\) at time \(i\). Then the combined policy \(\{\mu_0^\star,\dots,\mu^\star_{i-1},\mu_i',\dots,\mu_{N-1}'\}\) must attain a lower cost for the original optimal control problem \ref{def:basicproblem} due to the additive cost structure, contradicting the optimality of \(\pi^\star\).
+
+The Bellman principle of optimality is more than just a principle, it is also an algorithm. It suggests that, to build an optimal policy, one can start by solving the last-stage subproblem to obtain \(\{\mu^\star_{N-1} \}\), and then proceed to solve the subproblem containing the last two stages to obtain \(\{ \mu^\star_{N-2},\mu^\star_{N-1} \}\). The recursion continues until optimal policies at all stages are computed. The following theorem formalizes this concept.
+
+\begin{theorem}[Dynamic Programming]
+\protect\hypertarget{thm:dynamicprogramming}{}\label{thm:dynamicprogramming}The optimal value function \(J^\star(x_0)\) of the optimal control problem \ref{def:basicproblem} (starting from any given initial condition \(x_0\)) is equal to \(J_0(x_0)\), which can be computed backwards and recursively as
+\begin{align}
+J_N(X_N) &= g_N(x_N) \\
+J_k(x_k) &= \min_{u_k \in \mathbb{U}} \displaystyle \mathbb{E}_{w_k \sim P_k(\cdot \mid x_k, u_k)} \displaystyle \left\{ g_k(x_k,u_k) + J_{k+1}(f_k(x_k,u_k,w_k) ) \right\}, \ k=N-1,\dots,1,0.
+\label{eq:dpbackwardrecursion}
+\end{align}
+Moreover, if \(u_k^\star = \mu_k^\star(x_k)\) is a minimizer of \eqref{eq:dpbackwardrecursion} for every \(x_k\), then the policy \(\pi^\star = \{\mu_0^\star,\dots,\mu_{N-1}^\star \}\) is optimal.
+\end{theorem}
+
+\begin{proof}
+For any admissible policy \(\pi = \{ \mu_0,\dots,\mu_{N-1} \}\), denote \(\pi^k = \{ \mu_k,\dots,\mu_{N-1} \}\) the last-\((N-k)\)-stage truncated policy. Consider the subproblem consisting of the last \(N-k\) stages starting from \(x_k\), and let \(J^\star_k(x_k)\) be its optimal cost-to-go. Mathematically, this is
+\begin{equation}
+J^\star_{k}(x_k) = \min_{\pi^k} \mathbb{E}_{w_k,\dots,w_{N-1}} \left\{ g_N(x_N) + \sum_{i=k}^{N-1} g_i (x_i,\mu_i(x_i)) \right\}, \quad k=0,1,\dots,N-1.
+\label{eq:dptheoremdefineJkstar}
+\end{equation}
+We define \(J^\star_N(x_N) = g(x_N)\) for \(k=N\).
+
+Our goal is to prove the \(J_k(x_k)\) computed by dynamic programming from \eqref{eq:dpbackwardrecursion} is equal to \(J^\star_k (x_k)\) for all \(k=0,\dots,N\). We will prove this by induction.
+
+Firstly, we already have \(J^\star_N(x_N) = J_N(x_N) = g(x_N)\), so \(k=N\) holds automatically.
+
+Now we assume \(J^\star_{k+1}(x_{k+1}) = J_{k+1}(x_{k+1})\) for all \(x_{k+1}\), and we wish to induce \(J^\star_{k}(x_{k}) = J_{k}(x_{k})\). To show this, we write
+\begin{align}
+\hspace{-16mm} J^\star_{k}(x_k) &= \min_{\pi^k} \mathbb{E}_{w_k,\dots,w_{N-1}} \left\{ g_N(x_N) + \sum_{i=k}^{N-1} g_i (x_i,\mu_i(x_i)) \right\} \label{eq:dpproof-1}\\
+&= \min_{\mu_k,\pi^{k+1}} \mathbb{E}_{w_k,\dots,w_{N-1}} \left\{ g_k(x_k,\mu_k(x_k)) + g_N(x_N) + \sum_{i=k+1}^{N-1} g_i(x_i,\mu_i(x_i))  \right\}
+\label{eq:dpproof-2}\\
+&= \min_{\mu_k} \left[ \min_{\pi^{k+1}} \mathbb{E}_{w_k,\dots,w_{N-1}} \left\{ g_k(x_k,\mu_k(x_k)) + g_N(x_N) + \sum_{i=k+1}^{N-1} g_i(x_i,\mu_i(x_i))  \right\}\right] \label{eq:dpproof-3}\\
+&= \min_{\mu_k} \mathbb{E}_{w_k} \left\{ g_k(x_k,\mu_k(x_k)) + \min_{\pi^{k+1}} \left[ \mathbb{E}_{w_{k+1},\dots,w_{N-1}} \left\{ g_N(x_N) + \sum_{i=k+1}^{N-1} g_i(x_i,\mu_i(x_i))  \right\}  \right]    \right\} \label{eq:dpproof-4}\\
+&= \min_{\mu_k} \mathbb{E}_{w_k} \left\{ g_k(x_k,\mu_k(x_k)) + J^\star_{k+1}(f_k(x_k,\mu_k(x_k),w_k)) \right\} \label{eq:dpproof-5}\\
+&= \min_{\mu_k} \mathbb{E}_{w_k} \left\{ g_k(x_k,\mu_k(x_k)) + J_{k+1}(f_k(x_k,\mu_k(x_k),w_k)) \right\} \label{eq:dpproof-6}\\
+&= \min_{u_k \in \mathbb{U}} \mathbb{E}_{w_k} \left\{ g_k(x_k,\mu_k(x_k)) + J_{k+1}(f_k(x_k,\mu_k(x_k),w_k)) \right\} \label{eq:dpproof-7}\\
+&= J_k(x_k), \label{eq:dpproof-8}
+\end{align}
+where \eqref{eq:dpproof-1} follows from definition \eqref{eq:dptheoremdefineJkstar}; \eqref{eq:dpproof-2} expands \(\pi^k = \{ \mu_k, \pi^{k+1}\}\) and \(\sum_{i=k}^{N-1} g_i = g_k + \sum_{i=k+1}^{N-1}\); \eqref{eq:dpproof-3} writes the joint minimization over \(\mu_k\) and \(\pi^{k+1}\) as equivalently first minimizing over \(\pi^{k+1}\) and then minimizing over \(\mu_k\); \eqref{eq:dpproof-4} is the key step and holds because \(g_k\) and \(w_k\) depend only on \(\mu_k\) but not on \(\pi^{k+1}\); \eqref{eq:dpproof-5} follows again from definition \eqref{eq:dptheoremdefineJkstar} with \(k\) replaced by \(k+1\); \eqref{eq:dpproof-6} results from the induction assumption; \eqref{eq:dpproof-7} clearly holds because any \(\mu_k(x_k)\) belongs to \(\mathbb{U}\) and any element in \(\mathbb{U}\) can be chosen by a feedback controller \(\mu_k\); and lastly \eqref{eq:dpproof-8} follows from the dynamic programming algorithm \eqref{eq:dpbackwardrecursion}.
+
+By induction, this shows that \(J^\star_k(x_k) = J_k(x_k)\) for all \(k=0,\dots,N\).
+\end{proof}
 
 \hypertarget{stability}{%
 \chapter{Stability Analysis}\label{stability}}
@@ -589,7 +653,7 @@ where \(a \in \mathbb{R}^m\) contains all the parameters and \(Y \in \mathbb{R}^
 \tau = Y \hat{a} - K_D s,
 \label{eq:ac-mrac-manipulator-controller-unknownparam}
 \end{equation}
-with \(\hat{a}\) the time-varying parameter that we wish to adapt. Note that here we have done something strange: the adapative control law does not exactly follow the controller \eqref{eq:ac-mrac-manipulator-controller-knownparam} in the known-parameter case. We first separated \(s\) from \(\dot{q}\) and wrote \(Ya = H \ddot{q}_r + C \dot{q}_r + g\) instead of \(Ya = H \ddot{q}_r + C \dot{q} + g\); then we dropped the ``\(C\)'' matrix in front of \(s\) in the adapative control law. The reason for doing this will soon become clear when we analyze the tracking convergence.
+with \(\hat{a}\) the time-varying parameter that we wish to adapt. Note that here we have done something strange: the adapative control law does not exactly follow the controller \eqref{eq:ac-mrac-manipulator-controller-knownparam} in the known-parameter case.\footnote{In fact, one can show that the controller \eqref{eq:ac-mrac-manipulator-controller-unknownparam} with known parameters, i.e., \(\tau = Y a - K_D s\), also guarantees the convergence of \(s\) towards zero, though it is different from the feedback linearization controller \eqref{eq:ac-mrac-manipulator-controller-knownparam}. Try proving the convergence with a Lyapunov candidate \(V = \frac{1}{2}s^T H s\).} We first separated \(s\) from \(\dot{q}\) and wrote \(Ya = H \ddot{q}_r + C \dot{q}_r + g\) instead of \(Ya = H \ddot{q}_r + C \dot{q} + g\); then we dropped the ``\(C\)'' matrix in front of \(s\) in the adapative control law. The reason for doing this will soon become clear when we analyze the tracking convergence.
 
 \textbf{Adaptation law and tracking convergence}.
 Recall that the key of adapative control is to design a control law and an adaptation law such that global converge of the tracking error \(s\) can be guaranteed by a Lyapunov function. Looking at the previous Lyapunov functions in \eqref{eq:ac-first-linear-lyapunov} and \eqref{eq:ac-singleinput-nonlinear-lyapunov}, we see that they both contain a positive definite term in the tracking error \(s\) (or \(e\) if in first-order systems) and another positive definite term in the parameter error \(\tilde{a}\). This hints us that we may try a Lyapunov candidate function of the following form

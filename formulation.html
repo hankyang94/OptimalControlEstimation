@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-06-13" />
+<meta name="date" content="2023-06-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -98,7 +98,7 @@ div.csl-indent {
 <li class="chapter" data-level="1" data-path="formulation.html"><a href="formulation.html"><i class="fa fa-check"></i><b>1</b> The Optimal Control Formulation</a>
 <ul>
 <li class="chapter" data-level="1.1" data-path="formulation.html"><a href="formulation.html#the-basic-problem"><i class="fa fa-check"></i><b>1.1</b> The Basic Problem</a></li>
-<li class="chapter" data-level="1.2" data-path="formulation.html"><a href="formulation.html#open-loop-v.s.-closed-loop"><i class="fa fa-check"></i><b>1.2</b> Open-Loop v.s. Closed-Loop</a></li>
+<li class="chapter" data-level="1.2" data-path="formulation.html"><a href="formulation.html#dynamic-programming-and-principle-of-optimality"><i class="fa fa-check"></i><b>1.2</b> Dynamic Programming and Principle of Optimality</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="stability.html"><a href="stability.html"><i class="fa fa-check"></i><b>2</b> Stability Analysis</a></li>
 <li class="chapter" data-level="3" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html"><i class="fa fa-check"></i><b>3</b> Adaptive Control</a>
@@ -187,11 +187,68 @@ where the expectation is taken over the randomness of <span class="math inline">
 where <span class="math inline">\(\Pi\)</span> is the set of all admissible controllers.
 The cost attained by the optimal controller, i.e., <span class="math inline">\(J^\star = J_{\pi^\star}(x_0)\)</span> is called the optimal <em>cost-to-go</em>, or the optimal <em>value function</em>.</p>
 </div>
+<div class="remark">
+<p><span id="unlabeled-div-2" class="remark"><em>Remark</em> (Open-loop v.s. Closed-loop). </span>An important feature of the basic problem in Definition <a href="formulation.html#def:basicproblem">1.1</a> is that the problem seeks <em>feedback policies</em>, instead of numerical values of the controls, i.e., <span class="math inline">\(u_k = \mu_k(x_k)\)</span> is in general a function of the state <span class="math inline">\(x_k\)</span>. In other words, the controls are executed sequentially, one at a time after observing the state at each time. This is called closed-loop control, and is in general better than open-loop control
+<span class="math display">\[
+\min_{u_0,\dots,u_{N-1}} \mathbb{E} \left\{ g_N(x_N) + \sum_{k=0}^{N-1} g_k (x_k, u_k)  \right\}
+\]</span>
+where all the controls are planned at <span class="math inline">\(k=0\)</span>. Intuitively, a closed-loop policy is able to utilize the extra information received at each timestep (i.e., it observes <span class="math inline">\(x_{k+1}\)</span> and hence also observes the disturbance <span class="math inline">\(w_k\)</span>) to obtain a lower cost than an open-loop controller. Example 1.2.1 in <span class="citation">(<a href="#ref-bertsekas12book-dpocI">Bertsekas 2012</a>)</span> gives a concrete application where a closed-loop policy attains a lower cost than an open-loop policy.</p>
+<p>In deterministic control (i.e., when <span class="math inline">\(w_k \equiv 0,\forall k\)</span>), however, a closed-loop policy has no advantage over an open-loop controller. This is obvious because at <span class="math inline">\(k=0\)</span>, even the open-loop controller predicts perfectly the consequences of all its actions and there is no extra information to be observed at later time steps. In fact, even in stochastic problems, a closed-loop policy may not be advantageous, see Exercise 1.27 in <span class="citation">(<a href="#ref-bertsekas12book-dpocI">Bertsekas 2012</a>)</span>.</p>
 </div>
-<div id="open-loop-v.s.-closed-loop" class="section level2 hasAnchor" number="1.2">
-<h2><span class="header-section-number">1.2</span> Open-Loop v.s. Closed-Loop<a href="formulation.html#open-loop-v.s.-closed-loop" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>An important feature of the basic problem in Definition <a href="formulation.html#def:basicproblem">1.1</a></p>
+</div>
+<div id="dynamic-programming-and-principle-of-optimality" class="section level2 hasAnchor" number="1.2">
+<h2><span class="header-section-number">1.2</span> Dynamic Programming and Principle of Optimality<a href="formulation.html#dynamic-programming-and-principle-of-optimality" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We now introduce a general and powerful algorithm, namely <em>dynamic programming</em> (DP), for solving the optimal control problem <a href="formulation.html#def:basicproblem">1.1</a>. The DP algorithm builds upon a quite simple intuition called the <em>Bellman principle of optimality</em>.</p>
+<div class="theorem">
+<p><span id="thm:bellmanoptimality" class="theorem"><strong>Theorem 1.1  (Bellman Principle of Optimality) </strong></span>Let <span class="math inline">\(\pi^\star = \{ \mu_0^\star,\mu_1^\star,\dots,\mu_{N-1}^\star \}\)</span> be an optimal policy for the optimal control problem <a href="formulation.html#def:basicproblem">1.1</a>. Assume that when using <span class="math inline">\(\pi^\star\)</span>, a given state <span class="math inline">\(x_i\)</span> occurs at timestep <span class="math inline">\(i\)</span> with positive probability (i.e., <span class="math inline">\(x_i\)</span> is reachable at time <span class="math inline">\(i\)</span>).</p>
+<p>Now consider the following subproblem where we are at <span class="math inline">\(x_i\)</span> at time <span class="math inline">\(i\)</span> and wish to minimize the cost-to-go from time <span class="math inline">\(i\)</span> to time <span class="math inline">\(N\)</span>
+<span class="math display">\[
+\min_{\mu_i,\dots,\mu_{N-1}} \mathbb{E} \left\{ g_N(x_N) + \sum_{k=i}^{N-1} g_k (x_k, \mu_k(x_k)) \right\}.
+\]</span>
+Then the truncated policy <span class="math inline">\(\{\mu^\star_i,\mu^\star_{i+1},\dots, \mu^\star_{N-1}\}\)</span> must be optimal for the subproblem.</p>
+</div>
+<p>Theorem <a href="formulation.html#thm:bellmanoptimality">1.1</a> can be proved intuitively by contradiction: if the truncated policy <span class="math inline">\(\{\mu^\star_i,\mu^\star_{i+1},\dots, \mu^\star_{N-1}\}\)</span> is not optimal for the subproblem, say there exists a different policy <span class="math inline">\(\{\mu_i&#39;,\mu_{i+1}&#39;,\dots, \mu_{N-1}&#39;\}\)</span> that attains a lower cost for the subproblem starting at <span class="math inline">\(x_i\)</span> at time <span class="math inline">\(i\)</span>. Then the combined policy <span class="math inline">\(\{\mu_0^\star,\dots,\mu^\star_{i-1},\mu_i&#39;,\dots,\mu_{N-1}&#39;\}\)</span> must attain a lower cost for the original optimal control problem <a href="formulation.html#def:basicproblem">1.1</a> due to the additive cost structure, contradicting the optimality of <span class="math inline">\(\pi^\star\)</span>.</p>
+<p>The Bellman principle of optimality is more than just a principle, it is also an algorithm. It suggests that, to build an optimal policy, one can start by solving the last-stage subproblem to obtain <span class="math inline">\(\{\mu^\star_{N-1} \}\)</span>, and then proceed to solve the subproblem containing the last two stages to obtain <span class="math inline">\(\{ \mu^\star_{N-2},\mu^\star_{N-1} \}\)</span>. The recursion continues until optimal policies at all stages are computed. The following theorem formalizes this concept.</p>
+<div class="theorem">
+<p><span id="thm:dynamicprogramming" class="theorem"><strong>Theorem 1.2  (Dynamic Programming) </strong></span>The optimal value function <span class="math inline">\(J^\star(x_0)\)</span> of the optimal control problem <a href="formulation.html#def:basicproblem">1.1</a> (starting from any given initial condition <span class="math inline">\(x_0\)</span>) is equal to <span class="math inline">\(J_0(x_0)\)</span>, which can be computed backwards and recursively as
+<span class="math display" id="eq:dpbackwardrecursion">\[\begin{align}
+J_N(X_N) &amp;= g_N(x_N) \\
+J_k(x_k) &amp;= \min_{u_k \in \mathbb{U}} \displaystyle \mathbb{E}_{w_k \sim P_k(\cdot \mid x_k, u_k)} \displaystyle \left\{ g_k(x_k,u_k) + J_{k+1}(f_k(x_k,u_k,w_k) ) \right\}, \ k=N-1,\dots,1,0.
+\tag{1.5}
+\end{align}\]</span>
+Moreover, if <span class="math inline">\(u_k^\star = \mu_k^\star(x_k)\)</span> is a minimizer of <a href="formulation.html#eq:dpbackwardrecursion">(1.5)</a> for every <span class="math inline">\(x_k\)</span>, then the policy <span class="math inline">\(\pi^\star = \{\mu_0^\star,\dots,\mu_{N-1}^\star \}\)</span> is optimal.</p>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-3" class="proof"><em>Proof</em>. </span>For any admissible policy <span class="math inline">\(\pi = \{ \mu_0,\dots,\mu_{N-1} \}\)</span>, denote <span class="math inline">\(\pi^k = \{ \mu_k,\dots,\mu_{N-1} \}\)</span> the last-<span class="math inline">\((N-k)\)</span>-stage truncated policy. Consider the subproblem consisting of the last <span class="math inline">\(N-k\)</span> stages starting from <span class="math inline">\(x_k\)</span>, and let <span class="math inline">\(J^\star_k(x_k)\)</span> be its optimal cost-to-go. Mathematically, this is
+<span class="math display" id="eq:dptheoremdefineJkstar">\[\begin{equation}
+J^\star_{k}(x_k) = \min_{\pi^k} \mathbb{E}_{w_k,\dots,w_{N-1}} \left\{ g_N(x_N) + \sum_{i=k}^{N-1} g_i (x_i,\mu_i(x_i)) \right\}, \quad k=0,1,\dots,N-1.
+\tag{1.6}
+\end{equation}\]</span>
+We define <span class="math inline">\(J^\star_N(x_N) = g(x_N)\)</span> for <span class="math inline">\(k=N\)</span>.</p>
+<p>Our goal is to prove the <span class="math inline">\(J_k(x_k)\)</span> computed by dynamic programming from <a href="formulation.html#eq:dpbackwardrecursion">(1.5)</a> is equal to <span class="math inline">\(J^\star_k (x_k)\)</span> for all <span class="math inline">\(k=0,\dots,N\)</span>. We will prove this by induction.</p>
+<p>Firstly, we already have <span class="math inline">\(J^\star_N(x_N) = J_N(x_N) = g(x_N)\)</span>, so <span class="math inline">\(k=N\)</span> holds automatically.</p>
+<p>Now we assume <span class="math inline">\(J^\star_{k+1}(x_{k+1}) = J_{k+1}(x_{k+1})\)</span> for all <span class="math inline">\(x_{k+1}\)</span>, and we wish to induce <span class="math inline">\(J^\star_{k}(x_{k}) = J_{k}(x_{k})\)</span>. To show this, we write
+<span class="math display" id="eq:dpproof-8" id="eq:dpproof-7" id="eq:dpproof-6" id="eq:dpproof-5" id="eq:dpproof-4" id="eq:dpproof-3" id="eq:dpproof-2" id="eq:dpproof-1">\[\begin{align}
+\hspace{-16mm} J^\star_{k}(x_k) &amp;= \min_{\pi^k} \mathbb{E}_{w_k,\dots,w_{N-1}} \left\{ g_N(x_N) + \sum_{i=k}^{N-1} g_i (x_i,\mu_i(x_i)) \right\} \tag{1.7}\\
+&amp;= \min_{\mu_k,\pi^{k+1}} \mathbb{E}_{w_k,\dots,w_{N-1}} \left\{ g_k(x_k,\mu_k(x_k)) + g_N(x_N) + \sum_{i=k+1}^{N-1} g_i(x_i,\mu_i(x_i))  \right\}
+\tag{1.8}\\
+&amp;= \min_{\mu_k} \left[ \min_{\pi^{k+1}} \mathbb{E}_{w_k,\dots,w_{N-1}} \left\{ g_k(x_k,\mu_k(x_k)) + g_N(x_N) + \sum_{i=k+1}^{N-1} g_i(x_i,\mu_i(x_i))  \right\}\right] \tag{1.9}\\
+&amp;= \min_{\mu_k} \mathbb{E}_{w_k} \left\{ g_k(x_k,\mu_k(x_k)) + \min_{\pi^{k+1}} \left[ \mathbb{E}_{w_{k+1},\dots,w_{N-1}} \left\{ g_N(x_N) + \sum_{i=k+1}^{N-1} g_i(x_i,\mu_i(x_i))  \right\}  \right]    \right\} \tag{1.10}\\
+&amp;= \min_{\mu_k} \mathbb{E}_{w_k} \left\{ g_k(x_k,\mu_k(x_k)) + J^\star_{k+1}(f_k(x_k,\mu_k(x_k),w_k)) \right\} \tag{1.11}\\
+&amp;= \min_{\mu_k} \mathbb{E}_{w_k} \left\{ g_k(x_k,\mu_k(x_k)) + J_{k+1}(f_k(x_k,\mu_k(x_k),w_k)) \right\} \tag{1.12}\\
+&amp;= \min_{u_k \in \mathbb{U}} \mathbb{E}_{w_k} \left\{ g_k(x_k,\mu_k(x_k)) + J_{k+1}(f_k(x_k,\mu_k(x_k),w_k)) \right\} \tag{1.13}\\
+&amp;= J_k(x_k), \tag{1.14}
+\end{align}\]</span>
+where <a href="formulation.html#eq:dpproof-1">(1.7)</a> follows from definition <a href="formulation.html#eq:dptheoremdefineJkstar">(1.6)</a>; <a href="formulation.html#eq:dpproof-2">(1.8)</a> expands <span class="math inline">\(\pi^k = \{ \mu_k, \pi^{k+1}\}\)</span> and <span class="math inline">\(\sum_{i=k}^{N-1} g_i = g_k + \sum_{i=k+1}^{N-1}\)</span>; <a href="formulation.html#eq:dpproof-3">(1.9)</a> writes the joint minimization over <span class="math inline">\(\mu_k\)</span> and <span class="math inline">\(\pi^{k+1}\)</span> as equivalently first minimizing over <span class="math inline">\(\pi^{k+1}\)</span> and then minimizing over <span class="math inline">\(\mu_k\)</span>; <a href="formulation.html#eq:dpproof-4">(1.10)</a> is the key step and holds because <span class="math inline">\(g_k\)</span> and <span class="math inline">\(w_k\)</span> depend only on <span class="math inline">\(\mu_k\)</span> but not on <span class="math inline">\(\pi^{k+1}\)</span>; <a href="formulation.html#eq:dpproof-5">(1.11)</a> follows again from definition <a href="formulation.html#eq:dptheoremdefineJkstar">(1.6)</a> with <span class="math inline">\(k\)</span> replaced by <span class="math inline">\(k+1\)</span>; <a href="formulation.html#eq:dpproof-6">(1.12)</a> results from the induction assumption; <a href="formulation.html#eq:dpproof-7">(1.13)</a> clearly holds because any <span class="math inline">\(\mu_k(x_k)\)</span> belongs to <span class="math inline">\(\mathbb{U}\)</span> and any element in <span class="math inline">\(\mathbb{U}\)</span> can be chosen by a feedback controller <span class="math inline">\(\mu_k\)</span>; and lastly <a href="formulation.html#eq:dpproof-8">(1.14)</a> follows from the dynamic programming algorithm <a href="formulation.html#eq:dpbackwardrecursion">(1.5)</a>.</p>
+<p>By induction, this shows that <span class="math inline">\(J^\star_k(x_k) = J_k(x_k)\)</span> for all <span class="math inline">\(k=0,\dots,N\)</span>.</p>
+</div>
 
+</div>
+</div>
+<h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-bertsekas12book-dpocI" class="csl-entry">
+Bertsekas, Dimitri. 2012. <em>Dynamic Programming and Optimal Control: Volume i</em>. Vol. 1. Athena scientific.
 </div>
 </div>
             </section>
