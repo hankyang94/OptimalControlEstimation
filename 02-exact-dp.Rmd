@@ -1,0 +1,3 @@
+# Exact Dynamic Programming {#exactdp}
+
+## Linear Quadratic Regulator {#lqr}
