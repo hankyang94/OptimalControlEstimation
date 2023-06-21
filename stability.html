@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 2 Stability Analysis | Optimal Control and Estimation</title>
+  <title>Chapter 4 Stability Analysis | Optimal Control and Estimation</title>
   <meta name="description" content="Lecture notes for Harvard ES/AM 158 Introduction to Optimal Control and Estimation." />
   <meta name="generator" content="bookdown 0.33 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 2 Stability Analysis | Optimal Control and Estimation" />
+  <meta property="og:title" content="Chapter 4 Stability Analysis | Optimal Control and Estimation" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Lecture notes for Harvard ES/AM 158 Introduction to Optimal Control and Estimation." />
   <meta name="github-repo" content="hankyang94/OptimalControlEstimation" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 2 Stability Analysis | Optimal Control and Estimation" />
+  <meta name="twitter:title" content="Chapter 4 Stability Analysis | Optimal Control and Estimation" />
   
   <meta name="twitter:description" content="Lecture notes for Harvard ES/AM 158 Introduction to Optimal Control and Estimation." />
   
@@ -23,14 +23,14 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-06-20" />
+<meta name="date" content="2023-06-21" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="formulation.html"/>
+<link rel="prev" href="approximatedp.html"/>
 <link rel="next" href="adaptivecontrol.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -100,21 +100,27 @@ div.csl-indent {
 <li class="chapter" data-level="1.1" data-path="formulation.html"><a href="formulation.html#the-basic-problem"><i class="fa fa-check"></i><b>1.1</b> The Basic Problem</a></li>
 <li class="chapter" data-level="1.2" data-path="formulation.html"><a href="formulation.html#dynamic-programming-and-principle-of-optimality"><i class="fa fa-check"></i><b>1.2</b> Dynamic Programming and Principle of Optimality</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="stability.html"><a href="stability.html"><i class="fa fa-check"></i><b>2</b> Stability Analysis</a></li>
-<li class="chapter" data-level="3" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html"><i class="fa fa-check"></i><b>3</b> Adaptive Control</a>
+<li class="chapter" data-level="2" data-path="exactdp.html"><a href="exactdp.html"><i class="fa fa-check"></i><b>2</b> Exact Dynamic Programming</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#model-reference-adaptive-control"><i class="fa fa-check"></i><b>3.1</b> Model-Reference Adaptive Control</a>
-<ul>
-<li class="chapter" data-level="3.1.1" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#first-order-systems"><i class="fa fa-check"></i><b>3.1.1</b> First-Order Systems</a></li>
-<li class="chapter" data-level="3.1.2" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#high-order-systems"><i class="fa fa-check"></i><b>3.1.2</b> High-Order Systems</a></li>
-<li class="chapter" data-level="3.1.3" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#robotic-manipulator"><i class="fa fa-check"></i><b>3.1.3</b> Robotic Manipulator</a></li>
+<li class="chapter" data-level="2.1" data-path="exactdp.html"><a href="exactdp.html#lqr"><i class="fa fa-check"></i><b>2.1</b> Linear Quadratic Regulator</a></li>
 </ul></li>
-<li class="chapter" data-level="3.2" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#certainty-equivalent-adaptive-control"><i class="fa fa-check"></i><b>3.2</b> Certainty-Equivalent Adaptive Control</a></li>
+<li class="chapter" data-level="3" data-path="approximatedp.html"><a href="approximatedp.html"><i class="fa fa-check"></i><b>3</b> Approximate Dynamic Programming</a></li>
+<li class="chapter" data-level="4" data-path="stability.html"><a href="stability.html"><i class="fa fa-check"></i><b>4</b> Stability Analysis</a></li>
+<li class="chapter" data-level="5" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html"><i class="fa fa-check"></i><b>5</b> Adaptive Control</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#model-reference-adaptive-control"><i class="fa fa-check"></i><b>5.1</b> Model-Reference Adaptive Control</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#first-order-systems"><i class="fa fa-check"></i><b>5.1.1</b> First-Order Systems</a></li>
+<li class="chapter" data-level="5.1.2" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#high-order-systems"><i class="fa fa-check"></i><b>5.1.2</b> High-Order Systems</a></li>
+<li class="chapter" data-level="5.1.3" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#robotic-manipulator"><i class="fa fa-check"></i><b>5.1.3</b> Robotic Manipulator</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#certainty-equivalent-adaptive-control"><i class="fa fa-check"></i><b>5.2</b> Certainty-Equivalent Adaptive Control</a></li>
 </ul></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
-<li class="chapter" data-level="A" data-path="the-kalman-yakubovich-lemma.html"><a href="the-kalman-yakubovich-lemma.html"><i class="fa fa-check"></i><b>A</b> The Kalman-Yakubovich Lemma</a></li>
-<li class="chapter" data-level="B" data-path="feedbacklinearization.html"><a href="feedbacklinearization.html"><i class="fa fa-check"></i><b>B</b> Feedback Linearization</a></li>
-<li class="chapter" data-level="C" data-path="slidingcontrol.html"><a href="slidingcontrol.html"><i class="fa fa-check"></i><b>C</b> Sliding Control</a></li>
+<li class="chapter" data-level="A" data-path="appconvex.html"><a href="appconvex.html"><i class="fa fa-check"></i><b>A</b> Convex Analysis and Optimization</a></li>
+<li class="chapter" data-level="B" data-path="the-kalman-yakubovich-lemma.html"><a href="the-kalman-yakubovich-lemma.html"><i class="fa fa-check"></i><b>B</b> The Kalman-Yakubovich Lemma</a></li>
+<li class="chapter" data-level="C" data-path="feedbacklinearization.html"><a href="feedbacklinearization.html"><i class="fa fa-check"></i><b>C</b> Feedback Linearization</a></li>
+<li class="chapter" data-level="D" data-path="slidingcontrol.html"><a href="slidingcontrol.html"><i class="fa fa-check"></i><b>D</b> Sliding Control</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -136,13 +142,13 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="stability" class="section level1 hasAnchor" number="2">
-<h1><span class="header-section-number">Chapter 2</span> Stability Analysis<a href="stability.html#stability" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="stability" class="section level1 hasAnchor" number="4">
+<h1><span class="header-section-number">Chapter 4</span> Stability Analysis<a href="stability.html#stability" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <div class="lemma">
-<p><span id="lem:Barbalat" class="lemma"><strong>Lemma 2.1  (Barbalat's Lemma) </strong></span>Let <span class="math inline">\(f(t)\)</span> be differentiable, if</p>
+<p><span id="lem:Barbalat" class="lemma"><strong>Lemma 4.1  (Barbalat's Lemma) </strong></span>Let <span class="math inline">\(f(t)\)</span> be differentiable, if</p>
 <ul>
 <li><p><span class="math inline">\(\lim_{t \rightarrow \infty} f(t)\)</span> is finite, and</p></li>
-<li><p><span class="math inline">\(\dot{f}(t)\)</span> is uniformly continuous,<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p></li>
+<li><p><span class="math inline">\(\dot{f}(t)\)</span> is uniformly continuous,<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a></p></li>
 </ul>
 <p>then
 <span class="math display">\[
@@ -150,7 +156,7 @@ div.csl-indent {
 \]</span></p>
 </div>
 <div class="theorem">
-<p><span id="thm:BarbalatStability" class="theorem"><strong>Theorem 2.1  (Barbalat's Stability Certificate) </strong></span>If a scalar function <span class="math inline">\(V(x,t)\)</span> satisfies</p>
+<p><span id="thm:BarbalatStability" class="theorem"><strong>Theorem 4.1  (Barbalat's Stability Certificate) </strong></span>If a scalar function <span class="math inline">\(V(x,t)\)</span> satisfies</p>
 <ul>
 <li><p><span class="math inline">\(V(x,t)\)</span> is lower bounded,</p></li>
 <li><p><span class="math inline">\(\dot{V}(x,t)\)</span> is negative semidefinite</p></li>
@@ -159,14 +165,14 @@ div.csl-indent {
 <p>then <span class="math inline">\(\dot{V}(x,t) \rightarrow 0\)</span> as <span class="math inline">\(t \rightarrow \infty\)</span>.</p>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-4" class="proof"><em>Proof</em>. </span><span class="math inline">\(V(x,t)\)</span> is lower bounded and <span class="math inline">\(\dot{V}\)</span> is negative semidefinite implies the limit of <span class="math inline">\(V\)</span> as <span class="math inline">\(t \rightarrow \infty\)</span> is finite (note that <span class="math inline">\(V(x,t) \leq V(x(0),0)\)</span>). Then the theorem clearly follows from Barbalat’s Lemma <a href="stability.html#lem:Barbalat">2.1</a>.</p>
+<p><span id="unlabeled-div-4" class="proof"><em>Proof</em>. </span><span class="math inline">\(V(x,t)\)</span> is lower bounded and <span class="math inline">\(\dot{V}\)</span> is negative semidefinite implies the limit of <span class="math inline">\(V\)</span> as <span class="math inline">\(t \rightarrow \infty\)</span> is finite (note that <span class="math inline">\(V(x,t) \leq V(x(0),0)\)</span>). Then the theorem clearly follows from Barbalat’s Lemma <a href="stability.html#lem:Barbalat">4.1</a>.</p>
 </div>
 
 </div>
 <div class="footnotes">
 <hr />
-<ol start="1">
-<li id="fn1"><p>A sufficient condition for this to hold is that <span class="math inline">\(\ddot{f}\)</span> exists and is bounded.<a href="stability.html#fnref1" class="footnote-back">↩︎</a></p></li>
+<ol start="3">
+<li id="fn3"><p>A sufficient condition for this to hold is that <span class="math inline">\(\ddot{f}\)</span> exists and is bounded.<a href="stability.html#fnref3" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
             </section>
@@ -174,7 +180,7 @@ div.csl-indent {
           </div>
         </div>
       </div>
-<a href="formulation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="approximatedp.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="adaptivecontrol.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
@@ -206,7 +212,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/hankyang94/OptimalControlEstimation/blob/main/03-stability.Rmd",
+"link": "https://github.com/hankyang94/OptimalControlEstimation/blob/main/04-stability.Rmd",
 "text": "Edit"
 },
 "history": {
