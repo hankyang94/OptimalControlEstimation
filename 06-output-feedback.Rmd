@@ -1,0 +1,139 @@
+
+# Output Feedback {#output-feedback}
+
+Consider a continuous-time dynamical system
+\begin{equation}
+\begin{split}
+\dot{x} &= f(x,u)  \\
+y &= h(x,u)
+\end{split} 
+(\#eq:output-feedback-system)
+\end{equation}
+where $x(t) \in \mathbb{X} \subseteq \mathbb{R}^n$ the state of the system, $u(t) \in \mathbb{U} \subseteq \mathbb{R}^m$ the control (or input), $y(t) \in \mathbb{Y} \subseteq \mathbb{R}^{d}$ the output (i.e., measurement) of the state and control, and $f,g$ the evolution and measurement functions (which are sufficiently smooth).
+
+
+
+## State Observer {#state-observer}
+
+For the system \@ref(eq:output-feedback-system), let us denote 
+
+- $X(x_0,t_0;t;u)$ the solution at time $t$ with input $u$ and initial condition $x_0$ at time $t_0$; when $t_0 = 0$, we write $X(x_0;t;u)$
+
+- $Y(x_0,t_0;t;u)$ the output at time $t$ with input $u$ and initial condition $x_0$ at time $t_0$, i.e., $Y(x_0,t_0;t;u) = h(X(x_0,t_0;t;u), u(t))$; when $t_0 = 0$, we write $y_{x_0,u}(t)$; 
+
+- $\mathcal{X}_0$ a subset of $\mathbb{X}$ containing the initial conditions we consider; for any $x_0 \in \mathcal{X}_0$, we write $\sigma^+_{\mathcal{X}}(x_0;u)$ the maximal time of existence of $X(x_0,\cdot;t;u)$ in a set $\mathcal{X}$
+
+- $\mathcal{U}$ the set of all sufficiently many times differentiable inputs $u: [0,+\infty) \rightarrow \mathbb{U}$.
+
+The problem of state observation is to produce an estimated state $\hat{x}(t)$ of the true state $X(x_0,t_0;t;u)$ based on knowledge about the system \@ref(eq:output-feedback-system) and information about the history of inputs $u_{[0,t]}$ and outputs $y_{[0,t]}$, so that $\hat{x}(t)$ asymptotically converges to $X(x_0,t_0;t;u)$, for any initial condition $x_0 \in \mathcal{X}_0$ and any input $u \in \mathcal{U}$.
+
+There are multiple ways for solving the problem of state observation (see e.g., [@bernard19book-observer], [@bernard22arc-observer]). Here we are particularly interested in the approach using a _state observer_, i.e., a dynamical system whose _internal state_ evolves according to the history of inputs and outputs, from which a state estimation can be reconstructed that guarantees asymptotic convergence to the true state. We formalize this concept below.
+
+::: {.definition #stateobserver name="State Observer"}
+A state observer for system \@ref(eq:output-feedback-system) is a couple $(\mathcal{F},\mathcal{T})$ such that 
+
+1. $\mathcal{F}: \mathbb{R}^{l} \times \mathbb{R}^{m} \times \mathbb{R}^d \rightarrow \mathbb{R}^l$ is continuous
+
+2. $\mathcal{T}$ is a family of continuous functions indexed by $u \in \mathcal{U}$ where each $\mathcal{T}_u: \mathbb{R}^l \times [0,+\infty) \rightarrow \mathbb{R}^n$ respects the causality condition
+$$
+\forall \tilde{u}: [0,+\infty) \rightarrow \mathbb{R}^m,\forall t \in [0,+\infty), u_{[0,t]} = \tilde{u}_{[0,t]} \Rightarrow  \mathcal{F}_u (\cdot,t) = \mathcal{F}_{\tilde{u}}(\cdot,t).
+$$
+
+3. For any $u \in \mathcal{U}$, any $z_0 \in \mathbb{R}^l$, and any $x_0 \in \mathcal{X}_0$ such that $\sigma^+_{\mathbb{X}}(x_0;u) = +\infty$, any solution $Z(z_0;t;u,y_{x_0,u})$^[We say "any solution" because there may be several solutions to the observer \@ref(eq:observer-definition-1) due to $\mathcal{F}$ only being continuous. This is not a problem as long as any such solution satisfies the required convergence property.] to 
+\begin{equation}
+\dot{z} = \mathcal{F}(z,u,y_{x_0,u})
+(\#eq:observer-definition-1)
+\end{equation} 
+initialized at $z_0$ at time $0$ with input $u$ and $y_{x_0,u}$ exists on $[0,+\infty)$ and satisfies
+\begin{equation}
+\lim_{t \rightarrow \infty} \Vert \hat{X}(x_0,z_0;t;u) - X(x_0;t;u) \Vert = 0,
+(\#eq:observer-definition-2)
+\end{equation}
+with 
+\begin{equation}
+\hat{X}(x_0,z_0;t;u) = \mathcal{T}_u(Z(z_0;t;u,y_{x_0,u}),t).
+(\#eq:observer-definition-3)
+\end{equation}
+In words, (i) the state observer maintains an internal state (or latent state) $z \in \mathbb{R}^l$ that evolves according to the latent dynamics $\mathcal{F}$ in \@ref(eq:observer-definition-1), where $u$ and $y_{x_0,u}$ are inputs; (ii) an estimated state can be reconstructed from the internal state using $\mathcal{T}_u$ as in \@ref(eq:observer-definition-3); and (iii) the error between the estimated state and the true state (defined by a proper distance function $\Vert \cdot \Vert$ on $\mathbb{X}$) converges to zero.
+
+If $\mathcal{T}_u$ is the same for any $u \in \mathcal{U}$ and is also time independent, then we say $\mathcal{T}$ is _stationary_.^[The time dependence of $\mathcal{T}_u$ enables us to cover the case where the knowledge of the $u$ and $y_{x_0,u}$ is used to construct the estimate from the observer state. In particular, using the output sometimes can reduce the dimension of the observer state (and thus alleviate the computations), thus obtaining a reduced-order observer. For example, see [@karagiannis05cdc-nonlinear] and [@astolfi03tac-immersion].] In this case, we can simply write the observer \@ref(eq:observer-definition-1) and \@ref(eq:observer-definition-3) as 
+\begin{equation}
+\begin{split}
+\dot{z} &= \mathcal{F}(z,u,y) \\
+\hat{x} &= \mathcal{T}(z).
+\end{split}
+(\#eq:observer-definition-simple)
+\end{equation}
+
+If $\hat{x}$ can be read off directly from $z$, then we say the observer \@ref(eq:observer-definition-simple) is _in the given coordinates_. A special case of this is when $\hat{x} = z$, i.e., the internal state of the observer is the same as the system state. 
+:::
+
+### General Design Strategy
+
+::: {.theorem #observerdesignmeta name="Meta Observer"}
+Let $F: \mathbb{R}^p \times \mathbb{R}^m \times \mathbb{R}^d \rightarrow \mathbb{R}^p$, $H: \mathbb{R}^p \times \mathbb{R}^m \rightarrow \mathbb{R}^d$ and $\mathcal{F}: \mathbb{R}^p \times \mathbb{R}^m \times \mathbb{R}^d \rightarrow \mathbb{R}^p$ be continuous functions such that 
+\begin{equation}
+\dot{\hat{\xi}} = \mathcal{F}(\hat{\xi}, u, \tilde{y})
+(\#eq:meta-observer-zeta-hat)
+\end{equation}
+is an observer for 
+\begin{equation}
+\dot{\xi} = F(\xi,u,H(\xi,u)), \quad \tilde{y} = H(\xi,u),
+(\#eq:meta-observer-zeta)
+\end{equation}
+i.e., for any $\xi_0,\hat{\xi}_0 \in \mathbb{R}^p$ and any $u \in \mathcal{U}$, the solution of the observer \@ref(eq:meta-observer-zeta-hat), 
+denoted by $\hat{\Xi}(\hat{\xi}_0;t;u;\tilde{y}_{\xi_0,u})$, and the solution of the true system \@ref(eq:meta-observer-zeta), denoted by $\Xi(\xi_0;t;u)$, satisfy
+\begin{equation}
+\lim_{t \rightarrow \infty} \Vert \hat{\Xi}(\hat{\xi}_0;t;u;\tilde{y}_{\xi_0,u}) - \Xi(\xi_0;t;u) \Vert = 0.
+(\#eq:meta-observer-zeta-converge)
+\end{equation}
+Note that the observer \@ref(eq:meta-observer-zeta-hat) is stationary and in the given coordinates for system \@ref(eq:meta-observer-zeta). Indeed the internal state of the observer is the same as the system state.
+
+Now suppose for any $u \in \mathcal{U}$, there exists a continuous function (i.e., coordinate transformation) $T_u: \mathbb{R}^n \times \mathbb{R} \rightarrow \mathbb{R}^p$ and a subset $\mathcal{X}$ of $\mathbb{X}$ such that 
+
+1. For any $x_0 \in \mathcal{X}_0$ such that $\sigma^+_{\mathbb{X}}(x_0;u) = + \infty$, $X(x_0;\cdot;u)$ remains in $\mathcal{X}$
+
+2. There exists a concave $\mathcal{K}$^[A function $\rho: \mathbb{R}_+ \rightarrow \mathbb{R}_+$ is a $\mathcal{K}$ function if $\rho(0) = 0$, $\rho$ is continuous, and $\rho$ is increasing.] function $\rho$ and a positive number $\bar{t}$ such that 
+$$
+\Vert x_a - x_b \Vert \leq \rho (| T_u(x_a,t) - T_u(x_b,t) |), \quad \forall x_a,x_b \in \mathcal{X}, t \geq \bar{t},
+$$
+i.e., $x \mapsto T_u(x,t)$ becomes injective on $\mathcal{X}$,^[An injective function is a function $f$ that maps distinct elements of its domain to distinct elements. That is, $f(x_a) = f(x_b)$ implies $x_a = x_b$, or equivalently, $x_a \neq x_b$ implies $f(x_a) \neq f(x_b)$.] uniformly in time and space, after a certain time $\bar{t}$.
+
+3. $T_u$ transforms the system \@ref(eq:output-feedback-system) into the system \@ref(eq:meta-observer-zeta), i.e., for all $x \in \mathcal{X}$ and all $t \geq 0$, we have
+\begin{equation}
+L_{(f,1)} T_u(x,t) = F(T_u(x,t),u,h(x,u)), \quad h(x,u) = H(T_u(x,t),u),
+(\#eq:meta-observer-transform)
+\end{equation}
+where $L_{(f,1)} T_u(x,t)$ is the Lie derivative of $T_u$ along the vector field $(f,1)$
+$$
+L_{(f,1)} T_u(x,t) = \lim_{\tau \rightarrow 0} \frac{ T_u (X(x,t;t+\tau;u),t+\tau) - T_u(x,t) }{\tau}.
+$$
+
+4. $T_u$ respects the causality condition
+$$
+\forall \tilde{u}: [0,+\infty) \rightarrow \mathbb{R}^m, \forall t \in [0,+\infty), u_{[0,t]} = \tilde{u}_{[0,t]} \Rightarrow T_u(\cdot,t) = T_{\tilde{u}}(\cdot,t).
+$$
+
+Then, for any $u \in \mathcal{U}$, there exists a function $\mathcal{T}_u: \mathbb{R}^p \times [0,+\infty) \rightarrow \mathcal{X}$ (satisfying the causality condition) such that for any $t \geq \bar{t}$, $\xi \mapsto \mathcal{T}_u (\xi, t)$ is uniformly continuous on $\mathbb{R}^p$ and satisfies 
+$$
+\mathcal{T}_u \left( T_u(x,t),t \right) = x, \forall x \in \mathcal{X}.
+$$
+Moreover, denoting $\mathcal{T}$ the family of functions $\mathcal{T}_u$ for $u \in \mathcal{U}$, the couple $(\mathcal{F}, \mathcal{T})$ is an observer for the system \@ref(eq:output-feedback-system) initialized in $\mathcal{X}_0$.
+:::
+::: {.proof}
+See Theorem 1.1 in [@bernard19book-observer].
+:::
+
+A simpler version of Theorem \@ref(thm:observerdesignmeta) where the coordinate transformation $T_u$ is stationary and fixed for all $u$ is stated below as a corollary.
+
+::: {.corollary #observerdesignmetafixedT name="Meta Observer with Fixed Transformation"}
+Let $F: \mathbb{R}^p \times \mathbb{R}^m \times \mathbb{R}^d \rightarrow \mathbb{R}^p$, $H: \mathbb{R}^p \times \mathbb{R}^m \rightarrow \mathbb{R}^d$ and $\mathcal{F}: \mathbb{R}^p \times \mathbb{R}^m \times \mathbb{R}^d \rightarrow \mathbb{R}^p$ be continuous functions such that \@ref(eq:meta-observer-zeta-hat) is an observer for \@ref(eq:meta-observer-zeta). 
+
+Suppose there exists a continuous coordinate transformation $T: \mathbb{R}^p \rightarrow \mathbb{R}^n$ and a compact subset $\Omega$ of $\mathbb{R}^n$ such that 
+
+1. For any $x_0 \in \mathcal{X}_0$ such that $\sigma^+_{\mathbb{X}}(x_0;u) = + \infty$, $X(x_0;\cdot;u)$ remains in $\Omega$
+
+2. $x \mapsto T(x)$ is injective on $\Omega$
+
+3. $T$ transforms the system \@ref(eq:output-feedback-system) into system \@ref(eq:meta-observer-zeta)
+:::
