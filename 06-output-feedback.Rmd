@@ -136,4 +136,188 @@ Suppose there exists a continuous coordinate transformation $T: \mathbb{R}^p \ri
 2. $x \mapsto T(x)$ is injective on $\Omega$
 
 3. $T$ transforms the system \@ref(eq:output-feedback-system) into system \@ref(eq:meta-observer-zeta)
+$$
+L_f T(x) = F(T(x),u,h(x,u)), \quad h(x,u) = H(T(x),u),
+$$
+where $L_f T(x)$ is the Lie derivative of $T(x)$ along $f$
+$$
+L_f T(x) = \lim_{\tau \rightarrow 0} \frac{ T(X(x,t;t+\tau;u))  - T(x)}{\tau}.
+$$
+
+Then, there exists a uniformly continuous function $\mathcal{T}:\mathbb{R}^p \rightarrow \mathbb{R}^{n}$ such that 
+$$
+\mathcal{T}(T(x)) = x, \quad \forall x \in \Omega,
+$$
+and $(\mathcal{F},\mathcal{T})$ is an observer for system \@ref(eq:output-feedback-system) initialized in $\mathcal{X}_0$.
 :::
+
+Theorem \@ref(thm:observerdesignmeta) and Corollary \@ref(cor:observerdesignmetafixedT) suggest the following general observer design strategy:
+
+1. Find an injective coordinate transformation $T_u$ (that may be time-varying and also dependent on $u$) that transforms the original system \@ref(eq:output-feedback-system) with coordinate $x$ into a new system \@ref(eq:meta-observer-zeta) with coordinate $\xi$
+
+2. Design an observer \@ref(eq:meta-observer-zeta-hat), $\hat{\xi}$, for the new system
+
+3. Compute a left inverse, $\mathcal{T}_u$, of the transformation $T_u$ to recover a state estimation $\hat{x}$ of the original system.
+
+The transformed systems \@ref(eq:meta-observer-zeta) are typically referred to as _normal forms_, or in my opinion, _templates_. 
+
+Of course, the general design strategy is rather conceptual, and in order for it to be practical, we have to answer three questions.
+
+- What templates do we have, what are their associated observers, and what are the conditions for the observers to be asymptotically converging?
+
+- What kinds of (nonlinear) systems can be transformed into the templates, and how to perform the transformation?
+
+- How to invert the coordinate transformation? Is it analytical or does it require numerical approximation?
+
+In the following sections, we will study several representative normal forms and answer the above questions.
+
+
+### State-affine Template 
+
+Consider an instance of the normal form \@ref(eq:meta-observer-zeta) where the dynamics is linear in $\xi$, but the coefficients are time-varying and dependent on the input and output
+\begin{equation}
+\dot{\xi} = A(u,y) \xi + B(u,y), \quad y = C(u) \xi.
+(\#eq:state-affine-template)
+\end{equation}
+
+Kalman and Bucy originally proposed an observer for linear time-varying systems [@kalman61-new]. The result is later extened by [@besanccon96ejc-observer] and [@hammouri90cdc-observer] to deal with coefficient matrices dependent on the control. The following theorem is a direct extension of the result from [@besanccon96ejc-observer] and [@hammouri90cdc-observer] by considering $(u,y)$ as an augmented control input.
+
+Before presenting the theorem, we need to introduce the following terminology.
+
+::: {.definition #lineartimevarying name="Linear Time-Varying System"}
+For a linear time-varying system of the form 
+\begin{equation}
+\dot{\chi} = A(\nu) \chi, \quad y = C(\nu) \chi,
+(\#eq:linear-time-varying)
+\end{equation}
+with input $\nu$ and output $y$, we define
+
+- the _transition matrix_ $\Psi_\nu$ as the unique solution to 
+$$
+\Psi_\nu (t,t) = I, \quad \frac{\partial \Psi_\nu}{\partial \tau}(\tau,t) = A(\nu(\tau)) \Psi_\nu (\tau, t).
+$$
+Note that the transition matrix is used to express the solution to \@ref(eq:linear-time-varying) because it satisfies 
+$$
+\chi(\chi_0,t_0;t;\nu) = \Psi_\nu (t,t_0) \chi_0.
+$$
+
+- the _observability grammian_ as 
+$$
+\Gamma_\nu (t_0,t_1) = \int_{t_0}^{t_1} \Psi_\nu (\tau,t_0)^T C(\nu(\tau))^T C(\nu(\tau)) \Psi_\nu (\tau,t_0) d\tau.
+$$
+
+- the _backward observability grammian_ as
+$$
+\Gamma_\nu^b (t_0,t_1) = \int_{t_0}^{t_1} \Psi_\nu (\tau,t_1)^T C(\nu(\tau))^T C(\nu(\tau)) \Psi_\nu (\tau,t_1) d\tau.
+$$
+:::
+
+We now introduce the Kalman-Bucy Observer for the state-affine template \@ref(eq:state-affine-template).
+
+::: {.theorem #kalmanbucystateaffine name="Kalman-Bucy Observer"}
+Let $y_{\xi_0,u}(t) = C(u(t)) \Xi (\xi_0;t;u)$ be the output of system \@ref(eq:state-affine-template) at time $t$ with initialization $\xi_0$ and control $u$. Suppose the control $u$ satisfies 
+
+- For any $\xi_0$, $t \mapsto A(u(t),y_{\xi_0,u}(t))$ is bounded by $A_{\max}$
+
+- For any $\xi_0$, the augmented input $\nu = (u,y_{\xi_0,u})$ is _regularly persistent_ for the dynamics
+\begin{equation}
+\dot{\chi} = A(\nu) \chi , \quad y = C(\nu) \chi 
+(\#eq:kbobserver-auxilarydynamics)
+\end{equation}
+uniformly with respect to $\xi_0$. That is, there exist strictly positive numbers $t_0,\bar{t}$, and $\alpha$ such that for any $\xi_0$ and any time $t \geq t_0 \geq \bar{t}$,
+$$
+\Gamma_v^b (t-\bar{t}, t) \succeq \alpha I,
+$$
+where $\Gamma_v^b$ is the _backward observability grammian_ associated with system \@ref(eq:kbobserver-auxilarydynamics). 
+
+Then, given any positive definite matrix $P_0$, there exist $\alpha_1,\alpha_2 > 0$ such that for any $\lambda \geq 2 A_{\max}$ and any $\xi_0 \in \mathbb{R}^p$, the matrix differential equation 
+\begin{equation}
+\dot{P} = -\lambda P - A(u,y)^T P - P A(u,y) + C(u)^T C(u)
+(\#eq:kbobserver-matrixdifferential)
+\end{equation}
+initialized at $P(0) = P_0$ admits a unique solution satisfying $P(t)=P(t)^T$ and 
+$$
+\alpha_2 I \succeq P(t) \succeq \alpha_1 I.
+$$
+Moreover, the system 
+\begin{equation}
+\dot{\hat{\xi}} = A(u,y) \hat{\xi} + B(u,y) + K (y - C(u)\hat{\xi})
+(\#eq:kbobserver-observer)
+\end{equation}
+with a time-varying gain matrix
+\begin{equation}
+K = P^{-1} C(u)^T 
+(\#eq:kbobserver-gain)
+\end{equation}
+is an observer for the state-affine system \@ref(eq:state-affine-template).
+:::
+
+Let us work out an example of the Kalman-Bucy Observer for nonlinear systems.
+
+::: {.example #pendulumkbobserver name="Kalman-Bucy Observer for A Simple Pendulum"}
+Consider a simple pendulum dynamics model
+\begin{equation}
+x = \begin{bmatrix}
+\theta \\ \dot{\theta}
+\end{bmatrix}, \quad 
+\dot{x} = \begin{bmatrix} 
+\dot{\theta} \\
+- \frac{1}{ml^2} (b \dot{\theta} + mgl \sin \theta) 
+\end{bmatrix} + 
+\begin{bmatrix}
+0 \\
+\frac{1}{ml^2} 
+\end{bmatrix} u, \quad y = \theta,
+(\#eq:kbobserver-pendulum)
+\end{equation}
+where $\theta$ the angular position of the pendulum from the vertical line, $m > 0$ the mass of the pendulum, $l > 0$ the length, $g$ the gravitational constant, $b > 0$ the dampling coefficient, and $u$ the control input (torque). 
+
+We assume we can only observe the angular position of the pendulum in \@ref(eq:kbobserver-pendulum), e.g., using a camera, but not the angular velocity. Our goal is to construct an observer that can provide a full state estimation. 
+
+We first write the pendulum dynamics in a new coordinate system so that it is in the state-affine normal form \@ref(eq:state-affine-template). We choose $\xi = [\mathfrak{s},\mathfrak{c},\dot{\theta}]^T$ with $\mathfrak{s} = \sin \theta$ and $\mathfrak{c} = \cos \theta$. Clearly, we will be able to observe $y = [\mathfrak{s},\mathfrak{c}]^T$ in this new coordinate. The state-affine normal form of the pendulum dynamics reads
+\begin{equation}
+\begin{split}
+\dot{\xi} = \begin{bmatrix}
+\mathfrak{c} \dot{\theta} \\
+- \mathfrak{s} \dot{\theta} \\
+- \frac{1}{ml^2} (b \dot{\theta} + mgl \mathfrak{s} ) +  \frac{1}{ml^2} u
+\end{bmatrix} & = 
+\underbrace{\begin{bmatrix}
+0 & 0 & \mathfrak{c} \\
+0 & 0 & -\mathfrak{s} \\
+0 & 0 & -\frac{b}{ml^2}
+\end{bmatrix}}_{=:A(u,y)} \xi + 
+\underbrace{\begin{bmatrix}
+0 \\ 0 \\ \frac{u - mgl \mathfrak{s}}{ml^2}
+\end{bmatrix}}_{=:B(u,y)} \\
+y & = \underbrace{\begin{bmatrix}
+1 & 0 & 0 \\
+0 & 1 & 0
+\end{bmatrix}}_{=:C(u)} \xi
+\end{split}.
+(\#eq:pendulum-state-affine)
+\end{equation} 
+Note that $C(u)$ is in fact time-invariant, and $B(u,y)$ only depends on $u$; but we adopt the same notation as the general state-affine template \@ref(eq:state-affine-template). 
+
+In order to use the Kalman-Bucy observer in Theorem \@ref(thm:kalmanbucystateaffine), we need to verify the boundedness of $A(u,y)$, and the regular persistence of \@ref(eq:kbobserver-auxilarydynamics).
+
+**Boundedness of $A(u,y)$**. We can easily show the boundedness of $A(u,y)$ by writing 
+$$
+\Vert A(u,y) \xi \Vert = \Vert \xi_3 (\mathfrak{c} - \mathfrak{s} - b/ml^2) \Vert  \leq |\xi_3| \sqrt{3} \sqrt{\mathfrak{c}^2 + \mathfrak{s}^2 + b^2 / m^2 l^4} \leq \Vert \xi \Vert \sqrt{3 + 3b^2 / m^2 l^4}. 
+$$
+Therefore, we can take $A_{\max} = \sqrt{3 + 3b^2 / m^2 l^4}$.
+<span style="color:red">Does the $A_{\max}$ in Theorem \@ref(thm:kalmanbucystateaffine) refer to the bound in operator norm?</span>
+
+**Regular persistence**. We write the backward observability grammian of system \@ref(eq:kbobserver-auxilarydynamics)
+$$
+\Gamma_\nu^b(t - \bar{t},t) = \int_{t - \bar{t}}^t \Psi_\nu(\tau,t)^T C^T C \Psi_\nu (\tau, t) d \tau = \int_{t - \bar{t}}^t \Psi_\nu(\tau,t)^T \begin{bmatrix} 
+1 & 0 & 0 \\
+0 & 1 & 0 \\
+0 & 0 & 0
+\end{bmatrix}
+\Psi_\nu (\tau, t) d \tau
+$$
+<span style="color:red">Does the transition matrix $\Psi_\nu (\tau, t)$ have an analytical form?</span>
+:::
+
+### Triangular Template
