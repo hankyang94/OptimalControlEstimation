@@ -261,6 +261,7 @@ where $H(q) \in \mathbb{S}^{n}_{++}$ is the manipulator inertia matrix (that is 
 knitr::include_graphics('images/drawme.png')
 ```
 
+::: {.examplebox}
 ::: {.example #planartwolinkmanipulator name="Planar Two-link Manipulator"}
 The dynamics of a planar two-link manipulator in Fig. \@ref(fig:planar-two-link) is 
 \begin{equation}
@@ -287,6 +288,7 @@ a_2 &= I_e + m_e l_{ce}^2 \\
 a_3 &= m_e l_1 l_{ce} \cos \delta_e \\
 a_4 &= m_e l_1 l_{ce} \sin \delta_e.
 \end{align}
+:::
 :::
 
 As seen from the above example, the parameters $a$ (which are nonlinear functions of the physical parameters such as mass and length) enter linearly in $H$ and $C$ ($g(q)$ is ignored because the manipulator is on a horizontal plane). 

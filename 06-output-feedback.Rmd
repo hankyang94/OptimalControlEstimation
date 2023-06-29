@@ -197,6 +197,7 @@ The Luenberger observer is an elegant result in observer design (and even in con
 
 You may think the Luenberger template is restricting because it requires the system to be linear (up to the only nonlinearly in $B(u,y)$). However, it turns out the Luenberger template is already quite useful, as I will show in the following pendulum example.
 
+::: {.examplebox}
 ::: {.example #pendulumLuenberger name="Luenberger Observer for A Simple Pendulum"}
 Consider a simple pendulum dynamics model
 \begin{equation}
@@ -234,7 +235,6 @@ y & = \underbrace{\begin{bmatrix}
 \end{split}.
 (\#eq:pendulum-state-affine)
 \end{equation}
-:::
 
 In order for us to use the Luenberger observer, we need to check if the pair $(A,C)$ is detectable. We can easily find the eigenvalues and eigenvectors of $A$:
 $$
@@ -267,6 +267,8 @@ $$
 With $k > 0$, we know $A- KC$ is guaranteed to be Hurwitz (the two eigenvalues of $A-KC$ are $-k$ and $-b/ml^2$), and we have obtained an observer!
 
 <span style="color:red">TBD: simulate the observer.</span>
+:::
+:::
 
 
 ### State-affine Template 
@@ -352,6 +354,7 @@ is an observer for the state-affine system \@ref(eq:state-affine-template).
 
 Let us work out an example of the Kalman-Bucy Observer for nonlinear systems.
 
+::: {.examplebox}
 ::: {.example #pendulumkbobserver name="Kalman-Bucy Observer for A Simple Pendulum"}
 Let us reconsider the pendulum dynamics \@ref(eq:kbobserver-pendulum) but this time try to design a Kalman-Bucy observer.
 
@@ -399,6 +402,7 @@ $$
 \Psi_\nu (\tau, t) d \tau
 $$
 <span style="color:red">Does the transition matrix $\Psi_\nu (\tau, t)$ have an analytical form?</span>
+:::
 :::
 
 ### Triangular Template
