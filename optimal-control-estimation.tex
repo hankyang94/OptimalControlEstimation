@@ -66,12 +66,24 @@
 \usepackage{booktabs}
 \usepackage{amsthm}
 \usepackage[pagebackref=false,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
+\usepackage{tcolorbox}
+\usepackage{color}
+\usepackage{framed}
+\setlength{\fboxsep}{.8em}
 \makeatletter
 \def\thm@space@setup{%
   \thm@preskip=8pt plus 2pt minus 4pt
   \thm@postskip=\thm@preskip
 }
 \makeatother
+
+
+\newtcolorbox{examplebox}{
+  colback=green,
+  colframe=orange,
+  coltext=black,
+  boxsep=5pt,
+  arc=4pt}
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
@@ -600,7 +612,6 @@ y & = \underbrace{\begin{bmatrix}
 \end{split}.
 \label{eq:pendulum-state-affine}
 \end{equation}
-\end{example}
 
 In order for us to use the Luenberger observer, we need to check if the pair \((A,C)\) is detectable. We can easily find the eigenvalues and eigenvectors of \(A\):
 \[
@@ -633,6 +644,7 @@ K = \begin{bmatrix} k \\ 0 \end{bmatrix}, \quad A - KC =
 With \(k > 0\), we know \(A- KC\) is guaranteed to be Hurwitz (the two eigenvalues of \(A-KC\) are \(-k\) and \(-b/ml^2\)), and we have obtained an observer!
 
 {TBD: simulate the observer.}
+\end{example}
 
 \hypertarget{state-affine-template}{%
 \subsection{State-affine Template}\label{state-affine-template}}
