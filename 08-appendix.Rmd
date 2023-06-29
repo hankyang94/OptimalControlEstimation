@@ -1,5 +1,28 @@
 # (APPENDIX) Appendix {-} 
 
+# Linear System Theory
+
+Consider the linear time-invariant (LTI) system 
+\begin{equation}
+\dot{x} = A x + B u, \quad y = C x + D u,
+(\#eq:app-linear-system)
+\end{equation}
+where $x \in \mathbb{R}^n$ the state, $u \in \mathbb{R}^m$ the control, and $A,B,C,D$ are constant matrices with proper sizes. 
+
+::: {.theorem #ltidetectable name="Detectability"}
+The following are equivalent for the LTI system \@ref(eq:app-linear-system):
+
+1. $(A,C)$ is detectable;
+
+2. The matrix $\begin{bmatrix} A - \lambda I \\ C \end{bmatrix}$ has full column rank for all $\lambda \in \mathbb{C}$ such that $\mathrm{Re}(\lambda) \geq 0$ ;
+
+3. For all $\lambda$ and $x$ such that $Ax = \lambda x$ and $\mathrm{Re}(\lambda) \geq 0$, $Cx \neq 0$;
+
+4. There exists a matrix $L$ such that $A + LC$ is Hurwitz;
+
+5. $(A^*,C^*)$ is stabilizable.
+:::
+
 
 # Convex Analysis and Optimization {#appconvex}
 
