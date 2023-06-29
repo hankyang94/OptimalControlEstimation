@@ -111,8 +111,9 @@ div.csl-indent {
 <li class="chapter" data-level="5.1" data-path="output-feedback.html"><a href="output-feedback.html#state-observer"><i class="fa fa-check"></i><b>5.1</b> State Observer</a>
 <ul>
 <li class="chapter" data-level="5.1.1" data-path="output-feedback.html"><a href="output-feedback.html#general-design-strategy"><i class="fa fa-check"></i><b>5.1.1</b> General Design Strategy</a></li>
-<li class="chapter" data-level="5.1.2" data-path="output-feedback.html"><a href="output-feedback.html#state-affine-template"><i class="fa fa-check"></i><b>5.1.2</b> State-affine Template</a></li>
-<li class="chapter" data-level="5.1.3" data-path="output-feedback.html"><a href="output-feedback.html#triangular-template"><i class="fa fa-check"></i><b>5.1.3</b> Triangular Template</a></li>
+<li class="chapter" data-level="5.1.2" data-path="output-feedback.html"><a href="output-feedback.html#luenberger-template"><i class="fa fa-check"></i><b>5.1.2</b> Luenberger Template</a></li>
+<li class="chapter" data-level="5.1.3" data-path="output-feedback.html"><a href="output-feedback.html#state-affine-template"><i class="fa fa-check"></i><b>5.1.3</b> State-affine Template</a></li>
+<li class="chapter" data-level="5.1.4" data-path="output-feedback.html"><a href="output-feedback.html#triangular-template"><i class="fa fa-check"></i><b>5.1.4</b> Triangular Template</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html"><i class="fa fa-check"></i><b>6</b> Adaptive Control</a>
@@ -126,10 +127,11 @@ div.csl-indent {
 <li class="chapter" data-level="6.2" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#certainty-equivalent-adaptive-control"><i class="fa fa-check"></i><b>6.2</b> Certainty-Equivalent Adaptive Control</a></li>
 </ul></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
-<li class="chapter" data-level="A" data-path="appconvex.html"><a href="appconvex.html"><i class="fa fa-check"></i><b>A</b> Convex Analysis and Optimization</a></li>
-<li class="chapter" data-level="B" data-path="the-kalman-yakubovich-lemma.html"><a href="the-kalman-yakubovich-lemma.html"><i class="fa fa-check"></i><b>B</b> The Kalman-Yakubovich Lemma</a></li>
-<li class="chapter" data-level="C" data-path="feedbacklinearization.html"><a href="feedbacklinearization.html"><i class="fa fa-check"></i><b>C</b> Feedback Linearization</a></li>
-<li class="chapter" data-level="D" data-path="slidingcontrol.html"><a href="slidingcontrol.html"><i class="fa fa-check"></i><b>D</b> Sliding Control</a></li>
+<li class="chapter" data-level="A" data-path="linear-system-theory.html"><a href="linear-system-theory.html"><i class="fa fa-check"></i><b>A</b> Linear System Theory</a></li>
+<li class="chapter" data-level="B" data-path="appconvex.html"><a href="appconvex.html"><i class="fa fa-check"></i><b>B</b> Convex Analysis and Optimization</a></li>
+<li class="chapter" data-level="C" data-path="the-kalman-yakubovich-lemma.html"><a href="the-kalman-yakubovich-lemma.html"><i class="fa fa-check"></i><b>C</b> The Kalman-Yakubovich Lemma</a></li>
+<li class="chapter" data-level="D" data-path="feedbacklinearization.html"><a href="feedbacklinearization.html"><i class="fa fa-check"></i><b>D</b> Feedback Linearization</a></li>
+<li class="chapter" data-level="E" data-path="slidingcontrol.html"><a href="slidingcontrol.html"><i class="fa fa-check"></i><b>E</b> Sliding Control</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -296,20 +298,109 @@ and <span class="math inline">\((\mathcal{F},\mathcal{T})\)</span> is an observe
 </ul>
 <p>In the following sections, we will study several representative normal forms and answer the above questions.</p>
 </div>
-<div id="state-affine-template" class="section level3 hasAnchor" number="5.1.2">
-<h3><span class="header-section-number">5.1.2</span> State-affine Template<a href="output-feedback.html#state-affine-template" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="luenberger-template" class="section level3 hasAnchor" number="5.1.2">
+<h3><span class="header-section-number">5.1.2</span> Luenberger Template<a href="output-feedback.html#luenberger-template" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Consider an instance of the normal form <a href="output-feedback.html#eq:meta-observer-zeta">(5.7)</a> as follows:
+<span class="math display" id="eq:Luenberger-linear-template">\[\begin{equation}
+\dot{\xi} = A \xi + B(u,y), \quad y = C \xi,
+\tag{5.10}
+\end{equation}\]</span>
+where <span class="math inline">\(A,C\)</span> are constant matrices, and <span class="math inline">\(B(u,y)\)</span> can depend nonlinearly on <span class="math inline">\(u\)</span> and <span class="math inline">\(y\)</span>.</p>
+<p>For this template, we have the well-known Luenberger observer.</p>
+<div class="theorem">
+<p><span id="thm:LuenbergerLinear" class="theorem"><strong>Theorem 5.2  (Luenberger Observer) </strong></span>If the pair <span class="math inline">\((A,C)\)</span> is detectable (see Theorem <a href="linear-system-theory.html#thm:ltidetectable">A.1</a>), then there exists a matrix <span class="math inline">\(K\)</span> such that <span class="math inline">\(A-KC\)</span> is Hurwitz and the system
+<span class="math display" id="eq:Luenberger-Linear">\[\begin{equation}
+\dot{\hat{\xi}} = A \hat{\xi} + B(u,y) + K(y - C \hat{\xi})
+\tag{5.11}
+\end{equation}\]</span>
+is an observer for <a href="output-feedback.html#eq:Luenberger-linear-template">(5.10)</a>.</p>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-6" class="proof"><em>Proof</em>. </span><span style="color:red">TBD.</span></p>
+</div>
+<p>The Luenberger observer is an elegant result in observer design (and even in control theory) that has far-reaching impact. In my opinion, the essence of observer design is twofold: (i) to simulate the dynamics when the state estimation is correct, and (ii) to correct the state estimation from observation when it is off. These two pieces of ideas are evident in <a href="output-feedback.html#eq:Luenberger-Linear">(5.11)</a>: the observer is a copy of the original dynamics (<span class="math inline">\(A \hat{\xi} + B(u,y)\)</span>) plus a feedback correction from the difference between the “imagined” observation <span class="math inline">\(C\hat{\xi}\)</span> and the true observation <span class="math inline">\(y\)</span>.</p>
+<p>You may think the Luenberger template is restricting because it requires the system to be linear (up to the only nonlinearly in <span class="math inline">\(B(u,y)\)</span>). However, it turns out the Luenberger template is already quite useful, as I will show in the following pendulum example.</p>
+<div class="example">
+<p><span id="exm:pendulumLuenberger" class="example"><strong>Example 5.1  (Luenberger Observer for A Simple Pendulum) </strong></span>Consider a simple pendulum dynamics model
+<span class="math display" id="eq:kbobserver-pendulum">\[\begin{equation}
+x = \begin{bmatrix}
+\theta \\ \dot{\theta}
+\end{bmatrix}, \quad
+\dot{x} = \begin{bmatrix}
+\dot{\theta} \\
+- \frac{1}{ml^2} (b \dot{\theta} + mgl \sin \theta)
+\end{bmatrix} +
+\begin{bmatrix}
+0 \\
+\frac{1}{ml^2}
+\end{bmatrix} u, \quad y = \theta,
+\tag{5.12}
+\end{equation}\]</span>
+where <span class="math inline">\(\theta\)</span> the angular position of the pendulum from the vertical line, <span class="math inline">\(m &gt; 0\)</span> the mass of the pendulum, <span class="math inline">\(l &gt; 0\)</span> the length, <span class="math inline">\(g\)</span> the gravitational constant, <span class="math inline">\(b &gt; 0\)</span> the dampling coefficient, and <span class="math inline">\(u\)</span> the control input (torque).</p>
+<p>We assume we can only observe the angular position of the pendulum in <a href="output-feedback.html#eq:kbobserver-pendulum">(5.12)</a>, e.g., using a camera, but not the angular velocity. Our goal is to construct an observer that can provide a full state estimation.</p>
+<p>We first note that the pendulum dynamics <a href="output-feedback.html#eq:kbobserver-pendulum">(5.12)</a> can actually be written in the (linear) Luenberger template <a href="output-feedback.html#eq:Luenberger-linear-template">(5.10)</a> as<a href="#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a>
+<span class="math display" id="eq:pendulum-state-affine">\[\begin{equation}
+\begin{split}
+\dot{x} &amp; = \underbrace{\begin{bmatrix}
+0 &amp; 1 \\
+0 &amp; - \frac{b}{ml^2}
+\end{bmatrix}}_{=:A} x +
+\underbrace{\begin{bmatrix}
+0 \\
+\frac{u - mgl \sin \theta }{ml^2}
+\end{bmatrix}}_{=:B(u,y)} \\
+y &amp; = \underbrace{\begin{bmatrix}
+1 &amp; 0
+\end{bmatrix}}_{=:C} x
+\end{split}.
+\tag{5.13}
+\end{equation}\]</span></p>
+</div>
+<p>In order for us to use the Luenberger observer, we need to check if the pair <span class="math inline">\((A,C)\)</span> is detectable. We can easily find the eigenvalues and eigenvectors of <span class="math inline">\(A\)</span>:
+<span class="math display">\[
+A \begin{bmatrix}
+1 \\ 0
+\end{bmatrix} = 0,\quad
+A \begin{bmatrix}
+- \frac{ml^2}{b} \\ 1
+\end{bmatrix} = \begin{bmatrix}
+1 \\ - \frac{b}{ml^2}
+\end{bmatrix}
+= - \frac{b}{ml^2} \begin{bmatrix}
+- \frac{ml^2}{b} \\ 1 \end{bmatrix}.
+\]</span>
+The first eigenvalue has real part equal to <span class="math inline">\(0\)</span>. However,
+<span class="math display">\[
+C \begin{bmatrix}
+1 \\ 0
+\end{bmatrix} = 1 \neq 0.
+\]</span>
+According to Theorem <a href="linear-system-theory.html#thm:ltidetectable">A.1</a>, we conclude <span class="math inline">\((A,C)\)</span> is detectable.</p>
+<p>Now we need to find <span class="math inline">\(K\)</span>. An easy choice of <span class="math inline">\(K\)</span> is
+<span class="math display">\[
+K = \begin{bmatrix} k \\ 0 \end{bmatrix}, \quad A - KC =
+\begin{bmatrix}
+- k &amp; 1 \\ 0 &amp; - \frac{b}{ml^2}
+\end{bmatrix}.
+\]</span>
+With <span class="math inline">\(k &gt; 0\)</span>, we know <span class="math inline">\(A- KC\)</span> is guaranteed to be Hurwitz (the two eigenvalues of <span class="math inline">\(A-KC\)</span> are <span class="math inline">\(-k\)</span> and <span class="math inline">\(-b/ml^2\)</span>), and we have obtained an observer!</p>
+<p><span style="color:red">TBD: simulate the observer.</span></p>
+</div>
+<div id="state-affine-template" class="section level3 hasAnchor" number="5.1.3">
+<h3><span class="header-section-number">5.1.3</span> State-affine Template<a href="output-feedback.html#state-affine-template" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Consider an instance of the normal form <a href="output-feedback.html#eq:meta-observer-zeta">(5.7)</a> where the dynamics is linear in <span class="math inline">\(\xi\)</span>, but the coefficients are time-varying and dependent on the input and output
 <span class="math display" id="eq:state-affine-template">\[\begin{equation}
 \dot{\xi} = A(u,y) \xi + B(u,y), \quad y = C(u) \xi.
-\tag{5.10}
-\end{equation}\]</span></p>
+\tag{5.14}
+\end{equation}\]</span>
+The difference between the state-affine template <a href="output-feedback.html#eq:state-affine-template">(5.14)</a> and the Luenberger template <a href="output-feedback.html#eq:Luenberger-linear-template">(5.10)</a> is that the linear matrices <span class="math inline">\(A,C\)</span> are allowed to depend nonlinearly on the input <span class="math inline">\((u,y)\)</span>.</p>
 <p>Kalman and Bucy originally proposed an observer for linear time-varying systems <span class="citation">(<a href="#ref-kalman61-new">Kalman and Bucy 1961</a>)</span>. The result is later extened by <span class="citation">(<a href="#ref-besanccon96ejc-observer">Besançon, Bornard, and Hammouri 1996</a>)</span> and <span class="citation">(<a href="#ref-hammouri90cdc-observer">Hammouri and Leon Morales 1990</a>)</span> to deal with coefficient matrices dependent on the control. The following theorem is a direct extension of the result from <span class="citation">(<a href="#ref-besanccon96ejc-observer">Besançon, Bornard, and Hammouri 1996</a>)</span> and <span class="citation">(<a href="#ref-hammouri90cdc-observer">Hammouri and Leon Morales 1990</a>)</span> by considering <span class="math inline">\((u,y)\)</span> as an augmented control input.</p>
 <p>Before presenting the theorem, we need to introduce the following terminology.</p>
 <div class="definition">
 <p><span id="def:lineartimevarying" class="definition"><strong>Definition 5.2  (Linear Time-Varying System) </strong></span>For a linear time-varying system of the form
 <span class="math display" id="eq:linear-time-varying">\[\begin{equation}
 \dot{\chi} = A(\nu) \chi, \quad y = C(\nu) \chi,
-\tag{5.11}
+\tag{5.15}
 \end{equation}\]</span>
 with input <span class="math inline">\(\nu\)</span> and output <span class="math inline">\(y\)</span>, we define</p>
 <ul>
@@ -317,7 +408,7 @@ with input <span class="math inline">\(\nu\)</span> and output <span class="math
 <span class="math display">\[
 \Psi_\nu (t,t) = I, \quad \frac{\partial \Psi_\nu}{\partial \tau}(\tau,t) = A(\nu(\tau)) \Psi_\nu (\tau, t).
 \]</span>
-Note that the transition matrix is used to express the solution to <a href="output-feedback.html#eq:linear-time-varying">(5.11)</a> because it satisfies
+Note that the transition matrix is used to express the solution to <a href="output-feedback.html#eq:linear-time-varying">(5.15)</a> because it satisfies
 <span class="math display">\[
 \chi(\chi_0,t_0;t;\nu) = \Psi_\nu (t,t_0) \chi_0.
 \]</span></p></li>
@@ -331,26 +422,26 @@ Note that the transition matrix is used to express the solution to <a href="outp
 \]</span></p></li>
 </ul>
 </div>
-<p>We now introduce the Kalman-Bucy Observer for the state-affine template <a href="output-feedback.html#eq:state-affine-template">(5.10)</a>.</p>
+<p>We now introduce the Kalman-Bucy Observer for the state-affine template <a href="output-feedback.html#eq:state-affine-template">(5.14)</a>.</p>
 <div class="theorem">
-<p><span id="thm:kalmanbucystateaffine" class="theorem"><strong>Theorem 5.2  (Kalman-Bucy Observer) </strong></span>Let <span class="math inline">\(y_{\xi_0,u}(t) = C(u(t)) \Xi (\xi_0;t;u)\)</span> be the output of system <a href="output-feedback.html#eq:state-affine-template">(5.10)</a> at time <span class="math inline">\(t\)</span> with initialization <span class="math inline">\(\xi_0\)</span> and control <span class="math inline">\(u\)</span>. Suppose the control <span class="math inline">\(u\)</span> satisfies</p>
+<p><span id="thm:kalmanbucystateaffine" class="theorem"><strong>Theorem 5.3  (Kalman-Bucy Observer) </strong></span>Let <span class="math inline">\(y_{\xi_0,u}(t) = C(u(t)) \Xi (\xi_0;t;u)\)</span> be the output of system <a href="output-feedback.html#eq:state-affine-template">(5.14)</a> at time <span class="math inline">\(t\)</span> with initialization <span class="math inline">\(\xi_0\)</span> and control <span class="math inline">\(u\)</span>. Suppose the control <span class="math inline">\(u\)</span> satisfies</p>
 <ul>
 <li><p>For any <span class="math inline">\(\xi_0\)</span>, <span class="math inline">\(t \mapsto A(u(t),y_{\xi_0,u}(t))\)</span> is bounded by <span class="math inline">\(A_{\max}\)</span></p></li>
 <li><p>For any <span class="math inline">\(\xi_0\)</span>, the augmented input <span class="math inline">\(\nu = (u,y_{\xi_0,u})\)</span> is <em>regularly persistent</em> for the dynamics
 <span class="math display" id="eq:kbobserver-auxilarydynamics">\[\begin{equation}
 \dot{\chi} = A(\nu) \chi , \quad y = C(\nu) \chi
-\tag{5.12}
+\tag{5.16}
 \end{equation}\]</span>
 uniformly with respect to <span class="math inline">\(\xi_0\)</span>. That is, there exist strictly positive numbers <span class="math inline">\(t_0,\bar{t}\)</span>, and <span class="math inline">\(\alpha\)</span> such that for any <span class="math inline">\(\xi_0\)</span> and any time <span class="math inline">\(t \geq t_0 \geq \bar{t}\)</span>,
 <span class="math display">\[
 \Gamma_v^b (t-\bar{t}, t) \succeq \alpha I,
 \]</span>
-where <span class="math inline">\(\Gamma_v^b\)</span> is the <em>backward observability grammian</em> associated with system <a href="output-feedback.html#eq:kbobserver-auxilarydynamics">(5.12)</a>.</p></li>
+where <span class="math inline">\(\Gamma_v^b\)</span> is the <em>backward observability grammian</em> associated with system <a href="output-feedback.html#eq:kbobserver-auxilarydynamics">(5.16)</a>.</p></li>
 </ul>
 <p>Then, given any positive definite matrix <span class="math inline">\(P_0\)</span>, there exist <span class="math inline">\(\alpha_1,\alpha_2 &gt; 0\)</span> such that for any <span class="math inline">\(\lambda \geq 2 A_{\max}\)</span> and any <span class="math inline">\(\xi_0 \in \mathbb{R}^p\)</span>, the matrix differential equation
 <span class="math display" id="eq:kbobserver-matrixdifferential">\[\begin{equation}
 \dot{P} = -\lambda P - A(u,y)^T P - P A(u,y) + C(u)^T C(u)
-\tag{5.13}
+\tag{5.17}
 \end{equation}\]</span>
 initialized at <span class="math inline">\(P(0) = P_0\)</span> admits a unique solution satisfying <span class="math inline">\(P(t)=P(t)^T\)</span> and
 <span class="math display">\[
@@ -359,35 +450,19 @@ initialized at <span class="math inline">\(P(0) = P_0\)</span> admits a unique s
 Moreover, the system
 <span class="math display" id="eq:kbobserver-observer">\[\begin{equation}
 \dot{\hat{\xi}} = A(u,y) \hat{\xi} + B(u,y) + K (y - C(u)\hat{\xi})
-\tag{5.14}
+\tag{5.18}
 \end{equation}\]</span>
 with a time-varying gain matrix
 <span class="math display" id="eq:kbobserver-gain">\[\begin{equation}
 K = P^{-1} C(u)^T
-\tag{5.15}
+\tag{5.19}
 \end{equation}\]</span>
-is an observer for the state-affine system <a href="output-feedback.html#eq:state-affine-template">(5.10)</a>.</p>
+is an observer for the state-affine system <a href="output-feedback.html#eq:state-affine-template">(5.14)</a>.</p>
 </div>
 <p>Let us work out an example of the Kalman-Bucy Observer for nonlinear systems.</p>
 <div class="example">
-<p><span id="exm:pendulumkbobserver" class="example"><strong>Example 5.1  (Kalman-Bucy Observer for A Simple Pendulum) </strong></span>Consider a simple pendulum dynamics model
-<span class="math display" id="eq:kbobserver-pendulum">\[\begin{equation}
-x = \begin{bmatrix}
-\theta \\ \dot{\theta}
-\end{bmatrix}, \quad
-\dot{x} = \begin{bmatrix}
-\dot{\theta} \\
-- \frac{1}{ml^2} (b \dot{\theta} + mgl \sin \theta)
-\end{bmatrix} +
-\begin{bmatrix}
-0 \\
-\frac{1}{ml^2}
-\end{bmatrix} u, \quad y = \theta,
-\tag{5.16}
-\end{equation}\]</span>
-where <span class="math inline">\(\theta\)</span> the angular position of the pendulum from the vertical line, <span class="math inline">\(m &gt; 0\)</span> the mass of the pendulum, <span class="math inline">\(l &gt; 0\)</span> the length, <span class="math inline">\(g\)</span> the gravitational constant, <span class="math inline">\(b &gt; 0\)</span> the dampling coefficient, and <span class="math inline">\(u\)</span> the control input (torque).</p>
-<p>We assume we can only observe the angular position of the pendulum in <a href="output-feedback.html#eq:kbobserver-pendulum">(5.16)</a>, e.g., using a camera, but not the angular velocity. Our goal is to construct an observer that can provide a full state estimation.</p>
-<p>We first write the pendulum dynamics in a new coordinate system so that it is in the state-affine normal form <a href="output-feedback.html#eq:state-affine-template">(5.10)</a>. We choose <span class="math inline">\(\xi = [\mathfrak{s},\mathfrak{c},\dot{\theta}]^T\)</span> with <span class="math inline">\(\mathfrak{s} = \sin \theta\)</span> and <span class="math inline">\(\mathfrak{c} = \cos \theta\)</span>. Clearly, we will be able to observe <span class="math inline">\(y = [\mathfrak{s},\mathfrak{c}]^T\)</span> in this new coordinate. The state-affine normal form of the pendulum dynamics reads
+<p><span id="exm:pendulumkbobserver" class="example"><strong>Example 5.2  (Kalman-Bucy Observer for A Simple Pendulum) </strong></span>Let us reconsider the pendulum dynamics <a href="output-feedback.html#eq:kbobserver-pendulum">(5.12)</a> but this time try to design a Kalman-Bucy observer.</p>
+<p>We first write the pendulum dynamics in a new coordinate system so that it is in the state-affine normal form <a href="output-feedback.html#eq:state-affine-template">(5.14)</a>. We choose <span class="math inline">\(\xi = [\mathfrak{s},\mathfrak{c},\dot{\theta}]^T\)</span> with <span class="math inline">\(\mathfrak{s} = \sin \theta\)</span> and <span class="math inline">\(\mathfrak{c} = \cos \theta\)</span>. Clearly, we will be able to observe <span class="math inline">\(y = [\mathfrak{s},\mathfrak{c}]^T\)</span> in this new coordinate. The state-affine normal form of the pendulum dynamics reads
 <span class="math display" id="eq:pendulum-state-affine">\[\begin{equation}
 \begin{split}
 \dot{\xi} = \begin{bmatrix}
@@ -408,17 +483,17 @@ y &amp; = \underbrace{\begin{bmatrix}
 0 &amp; 1 &amp; 0
 \end{bmatrix}}_{=:C(u)} \xi
 \end{split}.
-\tag{5.17}
+\tag{5.13}
 \end{equation}\]</span>
-Note that <span class="math inline">\(C(u)\)</span> is in fact time-invariant, and <span class="math inline">\(B(u,y)\)</span> only depends on <span class="math inline">\(u\)</span>; but we adopt the same notation as the general state-affine template <a href="output-feedback.html#eq:state-affine-template">(5.10)</a>.</p>
-<p>In order to use the Kalman-Bucy observer in Theorem <a href="output-feedback.html#thm:kalmanbucystateaffine">5.2</a>, we need to verify the boundedness of <span class="math inline">\(A(u,y)\)</span>, and the regular persistence of <a href="output-feedback.html#eq:kbobserver-auxilarydynamics">(5.12)</a>.</p>
+Note that <span class="math inline">\(C(u)\)</span> is in fact time-invariant, and <span class="math inline">\(B(u,y)\)</span> only depends on <span class="math inline">\(u\)</span>; but we adopt the same notation as the general state-affine template <a href="output-feedback.html#eq:state-affine-template">(5.14)</a>.</p>
+<p>In order to use the Kalman-Bucy observer in Theorem <a href="output-feedback.html#thm:kalmanbucystateaffine">5.3</a>, we need to verify the boundedness of <span class="math inline">\(A(u,y)\)</span>, and the regular persistence of <a href="output-feedback.html#eq:kbobserver-auxilarydynamics">(5.16)</a>.</p>
 <p><strong>Boundedness of <span class="math inline">\(A(u,y)\)</span></strong>. We can easily show the boundedness of <span class="math inline">\(A(u,y)\)</span> by writing
 <span class="math display">\[
 \Vert A(u,y) \xi \Vert = \Vert \xi_3 (\mathfrak{c} - \mathfrak{s} - b/ml^2) \Vert  \leq |\xi_3| \sqrt{3} \sqrt{\mathfrak{c}^2 + \mathfrak{s}^2 + b^2 / m^2 l^4} \leq \Vert \xi \Vert \sqrt{3 + 3b^2 / m^2 l^4}.
 \]</span>
 Therefore, we can take <span class="math inline">\(A_{\max} = \sqrt{3 + 3b^2 / m^2 l^4}\)</span>.
-<span style="color:red">Does the <span class="math inline">\(A_{\max}\)</span> in Theorem <a href="output-feedback.html#thm:kalmanbucystateaffine">5.2</a> refer to the bound in operator norm?</span></p>
-<p><strong>Regular persistence</strong>. We write the backward observability grammian of system <a href="output-feedback.html#eq:kbobserver-auxilarydynamics">(5.12)</a>
+<span style="color:red">Does the <span class="math inline">\(A_{\max}\)</span> in Theorem <a href="output-feedback.html#thm:kalmanbucystateaffine">5.3</a> refer to the bound in operator norm?</span></p>
+<p><strong>Regular persistence</strong>. We write the backward observability grammian of system <a href="output-feedback.html#eq:kbobserver-auxilarydynamics">(5.16)</a>
 <span class="math display">\[
 \Gamma_\nu^b(t - \bar{t},t) = \int_{t - \bar{t}}^t \Psi_\nu(\tau,t)^T C^T C \Psi_\nu (\tau, t) d \tau = \int_{t - \bar{t}}^t \Psi_\nu(\tau,t)^T \begin{bmatrix}
 1 &amp; 0 &amp; 0 \\
@@ -430,8 +505,8 @@ Therefore, we can take <span class="math inline">\(A_{\max} = \sqrt{3 + 3b^2 / m
 <span style="color:red">Does the transition matrix <span class="math inline">\(\Psi_\nu (\tau, t)\)</span> have an analytical form?</span></p>
 </div>
 </div>
-<div id="triangular-template" class="section level3 hasAnchor" number="5.1.3">
-<h3><span class="header-section-number">5.1.3</span> Triangular Template<a href="output-feedback.html#triangular-template" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="triangular-template" class="section level3 hasAnchor" number="5.1.4">
+<h3><span class="header-section-number">5.1.4</span> Triangular Template<a href="output-feedback.html#triangular-template" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 
 </div>
 </div>
@@ -467,6 +542,7 @@ Karagiannis, Dimitrios, and Alessandro Astolfi. 2005. <span>“Nonlinear Observe
 <li id="fn5"><p>The time dependence of <span class="math inline">\(\mathcal{T}_u\)</span> enables us to cover the case where the knowledge of the <span class="math inline">\(u\)</span> and <span class="math inline">\(y_{x_0,u}\)</span> is used to construct the estimate from the observer state. In particular, using the output sometimes can reduce the dimension of the observer state (and thus alleviate the computations), thus obtaining a reduced-order observer. For example, see <span class="citation">(<a href="#ref-karagiannis05cdc-nonlinear">Karagiannis and Astolfi 2005</a>)</span> and <span class="citation">(<a href="#ref-astolfi03tac-immersion">Astolfi and Ortega 2003</a>)</span>.<a href="output-feedback.html#fnref5" class="footnote-back">↩︎</a></p></li>
 <li id="fn6"><p>A function <span class="math inline">\(\rho: \mathbb{R}_+ \rightarrow \mathbb{R}_+\)</span> is a <span class="math inline">\(\mathcal{K}\)</span> function if <span class="math inline">\(\rho(0) = 0\)</span>, <span class="math inline">\(\rho\)</span> is continuous, and <span class="math inline">\(\rho\)</span> is increasing.<a href="output-feedback.html#fnref6" class="footnote-back">↩︎</a></p></li>
 <li id="fn7"><p>An injective function is a function <span class="math inline">\(f\)</span> that maps distinct elements of its domain to distinct elements. That is, <span class="math inline">\(f(x_a) = f(x_b)\)</span> implies <span class="math inline">\(x_a = x_b\)</span>, or equivalently, <span class="math inline">\(x_a \neq x_b\)</span> implies <span class="math inline">\(f(x_a) \neq f(x_b)\)</span>.<a href="output-feedback.html#fnref7" class="footnote-back">↩︎</a></p></li>
+<li id="fn8"><p>I have to say I was a bit surprised when I arrived at this formulation.<a href="output-feedback.html#fnref8" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
             </section>

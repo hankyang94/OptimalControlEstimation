@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Page not found | Optimal Control and Estimation</title>
+  <title>A Linear System Theory | Optimal Control and Estimation</title>
   <meta name="description" content="Lecture notes for Harvard ES/AM 158 Introduction to Optimal Control and Estimation." />
   <meta name="generator" content="bookdown 0.33 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Page not found | Optimal Control and Estimation" />
+  <meta property="og:title" content="A Linear System Theory | Optimal Control and Estimation" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Lecture notes for Harvard ES/AM 158 Introduction to Optimal Control and Estimation." />
   <meta name="github-repo" content="hankyang94/OptimalControlEstimation" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Page not found | Optimal Control and Estimation" />
+  <meta name="twitter:title" content="A Linear System Theory | Optimal Control and Estimation" />
   
   <meta name="twitter:description" content="Lecture notes for Harvard ES/AM 158 Introduction to Optimal Control and Estimation." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-
-
+<link rel="prev" href="adaptivecontrol.html"/>
+<link rel="next" href="appconvex.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -153,19 +153,32 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="page-not-found" class="section level1">
-<h1>Page not found</h1>
-<p>The page you requested cannot be found (perhaps it was moved or renamed).</p>
-<p>You may want to try searching to find the page's new location, or use
-the table of contents to find the page you are looking for.</p>
+<div id="linear-system-theory" class="section level1 hasAnchor" number="7">
+<h1><span class="header-section-number">A</span> Linear System Theory<a href="linear-system-theory.html#linear-system-theory" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Consider the linear time-invariant (LTI) system
+<span class="math display" id="eq:app-linear-system">\[\begin{equation}
+\dot{x} = A x + B u, \quad y = C x + D u,
+\tag{A.1}
+\end{equation}\]</span>
+where <span class="math inline">\(x \in \mathbb{R}^n\)</span> the state, <span class="math inline">\(u \in \mathbb{R}^m\)</span> the control, and <span class="math inline">\(A,B,C,D\)</span> are constant matrices with proper sizes.</p>
+<div class="theorem">
+<p><span id="thm:ltidetectable" class="theorem"><strong>Theorem A.1  (Detectability) </strong></span>The following are equivalent for the LTI system <a href="linear-system-theory.html#eq:app-linear-system">(A.1)</a>:</p>
+<ol style="list-style-type: decimal">
+<li><p><span class="math inline">\((A,C)\)</span> is detectable;</p></li>
+<li><p>The matrix <span class="math inline">\(\begin{bmatrix} A - \lambda I \\ C \end{bmatrix}\)</span> has full column rank for all <span class="math inline">\(\lambda \in \mathbb{C}\)</span> such that <span class="math inline">\(\mathrm{Re}(\lambda) \geq 0\)</span> ;</p></li>
+<li><p>For all <span class="math inline">\(\lambda\)</span> and <span class="math inline">\(x\)</span> such that <span class="math inline">\(Ax = \lambda x\)</span> and <span class="math inline">\(\mathrm{Re}(\lambda) \geq 0\)</span>, <span class="math inline">\(Cx \neq 0\)</span>;</p></li>
+<li><p>There exists a matrix <span class="math inline">\(L\)</span> such that <span class="math inline">\(A + LC\)</span> is Hurwitz;</p></li>
+<li><p><span class="math inline">\((A^*,C^*)\)</span> is stabilizable.</p></li>
+</ol>
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-
-
+<a href="adaptivecontrol.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="appconvex.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -196,7 +209,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/hankyang94/OptimalControlEstimation/blob/main/%s",
+"link": "https://github.com/hankyang94/OptimalControlEstimation/blob/main/08-appendix.Rmd",
 "text": "Edit"
 },
 "history": {

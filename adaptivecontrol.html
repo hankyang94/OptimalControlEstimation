@@ -31,7 +31,7 @@
   
   
 <link rel="prev" href="output-feedback.html"/>
-<link rel="next" href="appconvex.html"/>
+<link rel="next" href="linear-system-theory.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -111,8 +111,9 @@ div.csl-indent {
 <li class="chapter" data-level="5.1" data-path="output-feedback.html"><a href="output-feedback.html#state-observer"><i class="fa fa-check"></i><b>5.1</b> State Observer</a>
 <ul>
 <li class="chapter" data-level="5.1.1" data-path="output-feedback.html"><a href="output-feedback.html#general-design-strategy"><i class="fa fa-check"></i><b>5.1.1</b> General Design Strategy</a></li>
-<li class="chapter" data-level="5.1.2" data-path="output-feedback.html"><a href="output-feedback.html#state-affine-template"><i class="fa fa-check"></i><b>5.1.2</b> State-affine Template</a></li>
-<li class="chapter" data-level="5.1.3" data-path="output-feedback.html"><a href="output-feedback.html#triangular-template"><i class="fa fa-check"></i><b>5.1.3</b> Triangular Template</a></li>
+<li class="chapter" data-level="5.1.2" data-path="output-feedback.html"><a href="output-feedback.html#luenberger-template"><i class="fa fa-check"></i><b>5.1.2</b> Luenberger Template</a></li>
+<li class="chapter" data-level="5.1.3" data-path="output-feedback.html"><a href="output-feedback.html#state-affine-template"><i class="fa fa-check"></i><b>5.1.3</b> State-affine Template</a></li>
+<li class="chapter" data-level="5.1.4" data-path="output-feedback.html"><a href="output-feedback.html#triangular-template"><i class="fa fa-check"></i><b>5.1.4</b> Triangular Template</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html"><i class="fa fa-check"></i><b>6</b> Adaptive Control</a>
@@ -126,10 +127,11 @@ div.csl-indent {
 <li class="chapter" data-level="6.2" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#certainty-equivalent-adaptive-control"><i class="fa fa-check"></i><b>6.2</b> Certainty-Equivalent Adaptive Control</a></li>
 </ul></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
-<li class="chapter" data-level="A" data-path="appconvex.html"><a href="appconvex.html"><i class="fa fa-check"></i><b>A</b> Convex Analysis and Optimization</a></li>
-<li class="chapter" data-level="B" data-path="the-kalman-yakubovich-lemma.html"><a href="the-kalman-yakubovich-lemma.html"><i class="fa fa-check"></i><b>B</b> The Kalman-Yakubovich Lemma</a></li>
-<li class="chapter" data-level="C" data-path="feedbacklinearization.html"><a href="feedbacklinearization.html"><i class="fa fa-check"></i><b>C</b> Feedback Linearization</a></li>
-<li class="chapter" data-level="D" data-path="slidingcontrol.html"><a href="slidingcontrol.html"><i class="fa fa-check"></i><b>D</b> Sliding Control</a></li>
+<li class="chapter" data-level="A" data-path="linear-system-theory.html"><a href="linear-system-theory.html"><i class="fa fa-check"></i><b>A</b> Linear System Theory</a></li>
+<li class="chapter" data-level="B" data-path="appconvex.html"><a href="appconvex.html"><i class="fa fa-check"></i><b>B</b> Convex Analysis and Optimization</a></li>
+<li class="chapter" data-level="C" data-path="the-kalman-yakubovich-lemma.html"><a href="the-kalman-yakubovich-lemma.html"><i class="fa fa-check"></i><b>C</b> The Kalman-Yakubovich Lemma</a></li>
+<li class="chapter" data-level="D" data-path="feedbacklinearization.html"><a href="feedbacklinearization.html"><i class="fa fa-check"></i><b>D</b> Feedback Linearization</a></li>
+<li class="chapter" data-level="E" data-path="slidingcontrol.html"><a href="slidingcontrol.html"><i class="fa fa-check"></i><b>E</b> Sliding Control</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -161,7 +163,7 @@ div.csl-indent {
 <li><p>Design an adaptation law for adjusting the control parameters</p></li>
 <li><p>Analyze the convergence of the closed-loop system</p></li>
 </ol>
-<p>The control law design at the first step typically requires the designer to know what a good controller is if the true parameters were actually known, e.g., from feedback linearization (Appendix <a href="feedbacklinearization.html#feedbacklinearization">C</a>), sliding control (Appendix <a href="slidingcontrol.html#slidingcontrol">D</a>) etc.</p>
+<p>The control law design at the first step typically requires the designer to know what a good controller is if the true parameters were actually known, e.g., from feedback linearization (Appendix <a href="feedbacklinearization.html#feedbacklinearization">D</a>), sliding control (Appendix <a href="slidingcontrol.html#slidingcontrol">E</a>) etc.</p>
 <p>The design of the adaptation law typically comes from analyzing the dynamics of the tracking error, which as we will see often appears in the form of Lemma <a href="adaptivecontrol.html#lem:adaptivecontrolbasic">6.1</a>.</p>
 <p>The convergence of the closed-loop system is usually analyzed with the help of a Lyapunov-like function introduced in Chapter <a href="stability.html#stability">4</a>.</p>
 <div class="lemma">
@@ -182,12 +184,12 @@ with <span class="math inline">\(\gamma &gt; 0\)</span> a positive constant, the
 \]</span></p>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-6" class="proof"><em>Proof</em>. </span>Let the state-space representation of <a href="adaptivecontrol.html#eq:acbasiclemmaephi">(6.1)</a> be
+<p><span id="unlabeled-div-7" class="proof"><em>Proof</em>. </span>Let the state-space representation of <a href="adaptivecontrol.html#eq:acbasiclemmaephi">(6.1)</a> be
 <span class="math display" id="eq:acbasiclemmastatespace">\[\begin{equation}
 \dot{x} = A x + b [k \phi^T v], \quad e = c^T x.
 \tag{6.3}
 \end{equation}\]</span>
-Since <span class="math inline">\(H(p)\)</span> is SPR, it follows from the Kalman-Yakubovich Lemma <a href="the-kalman-yakubovich-lemma.html#lem:KalmanYakubovich">B.1</a> that there exist <span class="math inline">\(P,Q \succ 0\)</span> such that
+Since <span class="math inline">\(H(p)\)</span> is SPR, it follows from the Kalman-Yakubovich Lemma <a href="the-kalman-yakubovich-lemma.html#lem:KalmanYakubovich">C.1</a> that there exist <span class="math inline">\(P,Q \succ 0\)</span> such that
 <span class="math display">\[
 A^T P + P A = -Q, \quad Pb = c.
 \]</span>
@@ -322,7 +324,7 @@ h q^{(n)} + \sum_{i=1}^n a_i f_i(x,t) = u
 \tag{6.15}
 \end{equation}\]</span>
 where <span class="math inline">\(h = 1 / b\)</span> and <span class="math inline">\(a_i = \alpha_i / b\)</span>.</p>
-<p><strong>Control law</strong>. Recall that the choice of the control law is tyically inspired by the control design if the true system parameters were known. We will borrow ideas from sliding control (Appendix <a href="slidingcontrol.html#slidingcontrol">D</a>).</p>
+<p><strong>Control law</strong>. Recall that the choice of the control law is tyically inspired by the control design if the true system parameters were known. We will borrow ideas from sliding control (Appendix <a href="slidingcontrol.html#slidingcontrol">E</a>).</p>
 <ul>
 <li><p><strong>Known parameters</strong>. Let <span class="math inline">\(e = q(t) - q_d(t)\)</span> be the tracking error, and define the following combined error
 <span class="math display">\[
@@ -426,7 +428,7 @@ a_4 &amp;= m_e l_1 l_{ce} \sin \delta_e.
 <span class="math display">\[
 s = \dot{\tilde{q}} + \Lambda \tilde{q} = \dot{q} - \underbrace{\left( \dot{q}_d - \Lambda \tilde{q} \right)}_{\dot{q}_r}
 \]</span>
-where <span class="math inline">\(\Lambda \in \mathbb{S}^n_{++}\)</span> is a user-chosen positive definite matrix (in general we want <span class="math inline">\(-\Lambda\)</span> to be Hurwitz). In this case, <span class="math inline">\(s \rightarrow 0\)</span> implies <span class="math inline">\(\tilde{q} \rightarrow 0\)</span> as <span class="math inline">\(t \rightarrow \infty\)</span>. Choosing the control law (coming from feedback linearization Appendix <a href="feedbacklinearization.html#feedbacklinearization">C</a>)
+where <span class="math inline">\(\Lambda \in \mathbb{S}^n_{++}\)</span> is a user-chosen positive definite matrix (in general we want <span class="math inline">\(-\Lambda\)</span> to be Hurwitz). In this case, <span class="math inline">\(s \rightarrow 0\)</span> implies <span class="math inline">\(\tilde{q} \rightarrow 0\)</span> as <span class="math inline">\(t \rightarrow \infty\)</span>. Choosing the control law (coming from feedback linearization Appendix <a href="feedbacklinearization.html#feedbacklinearization">D</a>)
 <span class="math display" id="eq:ac-mrac-manipulator-controller-knownparam">\[\begin{equation}
 \tau = H \ddot{q}_r - K_D s + C \dot{q} + g(q)
 \tag{6.23}
@@ -435,7 +437,7 @@ with <span class="math inline">\(K_D \in \mathbb{S}^n_{++}\)</span> positive def
 <span class="math display">\[
 H \dot{s} + K_D s = 0 \Longleftrightarrow \dot{s} = - H^{-1} K_D s.
 \]</span>
-Because the matrix <span class="math inline">\(H^{-1} K_D\)</span> is the product of two positive definite matrices (recall <span class="math inline">\(H\)</span> is positive definite and so is <span class="math inline">\(H^{-1}\)</span>), it has strictly positive real eigenvalues.<a href="#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a> Hence, <span class="math inline">\(- H^{-1} K_D\)</span> is <a href="https://en.wikipedia.org/wiki/Hurwitz_matrix">Hurwitz</a> and <span class="math inline">\(s\)</span> is guaranteed to converge to zero.</p>
+Because the matrix <span class="math inline">\(H^{-1} K_D\)</span> is the product of two positive definite matrices (recall <span class="math inline">\(H\)</span> is positive definite and so is <span class="math inline">\(H^{-1}\)</span>), it has strictly positive real eigenvalues.<a href="#fn9" class="footnote-ref" id="fnref9"><sup>9</sup></a> Hence, <span class="math inline">\(- H^{-1} K_D\)</span> is <a href="https://en.wikipedia.org/wiki/Hurwitz_matrix">Hurwitz</a> and <span class="math inline">\(s\)</span> is guaranteed to converge to zero.</p>
 <p><strong>Control law</strong>. A closer look at the controller <a href="adaptivecontrol.html#eq:ac-mrac-manipulator-controller-knownparam">(6.23)</a> allows us to write it in the following form
 <span class="math display">\[\begin{align}
 \tau &amp;= H \ddot{q}_r + C(s + \dot{q}_r) + g(q) - K_D s  \\
@@ -447,7 +449,7 @@ where <span class="math inline">\(a \in \mathbb{R}^m\)</span> contains all the p
 \tau = Y \hat{a} - K_D s,
 \tag{6.24}
 \end{equation}\]</span>
-with <span class="math inline">\(\hat{a}\)</span> the time-varying parameter that we wish to adapt. Note that here we have done something strange: the adapative control law does not exactly follow the controller <a href="adaptivecontrol.html#eq:ac-mrac-manipulator-controller-knownparam">(6.23)</a> in the known-parameter case.<a href="#fn9" class="footnote-ref" id="fnref9"><sup>9</sup></a> We first separated <span class="math inline">\(s\)</span> from <span class="math inline">\(\dot{q}\)</span> and wrote <span class="math inline">\(Ya = H \ddot{q}_r + C \dot{q}_r + g\)</span> instead of <span class="math inline">\(Ya = H \ddot{q}_r + C \dot{q} + g\)</span>; then we dropped the “<span class="math inline">\(C\)</span>” matrix in front of <span class="math inline">\(s\)</span> in the adapative control law. The reason for doing this will soon become clear when we analyze the tracking convergence.</p>
+with <span class="math inline">\(\hat{a}\)</span> the time-varying parameter that we wish to adapt. Note that here we have done something strange: the adapative control law does not exactly follow the controller <a href="adaptivecontrol.html#eq:ac-mrac-manipulator-controller-knownparam">(6.23)</a> in the known-parameter case.<a href="#fn10" class="footnote-ref" id="fnref10"><sup>10</sup></a> We first separated <span class="math inline">\(s\)</span> from <span class="math inline">\(\dot{q}\)</span> and wrote <span class="math inline">\(Ya = H \ddot{q}_r + C \dot{q}_r + g\)</span> instead of <span class="math inline">\(Ya = H \ddot{q}_r + C \dot{q} + g\)</span>; then we dropped the “<span class="math inline">\(C\)</span>” matrix in front of <span class="math inline">\(s\)</span> in the adapative control law. The reason for doing this will soon become clear when we analyze the tracking convergence.</p>
 <p><strong>Adaptation law and tracking convergence</strong>.
 Recall that the key of adapative control is to design a control law and an adaptation law such that global converge of the tracking error <span class="math inline">\(s\)</span> can be guaranteed by a Lyapunov function. Looking at the previous Lyapunov functions in <a href="adaptivecontrol.html#eq:ac-first-linear-lyapunov">(6.11)</a> and <a href="adaptivecontrol.html#eq:ac-singleinput-nonlinear-lyapunov">(6.20)</a>, we see that they both contain a positive definite term in the tracking error <span class="math inline">\(s\)</span> (or <span class="math inline">\(e\)</span> if in first-order systems) and another positive definite term in the parameter error <span class="math inline">\(\tilde{a}\)</span>. This hints us that we may try a Lyapunov candidate function of the following form
 <span class="math display" id="eq:ac-mrac-manipulator-controller-unknownparam-lyapunov">\[\begin{equation}
@@ -460,7 +462,7 @@ where <span class="math inline">\(\Gamma \in \mathbb{S}^m_{++}\)</span> is a con
 <p><span id="lem:skewsymmetricmanipulator" class="lemma"><strong>Lemma 6.2  </strong></span>For the manipulator dynamics <a href="adaptivecontrol.html#eq:ac-mrac-manipulator-dynamics">(6.21)</a>, there exists a way to define <span class="math inline">\(C\)</span> such that <span class="math inline">\(\dot{H} - 2C\)</span> is skew-symmetric.</p>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-7" class="proof"><em>Proof</em>. </span>See Section 9.1, page 399-402 in <span class="citation">(<a href="#ref-slotine91book-applied">Slotine, Li, et al. 1991</a>)</span>. You should also check if this is true for the planar two-link manipulator dynamics in Example <a href="adaptivecontrol.html#exm:planartwolinkmanipulator">6.1</a>.</p>
+<p><span id="unlabeled-div-8" class="proof"><em>Proof</em>. </span>See Section 9.1, page 399-402 in <span class="citation">(<a href="#ref-slotine91book-applied">Slotine, Li, et al. 1991</a>)</span>. You should also check if this is true for the planar two-link manipulator dynamics in Example <a href="adaptivecontrol.html#exm:planartwolinkmanipulator">6.1</a>.</p>
 </div>
 <p>With Lemma <a href="adaptivecontrol.html#lem:skewsymmetricmanipulator">6.2</a>, the time derivative of <span class="math inline">\(V\)</span> in <a href="adaptivecontrol.html#eq:ac-mrac-manipulator-controller-unknownparam-lyapunov">(6.25)</a> reads
 <span class="math display" id="eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative" id="eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative-3" id="eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative-2" id="eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative-1">\[\begin{align}
@@ -522,9 +524,9 @@ Slotine, Jean-Jacques E, Weiping Li, et al. 1991. <em>Applied Nonlinear Control<
 </div>
 <div class="footnotes">
 <hr />
-<ol start="8">
-<li id="fn8"><p>Consider two positive definite matrices <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>, let <span class="math inline">\(B = B^{1/2}B^{1/2}\)</span>. The product <span class="math inline">\(AB\)</span> can be written as <span class="math inline">\(AB = A B^{1/2}B^{1/2} = B^{-1/2} (B^{1/2} A B^{1/2}) B^{1/2}\)</span>. Therefore <span class="math inline">\(AB\)</span> is <a href="https://en.wikipedia.org/wiki/Matrix_similarity">similar</a> to <span class="math inline">\(B^{1/2} A B^{1/2}\)</span> and is positive definite.<a href="adaptivecontrol.html#fnref8" class="footnote-back">↩︎</a></p></li>
-<li id="fn9"><p>In fact, one can show that the controller <a href="adaptivecontrol.html#eq:ac-mrac-manipulator-controller-unknownparam">(6.24)</a> with known parameters, i.e., <span class="math inline">\(\tau = Y a - K_D s\)</span>, also guarantees the convergence of <span class="math inline">\(s\)</span> towards zero, though it is different from the feedback linearization controller <a href="adaptivecontrol.html#eq:ac-mrac-manipulator-controller-knownparam">(6.23)</a>. Try proving the convergence with a Lyapunov candidate <span class="math inline">\(V = \frac{1}{2}s^T H s\)</span>.<a href="adaptivecontrol.html#fnref9" class="footnote-back">↩︎</a></p></li>
+<ol start="9">
+<li id="fn9"><p>Consider two positive definite matrices <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>, let <span class="math inline">\(B = B^{1/2}B^{1/2}\)</span>. The product <span class="math inline">\(AB\)</span> can be written as <span class="math inline">\(AB = A B^{1/2}B^{1/2} = B^{-1/2} (B^{1/2} A B^{1/2}) B^{1/2}\)</span>. Therefore <span class="math inline">\(AB\)</span> is <a href="https://en.wikipedia.org/wiki/Matrix_similarity">similar</a> to <span class="math inline">\(B^{1/2} A B^{1/2}\)</span> and is positive definite.<a href="adaptivecontrol.html#fnref9" class="footnote-back">↩︎</a></p></li>
+<li id="fn10"><p>In fact, one can show that the controller <a href="adaptivecontrol.html#eq:ac-mrac-manipulator-controller-unknownparam">(6.24)</a> with known parameters, i.e., <span class="math inline">\(\tau = Y a - K_D s\)</span>, also guarantees the convergence of <span class="math inline">\(s\)</span> towards zero, though it is different from the feedback linearization controller <a href="adaptivecontrol.html#eq:ac-mrac-manipulator-controller-knownparam">(6.23)</a>. Try proving the convergence with a Lyapunov candidate <span class="math inline">\(V = \frac{1}{2}s^T H s\)</span>.<a href="adaptivecontrol.html#fnref10" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
             </section>
@@ -533,7 +535,7 @@ Slotine, Jean-Jacques E, Weiping Li, et al. 1991. <em>Applied Nonlinear Control<
         </div>
       </div>
 <a href="output-feedback.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="appconvex.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="linear-system-theory.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

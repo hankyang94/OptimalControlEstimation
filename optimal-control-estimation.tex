@@ -534,6 +534,106 @@ Of course, the general design strategy is rather conceptual, and in order for it
 
 In the following sections, we will study several representative normal forms and answer the above questions.
 
+\hypertarget{luenberger-template}{%
+\subsection{Luenberger Template}\label{luenberger-template}}
+
+Consider an instance of the normal form \eqref{eq:meta-observer-zeta} as follows:
+\begin{equation}
+\dot{\xi} = A \xi + B(u,y), \quad y = C \xi,
+\label{eq:Luenberger-linear-template}
+\end{equation}
+where \(A,C\) are constant matrices, and \(B(u,y)\) can depend nonlinearly on \(u\) and \(y\).
+
+For this template, we have the well-known Luenberger observer.
+
+\begin{theorem}[Luenberger Observer]
+\protect\hypertarget{thm:LuenbergerLinear}{}\label{thm:LuenbergerLinear}If the pair \((A,C)\) is detectable (see Theorem \ref{thm:ltidetectable}), then there exists a matrix \(K\) such that \(A-KC\) is Hurwitz and the system
+\begin{equation}
+\dot{\hat{\xi}} = A \hat{\xi} + B(u,y) + K(y - C \hat{\xi})
+\label{eq:Luenberger-Linear}
+\end{equation}
+is an observer for \eqref{eq:Luenberger-linear-template}.
+\end{theorem}
+
+\begin{proof}
+{TBD.}
+\end{proof}
+
+The Luenberger observer is an elegant result in observer design (and even in control theory) that has far-reaching impact. In my opinion, the essence of observer design is twofold: (i) to simulate the dynamics when the state estimation is correct, and (ii) to correct the state estimation from observation when it is off. These two pieces of ideas are evident in \eqref{eq:Luenberger-Linear}: the observer is a copy of the original dynamics (\(A \hat{\xi} + B(u,y)\)) plus a feedback correction from the difference between the ``imagined'' observation \(C\hat{\xi}\) and the true observation \(y\).
+
+You may think the Luenberger template is restricting because it requires the system to be linear (up to the only nonlinearly in \(B(u,y)\)). However, it turns out the Luenberger template is already quite useful, as I will show in the following pendulum example.
+
+\begin{example}[Luenberger Observer for A Simple Pendulum]
+\protect\hypertarget{exm:pendulumLuenberger}{}\label{exm:pendulumLuenberger}Consider a simple pendulum dynamics model
+\begin{equation}
+x = \begin{bmatrix}
+\theta \\ \dot{\theta}
+\end{bmatrix}, \quad 
+\dot{x} = \begin{bmatrix} 
+\dot{\theta} \\
+- \frac{1}{ml^2} (b \dot{\theta} + mgl \sin \theta) 
+\end{bmatrix} + 
+\begin{bmatrix}
+0 \\
+\frac{1}{ml^2} 
+\end{bmatrix} u, \quad y = \theta,
+\label{eq:kbobserver-pendulum}
+\end{equation}
+where \(\theta\) the angular position of the pendulum from the vertical line, \(m > 0\) the mass of the pendulum, \(l > 0\) the length, \(g\) the gravitational constant, \(b > 0\) the dampling coefficient, and \(u\) the control input (torque).
+
+We assume we can only observe the angular position of the pendulum in \eqref{eq:kbobserver-pendulum}, e.g., using a camera, but not the angular velocity. Our goal is to construct an observer that can provide a full state estimation.
+
+We first note that the pendulum dynamics \eqref{eq:kbobserver-pendulum} can actually be written in the (linear) Luenberger template \eqref{eq:Luenberger-linear-template} as\footnote{I have to say I was a bit surprised when I arrived at this formulation.}
+\begin{equation}
+\begin{split}
+\dot{x} & = \underbrace{\begin{bmatrix}
+0 & 1 \\
+0 & - \frac{b}{ml^2}
+\end{bmatrix}}_{=:A} x + 
+\underbrace{\begin{bmatrix}
+0 \\
+\frac{u - mgl \sin \theta }{ml^2}
+\end{bmatrix}}_{=:B(u,y)} \\
+y & = \underbrace{\begin{bmatrix}
+1 & 0
+\end{bmatrix}}_{=:C} x 
+\end{split}.
+\label{eq:pendulum-state-affine}
+\end{equation}
+\end{example}
+
+In order for us to use the Luenberger observer, we need to check if the pair \((A,C)\) is detectable. We can easily find the eigenvalues and eigenvectors of \(A\):
+\[
+A \begin{bmatrix}
+1 \\ 0
+\end{bmatrix} = 0,\quad 
+A \begin{bmatrix}
+- \frac{ml^2}{b} \\ 1 
+\end{bmatrix} = \begin{bmatrix}
+1 \\ - \frac{b}{ml^2}
+\end{bmatrix}
+= - \frac{b}{ml^2} \begin{bmatrix}
+- \frac{ml^2}{b} \\ 1 \end{bmatrix}.
+\]
+The first eigenvalue has real part equal to \(0\). However,
+\[
+C \begin{bmatrix}
+1 \\ 0
+\end{bmatrix} = 1 \neq 0.
+\]
+According to Theorem \ref{thm:ltidetectable}, we conclude \((A,C)\) is detectable.
+
+Now we need to find \(K\). An easy choice of \(K\) is
+\[
+K = \begin{bmatrix} k \\ 0 \end{bmatrix}, \quad A - KC = 
+\begin{bmatrix}
+- k & 1 \\ 0 & - \frac{b}{ml^2}
+\end{bmatrix}.
+\]
+With \(k > 0\), we know \(A- KC\) is guaranteed to be Hurwitz (the two eigenvalues of \(A-KC\) are \(-k\) and \(-b/ml^2\)), and we have obtained an observer!
+
+{TBD: simulate the observer.}
+
 \hypertarget{state-affine-template}{%
 \subsection{State-affine Template}\label{state-affine-template}}
 
@@ -542,6 +642,7 @@ Consider an instance of the normal form \eqref{eq:meta-observer-zeta} where the 
 \dot{\xi} = A(u,y) \xi + B(u,y), \quad y = C(u) \xi.
 \label{eq:state-affine-template}
 \end{equation}
+The difference between the state-affine template \eqref{eq:state-affine-template} and the Luenberger template \eqref{eq:Luenberger-linear-template} is that the linear matrices \(A,C\) are allowed to depend nonlinearly on the input \((u,y)\).
 
 Kalman and Bucy originally proposed an observer for linear time-varying systems \citep{kalman61-new}. The result is later extened by \citep{besanccon96ejc-observer} and \citep{hammouri90cdc-observer} to deal with coefficient matrices dependent on the control. The following theorem is a direct extension of the result from \citep{besanccon96ejc-observer} and \citep{hammouri90cdc-observer} by considering \((u,y)\) as an augmented control input.
 
@@ -627,24 +728,7 @@ is an observer for the state-affine system \eqref{eq:state-affine-template}.
 Let us work out an example of the Kalman-Bucy Observer for nonlinear systems.
 
 \begin{example}[Kalman-Bucy Observer for A Simple Pendulum]
-\protect\hypertarget{exm:pendulumkbobserver}{}\label{exm:pendulumkbobserver}Consider a simple pendulum dynamics model
-\begin{equation}
-x = \begin{bmatrix}
-\theta \\ \dot{\theta}
-\end{bmatrix}, \quad 
-\dot{x} = \begin{bmatrix} 
-\dot{\theta} \\
-- \frac{1}{ml^2} (b \dot{\theta} + mgl \sin \theta) 
-\end{bmatrix} + 
-\begin{bmatrix}
-0 \\
-\frac{1}{ml^2} 
-\end{bmatrix} u, \quad y = \theta,
-\label{eq:kbobserver-pendulum}
-\end{equation}
-where \(\theta\) the angular position of the pendulum from the vertical line, \(m > 0\) the mass of the pendulum, \(l > 0\) the length, \(g\) the gravitational constant, \(b > 0\) the dampling coefficient, and \(u\) the control input (torque).
-
-We assume we can only observe the angular position of the pendulum in \eqref{eq:kbobserver-pendulum}, e.g., using a camera, but not the angular velocity. Our goal is to construct an observer that can provide a full state estimation.
+\protect\hypertarget{exm:pendulumkbobserver}{}\label{exm:pendulumkbobserver}Let us reconsider the pendulum dynamics \eqref{eq:kbobserver-pendulum} but this time try to design a Kalman-Bucy observer.
 
 We first write the pendulum dynamics in a new coordinate system so that it is in the state-affine normal form \eqref{eq:state-affine-template}. We choose \(\xi = [\mathfrak{s},\mathfrak{c},\dot{\theta}]^T\) with \(\mathfrak{s} = \sin \theta\) and \(\mathfrak{c} = \cos \theta\). Clearly, we will be able to observe \(y = [\mathfrak{s},\mathfrak{c}]^T\) in this new coordinate. The state-affine normal form of the pendulum dynamics reads
 \begin{equation}
@@ -1098,6 +1182,37 @@ which implies the boundedness of \(\dot{s}\) (note that \(H\) is uniformly posit
 \hypertarget{appendix-appendix}{%
 \appendix}
 
+
+\hypertarget{linear-system-theory}{%
+\chapter{Linear System Theory}\label{linear-system-theory}}
+
+Consider the linear time-invariant (LTI) system
+\begin{equation}
+\dot{x} = A x + B u, \quad y = C x + D u,
+\label{eq:app-linear-system}
+\end{equation}
+where \(x \in \mathbb{R}^n\) the state, \(u \in \mathbb{R}^m\) the control, and \(A,B,C,D\) are constant matrices with proper sizes.
+
+\begin{theorem}[Detectability]
+\protect\hypertarget{thm:ltidetectable}{}\label{thm:ltidetectable}
+
+The following are equivalent for the LTI system \eqref{eq:app-linear-system}:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \((A,C)\) is detectable;
+\item
+  The matrix \(\begin{bmatrix} A - \lambda I \\ C \end{bmatrix}\) has full column rank for all \(\lambda \in \mathbb{C}\) such that \(\mathrm{Re}(\lambda) \geq 0\) ;
+\item
+  For all \(\lambda\) and \(x\) such that \(Ax = \lambda x\) and \(\mathrm{Re}(\lambda) \geq 0\), \(Cx \neq 0\);
+\item
+  There exists a matrix \(L\) such that \(A + LC\) is Hurwitz;
+\item
+  \((A^*,C^*)\) is stabilizable.
+\end{enumerate}
+
+\end{theorem}
 
 \hypertarget{appconvex}{%
 \chapter{Convex Analysis and Optimization}\label{appconvex}}
