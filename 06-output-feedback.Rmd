@@ -190,23 +190,19 @@ If the pair $(A,C)$ is detectable (see Theorem \@ref(thm:ltidetectable)), then t
 is an observer for \@ref(eq:Luenberger-linear-template).
 :::
 ::: {.proof}
-<span style="color:red">TBD.</span>
 Define $e(t) = \xi(t)  - \hat{\xi}(t)$. In that case,
 \begin{equation}
     \dot{e}(t) = [A - KC] e(t)
     (\#eq:Luenberger-error)
 \end{equation}
 
-Solving \@ref(\#eq:Luenberger-error), we obtain
+Solving \@ref(eq:Luenberger-error), we obtain
 
 \begin{equation}
     e(t) = \mathrm{exp}[(A - KC)t] e(0)
 \end{equation}
 
-Then, if the real components of $\mathrm{eig}(A - KC) < 0$, then $e(t) \rightarrow 0$ as $t \rightarrow \infty$, independent of the initial error $e(0) = \xi(0) - \hat{xi}(0)$. 
-
-
-Subtracting the error dynamics from the true dynamics, we obtain $\dot{e} = A - KC$. 
+Then, if the real components of the eigenvalues of $A - KC$ are strictly negative (i.e., $A - KC$ is Hurwitz), then $e(t) \rightarrow 0$ as $t \rightarrow \infty$, independent of the initial error $e(0) = \xi(0) - \hat{\xi}(0)$. From Theorem \@ref(thm:ltidetectable), we know that $(A,C)$ being detectable implies the existence of $K$ such that $A - KC$ is Hurwitz.
 :::
 
 The Luenberger observer is an elegant result in observer design (and even in control theory) that has far-reaching impact. In my opinion, the essence of observer design is twofold: (i) to simulate the dynamics when the state estimation is correct, and (ii) to correct the state estimation from observation when it is off. These two pieces of ideas are evident in \@ref(eq:Luenberger-Linear): the observer is a copy of the original dynamics ($A \hat{\xi} + B(u,y)$) plus a feedback correction from the difference between the "imagined" observation $C\hat{\xi}$ and the true observation $y$. 
