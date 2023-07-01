@@ -36,12 +36,71 @@ Clearly, $\dot{V} < 0$ for any $x \neq 0$ and $\dot{V}(0) = 0$. According to Lya
 $$
 P = \int_{t=0}^{\infty} e^{A^T t} Q e^{At} dt.
 $$
-Because $A$ is Hurwitz, the integral exists, and clearly $P \succ 0$ due to $Q \succ 0$. 
+Because $A$ is Hurwitz, the integral exists, and clearly $P \succ 0$ due to $Q \succ 0$. To show this choice of $P$ satisfies the Lyapunov equation, we write
+\begin{align}
+A^T P + P A &= \int_{t=0}^{\infty} \left( A^T e^{A^T t} Q e^{At} + e^{A^T t} Q e^{At} A  \right) dt \\
+&=\int_{t=0}^{\infty} d \left( e^{A^T t} Q e^{At} \right) \\ 
+& = e^{A^T t} Q e^{At}\vert_{t = \infty} - e^{A^T t} Q e^{At}\vert_{t = 0} = - Q,
+\end{align}
+where the last equality holds because $e^{A \infty} = 0$ (recall $A$ is Hurwitz).
+
+To show the uniqueness of $P$, we assume that there exists another matrix $P'$ that also satisfies the Lyapunov equation. Therefore,
+\begin{align}
+P' &= e^{A^T t} P' e^{At} \vert_{t=0} - e^{A^T t} P' e^{At} \vert_{t=\infty} \\
+ &= - \int_{t=0}^{\infty} d \left( e^{A^T t} P' e^{At} \right) \\
+ &= - \int_{t=0}^{\infty} e^{A^T t} \left( A^T P' + P' A \right) e^{At} dt \\
+ & = \int_{t=0}^{\infty} e^{A^T t} Q e^{At} dt = P,
+\end{align}
+leading to $P' = P$. Hence, the solution is unique. 
 :::
 :::
 
+**Convergence rate estimation**. We now show that Theorem \@ref(thm:lyapunovequation) can allow us to quantify the convergence rate of a (stable) linear system towards zero. 
 
+For a Hurwitz linear system $\dot{x} = Ax$, let us pick a positive definite matrix $Q$. Theorem \@ref(thm:lyapunovequation) tells us we can find a unique $P \succ 0$ satisfying the Lyapunov equation \@ref(eq:lyapunov-equation). In this case, we can upper bound the scalar function $V = x^T P x$ as 
+$$
+V \leq \lambda_{\max}(P) \Vert x \Vert^2.
+$$
+The time derivative of $V$ is $\dot{V} = - x^T Q x$, which can be upper bounded by 
+\begin{align}
+\dot{V} & \leq - \lambda_{\min} (Q) \Vert x \Vert^2 \\
+& = - \frac{\lambda_{\min} (Q)}{\lambda_{\max} (P)} \underbrace{ \left( \lambda_{\max} (P) \Vert x \Vert^2 \right)}_{\geq V} \\
+& \leq - \frac{\lambda_{\min} (Q)}{\lambda_{\max} (P)} V.
+\end{align}
+Denoting $\gamma(Q) = \frac{\lambda_{\min} (Q)}{\lambda_{\max}(P)}$, the above inequality implies 
+$$
+V(0) e^{-\gamma(Q) t} \geq V(t) = x^T P x \geq \lambda_{\min}(P) \Vert x \Vert^2.
+$$
+As a result, $\Vert x \Vert^2$ converges to zero exponentially with a rate at least $\gamma(Q)$, and $\Vert x \Vert$ converges to zero exponentially with a rate at least $\gamma(Q) / 2$.
 
+**Best convergence rate estimation**. I have used $\gamma (Q)$ to make it explict that the rate $\gamma$ depends on the choice of $Q$, because $P$ is computed from the Lyapunov equation as an implicit function of $Q$. Naturally, choosing different $Q$ will lead to different $\gamma (Q)$. So what is the choice of $Q$ that maximizes the convergence rate estimation? 
+
+::: {.corollary #bestconvergencerate name="Maximum Convergence Rate Estimation"}
+$Q = I$ maximizes the convergence rate estimation.
+:::
+::: {.proofbox}
+::: {.proof}
+let us denote $P_0$ as the solution to the Lyapunov equation with $Q = I$
+$$
+A^T P_0 + P_0 A = - I.
+$$
+Let $P$ be the solution corresponding to a different choice of $Q$
+$$
+A^T P + P A = - Q.
+$$
+Without loss of generality, we can assume $\lambda_{\min}(Q) = 1$, because rescaling $Q$ will recale $P$ by the same factor, which does not affect $\gamma(Q)$. Subtracting the two Lyapunov equations above we get 
+$$
+A^T (P - P_0) + (P - P_0) A = - (Q - I).
+$$
+Since $Q - I \succeq 0$ (due to $\lambda_{\min}(Q) = 1$), we know $P - P_0 \succeq 0$ and $\lambda_{\max} (P) \geq \lambda_{\max} (P_0)$. As a result, 
+$$
+\gamma(Q) = \frac{\lambda_{\min}(Q)}{\lambda_{\max}(P)} =  \frac{\lambda_{\min}(I)}{\lambda_{\max}(P)} \leq \frac{\lambda_{\min}(I)}{\lambda_{\max}(P_0)} = \gamma(I),
+$$
+and $Q = I$ maximizes the convergence rate estimation.
+:::
+:::
+
+---
 Consider the linear time-invariant (LTI) system 
 \begin{equation}
 \dot{x} = A x + B u, \quad y = C x + D u,

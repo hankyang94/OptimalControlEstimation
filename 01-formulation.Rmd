@@ -72,6 +72,7 @@ In deterministic control (i.e., when $w_k \equiv 0,\forall k$), however, a close
 
 We now introduce a general and powerful algorithm, namely _dynamic programming_ (DP), for solving the optimal control problem \@ref(def:basicproblem). The DP algorithm builds upon a quite simple intuition called the _Bellman principle of optimality_.
 
+::: {.theorembox}
 ::: {.theorem #bellmanoptimality name="Bellman Principle of Optimality"}
 Let $\pi^\star = \{ \mu_0^\star,\mu_1^\star,\dots,\mu_{N-1}^\star \}$ be an optimal policy for the optimal control problem \@ref(def:basicproblem). Assume that when using $\pi^\star$, a given state $x_i$ occurs at timestep $i$ with positive probability (i.e., $x_i$ is reachable at time $i$). 
 
@@ -81,11 +82,13 @@ $$
 $$
 Then the truncated policy $\{\mu^\star_i,\mu^\star_{i+1},\dots, \mu^\star_{N-1}\}$ must be optimal for the subproblem.
 :::
+:::
 
 Theorem \@ref(thm:bellmanoptimality) can be proved intuitively by contradiction: if the truncated policy $\{\mu^\star_i,\mu^\star_{i+1},\dots, \mu^\star_{N-1}\}$ is not optimal for the subproblem, say there exists a different policy $\{\mu_i',\mu_{i+1}',\dots, \mu_{N-1}'\}$ that attains a lower cost for the subproblem starting at $x_i$ at time $i$. Then the combined policy $\{\mu_0^\star,\dots,\mu^\star_{i-1},\mu_i',\dots,\mu_{N-1}'\}$ must attain a lower cost for the original optimal control problem \@ref(def:basicproblem) due to the additive cost structure, contradicting the optimality of $\pi^\star$. 
 
 The Bellman principle of optimality is more than just a principle, it is also an algorithm. It suggests that, to build an optimal policy, one can start by solving the last-stage subproblem to obtain $\{\mu^\star_{N-1} \}$, and then proceed to solve the subproblem containing the last two stages to obtain $\{ \mu^\star_{N-2},\mu^\star_{N-1} \}$. The recursion continues until optimal policies at all stages are computed. The following theorem formalizes this concept.
 
+::: {.theorembox}
 ::: {.theorem #dynamicprogramming name="Dynamic Programming"}
 The optimal value function $J^\star(x_0)$ of the optimal control problem \@ref(def:basicproblem) (starting from any given initial condition $x_0$) is equal to $J_0(x_0)$, which can be computed backwards and recursively as
 \begin{align}
@@ -95,6 +98,8 @@ J_k(x_k) &= \min_{u_k \in \mathbb{U}} \displaystyle \mathbb{E}_{w_k \sim P_k(\cd
 \end{align}
 Moreover, if $u_k^\star = \mu_k^\star(x_k)$ is a minimizer of \@ref(eq:dpbackwardrecursion) for every $x_k$, then the policy $\pi^\star = \{\mu_0^\star,\dots,\mu_{N-1}^\star \}$ is optimal.
 :::
+:::
+::: {.proofbox}
 ::: {.proof}
 For any admissible policy $\pi = \{ \mu_0,\dots,\mu_{N-1} \}$, denote $\pi^k = \{ \mu_k,\dots,\mu_{N-1} \}$ the last-$(N-k)$-stage truncated policy. Consider the subproblem consisting of the last $N-k$ stages starting from $x_k$, and let $J^\star_k(x_k)$ be its optimal cost-to-go. Mathematically, this is
 \begin{equation}
@@ -122,6 +127,7 @@ Now we assume $J^\star_{k+1}(x_{k+1}) = J_{k+1}(x_{k+1})$ for all $x_{k+1}$, and
 where \@ref(eq:dpproof-1) follows from definition \@ref(eq:dptheoremdefineJkstar); \@ref(eq:dpproof-2) expands $\pi^k = \{ \mu_k, \pi^{k+1}\}$ and $\sum_{i=k}^{N-1} g_i = g_k + \sum_{i=k+1}^{N-1}$; \@ref(eq:dpproof-3) writes the joint minimization over $\mu_k$ and $\pi^{k+1}$ as equivalently first minimizing over $\pi^{k+1}$ and then minimizing over $\mu_k$; \@ref(eq:dpproof-4) is the key step and holds because $g_k$ and $w_k$ depend only on $\mu_k$ but not on $\pi^{k+1}$; \@ref(eq:dpproof-5) follows again from definition \@ref(eq:dptheoremdefineJkstar) with $k$ replaced by $k+1$; \@ref(eq:dpproof-6) results from the induction assumption; \@ref(eq:dpproof-7) clearly holds because any $\mu_k(x_k)$ belongs to $\mathbb{U}$ and any element in $\mathbb{U}$ can be chosen by a feedback controller $\mu_k$; and lastly \@ref(eq:dpproof-8) follows from the dynamic programming algorithm \@ref(eq:dpbackwardrecursion).
 
 By induction, this shows that $J^\star_k(x_k) = J_k(x_k)$ for all $k=0,\dots,N$.
+:::
 :::
 
 The careful reader, especially from a robotics background, may soon become disappointed when seeing the DP algorithm \@ref(eq:dpbackwardrecursion) because it is rather conceptual than practical. To see this, we only need to run DP for $k=N-1$:
