@@ -1,5 +1,26 @@
 # Stability Analysis {#stability}
 
+Consider the autonomous system
+\begin{equation}
+\dot{x} = f(x)
+(\#eq:autonomous-system)
+\end{equation}
+
+::: {.theorembox}
+::: {.theorem #lyapunovglobalstability name="Lyapunov Global Stability"}
+For the autonomous system \@ref(eq:autonomous-system), suppose there exists a scalar function $V(x)$ with continuous first order derivatives such that 
+
+- $V(x)$ is positive define;
+
+- $\dot{V}(x)$ is negative define;
+
+- $V(x) \rightarrow \infty$ as $\Vert x \Vert \rightarrow \infty$,
+
+then the equilibrium point $x = 0$ is globally asymptotically stable.
+:::
+:::
+
+
 ::: {.lemma #Barbalat name="Barbalat's Lemma"}
 Let $f(t)$ be differentiable, if 
 
@@ -13,6 +34,7 @@ $$
 $$
 :::
 
+::: {.theorembox}
 ::: {.theorem #BarbalatStability name="Barbalat's Stability Certificate"}
 If a scalar function $V(x,t)$ satisfies
 
@@ -24,7 +46,10 @@ If a scalar function $V(x,t)$ satisfies
 
 then $\dot{V}(x,t) \rightarrow 0$ as $t \rightarrow \infty$.
 :::
+:::
+::: {.proofbox}
 ::: {.proof}
 $V(x,t)$ is lower bounded and $\dot{V}$ is negative semidefinite implies the limit of $V$ as $t \rightarrow \infty$ is finite (note that $V(x,t) \leq V(x(0),0)$). Then the theorem clearly follows from Barbalat's Lemma \@ref(lem:Barbalat).
+:::
 :::
 

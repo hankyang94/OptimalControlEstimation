@@ -69,7 +69,7 @@ If $\hat{x}$ can be read off directly from $z$, then we say the observer \@ref(e
 :::
 
 ### General Design Strategy
-
+::: {.theorembox}
 ::: {.theorem #observerdesignmeta name="Meta Observer"}
 Let $F: \mathbb{R}^p \times \mathbb{R}^m \times \mathbb{R}^d \rightarrow \mathbb{R}^p$, $H: \mathbb{R}^p \times \mathbb{R}^m \rightarrow \mathbb{R}^d$ and $\mathcal{F}: \mathbb{R}^p \times \mathbb{R}^m \times \mathbb{R}^d \rightarrow \mathbb{R}^p$ be continuous functions such that 
 \begin{equation}
@@ -119,6 +119,7 @@ $$
 \mathcal{T}_u \left( T_u(x,t),t \right) = x, \forall x \in \mathcal{X}.
 $$
 Moreover, denoting $\mathcal{T}$ the family of functions $\mathcal{T}_u$ for $u \in \mathcal{U}$, the couple $(\mathcal{F}, \mathcal{T})$ is an observer for the system \@ref(eq:output-feedback-system) initialized in $\mathcal{X}_0$.
+:::
 :::
 ::: {.proof}
 See Theorem 1.1 in [@bernard19book-observer].
@@ -267,7 +268,7 @@ C \begin{bmatrix}
 1 \\ 0
 \end{bmatrix} = 1 \neq 0.
 $$
-According to Theorem \@ref(thm:ltidetectable), we conclude $(A,C)$ is detectable. 
+According to Theorem \@ref(thm:ltidetectable), we conclude $(A,C)$ is detectable. In fact, the pair $(A,C)$ is more than just detectable, it is indeed observable (according to Theorem \@ref(thm:ltiobservable)). Therefore, the poles of $A - KC$ can be arbitrarily placed. 
 
 Now we need to find $K$. An easy choice of $K$ is 
 $$
@@ -277,6 +278,19 @@ K = \begin{bmatrix} k \\ 0 \end{bmatrix}, \quad A - KC =
 \end{bmatrix}.
 $$
 With $k > 0$, we know $A- KC$ is guaranteed to be Hurwitz (the two eigenvalues of $A-KC$ are $-k$ and $-b/ml^2$), and we have obtained an observer!
+
+Oftentimes, it is insufficient to ensure the estimator converges to the true state asymptotically, and we need to reason about the convergence rate. Particularly, let us define $e = \hat{x} - x$, and we know 
+$$
+\dot{e} = H e, \quad H = A - KC.
+$$
+Suppose we are interested in understanding the convergence rate of the squared norm of the error signal, that is,
+$$
+V = e^T e.
+$$
+Differentiating $V$ we obtain
+$$
+\dot{V} = 2 \dot{e}^T e = e^T (H + H^T) e
+$$
 
 <span style="color:red">TBD: simulate the observer.</span>
 :::
@@ -326,6 +340,7 @@ $$
 
 We now introduce the Kalman-Bucy Observer for the state-affine template \@ref(eq:state-affine-template).
 
+::: {.theorembox}
 ::: {.theorem #kalmanbucystateaffine name="Kalman-Bucy Observer"}
 Let $y_{\xi_0,u}(t) = C(u(t)) \Xi (\xi_0;t;u)$ be the output of system \@ref(eq:state-affine-template) at time $t$ with initialization $\xi_0$ and control $u$. Suppose the control $u$ satisfies 
 
@@ -362,6 +377,7 @@ K = P^{-1} C(u)^T
 (\#eq:kbobserver-gain)
 \end{equation}
 is an observer for the state-affine system \@ref(eq:state-affine-template).
+:::
 :::
 
 Let us work out an example of the Kalman-Bucy Observer for nonlinear systems.

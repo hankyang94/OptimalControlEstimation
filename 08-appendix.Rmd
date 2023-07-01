@@ -2,6 +2,46 @@
 
 # Linear System Theory
 
+::: {.theorembox}
+::: {.theorem #lyapunovequation name="Lyapunov Equation"}
+The following is equivalent for a linear time-invariant system $\dot{x} = A x$
+
+1. The system is globally asymptotically stable, i.e., $A$ is Hurwitz and $\lim_{t \rightarrow \infty} x(t) = 0$ regardless of the initial condition;
+
+2. For any positive definite matrix $Q$, the unique solution $P$ to the Lyapunov equation 
+\begin{equation}
+A^T P + P A = -Q
+(\#eq:lyapunov-equation)
+\end{equation}
+is positive definite.
+:::
+:::
+::: {.proofbox}
+::: {.proof}
+(a): $2 \Rightarrow 1$. Suppose we are given two positive definie matrices $P, Q \succ 0$ that satisfies the Lyapunov equation \@ref(eq:lyapunov-equation). Define a scalar function 
+$$
+V(x) = x^T P x.
+$$
+It is clear that $V > 0$ for any $x \neq 0$ and $V(x) = 0$ (i.e., $V(x)$ is positive definie). We also see $V(x)$ is radially unbounded because:
+$$
+V(x) \geq \lambda_{\min}(P) \Vert x \Vert^2 \Rightarrow \lim_{x \rightarrow \infty} V(x) \rightarrow \infty.
+$$
+The time derivative of $V$ reads
+$$
+\dot{V} = 2 x^T P \dot{x} = x^T (A^T P + P A) x = - x^T Q x. 
+$$
+Clearly, $\dot{V} < 0$ for any $x \neq 0$ and $\dot{V}(0) = 0$. According to Lyapunov's global stability theorem \@ref(thm:lyapunovglobalstability), we conclude the linear system $\dot{x} = Ax$ is globally asymptotically stable at $x = 0$.
+
+(b): $1 \Rightarrow 2$. Suppose $A$ is Hurwitz, we want to show that, for any $Q \succ 0$, there exists a unique $P \succ 0$ satisfying the Lyapunov equation \@ref(eq:lyapunov-equation). In fact, consider the matrix 
+$$
+P = \int_{t=0}^{\infty} e^{A^T t} Q e^{At} dt.
+$$
+Because $A$ is Hurwitz, the integral exists, and clearly $P \succ 0$ due to $Q \succ 0$. 
+:::
+:::
+
+
+
 Consider the linear time-invariant (LTI) system 
 \begin{equation}
 \dot{x} = A x + B u, \quad y = C x + D u,
@@ -9,6 +49,35 @@ Consider the linear time-invariant (LTI) system
 \end{equation}
 where $x \in \mathbb{R}^n$ the state, $u \in \mathbb{R}^m$ the control, and $A,B,C,D$ are constant matrices with proper sizes. 
 
+::: {.theorembox}
+::: {.theorem #ltiobservable name="Observability"}
+The following are equivalent for the LTI system \@ref(eq:app-linear-system):
+
+1. $(A,C)$ is observable;
+
+2. The observability grammian
+$$
+W_o (t) = \int_{0}^t e^{A^* \tau} C^* C e^{A\tau} d\tau
+$$
+is positive definite for any $t > 0$;
+
+3. The observability matrix 
+$$
+\mathcal{O} = \begin{bmatrix} C \\ CA \\ CA^2 \\ \vdots \\ C A^{n-1} \end{bmatrix}
+$$
+has full column rank;
+
+4. The matrix $\begin{bmatrix} A - \lambda I \\ C \end{bmatrix}$ has full column rank for all $\lambda \in \mathbb{C}$;
+
+5. For all $\lambda$ and $x$ such that $Ax = \lambda x$, $Cx \neq 0$;
+
+6. The eigenvalues of $A + LC$ can be freely assigned (with the restriction that complex eigenvalues are in conjugate pairs);
+
+7. $(A^*,C^*)$ is controllable.
+:::
+:::
+
+::: {.theorembox}
 ::: {.theorem #ltidetectable name="Detectability"}
 The following are equivalent for the LTI system \@ref(eq:app-linear-system):
 
@@ -21,6 +90,7 @@ The following are equivalent for the LTI system \@ref(eq:app-linear-system):
 4. There exists a matrix $L$ such that $A + LC$ is Hurwitz;
 
 5. $(A^*,C^*)$ is stabilizable.
+:::
 :::
 
 
