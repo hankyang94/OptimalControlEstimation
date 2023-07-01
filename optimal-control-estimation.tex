@@ -84,6 +84,13 @@
   coltext=black,
   boxsep=5pt,
   arc=4pt}
+
+  \newtcolorbox{theorembox}{
+    colback=green,
+    colframe=green,
+    coltext=black,
+    boxsep=5pt,
+    arc=4pt}
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
@@ -100,7 +107,7 @@
 
 \title{Optimal Control and Estimation}
 \author{Heng Yang}
-\date{2023-06-30}
+\date{2023-07-01}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -314,6 +321,27 @@ For general optimal control problems with continuous state space and control spa
 
 \hypertarget{stability}{%
 \chapter{Stability Analysis}\label{stability}}
+
+Consider the autonomous system
+\begin{equation}
+\dot{x} = f(x)
+\label{eq:autonomous-system}
+\end{equation}
+
+\begin{theorem}[Lyapunov Global Stability]
+\protect\hypertarget{thm:lyapunovglobalstability}{}\label{thm:lyapunovglobalstability}For the autonomous system \eqref{eq:autonomous-system}, suppose there exists a scalar function \(V(x)\) with continuous first order derivatives such that
+
+\begin{itemize}
+\item
+  \(V(x)\) is positive define;
+\item
+  \(\dot{V}(x)\) is negative define;
+\item
+  \(V(x) \rightarrow \infty\) as \(\Vert x \Vert \rightarrow \infty\),
+\end{itemize}
+
+then the equilibrium point \(x = 0\) is globally asymptotically stable.
+\end{theorem}
 
 \begin{lemma}[Barbalat's Lemma]
 \protect\hypertarget{lem:Barbalat}{}\label{lem:Barbalat}Let \(f(t)\) be differentiable, if
@@ -581,6 +609,12 @@ Solving \eqref{eq:Luenberger-error}, we obtain
 \end{equation}
 
 Then, if the real components of the eigenvalues of \(A - KC\) are strictly negative (i.e., \(A - KC\) is Hurwitz), then \(e(t) \rightarrow 0\) as \(t \rightarrow \infty\), independent of the initial error \(e(0) = \xi(0) - \hat{\xi}(0)\). From Theorem \ref{thm:ltidetectable}, we know that \((A,C)\) being detectable implies the existence of \(K\) such that \(A - KC\) is Hurwitz.
+
+If one is further interested in estimating the convergence rate of the Luenberger observer, then one can use the result from Corollary \ref{cor:bestconvergencerate}. Particularly, one can solve the Lyapunov equation
+\[
+(A - KC)^T P + P (A - KC) = - I
+\]
+to obtain \(P\). Then the convergence rate of \(\Vert e \Vert\) towards zero is \(\frac{0.5}{\lambda_{\max}(P)}\).
 \end{proof}
 
 The Luenberger observer is an elegant result in observer design (and even in control theory) that has far-reaching impact. In my opinion, the essence of observer design is twofold: (i) to simulate the dynamics when the state estimation is correct, and (ii) to correct the state estimation from observation when it is off. These two pieces of ideas are evident in \eqref{eq:Luenberger-Linear}: the observer is a copy of the original dynamics (\(A \hat{\xi} + B(u,y)\)) plus a feedback correction from the difference between the ``imagined'' observation \(C\hat{\xi}\) and the true observation \(y\).
@@ -644,7 +678,7 @@ C \begin{bmatrix}
 1 \\ 0
 \end{bmatrix} = 1 \neq 0.
 \]
-According to Theorem \ref{thm:ltidetectable}, we conclude \((A,C)\) is detectable.
+According to Theorem \ref{thm:ltidetectable}, we conclude \((A,C)\) is detectable. In fact, the pair \((A,C)\) is more than just detectable, it is indeed observable (according to Theorem \ref{thm:ltiobservable}). Therefore, the poles of \(A - KC\) can be arbitrarily placed.
 
 Now we need to find \(K\). An easy choice of \(K\) is
 \[
@@ -654,6 +688,19 @@ K = \begin{bmatrix} k \\ 0 \end{bmatrix}, \quad A - KC =
 \end{bmatrix}.
 \]
 With \(k > 0\), we know \(A- KC\) is guaranteed to be Hurwitz (the two eigenvalues of \(A-KC\) are \(-k\) and \(-b/ml^2\)), and we have obtained an observer!
+
+Oftentimes, it is insufficient to ensure the estimator converges to the true state asymptotically, and we need to reason about the convergence rate. Particularly, let us define \(e = \hat{x} - x\), and we know
+\[
+\dot{e} = H e, \quad H = A - KC.
+\]
+Suppose we are interested in understanding the convergence rate of the squared norm of the error signal, that is,
+\[
+V = e^T e.
+\]
+Differentiating \(V\) we obtain
+\[
+\dot{V} = 2 \dot{e}^T e = e^T (H + H^T) e
+\]
 
 {TBD: simulate the observer.}
 \end{example}
@@ -1210,12 +1257,148 @@ which implies the boundedness of \(\dot{s}\) (note that \(H\) is uniformly posit
 \hypertarget{linear-system-theory}{%
 \chapter{Linear System Theory}\label{linear-system-theory}}
 
+\begin{theorem}[Lyapunov Equation]
+\protect\hypertarget{thm:lyapunovequation}{}\label{thm:lyapunovequation}
+
+The following is equivalent for a linear time-invariant system \(\dot{x} = A x\)
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  The system is globally asymptotically stable, i.e., \(A\) is Hurwitz and \(\lim_{t \rightarrow \infty} x(t) = 0\) regardless of the initial condition;
+\item
+  For any positive definite matrix \(Q\), the unique solution \(P\) to the Lyapunov equation
+  \begin{equation}
+  A^T P + P A = -Q
+  \label{eq:lyapunov-equation}
+  \end{equation}
+  is positive definite.
+\end{enumerate}
+
+\end{theorem}
+
+\begin{proof}
+(a): \(2 \Rightarrow 1\). Suppose we are given two positive definie matrices \(P, Q \succ 0\) that satisfies the Lyapunov equation \eqref{eq:lyapunov-equation}. Define a scalar function
+\[
+V(x) = x^T P x.
+\]
+It is clear that \(V > 0\) for any \(x \neq 0\) and \(V(x) = 0\) (i.e., \(V(x)\) is positive definie). We also see \(V(x)\) is radially unbounded because:
+\[
+V(x) \geq \lambda_{\min}(P) \Vert x \Vert^2 \Rightarrow \lim_{x \rightarrow \infty} V(x) \rightarrow \infty.
+\]
+The time derivative of \(V\) reads
+\[
+\dot{V} = 2 x^T P \dot{x} = x^T (A^T P + P A) x = - x^T Q x. 
+\]
+Clearly, \(\dot{V} < 0\) for any \(x \neq 0\) and \(\dot{V}(0) = 0\). According to Lyapunov's global stability theorem \ref{thm:lyapunovglobalstability}, we conclude the linear system \(\dot{x} = Ax\) is globally asymptotically stable at \(x = 0\).
+
+(b): \(1 \Rightarrow 2\). Suppose \(A\) is Hurwitz, we want to show that, for any \(Q \succ 0\), there exists a unique \(P \succ 0\) satisfying the Lyapunov equation \eqref{eq:lyapunov-equation}. In fact, consider the matrix
+\[
+P = \int_{t=0}^{\infty} e^{A^T t} Q e^{At} dt.
+\]
+Because \(A\) is Hurwitz, the integral exists, and clearly \(P \succ 0\) due to \(Q \succ 0\). To show this choice of \(P\) satisfies the Lyapunov equation, we write
+\begin{align}
+A^T P + P A &= \int_{t=0}^{\infty} \left( A^T e^{A^T t} Q e^{At} + e^{A^T t} Q e^{At} A  \right) dt \\
+&=\int_{t=0}^{\infty} d \left( e^{A^T t} Q e^{At} \right) \\ 
+& = e^{A^T t} Q e^{At}\vert_{t = \infty} - e^{A^T t} Q e^{At}\vert_{t = 0} = - Q,
+\end{align}
+where the last equality holds because \(e^{A \infty} = 0\) (recall \(A\) is Hurwitz).
+
+To show the uniqueness of \(P\), we assume that there exists another matrix \(P'\) that also satisfies the Lyapunov equation. Therefore,
+\begin{align}
+P' &= e^{A^T t} P' e^{At} \vert_{t=0} - e^{A^T t} P' e^{At} \vert_{t=\infty} \\
+ &= - \int_{t=0}^{\infty} d \left( e^{A^T t} P' e^{At} \right) \\
+ &= - \int_{t=0}^{\infty} e^{A^T t} \left( A^T P' + P' A \right) e^{At} dt \\
+ & = \int_{t=0}^{\infty} e^{A^T t} Q e^{At} dt = P,
+\end{align}
+leading to \(P' = P\). Hence, the solution is unique.
+\end{proof}
+
+\textbf{Convergence rate estimation}. We now show that Theorem \ref{thm:lyapunovequation} can allow us to quantify the convergence rate of a (stable) linear system towards zero.
+
+For a Hurwitz linear system \(\dot{x} = Ax\), let us pick a positive definite matrix \(Q\). Theorem \ref{thm:lyapunovequation} tells us we can find a unique \(P \succ 0\) satisfying the Lyapunov equation \eqref{eq:lyapunov-equation}. In this case, we can upper bound the scalar function \(V = x^T P x\) as
+\[
+V \leq \lambda_{\max}(P) \Vert x \Vert^2.
+\]
+The time derivative of \(V\) is \(\dot{V} = - x^T Q x\), which can be upper bounded by
+\begin{align}
+\dot{V} & \leq - \lambda_{\min} (Q) \Vert x \Vert^2 \\
+& = - \frac{\lambda_{\min} (Q)}{\lambda_{\max} (P)} \underbrace{ \left( \lambda_{\max} (P) \Vert x \Vert^2 \right)}_{\geq V} \\
+& \leq - \frac{\lambda_{\min} (Q)}{\lambda_{\max} (P)} V.
+\end{align}
+Denoting \(\gamma(Q) = \frac{\lambda_{\min} (Q)}{\lambda_{\max}(P)}\), the above inequality implies
+\[
+V(0) e^{-\gamma(Q) t} \geq V(t) = x^T P x \geq \lambda_{\min}(P) \Vert x \Vert^2.
+\]
+As a result, \(\Vert x \Vert^2\) converges to zero exponentially with a rate at least \(\gamma(Q)\), and \(\Vert x \Vert\) converges to zero exponentially with a rate at least \(\gamma(Q) / 2\).
+
+\textbf{Best convergence rate estimation}. I have used \(\gamma (Q)\) to make it explict that the rate \(\gamma\) depends on the choice of \(Q\), because \(P\) is computed from the Lyapunov equation as an implicit function of \(Q\). Naturally, choosing different \(Q\) will lead to different \(\gamma (Q)\). So what is the choice of \(Q\) that maximizes the convergence rate estimation?
+
+\begin{corollary}[Maximum Convergence Rate Estimation]
+\protect\hypertarget{cor:bestconvergencerate}{}\label{cor:bestconvergencerate}\(Q = I\) maximizes the convergence rate estimation.
+\end{corollary}
+
+\begin{proof}
+let us denote \(P_0\) as the solution to the Lyapunov equation with \(Q = I\)
+\[
+A^T P_0 + P_0 A = - I.
+\]
+Let \(P\) be the solution corresponding to a different choice of \(Q\)
+\[
+A^T P + P A = - Q.
+\]
+Without loss of generality, we can assume \(\lambda_{\min}(Q) = 1\), because rescaling \(Q\) will recale \(P\) by the same factor, which does not affect \(\gamma(Q)\). Subtracting the two Lyapunov equations above we get
+\[
+A^T (P - P_0) + (P - P_0) A = - (Q - I).
+\]
+Since \(Q - I \succeq 0\) (due to \(\lambda_{\min}(Q) = 1\)), we know \(P - P_0 \succeq 0\) and \(\lambda_{\max} (P) \geq \lambda_{\max} (P_0)\). As a result,
+\[
+\gamma(Q) = \frac{\lambda_{\min}(Q)}{\lambda_{\max}(P)} =  \frac{\lambda_{\min}(I)}{\lambda_{\max}(P)} \leq \frac{\lambda_{\min}(I)}{\lambda_{\max}(P_0)} = \gamma(I),
+\]
+and \(Q = I\) maximizes the convergence rate estimation.
+\end{proof}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
 Consider the linear time-invariant (LTI) system
 \begin{equation}
 \dot{x} = A x + B u, \quad y = C x + D u,
 \label{eq:app-linear-system}
 \end{equation}
 where \(x \in \mathbb{R}^n\) the state, \(u \in \mathbb{R}^m\) the control, and \(A,B,C,D\) are constant matrices with proper sizes.
+
+\begin{theorem}[Observability]
+\protect\hypertarget{thm:ltiobservable}{}\label{thm:ltiobservable}
+
+The following are equivalent for the LTI system \eqref{eq:app-linear-system}:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \((A,C)\) is observable;
+\item
+  The observability grammian
+  \[
+  W_o (t) = \int_{0}^t e^{A^* \tau} C^* C e^{A\tau} d\tau
+  \]
+  is positive definite for any \(t > 0\);
+\item
+  The observability matrix
+  \[
+  \mathcal{O} = \begin{bmatrix} C \\ CA \\ CA^2 \\ \vdots \\ C A^{n-1} \end{bmatrix}
+  \]
+  has full column rank;
+\item
+  The matrix \(\begin{bmatrix} A - \lambda I \\ C \end{bmatrix}\) has full column rank for all \(\lambda \in \mathbb{C}\);
+\item
+  For all \(\lambda\) and \(x\) such that \(Ax = \lambda x\), \(Cx \neq 0\);
+\item
+  The eigenvalues of \(A + LC\) can be freely assigned (with the restriction that complex eigenvalues are in conjugate pairs);
+\item
+  \((A^*,C^*)\) is controllable.
+\end{enumerate}
+
+\end{theorem}
 
 \begin{theorem}[Detectability]
 \protect\hypertarget{thm:ltidetectable}{}\label{thm:ltidetectable}

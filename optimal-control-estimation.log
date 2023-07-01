@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.1.13)  29 JUN 2023 18:54
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.1.13)  1 JUL 2023 16:10
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -568,7 +568,7 @@ Package: xurl 2022/01/09 v 0.10 modify URL breaks
 \c@example=\count320
 \c@exercise=\count321
 \c@hypothesis=\count322
-LaTeX Font Info:    Trying to load font information for T1+lmr on input line 122.
+LaTeX Font Info:    Trying to load font information for T1+lmr on input line 129.
  (/usr/local/texlive/2022/texmf-dist/tex/latex/lm/t1lmr.fd
 File: t1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 ) (/usr/local/texlive/2022/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
@@ -582,36 +582,36 @@ LaTeX Warning: Label `eq:pendulum-state-affine' multiply defined.
 )
 \openout1 = `optimal-control-estimation.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 122.
-LaTeX Font Info:    ... okay on input line 122.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 122.
-LaTeX Font Info:    ... okay on input line 122.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 122.
-LaTeX Font Info:    ... okay on input line 122.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 122.
-LaTeX Font Info:    ... okay on input line 122.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 122.
-LaTeX Font Info:    ... okay on input line 122.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 122.
-LaTeX Font Info:    ... okay on input line 122.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 122.
-LaTeX Font Info:    ... okay on input line 122.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 122.
-LaTeX Font Info:    ... okay on input line 122.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 122.
-LaTeX Font Info:    ... okay on input line 122.
-LaTeX Info: Redefining \microtypecontext on input line 122.
-Package microtype Info: Applying patch `item' on input line 122.
-Package microtype Info: Applying patch `toc' on input line 122.
-Package microtype Info: Applying patch `eqnum' on input line 122.
-Package microtype Info: Applying patch `footnote' on input line 122.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 129.
+LaTeX Font Info:    ... okay on input line 129.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 129.
+LaTeX Font Info:    ... okay on input line 129.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 129.
+LaTeX Font Info:    ... okay on input line 129.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 129.
+LaTeX Font Info:    ... okay on input line 129.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 129.
+LaTeX Font Info:    ... okay on input line 129.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 129.
+LaTeX Font Info:    ... okay on input line 129.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 129.
+LaTeX Font Info:    ... okay on input line 129.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 129.
+LaTeX Font Info:    ... okay on input line 129.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 129.
+LaTeX Font Info:    ... okay on input line 129.
+LaTeX Info: Redefining \microtypecontext on input line 129.
+Package microtype Info: Applying patch `item' on input line 129.
+Package microtype Info: Applying patch `toc' on input line 129.
+Package microtype Info: Applying patch `eqnum' on input line 129.
+Package microtype Info: Applying patch `footnote' on input line 129.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using protrusion set `basicmath'.
 Package microtype Info: Automatic font expansion enabled (level 2),
 (microtype)             stretch: 20, shrink: 20, step: 1, non-selected.
 Package microtype Info: Using default expansion set `alltext-nott'.
-LaTeX Info: Redefining \showhyphens on input line 122.
+LaTeX Info: Redefining \showhyphens on input line 129.
 Package microtype Info: No adjustment of tracking.
 Package microtype Info: No adjustment of interword spacing.
 Package microtype Info: No adjustment of character kerning.
@@ -636,7 +636,7 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 48
  (/usr/local/texlive/2022/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 ))
-Package hyperref Info: Link coloring OFF on input line 122.
+Package hyperref Info: Link coloring OFF on input line 129.
  (/usr/local/texlive/2022/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2021-04-02 v2.47 Cross-referencing by name of section
  (/usr/local/texlive/2022/texmf-dist/tex/latex/refcount/refcount.sty
@@ -646,38 +646,38 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
 \c@section@level=\count330
 )
-LaTeX Info: Redefining \ref on input line 122.
-LaTeX Info: Redefining \pageref on input line 122.
-LaTeX Info: Redefining \nameref on input line 122.
-LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 124.
+LaTeX Info: Redefining \ref on input line 129.
+LaTeX Info: Redefining \pageref on input line 129.
+LaTeX Info: Redefining \nameref on input line 129.
+LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 131.
  (/usr/local/texlive/2022/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 124.
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 131.
  (/usr/local/texlive/2022/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 124.
+LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 131.
  (/usr/local/texlive/2022/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 124.
+LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 131.
  (/usr/local/texlive/2022/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <12> on input line 124.
+(Font)              <12> on input line 131.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 124.
+(Font)              <8> on input line 131.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 124.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 124.
+(Font)              <6> on input line 131.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 131.
  (/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 ) (/usr/local/texlive/2022/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 124.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 131.
  (/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) (/usr/local/texlive/2022/texmf-dist/tex/latex/microtype/mt-msb.cfg
@@ -704,38 +704,38 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 
 ]
 Chapter 1.
-LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 168.
+LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 175.
 (/usr/local/texlive/2022/texmf-dist/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 ) [7]
 
-Package natbib Warning: Citation `bertsekas12book-dpocI' on page 8 undefined on input line 224.
+Package natbib Warning: Citation `bertsekas12book-dpocI' on page 8 undefined on input line 231.
 
 
-Package natbib Warning: Citation `bertsekas12book-dpocI' on page 8 undefined on input line 226.
+Package natbib Warning: Citation `bertsekas12book-dpocI' on page 8 undefined on input line 233.
 
 [8]
-Overfull \hbox (40.36504pt too wide) detected at line 254
+Overfull \hbox (40.36504pt too wide) detected at line 261
 []
  []
 
 [9]
-Underfull \hbox (badness 1902) in paragraph at lines 259--260
+Underfull \hbox (badness 1902) in paragraph at lines 266--267
 []\T1/lmr/m/n/10 (+20) For any ad-mis-si-ble pol-icy $\OML/lmm/m/it/10 ^^Y \OT1/lmr/m/n/10 (+20) = \OMS/lmsy/m/n/10 f\OML/lmm/m/it/10 ^^V[]; [] ; ^^V[]\OMS/lmsy/m/n/10 g$\T1/lmr/m/n/10 (+20) , de-note $\OML/lmm/m/it/10 ^^Y[] \OT1/lmr/m/n/10 (+20) =
  []
 
 
-Underfull \hbox (badness 1383) in paragraph at lines 259--260
+Underfull \hbox (badness 1383) in paragraph at lines 266--267
 \OMS/lmsy/m/n/10 f\OML/lmm/m/it/10 ^^V[]; [] ; ^^V[]\OMS/lmsy/m/n/10 g$ \T1/lmr/m/n/10 (+20) the last-$\OT1/lmr/m/n/10 (+20) (\OML/lmm/m/it/10 N \OMS/lmsy/m/n/10 ^^@ \OML/lmm/m/it/10 k\OT1/lmr/m/n/10 (+20) )$\T1/lmr/m/n/10 (+20) -stage trun-cated pol-icy. Con-sider the
  []
 
 
-Overfull \hbox (0.75839pt too wide) detected at line 263
+Overfull \hbox (0.75839pt too wide) detected at line 270
 [][]\OML/lmm/m/it/10 J[]\OT1/lmr/m/n/10 (\OML/lmm/m/it/10 x[]\OT1/lmr/m/n/10 ) = [] \U/msb/m/n/10 E[] [] \OML/lmm/m/it/10 ;  k \OT1/lmr/m/n/10 = 0\OML/lmm/m/it/10 ; \OT1/lmr/m/n/10 1\OML/lmm/m/it/10 ; [] ; N \OMS/lmsy/m/n/10 ^^@ \OT1/lmr/m/n/10 1\OML/lmm/m/it/10 :
  []
 
 
-Overfull \hbox (30.06778pt too wide) detected at line 281
+Overfull \hbox (30.06778pt too wide) detected at line 288
 []
  []
 
@@ -743,7 +743,7 @@ Overfull \hbox (30.06778pt too wide) detected at line 281
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [10]
-Overfull \hbox (25.87103pt too wide) detected at line 291
+Overfull \hbox (25.87103pt too wide) detected at line 298
 [][]\OML/lmm/m/it/10 J[]\OT1/lmr/m/n/10 (\OML/lmm/m/it/10 x[]\OT1/lmr/m/n/10 ) = [] \U/msb/m/n/10 E[] [] \OML/lmm/m/it/10 :
  []
 
@@ -759,90 +759,90 @@ Chapter 3.
 
 ]
 Chapter 4.
-[17] [18
-
-]
+[17] [18]
 Chapter 5.
 
-Package natbib Warning: Citation `bernard19book-observer' on page 19 undefined on input line 384.
+Package natbib Warning: Citation `bernard19book-observer' on page 19 undefined on input line 412.
 
 
-Package natbib Warning: Citation `bernard22arc-observer' on page 19 undefined on input line 384.
+Package natbib Warning: Citation `bernard22arc-observer' on page 19 undefined on input line 412.
 
-[19]
+[19
 
-Package natbib Warning: Citation `karagiannis05cdc-nonlinear' on page 20 undefined on input line 417.
+]
+
+Package natbib Warning: Citation `karagiannis05cdc-nonlinear' on page 20 undefined on input line 445.
 
 
-Package natbib Warning: Citation `astolfi03tac-immersion' on page 20 undefined on input line 417.
+Package natbib Warning: Citation `astolfi03tac-immersion' on page 20 undefined on input line 445.
 
 [20] [21]
 
-Package natbib Warning: Citation `bernard19book-observer' on page 22 undefined on input line 488.
+Package natbib Warning: Citation `bernard19book-observer' on page 22 undefined on input line 516.
 
 [22] [23] [24]
 
-Package natbib Warning: Citation `kalman61-new' on page 25 undefined on input line 659.
+Package natbib Warning: Citation `kalman61-new' on page 25 undefined on input line 718.
 
 
-Package natbib Warning: Citation `besanccon96ejc-observer' on page 25 undefined on input line 659.
+Package natbib Warning: Citation `besanccon96ejc-observer' on page 25 undefined on input line 718.
 
 
-Package natbib Warning: Citation `hammouri90cdc-observer' on page 25 undefined on input line 659.
+Package natbib Warning: Citation `hammouri90cdc-observer' on page 25 undefined on input line 718.
 
 
-Package natbib Warning: Citation `besanccon96ejc-observer' on page 25 undefined on input line 659.
+Package natbib Warning: Citation `besanccon96ejc-observer' on page 25 undefined on input line 718.
 
 
-Package natbib Warning: Citation `hammouri90cdc-observer' on page 25 undefined on input line 659.
+Package natbib Warning: Citation `hammouri90cdc-observer' on page 25 undefined on input line 718.
 
-[25]
-LaTeX Font Info:    Trying to load font information for U+euf on input line 745.
+[25] [26]
+LaTeX Font Info:    Trying to load font information for U+euf on input line 804.
  (/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/ueuf.fd
 File: ueuf.fd 2013/01/14 v3.01 Euler Fraktur
 ) (/usr/local/texlive/2022/texmf-dist/tex/latex/microtype/mt-euf.cfg
 File: mt-euf.cfg 2006/07/03 v1.1 microtype config. file: AMS Euler Fraktur (RS)
-) [26]
-Overfull \hbox (15.54147pt too wide) detected at line 775
+)
+Overfull \hbox (15.54147pt too wide) detected at line 834
 \OMS/lmsy/m/n/10 k\OML/lmm/m/it/10 A\OT1/lmr/m/n/10 (\OML/lmm/m/it/10 u; y\OT1/lmr/m/n/10 )\OML/lmm/m/it/10 ^^X\OMS/lmsy/m/n/10 k \OT1/lmr/m/n/10 = \OMS/lmsy/m/n/10 k\OML/lmm/m/it/10 ^^X[]\OT1/lmr/m/n/10 (\U/euf/m/n/10 c \OMS/lmsy/m/n/10 ^^@ \U/euf/m/n/10 s \OMS/lmsy/m/n/10 ^^@ \OML/lmm/m/it/10 b=ml[]\OT1/lmr/m/n/10 )\OMS/lmsy/m/n/10 k ^^T j\OML/lmm/m/it/10 ^^X[]\OMS/lmsy/m/n/10 j[][] ^^T k\OML/lmm/m/it/10 ^^X\OMS/lmsy/m/n/10 k[]\OML/lmm/m/it/10 :
  []
 
 
-Overfull \hbox (5.60188pt too wide) detected at line 787
+Overfull \hbox (5.60188pt too wide) detected at line 846
 \OT1/lmr/m/n/10 ^^@[](\OML/lmm/m/it/10 t \OMS/lmsy/m/n/10 ^^@ []\OML/lmm/m/it/10 ; t\OT1/lmr/m/n/10 ) = [][] 	[](\OML/lmm/m/it/10 ^^\; t\OT1/lmr/m/n/10 )[]\OML/lmm/m/it/10 C[]C\OT1/lmr/m/n/10 	[](\OML/lmm/m/it/10 ^^\; t\OT1/lmr/m/n/10 )\OML/lmm/m/it/10 d^^\ \OT1/lmr/m/n/10 = [][] 	[](\OML/lmm/m/it/10 ^^\; t\OT1/lmr/m/n/10 )[] [] 	[](\OML/lmm/m/it/10 ^^\; t\OT1/lmr/m/n/10 )\OML/lmm/m/it/10 d^^\
  []
 
-[27] [28
-
-]
+[27] [28]
 Chapter 6.
-[29] [30] [31] [32] [33] [34]
-<images/drawme.png, id=508, 670.505pt x 310.15875pt>
+[29
+
+] [30] [31] [32] [33] [34]
+<images/drawme.png, id=520, 670.505pt x 310.15875pt>
 File: images/drawme.png Graphic file (type png)
 <use images/drawme.png>
-Package pdftex.def Info: images/drawme.png  used on input line 1072.
+Package pdftex.def Info: images/drawme.png  used on input line 1131.
 (pdftex.def)             Requested size: 206.995pt x 95.75067pt.
  [35] [36 <./images/drawme.png>] [37]
 
-Package natbib Warning: Citation `slotine91book-applied' on page 38 undefined on input line 1154.
+Package natbib Warning: Citation `slotine91book-applied' on page 38 undefined on input line 1213.
 
 [38] [39] [40
 
 ]
 Appendix A.
-[41] [42
-
-]
+[41] [42] [43] [44]
 Appendix B.
-[43] [44
+[45
+
+] [46
 
 ]
 Appendix C.
-[45] [46
+[47] [48
 
 ]
 Appendix D.
-[47] [48
+[49] [50
 
 ]
 Appendix E.
@@ -850,24 +850,24 @@ No file optimal-control-estimation.bbl.
 
 Package natbib Warning: There were undefined citations.
 
-[49] (./optimal-control-estimation.aux)
+[51] (./optimal-control-estimation.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 23570 strings out of 478268
- 433062 string characters out of 5846347
- 734283 words of memory out of 5000000
- 40785 multiletter control sequences out of 15000+600000
- 561476 words of font info for 227 fonts, out of 8000000 for 9000
+ 23639 strings out of 478268
+ 433962 string characters out of 5846347
+ 734777 words of memory out of 5000000
+ 40795 multiletter control sequences out of 15000+600000
+ 562740 words of font info for 240 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 83i,29n,80p,1188b,519s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 83i,29n,80p,1188b,529s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}</usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/euler/eufm10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/euler/eufm7.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmmi5.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmr17.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmr5.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmr6.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmro10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmsy5.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmsy6.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm7.pfb>
-Output written on optimal-control-estimation.pdf (49 pages, 547829 bytes).
+Output written on optimal-control-estimation.pdf (51 pages, 566136 bytes).
 PDF statistics:
- 902 PDF objects out of 1000 (max. 8388607)
- 782 compressed objects within 8 object streams
- 272 named destinations out of 1000 (max. 500000)
+ 960 PDF objects out of 1000 (max. 8388607)
+ 837 compressed objects within 9 object streams
+ 305 named destinations out of 1000 (max. 500000)
  49314 words of extra memory for PDF output out of 51595 (max. 10000000)
 

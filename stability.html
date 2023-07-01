@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-06-30" />
+<meta name="date" content="2023-07-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -155,6 +155,22 @@ div.csl-indent {
             <section class="normal" id="section-">
 <div id="stability" class="section level1 hasAnchor" number="4">
 <h1><span class="header-section-number">Chapter 4</span> Stability Analysis<a href="stability.html#stability" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Consider the autonomous system
+<span class="math display" id="eq:autonomous-system">\[\begin{equation}
+\dot{x} = f(x)
+\tag{4.1}
+\end{equation}\]</span></p>
+<div class="theorembox">
+<div class="theorem">
+<p><span id="thm:lyapunovglobalstability" class="theorem"><strong>Theorem 4.1  (Lyapunov Global Stability) </strong></span>For the autonomous system <a href="stability.html#eq:autonomous-system">(4.1)</a>, suppose there exists a scalar function <span class="math inline">\(V(x)\)</span> with continuous first order derivatives such that</p>
+<ul>
+<li><p><span class="math inline">\(V(x)\)</span> is positive define;</p></li>
+<li><p><span class="math inline">\(\dot{V}(x)\)</span> is negative define;</p></li>
+<li><p><span class="math inline">\(V(x) \rightarrow \infty\)</span> as <span class="math inline">\(\Vert x \Vert \rightarrow \infty\)</span>,</p></li>
+</ul>
+<p>then the equilibrium point <span class="math inline">\(x = 0\)</span> is globally asymptotically stable.</p>
+</div>
+</div>
 <div class="lemma">
 <p><span id="lem:Barbalat" class="lemma"><strong>Lemma 4.1  (Barbalat's Lemma) </strong></span>Let <span class="math inline">\(f(t)\)</span> be differentiable, if</p>
 <ul>
@@ -166,8 +182,9 @@ div.csl-indent {
 \lim_{t \rightarrow \infty} \dot{f}(t) = 0.
 \]</span></p>
 </div>
+<div class="theorembox">
 <div class="theorem">
-<p><span id="thm:BarbalatStability" class="theorem"><strong>Theorem 4.1  (Barbalat's Stability Certificate) </strong></span>If a scalar function <span class="math inline">\(V(x,t)\)</span> satisfies</p>
+<p><span id="thm:BarbalatStability" class="theorem"><strong>Theorem 4.2  (Barbalat's Stability Certificate) </strong></span>If a scalar function <span class="math inline">\(V(x,t)\)</span> satisfies</p>
 <ul>
 <li><p><span class="math inline">\(V(x,t)\)</span> is lower bounded,</p></li>
 <li><p><span class="math inline">\(\dot{V}(x,t)\)</span> is negative semidefinite</p></li>
@@ -175,8 +192,11 @@ div.csl-indent {
 </ul>
 <p>then <span class="math inline">\(\dot{V}(x,t) \rightarrow 0\)</span> as <span class="math inline">\(t \rightarrow \infty\)</span>.</p>
 </div>
+</div>
+<div class="proofbox">
 <div class="proof">
 <p><span id="unlabeled-div-4" class="proof"><em>Proof</em>. </span><span class="math inline">\(V(x,t)\)</span> is lower bounded and <span class="math inline">\(\dot{V}\)</span> is negative semidefinite implies the limit of <span class="math inline">\(V\)</span> as <span class="math inline">\(t \rightarrow \infty\)</span> is finite (note that <span class="math inline">\(V(x,t) \leq V(x(0),0)\)</span>). Then the theorem clearly follows from Barbalat’s Lemma <a href="stability.html#lem:Barbalat">4.1</a>.</p>
+</div>
 </div>
 
 </div>

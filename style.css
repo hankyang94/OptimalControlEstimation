@@ -19,3 +19,15 @@ pre code {
   border: 2px solid rgb(227, 226, 242);
   border-radius: 10px;
 }
+
+.theorembox {
+  padding: 1em;
+  background: rgba(0, 250, 0, 0.3);
+  color: rgb(0, 0, 0);
+  border: 2px rgb(0, 250, 0, 0.3);
+  border-radius: 10px;
+}
+
+.proofbox {
+  color: rgb(128, 128, 128);
+}

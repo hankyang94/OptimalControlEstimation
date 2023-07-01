@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-06-30" />
+<meta name="date" content="2023-07-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -216,6 +216,7 @@ where all the controls are planned at <span class="math inline">\(k=0\)</span>. 
 <div id="dynamic-programming-and-principle-of-optimality" class="section level2 hasAnchor" number="1.2">
 <h2><span class="header-section-number">1.2</span> Dynamic Programming and Principle of Optimality<a href="formulation.html#dynamic-programming-and-principle-of-optimality" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>We now introduce a general and powerful algorithm, namely <em>dynamic programming</em> (DP), for solving the optimal control problem <a href="formulation.html#def:basicproblem">1.1</a>. The DP algorithm builds upon a quite simple intuition called the <em>Bellman principle of optimality</em>.</p>
+<div class="theorembox">
 <div class="theorem">
 <p><span id="thm:bellmanoptimality" class="theorem"><strong>Theorem 1.1  (Bellman Principle of Optimality) </strong></span>Let <span class="math inline">\(\pi^\star = \{ \mu_0^\star,\mu_1^\star,\dots,\mu_{N-1}^\star \}\)</span> be an optimal policy for the optimal control problem <a href="formulation.html#def:basicproblem">1.1</a>. Assume that when using <span class="math inline">\(\pi^\star\)</span>, a given state <span class="math inline">\(x_i\)</span> occurs at timestep <span class="math inline">\(i\)</span> with positive probability (i.e., <span class="math inline">\(x_i\)</span> is reachable at time <span class="math inline">\(i\)</span>).</p>
 <p>Now consider the following subproblem where we are at <span class="math inline">\(x_i\)</span> at time <span class="math inline">\(i\)</span> and wish to minimize the cost-to-go from time <span class="math inline">\(i\)</span> to time <span class="math inline">\(N\)</span>
@@ -224,8 +225,10 @@ where all the controls are planned at <span class="math inline">\(k=0\)</span>. 
 \]</span>
 Then the truncated policy <span class="math inline">\(\{\mu^\star_i,\mu^\star_{i+1},\dots, \mu^\star_{N-1}\}\)</span> must be optimal for the subproblem.</p>
 </div>
+</div>
 <p>Theorem <a href="formulation.html#thm:bellmanoptimality">1.1</a> can be proved intuitively by contradiction: if the truncated policy <span class="math inline">\(\{\mu^\star_i,\mu^\star_{i+1},\dots, \mu^\star_{N-1}\}\)</span> is not optimal for the subproblem, say there exists a different policy <span class="math inline">\(\{\mu_i&#39;,\mu_{i+1}&#39;,\dots, \mu_{N-1}&#39;\}\)</span> that attains a lower cost for the subproblem starting at <span class="math inline">\(x_i\)</span> at time <span class="math inline">\(i\)</span>. Then the combined policy <span class="math inline">\(\{\mu_0^\star,\dots,\mu^\star_{i-1},\mu_i&#39;,\dots,\mu_{N-1}&#39;\}\)</span> must attain a lower cost for the original optimal control problem <a href="formulation.html#def:basicproblem">1.1</a> due to the additive cost structure, contradicting the optimality of <span class="math inline">\(\pi^\star\)</span>.</p>
 <p>The Bellman principle of optimality is more than just a principle, it is also an algorithm. It suggests that, to build an optimal policy, one can start by solving the last-stage subproblem to obtain <span class="math inline">\(\{\mu^\star_{N-1} \}\)</span>, and then proceed to solve the subproblem containing the last two stages to obtain <span class="math inline">\(\{ \mu^\star_{N-2},\mu^\star_{N-1} \}\)</span>. The recursion continues until optimal policies at all stages are computed. The following theorem formalizes this concept.</p>
+<div class="theorembox">
 <div class="theorem">
 <p><span id="thm:dynamicprogramming" class="theorem"><strong>Theorem 1.2  (Dynamic Programming) </strong></span>The optimal value function <span class="math inline">\(J^\star(x_0)\)</span> of the optimal control problem <a href="formulation.html#def:basicproblem">1.1</a> (starting from any given initial condition <span class="math inline">\(x_0\)</span>) is equal to <span class="math inline">\(J_0(x_0)\)</span>, which can be computed backwards and recursively as
 <span class="math display" id="eq:dpbackwardrecursion">\[\begin{align}
@@ -235,6 +238,8 @@ J_k(x_k) &amp;= \min_{u_k \in \mathbb{U}} \displaystyle \mathbb{E}_{w_k \sim P_k
 \end{align}\]</span>
 Moreover, if <span class="math inline">\(u_k^\star = \mu_k^\star(x_k)\)</span> is a minimizer of <a href="formulation.html#eq:dpbackwardrecursion">(1.5)</a> for every <span class="math inline">\(x_k\)</span>, then the policy <span class="math inline">\(\pi^\star = \{\mu_0^\star,\dots,\mu_{N-1}^\star \}\)</span> is optimal.</p>
 </div>
+</div>
+<div class="proofbox">
 <div class="proof">
 <p><span id="unlabeled-div-3" class="proof"><em>Proof</em>. </span>For any admissible policy <span class="math inline">\(\pi = \{ \mu_0,\dots,\mu_{N-1} \}\)</span>, denote <span class="math inline">\(\pi^k = \{ \mu_k,\dots,\mu_{N-1} \}\)</span> the last-<span class="math inline">\((N-k)\)</span>-stage truncated policy. Consider the subproblem consisting of the last <span class="math inline">\(N-k\)</span> stages starting from <span class="math inline">\(x_k\)</span>, and let <span class="math inline">\(J^\star_k(x_k)\)</span> be its optimal cost-to-go. Mathematically, this is
 <span class="math display" id="eq:dptheoremdefineJkstar">\[\begin{equation}
@@ -258,6 +263,7 @@ We define <span class="math inline">\(J^\star_N(x_N) = g(x_N)\)</span> for <span
 \end{align}\]</span>
 where <a href="formulation.html#eq:dpproof-1">(1.7)</a> follows from definition <a href="formulation.html#eq:dptheoremdefineJkstar">(1.6)</a>; <a href="formulation.html#eq:dpproof-2">(1.8)</a> expands <span class="math inline">\(\pi^k = \{ \mu_k, \pi^{k+1}\}\)</span> and <span class="math inline">\(\sum_{i=k}^{N-1} g_i = g_k + \sum_{i=k+1}^{N-1}\)</span>; <a href="formulation.html#eq:dpproof-3">(1.9)</a> writes the joint minimization over <span class="math inline">\(\mu_k\)</span> and <span class="math inline">\(\pi^{k+1}\)</span> as equivalently first minimizing over <span class="math inline">\(\pi^{k+1}\)</span> and then minimizing over <span class="math inline">\(\mu_k\)</span>; <a href="formulation.html#eq:dpproof-4">(1.10)</a> is the key step and holds because <span class="math inline">\(g_k\)</span> and <span class="math inline">\(w_k\)</span> depend only on <span class="math inline">\(\mu_k\)</span> but not on <span class="math inline">\(\pi^{k+1}\)</span>; <a href="formulation.html#eq:dpproof-5">(1.11)</a> follows again from definition <a href="formulation.html#eq:dptheoremdefineJkstar">(1.6)</a> with <span class="math inline">\(k\)</span> replaced by <span class="math inline">\(k+1\)</span>; <a href="formulation.html#eq:dpproof-6">(1.12)</a> results from the induction assumption; <a href="formulation.html#eq:dpproof-7">(1.13)</a> clearly holds because any <span class="math inline">\(\mu_k(x_k)\)</span> belongs to <span class="math inline">\(\mathbb{U}\)</span> and any element in <span class="math inline">\(\mathbb{U}\)</span> can be chosen by a feedback controller <span class="math inline">\(\mu_k\)</span>; and lastly <a href="formulation.html#eq:dpproof-8">(1.14)</a> follows from the dynamic programming algorithm <a href="formulation.html#eq:dpbackwardrecursion">(1.5)</a>.</p>
 <p>By induction, this shows that <span class="math inline">\(J^\star_k(x_k) = J_k(x_k)\)</span> for all <span class="math inline">\(k=0,\dots,N\)</span>.</p>
+</div>
 </div>
 <p>The careful reader, especially from a robotics background, may soon become disappointed when seeing the DP algorithm <a href="formulation.html#eq:dpbackwardrecursion">(1.5)</a> because it is rather conceptual than practical. To see this, we only need to run DP for <span class="math inline">\(k=N-1\)</span>:
 <span class="math display" id="eq:dptryN-1">\[\begin{equation}

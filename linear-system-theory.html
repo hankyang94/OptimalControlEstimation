@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-06-30" />
+<meta name="date" content="2023-07-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -155,14 +155,129 @@ div.csl-indent {
             <section class="normal" id="section-">
 <div id="linear-system-theory" class="section level1 hasAnchor" number="7">
 <h1><span class="header-section-number">A</span> Linear System Theory<a href="linear-system-theory.html#linear-system-theory" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div class="theorembox">
+<div class="theorem">
+<p><span id="thm:lyapunovequation" class="theorem"><strong>Theorem A.1  (Lyapunov Equation) </strong></span>The following is equivalent for a linear time-invariant system <span class="math inline">\(\dot{x} = A x\)</span></p>
+<ol style="list-style-type: decimal">
+<li><p>The system is globally asymptotically stable, i.e., <span class="math inline">\(A\)</span> is Hurwitz and <span class="math inline">\(\lim_{t \rightarrow \infty} x(t) = 0\)</span> regardless of the initial condition;</p></li>
+<li><p>For any positive definite matrix <span class="math inline">\(Q\)</span>, the unique solution <span class="math inline">\(P\)</span> to the Lyapunov equation
+<span class="math display" id="eq:lyapunov-equation">\[\begin{equation}
+A^T P + P A = -Q
+\tag{A.1}
+\end{equation}\]</span>
+is positive definite.</p></li>
+</ol>
+</div>
+</div>
+<div class="proofbox">
+<div class="proof">
+<p><span id="unlabeled-div-9" class="proof"><em>Proof</em>. </span>(a): <span class="math inline">\(2 \Rightarrow 1\)</span>. Suppose we are given two positive definie matrices <span class="math inline">\(P, Q \succ 0\)</span> that satisfies the Lyapunov equation <a href="linear-system-theory.html#eq:lyapunov-equation">(A.1)</a>. Define a scalar function
+<span class="math display">\[
+V(x) = x^T P x.
+\]</span>
+It is clear that <span class="math inline">\(V &gt; 0\)</span> for any <span class="math inline">\(x \neq 0\)</span> and <span class="math inline">\(V(x) = 0\)</span> (i.e., <span class="math inline">\(V(x)\)</span> is positive definie). We also see <span class="math inline">\(V(x)\)</span> is radially unbounded because:
+<span class="math display">\[
+V(x) \geq \lambda_{\min}(P) \Vert x \Vert^2 \Rightarrow \lim_{x \rightarrow \infty} V(x) \rightarrow \infty.
+\]</span>
+The time derivative of <span class="math inline">\(V\)</span> reads
+<span class="math display">\[
+\dot{V} = 2 x^T P \dot{x} = x^T (A^T P + P A) x = - x^T Q x.
+\]</span>
+Clearly, <span class="math inline">\(\dot{V} &lt; 0\)</span> for any <span class="math inline">\(x \neq 0\)</span> and <span class="math inline">\(\dot{V}(0) = 0\)</span>. According to Lyapunov’s global stability theorem <a href="stability.html#thm:lyapunovglobalstability">4.1</a>, we conclude the linear system <span class="math inline">\(\dot{x} = Ax\)</span> is globally asymptotically stable at <span class="math inline">\(x = 0\)</span>.</p>
+<p>(b): <span class="math inline">\(1 \Rightarrow 2\)</span>. Suppose <span class="math inline">\(A\)</span> is Hurwitz, we want to show that, for any <span class="math inline">\(Q \succ 0\)</span>, there exists a unique <span class="math inline">\(P \succ 0\)</span> satisfying the Lyapunov equation <a href="linear-system-theory.html#eq:lyapunov-equation">(A.1)</a>. In fact, consider the matrix
+<span class="math display">\[
+P = \int_{t=0}^{\infty} e^{A^T t} Q e^{At} dt.
+\]</span>
+Because <span class="math inline">\(A\)</span> is Hurwitz, the integral exists, and clearly <span class="math inline">\(P \succ 0\)</span> due to <span class="math inline">\(Q \succ 0\)</span>. To show this choice of <span class="math inline">\(P\)</span> satisfies the Lyapunov equation, we write
+<span class="math display">\[\begin{align}
+A^T P + P A &amp;= \int_{t=0}^{\infty} \left( A^T e^{A^T t} Q e^{At} + e^{A^T t} Q e^{At} A  \right) dt \\
+&amp;=\int_{t=0}^{\infty} d \left( e^{A^T t} Q e^{At} \right) \\
+&amp; = e^{A^T t} Q e^{At}\vert_{t = \infty} - e^{A^T t} Q e^{At}\vert_{t = 0} = - Q,
+\end{align}\]</span>
+where the last equality holds because <span class="math inline">\(e^{A \infty} = 0\)</span> (recall <span class="math inline">\(A\)</span> is Hurwitz).</p>
+<p>To show the uniqueness of <span class="math inline">\(P\)</span>, we assume that there exists another matrix <span class="math inline">\(P&#39;\)</span> that also satisfies the Lyapunov equation. Therefore,
+<span class="math display">\[\begin{align}
+P&#39; &amp;= e^{A^T t} P&#39; e^{At} \vert_{t=0} - e^{A^T t} P&#39; e^{At} \vert_{t=\infty} \\
+&amp;= - \int_{t=0}^{\infty} d \left( e^{A^T t} P&#39; e^{At} \right) \\
+&amp;= - \int_{t=0}^{\infty} e^{A^T t} \left( A^T P&#39; + P&#39; A \right) e^{At} dt \\
+&amp; = \int_{t=0}^{\infty} e^{A^T t} Q e^{At} dt = P,
+\end{align}\]</span>
+leading to <span class="math inline">\(P&#39; = P\)</span>. Hence, the solution is unique.</p>
+</div>
+</div>
+<p><strong>Convergence rate estimation</strong>. We now show that Theorem <a href="linear-system-theory.html#thm:lyapunovequation">A.1</a> can allow us to quantify the convergence rate of a (stable) linear system towards zero.</p>
+<p>For a Hurwitz linear system <span class="math inline">\(\dot{x} = Ax\)</span>, let us pick a positive definite matrix <span class="math inline">\(Q\)</span>. Theorem <a href="linear-system-theory.html#thm:lyapunovequation">A.1</a> tells us we can find a unique <span class="math inline">\(P \succ 0\)</span> satisfying the Lyapunov equation <a href="linear-system-theory.html#eq:lyapunov-equation">(A.1)</a>. In this case, we can upper bound the scalar function <span class="math inline">\(V = x^T P x\)</span> as
+<span class="math display">\[
+V \leq \lambda_{\max}(P) \Vert x \Vert^2.
+\]</span>
+The time derivative of <span class="math inline">\(V\)</span> is <span class="math inline">\(\dot{V} = - x^T Q x\)</span>, which can be upper bounded by
+<span class="math display">\[\begin{align}
+\dot{V} &amp; \leq - \lambda_{\min} (Q) \Vert x \Vert^2 \\
+&amp; = - \frac{\lambda_{\min} (Q)}{\lambda_{\max} (P)} \underbrace{ \left( \lambda_{\max} (P) \Vert x \Vert^2 \right)}_{\geq V} \\
+&amp; \leq - \frac{\lambda_{\min} (Q)}{\lambda_{\max} (P)} V.
+\end{align}\]</span>
+Denoting <span class="math inline">\(\gamma(Q) = \frac{\lambda_{\min} (Q)}{\lambda_{\max}(P)}\)</span>, the above inequality implies
+<span class="math display">\[
+V(0) e^{-\gamma(Q) t} \geq V(t) = x^T P x \geq \lambda_{\min}(P) \Vert x \Vert^2.
+\]</span>
+As a result, <span class="math inline">\(\Vert x \Vert^2\)</span> converges to zero exponentially with a rate at least <span class="math inline">\(\gamma(Q)\)</span>, and <span class="math inline">\(\Vert x \Vert\)</span> converges to zero exponentially with a rate at least <span class="math inline">\(\gamma(Q) / 2\)</span>.</p>
+<p><strong>Best convergence rate estimation</strong>. I have used <span class="math inline">\(\gamma (Q)\)</span> to make it explict that the rate <span class="math inline">\(\gamma\)</span> depends on the choice of <span class="math inline">\(Q\)</span>, because <span class="math inline">\(P\)</span> is computed from the Lyapunov equation as an implicit function of <span class="math inline">\(Q\)</span>. Naturally, choosing different <span class="math inline">\(Q\)</span> will lead to different <span class="math inline">\(\gamma (Q)\)</span>. So what is the choice of <span class="math inline">\(Q\)</span> that maximizes the convergence rate estimation?</p>
+<div class="corollary">
+<p><span id="cor:bestconvergencerate" class="corollary"><strong>Corollary A.1  (Maximum Convergence Rate Estimation) </strong></span><span class="math inline">\(Q = I\)</span> maximizes the convergence rate estimation.</p>
+</div>
+<div class="proofbox">
+<div class="proof">
+<p><span id="unlabeled-div-10" class="proof"><em>Proof</em>. </span>let us denote <span class="math inline">\(P_0\)</span> as the solution to the Lyapunov equation with <span class="math inline">\(Q = I\)</span>
+<span class="math display">\[
+A^T P_0 + P_0 A = - I.
+\]</span>
+Let <span class="math inline">\(P\)</span> be the solution corresponding to a different choice of <span class="math inline">\(Q\)</span>
+<span class="math display">\[
+A^T P + P A = - Q.
+\]</span>
+Without loss of generality, we can assume <span class="math inline">\(\lambda_{\min}(Q) = 1\)</span>, because rescaling <span class="math inline">\(Q\)</span> will recale <span class="math inline">\(P\)</span> by the same factor, which does not affect <span class="math inline">\(\gamma(Q)\)</span>. Subtracting the two Lyapunov equations above we get
+<span class="math display">\[
+A^T (P - P_0) + (P - P_0) A = - (Q - I).
+\]</span>
+Since <span class="math inline">\(Q - I \succeq 0\)</span> (due to <span class="math inline">\(\lambda_{\min}(Q) = 1\)</span>), we know <span class="math inline">\(P - P_0 \succeq 0\)</span> and <span class="math inline">\(\lambda_{\max} (P) \geq \lambda_{\max} (P_0)\)</span>. As a result,
+<span class="math display">\[
+\gamma(Q) = \frac{\lambda_{\min}(Q)}{\lambda_{\max}(P)} =  \frac{\lambda_{\min}(I)}{\lambda_{\max}(P)} \leq \frac{\lambda_{\min}(I)}{\lambda_{\max}(P_0)} = \gamma(I),
+\]</span>
+and <span class="math inline">\(Q = I\)</span> maximizes the convergence rate estimation.</p>
+</div>
+</div>
+<hr />
 <p>Consider the linear time-invariant (LTI) system
 <span class="math display" id="eq:app-linear-system">\[\begin{equation}
 \dot{x} = A x + B u, \quad y = C x + D u,
-\tag{A.1}
+\tag{A.2}
 \end{equation}\]</span>
 where <span class="math inline">\(x \in \mathbb{R}^n\)</span> the state, <span class="math inline">\(u \in \mathbb{R}^m\)</span> the control, and <span class="math inline">\(A,B,C,D\)</span> are constant matrices with proper sizes.</p>
+<div class="theorembox">
 <div class="theorem">
-<p><span id="thm:ltidetectable" class="theorem"><strong>Theorem A.1  (Detectability) </strong></span>The following are equivalent for the LTI system <a href="linear-system-theory.html#eq:app-linear-system">(A.1)</a>:</p>
+<p><span id="thm:ltiobservable" class="theorem"><strong>Theorem A.2  (Observability) </strong></span>The following are equivalent for the LTI system <a href="linear-system-theory.html#eq:app-linear-system">(A.2)</a>:</p>
+<ol style="list-style-type: decimal">
+<li><p><span class="math inline">\((A,C)\)</span> is observable;</p></li>
+<li><p>The observability grammian
+<span class="math display">\[
+W_o (t) = \int_{0}^t e^{A^* \tau} C^* C e^{A\tau} d\tau
+\]</span>
+is positive definite for any <span class="math inline">\(t &gt; 0\)</span>;</p></li>
+<li><p>The observability matrix
+<span class="math display">\[
+\mathcal{O} = \begin{bmatrix} C \\ CA \\ CA^2 \\ \vdots \\ C A^{n-1} \end{bmatrix}
+\]</span>
+has full column rank;</p></li>
+<li><p>The matrix <span class="math inline">\(\begin{bmatrix} A - \lambda I \\ C \end{bmatrix}\)</span> has full column rank for all <span class="math inline">\(\lambda \in \mathbb{C}\)</span>;</p></li>
+<li><p>For all <span class="math inline">\(\lambda\)</span> and <span class="math inline">\(x\)</span> such that <span class="math inline">\(Ax = \lambda x\)</span>, <span class="math inline">\(Cx \neq 0\)</span>;</p></li>
+<li><p>The eigenvalues of <span class="math inline">\(A + LC\)</span> can be freely assigned (with the restriction that complex eigenvalues are in conjugate pairs);</p></li>
+<li><p><span class="math inline">\((A^*,C^*)\)</span> is controllable.</p></li>
+</ol>
+</div>
+</div>
+<div class="theorembox">
+<div class="theorem">
+<p><span id="thm:ltidetectable" class="theorem"><strong>Theorem A.3  (Detectability) </strong></span>The following are equivalent for the LTI system <a href="linear-system-theory.html#eq:app-linear-system">(A.2)</a>:</p>
 <ol style="list-style-type: decimal">
 <li><p><span class="math inline">\((A,C)\)</span> is detectable;</p></li>
 <li><p>The matrix <span class="math inline">\(\begin{bmatrix} A - \lambda I \\ C \end{bmatrix}\)</span> has full column rank for all <span class="math inline">\(\lambda \in \mathbb{C}\)</span> such that <span class="math inline">\(\mathrm{Re}(\lambda) \geq 0\)</span> ;</p></li>
@@ -170,6 +285,7 @@ where <span class="math inline">\(x \in \mathbb{R}^n\)</span> the state, <span c
 <li><p>There exists a matrix <span class="math inline">\(L\)</span> such that <span class="math inline">\(A + LC\)</span> is Hurwitz;</p></li>
 <li><p><span class="math inline">\((A^*,C^*)\)</span> is stabilizable.</p></li>
 </ol>
+</div>
 </div>
 </div>
             </section>

@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-06-30" />
+<meta name="date" content="2023-07-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -212,6 +212,7 @@ In words, (i) the state observer maintains an internal state (or latent state) <
 </div>
 <div id="general-design-strategy" class="section level3 hasAnchor" number="5.1.1">
 <h3><span class="header-section-number">5.1.1</span> General Design Strategy<a href="output-feedback.html#general-design-strategy" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="theorembox">
 <div class="theorem">
 <p><span id="thm:observerdesignmeta" class="theorem"><strong>Theorem 5.1  (Meta Observer) </strong></span>Let <span class="math inline">\(F: \mathbb{R}^p \times \mathbb{R}^m \times \mathbb{R}^d \rightarrow \mathbb{R}^p\)</span>, <span class="math inline">\(H: \mathbb{R}^p \times \mathbb{R}^m \rightarrow \mathbb{R}^d\)</span> and <span class="math inline">\(\mathcal{F}: \mathbb{R}^p \times \mathbb{R}^m \times \mathbb{R}^d \rightarrow \mathbb{R}^p\)</span> be continuous functions such that
 <span class="math display" id="eq:meta-observer-zeta-hat">\[\begin{equation}
@@ -257,6 +258,7 @@ L_{(f,1)} T_u(x,t) = \lim_{\tau \rightarrow 0} \frac{ T_u (X(x,t;t+\tau;u),t+\ta
 \mathcal{T}_u \left( T_u(x,t),t \right) = x, \forall x \in \mathcal{X}.
 \]</span>
 Moreover, denoting <span class="math inline">\(\mathcal{T}\)</span> the family of functions <span class="math inline">\(\mathcal{T}_u\)</span> for <span class="math inline">\(u \in \mathcal{U}\)</span>, the couple <span class="math inline">\((\mathcal{F}, \mathcal{T})\)</span> is an observer for the system <a href="output-feedback.html#eq:output-feedback-system">(5.1)</a> initialized in <span class="math inline">\(\mathcal{X}_0\)</span>.</p>
+</div>
 </div>
 <div class="proof">
 <p><span id="unlabeled-div-5" class="proof"><em>Proof</em>. </span>See Theorem 1.1 in <span class="citation">(<a href="#ref-bernard19book-observer">Bernard 2019</a>)</span>.</p>
@@ -307,14 +309,17 @@ and <span class="math inline">\((\mathcal{F},\mathcal{T})\)</span> is an observe
 \end{equation}\]</span>
 where <span class="math inline">\(A,C\)</span> are constant matrices, and <span class="math inline">\(B(u,y)\)</span> can depend nonlinearly on <span class="math inline">\(u\)</span> and <span class="math inline">\(y\)</span>.</p>
 <p>For this template, we have the well-known Luenberger observer.</p>
+<div class="theorembox">
 <div class="theorem">
-<p><span id="thm:LuenbergerLinear" class="theorem"><strong>Theorem 5.2  (Luenberger Observer) </strong></span>If the pair <span class="math inline">\((A,C)\)</span> is detectable (see Theorem <a href="linear-system-theory.html#thm:ltidetectable">A.1</a>), then there exists a matrix <span class="math inline">\(K\)</span> such that <span class="math inline">\(A-KC\)</span> is Hurwitz and the system
+<p><span id="thm:LuenbergerLinear" class="theorem"><strong>Theorem 5.2  (Luenberger Observer) </strong></span>If the pair <span class="math inline">\((A,C)\)</span> is detectable (see Theorem <a href="linear-system-theory.html#thm:ltidetectable">A.3</a>), then there exists a matrix <span class="math inline">\(K\)</span> such that <span class="math inline">\(A-KC\)</span> is Hurwitz and the system
 <span class="math display" id="eq:Luenberger-Linear">\[\begin{equation}
 \dot{\hat{\xi}} = A \hat{\xi} + B(u,y) + K(y - C \hat{\xi})
 \tag{5.11}
 \end{equation}\]</span>
 is an observer for <a href="output-feedback.html#eq:Luenberger-linear-template">(5.10)</a>.</p>
 </div>
+</div>
+<div class="proofbox">
 <div class="proof">
 <p><span id="unlabeled-div-6" class="proof"><em>Proof</em>. </span>Define <span class="math inline">\(e(t) = \xi(t) - \hat{\xi}(t)\)</span>. In that case,
 <span class="math display" id="eq:Luenberger-error">\[\begin{equation}
@@ -325,7 +330,13 @@ is an observer for <a href="output-feedback.html#eq:Luenberger-linear-template">
 <p><span class="math display">\[\begin{equation}
     e(t) = \mathrm{exp}[(A - KC)t] e(0)
 \end{equation}\]</span></p>
-<p>Then, if the real components of the eigenvalues of <span class="math inline">\(A - KC\)</span> are strictly negative (i.e., <span class="math inline">\(A - KC\)</span> is Hurwitz), then <span class="math inline">\(e(t) \rightarrow 0\)</span> as <span class="math inline">\(t \rightarrow \infty\)</span>, independent of the initial error <span class="math inline">\(e(0) = \xi(0) - \hat{\xi}(0)\)</span>. From Theorem <a href="linear-system-theory.html#thm:ltidetectable">A.1</a>, we know that <span class="math inline">\((A,C)\)</span> being detectable implies the existence of <span class="math inline">\(K\)</span> such that <span class="math inline">\(A - KC\)</span> is Hurwitz.</p>
+<p>Then, if the real components of the eigenvalues of <span class="math inline">\(A - KC\)</span> are strictly negative (i.e., <span class="math inline">\(A - KC\)</span> is Hurwitz), then <span class="math inline">\(e(t) \rightarrow 0\)</span> as <span class="math inline">\(t \rightarrow \infty\)</span>, independent of the initial error <span class="math inline">\(e(0) = \xi(0) - \hat{\xi}(0)\)</span>. From Theorem <a href="linear-system-theory.html#thm:ltidetectable">A.3</a>, we know that <span class="math inline">\((A,C)\)</span> being detectable implies the existence of <span class="math inline">\(K\)</span> such that <span class="math inline">\(A - KC\)</span> is Hurwitz.</p>
+<p>If one is further interested in estimating the convergence rate of the Luenberger observer, then one can use the result from Corollary <a href="linear-system-theory.html#cor:bestconvergencerate">A.1</a>. Particularly, one can solve the Lyapunov equation
+<span class="math display">\[
+(A - KC)^T P + P (A - KC) = - I
+\]</span>
+to obtain <span class="math inline">\(P\)</span>. Then the convergence rate of <span class="math inline">\(\Vert e \Vert\)</span> towards zero is <span class="math inline">\(\frac{0.5}{\lambda_{\max}(P)}\)</span>.</p>
+</div>
 </div>
 <p>The Luenberger observer is an elegant result in observer design (and even in control theory) that has far-reaching impact. In my opinion, the essence of observer design is twofold: (i) to simulate the dynamics when the state estimation is correct, and (ii) to correct the state estimation from observation when it is off. These two pieces of ideas are evident in <a href="output-feedback.html#eq:Luenberger-Linear">(5.11)</a>: the observer is a copy of the original dynamics (<span class="math inline">\(A \hat{\xi} + B(u,y)\)</span>) plus a feedback correction from the difference between the “imagined” observation <span class="math inline">\(C\hat{\xi}\)</span> and the true observation <span class="math inline">\(y\)</span>.</p>
 <p>You may think the Luenberger template is restricting because it requires the system to be linear (up to the only nonlinearly in <span class="math inline">\(B(u,y)\)</span>). However, it turns out the Luenberger template is already quite useful, as I will show in the following pendulum example.</p>
@@ -384,7 +395,7 @@ C \begin{bmatrix}
 1 \\ 0
 \end{bmatrix} = 1 \neq 0.
 \]</span>
-According to Theorem <a href="linear-system-theory.html#thm:ltidetectable">A.1</a>, we conclude <span class="math inline">\((A,C)\)</span> is detectable.</p>
+According to Theorem <a href="linear-system-theory.html#thm:ltidetectable">A.3</a>, we conclude <span class="math inline">\((A,C)\)</span> is detectable. In fact, the pair <span class="math inline">\((A,C)\)</span> is more than just detectable, it is indeed observable (according to Theorem <a href="linear-system-theory.html#thm:ltiobservable">A.2</a>). Therefore, the poles of <span class="math inline">\(A - KC\)</span> can be arbitrarily placed.</p>
 <p>Now we need to find <span class="math inline">\(K\)</span>. An easy choice of <span class="math inline">\(K\)</span> is
 <span class="math display">\[
 K = \begin{bmatrix} k \\ 0 \end{bmatrix}, \quad A - KC =
@@ -393,6 +404,18 @@ K = \begin{bmatrix} k \\ 0 \end{bmatrix}, \quad A - KC =
 \end{bmatrix}.
 \]</span>
 With <span class="math inline">\(k &gt; 0\)</span>, we know <span class="math inline">\(A- KC\)</span> is guaranteed to be Hurwitz (the two eigenvalues of <span class="math inline">\(A-KC\)</span> are <span class="math inline">\(-k\)</span> and <span class="math inline">\(-b/ml^2\)</span>), and we have obtained an observer!</p>
+<p>Oftentimes, it is insufficient to ensure the estimator converges to the true state asymptotically, and we need to reason about the convergence rate. Particularly, let us define <span class="math inline">\(e = \hat{x} - x\)</span>, and we know
+<span class="math display">\[
+\dot{e} = H e, \quad H = A - KC.
+\]</span>
+Suppose we are interested in understanding the convergence rate of the squared norm of the error signal, that is,
+<span class="math display">\[
+V = e^T e.
+\]</span>
+Differentiating <span class="math inline">\(V\)</span> we obtain
+<span class="math display">\[
+\dot{V} = 2 \dot{e}^T e = e^T (H + H^T) e
+\]</span></p>
 <p><span style="color:red">TBD: simulate the observer.</span></p>
 </div>
 </div>
@@ -434,6 +457,7 @@ Note that the transition matrix is used to express the solution to <a href="outp
 </ul>
 </div>
 <p>We now introduce the Kalman-Bucy Observer for the state-affine template <a href="output-feedback.html#eq:state-affine-template">(5.15)</a>.</p>
+<div class="theorembox">
 <div class="theorem">
 <p><span id="thm:kalmanbucystateaffine" class="theorem"><strong>Theorem 5.3  (Kalman-Bucy Observer) </strong></span>Let <span class="math inline">\(y_{\xi_0,u}(t) = C(u(t)) \Xi (\xi_0;t;u)\)</span> be the output of system <a href="output-feedback.html#eq:state-affine-template">(5.15)</a> at time <span class="math inline">\(t\)</span> with initialization <span class="math inline">\(\xi_0\)</span> and control <span class="math inline">\(u\)</span>. Suppose the control <span class="math inline">\(u\)</span> satisfies</p>
 <ul>
@@ -469,6 +493,7 @@ K = P^{-1} C(u)^T
 \tag{5.20}
 \end{equation}\]</span>
 is an observer for the state-affine system <a href="output-feedback.html#eq:state-affine-template">(5.15)</a>.</p>
+</div>
 </div>
 <p>Let us work out an example of the Kalman-Bucy Observer for nonlinear systems.</p>
 <div class="examplebox">
