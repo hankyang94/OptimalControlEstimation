@@ -1,14 +1,14 @@
 # Fdb version 3
-["bibtex optimal-control-estimation"] 1688330081 "optimal-control-estimation.aux" "optimal-control-estimation.bbl" "optimal-control-estimation" 1688330083
+["bibtex optimal-control-estimation"] 1688339537 "optimal-control-estimation.aux" "optimal-control-estimation.bbl" "optimal-control-estimation" 1688339539
   "/usr/local/texlive/2022/texmf-dist/bibtex/bib/jurabib/book.bib" 1136766823 3095 06d31a152c5b167d3c6afe2b7acb6527 ""
   "/usr/local/texlive/2022/texmf-dist/bibtex/bst/base/apalike.bst" 1292289607 24635 604dafcc79f521a11ea73e506e1fbd98 ""
-  "optimal-control-estimation.aux" 1688330082 23084 b890892386ffcff6ef170d55e692e831 "pdflatex"
+  "optimal-control-estimation.aux" 1688339538 23203 75db0cc6661a398b100b06fc46bce193 "pdflatex"
   "packages.bib" 0 -1 0 ""
   (generated)
   "optimal-control-estimation.bbl"
   "optimal-control-estimation.blg"
-["pdflatex"] 1688330081 "/Users/hengyang/Documents/OptimalControlEstimation/_book/optimal-control-estimation.tex" "optimal-control-estimation.pdf" "optimal-control-estimation" 1688330083
-  "/Users/hengyang/Documents/OptimalControlEstimation/_book/optimal-control-estimation.tex" 1688330074 89500 2a2e5dded3cbbe133200fbe122809561 ""
+["pdflatex"] 1688339537 "/Users/hengyang/Documents/OptimalControlEstimation/_book/optimal-control-estimation.tex" "optimal-control-estimation.pdf" "optimal-control-estimation" 1688339539
+  "/Users/hengyang/Documents/OptimalControlEstimation/_book/optimal-control-estimation.tex" 1688339528 91860 ee74d10fe0dc63832a93dddf56d34dd7 ""
   "/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc" 1254269338 2375 baa924870cfb487815765f9094cf3728 ""
   "/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc" 1202520719 3486 c7eadf5dcc57b3b2d11736679f6636ba ""
   "/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc" 1202520719 2405 5dcf2c1b967ee25cc46c58cd52244aed ""
@@ -231,11 +231,11 @@
   "/usr/local/texlive/2022/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1647878959 4410336 7d30a02e9fa9a16d7d1f8d037ba69641 ""
   "/usr/local/texlive/2022/texmf-var/web2c/pdftex/pdflatex.fmt" 1673671093 2826448 a78327bcce7ae8ed182a61bed08ffa4d ""
   "/usr/local/texlive/2022/texmf.cnf" 1647878952 577 209b46be99c9075fd74d4c0369380e8c ""
-  "images/drawme.png" 1688330073 28419 42b71f4e823e1d68378c16fa12bcb64a ""
-  "optimal-control-estimation.aux" 1688330082 23084 b890892386ffcff6ef170d55e692e831 "pdflatex"
+  "images/drawme.png" 1688339526 28419 42b71f4e823e1d68378c16fa12bcb64a ""
+  "optimal-control-estimation.aux" 1688339538 23203 75db0cc6661a398b100b06fc46bce193 "pdflatex"
   "optimal-control-estimation.bbl" 0 -1 0 "bibtex optimal-control-estimation"
-  "optimal-control-estimation.tex" 1688330074 89500 2a2e5dded3cbbe133200fbe122809561 ""
-  "optimal-control-estimation.toc" 1688330082 2223 546a73d5ceddb5a3d5c53b312237c1c2 "pdflatex"
+  "optimal-control-estimation.tex" 1688339528 91860 ee74d10fe0dc63832a93dddf56d34dd7 ""
+  "optimal-control-estimation.toc" 1688339538 2223 546a73d5ceddb5a3d5c53b312237c1c2 "pdflatex"
   (generated)
   "optimal-control-estimation.aux"
   "optimal-control-estimation.log"

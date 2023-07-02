@@ -588,14 +588,57 @@ Therefore, we can take <span class="math inline">\(A_{\max} = \sqrt{3 + 3b^2 / m
 <span style="color:red">Does the <span class="math inline">\(A_{\max}\)</span> in Theorem <a href="output-feedback.html#thm:kalmanbucystateaffine">5.3</a> refer to the bound in operator norm?</span></p>
 <p><strong>Regular persistence</strong>. We write the backward observability grammian of system <a href="output-feedback.html#eq:kbobserver-auxilarydynamics">(5.19)</a>
 <span class="math display">\[
-\Gamma_\nu^b(t - \bar{t},t) = \int_{t - \bar{t}}^t \Psi_\nu(\tau,t)^T C^T C \Psi_\nu (\tau, t) d \tau = \int_{t - \bar{t}}^t \Psi_\nu(\tau,t)^T \begin{bmatrix}
+\Gamma_\nu^b(t - \bar{t},t) = \int_{t - \bar{t}}^t \Psi_\nu(\tau,t)^T C^T C \Psi_\nu (\tau, t) d \tau = \int_{t - \bar{t}}^t \Psi_\nu(\tau,t)^T \underbrace{\begin{bmatrix}
 1 &amp; 0 &amp; 0 \\
 0 &amp; 1 &amp; 0 \\
 0 &amp; 0 &amp; 0
-\end{bmatrix}
-\Psi_\nu (\tau, t) d \tau
+\end{bmatrix}}_{=:\tilde{C}}
+\Psi_\nu (\tau, t) d \tau.
 \]</span>
-<span style="color:red">Does the transition matrix <span class="math inline">\(\Psi_\nu (\tau, t)\)</span> have an analytical form?</span></p>
+<span class="math inline">\(\Gamma_\nu^b(t - \bar{t},t) \succeq \alpha I\)</span> if and only if
+<span class="math display">\[
+w^T \Gamma_\nu^b(t - \bar{t},t) w \geq \alpha, \quad \forall w \in \mathbb{R}^3, \Vert w \Vert = 1.
+\]</span>
+With this, we develop <span class="math inline">\(w^T \Gamma_\nu^b(t - \bar{t},t) w\)</span>
+<span class="math display" id="eq:pendulm-regular-persistence-1">\[\begin{equation}
+\begin{split}
+w^T \Gamma_\nu^b(t - \bar{t},t) w &amp;= \int_{t - \bar{t}}^t s^T \tilde{C} s d\tau, \\
+&amp; = \int_{t - \bar{t}}^t \left( s_1^2 + s_2^2 \right) d\tau, \quad s = \Psi_\nu (\tau, t) w
+\end{split}
+\tag{5.23}
+\end{equation}\]</span>
+and observe that <span class="math inline">\(s = \Psi_\nu (\tau,t) w\)</span> is equivalent to
+<span class="math display">\[
+w = (\Psi_\nu (\tau,t))^{-1} s = \Psi_\nu (t,\tau) s,
+\]</span>
+that is, <span class="math inline">\(w\)</span> is the solution of <span class="math inline">\(\dot{\xi} = A(\nu) \xi\)</span> at time <span class="math inline">\(t\)</span> with initial condition <span class="math inline">\(s\)</span> at time <span class="math inline">\(\tau \leq t\)</span>. Equivalently, this is saying <span class="math inline">\(s\)</span> is the initial condition of <span class="math inline">\(\dot{\xi} = A(\nu) \xi\)</span> at time <span class="math inline">\(\tau \leq t\)</span> such that its solution at time <span class="math inline">\(t\)</span> is <span class="math inline">\(w\)</span>. Note that from <a href="output-feedback.html#eq:pendulm-regular-persistence-1">(5.23)</a> it is clearly that <span class="math inline">\(\int_{t - \bar{t}}^t \left( s_1^2 + s_2^2 \right) d\tau \geq 0\)</span>, and <span class="math inline">\(\int_{t - \bar{t}}^t \left( s_1^2 + s_2^2 \right) d\tau = 0\)</span> if and only if <span class="math inline">\(s_1^2 + s_2^2 = 0\)</span>, or equivalently <span class="math inline">\(s_1 = s_2 = 0\)</span> for any <span class="math inline">\(\tau \in [t - \bar{t}, t]\)</span>.</p>
+<p>We then take a closer look at the system <span class="math inline">\(\dot{\xi} = A(\nu) \xi\)</span>:
+<span class="math display">\[\begin{align}
+\dot{\xi}_1 &amp;= \mathfrak{c} \xi_3 \\
+\dot{\xi}_2 &amp;= -\mathfrak{s} \xi_3 \\
+\dot{\xi}_3 &amp;= - \frac{b}{ml^2} \xi_3.
+\end{align}\]</span>
+If the solution of <span class="math inline">\(\xi_3\)</span> at time <span class="math inline">\(t\)</span> is <span class="math inline">\(w_3\)</span>, then
+<span class="math display">\[
+\xi_3(\tau) = w_3 e^{\frac{b}{ml^2}(t - \tau)}, \quad \tau \leq t.
+\]</span>
+We can now claim it is impossible that <span class="math inline">\(s_1 = s_2 = 0\)</span> at any time <span class="math inline">\(\tau \in [t - \bar{t}, t]\)</span>.</p>
+<p>We can show this by contradiction. First of all, <span class="math inline">\(s_1 = s_2 = 0\)</span> at <span class="math inline">\(\tau = t\)</span> implies <span class="math inline">\(w_1 = w_2 = 0\)</span> and hence <span class="math inline">\(w_3 = \pm 1\)</span>. This implies <span class="math inline">\(\xi_3 \neq 0\)</span> for any <span class="math inline">\(\tau \in [t - \bar{t}, t]\)</span>. Then, <span class="math inline">\(s_1 = 0, \forall \tau \in [t - \bar{t}, t]\)</span> implies <span class="math inline">\(\dot{\xi}_1 = 0\)</span> which, due to <span class="math inline">\(\xi_3 \neq 0\)</span>, implies <span class="math inline">\(\mathfrak{c} = 0\)</span> for all <span class="math inline">\(\tau\)</span>. Similarly, <span class="math inline">\(s_2 = 0, \forall \tau \in [t - \bar{t}, t]\)</span> implies <span class="math inline">\(\dot{\xi}_2 = 0\)</span> and <span class="math inline">\(\mathfrak{s} = 0\)</span>. This creates a contradiction because <span class="math inline">\(\mathfrak{c}^2 + \mathfrak{s}^2 = 1\)</span> and <span class="math inline">\(\mathfrak{c}, \mathfrak{s}\)</span> cannot be simultaneously zero.</p>
+<p>Therefore, there must exist <span class="math inline">\(\alpha &gt; 0\)</span> such that <span class="math inline">\(\Gamma_\nu^b (t - \bar{t},t) \succeq \alpha I\)</span>.
+<!-- On the other hand,
+$$
+\frac{d}{d\tau}\left( \xi_1^2 + \xi_2^2 \right) = 2 \xi_1 \dot{\xi}_1 + 2 \xi_2 \dot{\xi}_2 = 2 \xi_3 \left(\mathfrak{c} \xi_1 - 2 \mathfrak{s}\xi_2 \right).
+$$
+
+This implies
+$$
+\xi_3^2 \leq w_3^2 e^{\frac{2b}{ml^2} \bar{t}}, \quad \forall t - \bar{t} \leq z \leq t. 
+$$
+
+On the other hand,
+\begin{align}
+(\dot{\xi}_1)^2 + (\dot{\xi}_2)^2 = (\mathfrak{c}^2 + \mathfrak{s}^2) \xi_3^2 \leq w_3^2 e^{\frac{2b}{ml^2} \bar{t}}, \quad \forall t - \bar{t} \leq z \leq t.
+\end{align} --></p>
 </div>
 </div>
 </div>

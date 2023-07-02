@@ -913,14 +913,47 @@ Therefore, we can take \(A_{\max} = \sqrt{3 + 3b^2 / m^2 l^4}\).
 
 \textbf{Regular persistence}. We write the backward observability grammian of system \eqref{eq:kbobserver-auxilarydynamics}
 \[
-\Gamma_\nu^b(t - \bar{t},t) = \int_{t - \bar{t}}^t \Psi_\nu(\tau,t)^T C^T C \Psi_\nu (\tau, t) d \tau = \int_{t - \bar{t}}^t \Psi_\nu(\tau,t)^T \begin{bmatrix} 
+\Gamma_\nu^b(t - \bar{t},t) = \int_{t - \bar{t}}^t \Psi_\nu(\tau,t)^T C^T C \Psi_\nu (\tau, t) d \tau = \int_{t - \bar{t}}^t \Psi_\nu(\tau,t)^T \underbrace{\begin{bmatrix} 
 1 & 0 & 0 \\
 0 & 1 & 0 \\
 0 & 0 & 0
-\end{bmatrix}
-\Psi_\nu (\tau, t) d \tau
+\end{bmatrix}}_{=:\tilde{C}}
+\Psi_\nu (\tau, t) d \tau.
 \]
-{Does the transition matrix \(\Psi_\nu (\tau, t)\) have an analytical form?}
+\(\Gamma_\nu^b(t - \bar{t},t) \succeq \alpha I\) if and only if
+\[
+w^T \Gamma_\nu^b(t - \bar{t},t) w \geq \alpha, \quad \forall w \in \mathbb{R}^3, \Vert w \Vert = 1.
+\]
+With this, we develop \(w^T \Gamma_\nu^b(t - \bar{t},t) w\)
+\begin{equation}
+\begin{split}
+w^T \Gamma_\nu^b(t - \bar{t},t) w &= \int_{t - \bar{t}}^t s^T \tilde{C} s d\tau, \\
+& = \int_{t - \bar{t}}^t \left( s_1^2 + s_2^2 \right) d\tau, \quad s = \Psi_\nu (\tau, t) w
+\end{split}
+\label{eq:pendulm-regular-persistence-1}
+\end{equation}
+and observe that \(s = \Psi_\nu (\tau,t) w\) is equivalent to
+\[
+w = (\Psi_\nu (\tau,t))^{-1} s = \Psi_\nu (t,\tau) s,
+\]
+that is, \(w\) is the solution of \(\dot{\xi} = A(\nu) \xi\) at time \(t\) with initial condition \(s\) at time \(\tau \leq t\). Equivalently, this is saying \(s\) is the initial condition of \(\dot{\xi} = A(\nu) \xi\) at time \(\tau \leq t\) such that its solution at time \(t\) is \(w\). Note that from \eqref{eq:pendulm-regular-persistence-1} it is clearly that \(\int_{t - \bar{t}}^t \left( s_1^2 + s_2^2 \right) d\tau \geq 0\), and \(\int_{t - \bar{t}}^t \left( s_1^2 + s_2^2 \right) d\tau = 0\) if and only if \(s_1^2 + s_2^2 = 0\), or equivalently \(s_1 = s_2 = 0\) for any \(\tau \in [t - \bar{t}, t]\).
+
+We then take a closer look at the system \(\dot{\xi} = A(\nu) \xi\):
+\begin{align}
+\dot{\xi}_1 &= \mathfrak{c} \xi_3 \\
+\dot{\xi}_2 &= -\mathfrak{s} \xi_3 \\
+\dot{\xi}_3 &= - \frac{b}{ml^2} \xi_3.
+\end{align}
+If the solution of \(\xi_3\) at time \(t\) is \(w_3\), then
+\[
+\xi_3(\tau) = w_3 e^{\frac{b}{ml^2}(t - \tau)}, \quad \tau \leq t.
+\]
+We can now claim it is impossible that \(s_1 = s_2 = 0\) at any time \(\tau \in [t - \bar{t}, t]\).
+
+We can show this by contradiction. First of all, \(s_1 = s_2 = 0\) at \(\tau = t\) implies \(w_1 = w_2 = 0\) and hence \(w_3 = \pm 1\). This implies \(\xi_3 \neq 0\) for any \(\tau \in [t - \bar{t}, t]\). Then, \(s_1 = 0, \forall \tau \in [t - \bar{t}, t]\) implies \(\dot{\xi}_1 = 0\) which, due to \(\xi_3 \neq 0\), implies \(\mathfrak{c} = 0\) for all \(\tau\). Similarly, \(s_2 = 0, \forall \tau \in [t - \bar{t}, t]\) implies \(\dot{\xi}_2 = 0\) and \(\mathfrak{s} = 0\). This creates a contradiction because \(\mathfrak{c}^2 + \mathfrak{s}^2 = 1\) and \(\mathfrak{c}, \mathfrak{s}\) cannot be simultaneously zero.
+
+Therefore, there must exist \(\alpha > 0\) such that \(\Gamma_\nu^b (t - \bar{t},t) \succeq \alpha I\).
+
 \end{example}
 
 \hypertarget{triangular-template}{%
