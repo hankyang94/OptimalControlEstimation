@@ -107,7 +107,7 @@
 
 \title{Optimal Control and Estimation}
 \author{Heng Yang}
-\date{2023-07-01}
+\date{2023-07-02}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -680,7 +680,7 @@ C \begin{bmatrix}
 \]
 According to Theorem \ref{thm:ltidetectable}, we conclude \((A,C)\) is detectable. In fact, the pair \((A,C)\) is more than just detectable, it is indeed observable (according to Theorem \ref{thm:ltiobservable}). Therefore, the poles of \(A - KC\) can be arbitrarily placed.
 
-Now we need to find \(K\). An easy choice of \(K\) is
+\textbf{Finding \(K\)}. Now we need to find \(K\). An easy choice of \(K\) is
 \[
 K = \begin{bmatrix} k \\ 0 \end{bmatrix}, \quad A - KC = 
 \begin{bmatrix}
@@ -689,20 +689,96 @@ K = \begin{bmatrix} k \\ 0 \end{bmatrix}, \quad A - KC =
 \]
 With \(k > 0\), we know \(A- KC\) is guaranteed to be Hurwitz (the two eigenvalues of \(A-KC\) are \(-k\) and \(-b/ml^2\)), and we have obtained an observer!
 
-Oftentimes, it is insufficient to ensure the estimator converges to the true state asymptotically, and we need to reason about the convergence rate. Particularly, let us define \(e = \hat{x} - x\), and we know
+We can also estimate the convergence rate of this observer. Let us use \(m=1,g=9.8,l=1,b=0.1\) as parameters of the pendulm dynamics. According to Theorem \ref{thm:LuenbergerLinear}, we solve the Lyapunov equation
 \[
-\dot{e} = H e, \quad H = A - KC.
+(A - KC)^T P + P(A - KC) = -I
 \]
-Suppose we are interested in understanding the convergence rate of the squared norm of the error signal, that is,
-\[
-V = e^T e.
-\]
-Differentiating \(V\) we obtain
-\[
-\dot{V} = 2 \dot{e}^T e = e^T (H + H^T) e
-\]
+and \(\gamma = \frac{0.5}{\lambda_{\max}(P)}\) will be our best estimate of the convergence rate (of \(\Vert e \Vert = \Vert \hat{x} - x \Vert\) towards zero).
 
-{TBD: simulate the observer.}
+Table \ref{tab:pendulumLuenbergerRate} below shows the convergence rates computed for different values of \(k\). We can see that as \(k\) is increased, the convergence rate estimation is also increased. However, it appears that \(0.1\) is the best convergence rate we can achieve, regardless of how large \(k\) is.
+
+\begin{longtable}[]{@{}
+  >{\centering\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.1512}}
+  >{\centering\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.1395}}
+  >{\centering\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.1512}}
+  >{\centering\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.1395}}
+  >{\centering\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.1395}}
+  >{\centering\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.1395}}
+  >{\centering\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.1395}}@{}}
+\caption{\label{tab:pendulumLuenbergerRate} Convergence rate estimation of the Luenberger observer for a simple pendulm.}\tabularnewline
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\centering
+\(k\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\(0.1\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\(1\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\(10\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\(100\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\(1000\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\(10000\)
+\end{minipage} \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\centering
+\(k\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\(0.1\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\(1\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\(10\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\(100\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\(1000\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\(10000\)
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\(\gamma\) & \(0.0019\) & \(0.0523\) & \(0.0990\) & \(0.1000\) & \(0.1000\) & \(0.1000\) \\
+\end{longtable}
+
+\textbf{Optimal \(K\)}. Is it true that \(0.1\) is the best convergence rate, or in other words, what is the best \(K\) that maximizes the convergence rate \(\gamma\)?
+
+A natural way (and my favorite way) to answer this question is to formulate an optimization problem.
+\begin{equation}
+\begin{split}
+\min_{P,K} & \quad \lambda_{\max}(P) \\
+\text{subject to} & \quad (A - KC)^T P + P (A - KC) = -I \\
+& \quad P \succeq 0
+\end{split}
+\label{eq:pendulumLuenbergerMaxgammaNonCVX}
+\end{equation}
+The above formulation seeks the best possible \(K\) that minimizes \(\lambda_{\max}(P)\) which, according to \(\gamma = 0.5 / \lambda_{\max}(P)\), also maximizes \(\gamma\).
+
+However, problem \eqref{eq:pendulumLuenbergerMaxgammaNonCVX} is not a convex formulation due to the bilinear term \(PK\). Nevertheless, via a simple change of variable \(H = PK\), we arrive at the following convex formulation
+\begin{equation}
+\begin{split}
+\min_{P,H} & \quad \lambda_{\max}(P) \\
+\text{subject to} & \quad A^T P - C^T H^T + PA - H C = - I \\
+& \quad P \succeq 0
+\end{split}
+\label{eq:pendulumLuenbergerMaxgammaCVX}
+\end{equation}
+Problem \eqref{eq:pendulumLuenbergerMaxgammaCVX} is a semidefinite programming problem (SDP), that can be modeled and solved by off-the-shelf tools. We can recover \(K = P^{-1} H\) from \eqref{eq:pendulumLuenbergerMaxgammaCVX} after it is solved.
+
+Interestingly, solving problem \eqref{eq:pendulumLuenbergerMaxgammaCVX} verifies that the minimum \(\lambda_{\max}(P)\) is \(5\) and the maximum converge rate is \(0.1\). An optimal solution of \eqref{eq:pendulumLuenbergerMaxgammaCVX} is
+\[
+P^\star = \begin{bmatrix}
+2.4923 & 0 \\ 0 & 5 \end{bmatrix}, \quad 
+K^\star = \begin{bmatrix}
+0.2006 \\ 0.4985 \end{bmatrix}.
+\]
+You should check out the Matlab code of this example \href{https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/pendulum_luenberger.m}{here}.
 \end{example}
 
 \hypertarget{state-affine-template}{%

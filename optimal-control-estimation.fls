@@ -1032,6 +1032,7 @@ INPUT /usr/local/texlive/2022/texmf-dist/fonts/tfm/public/lm/ec-lmr8.tfm
 INPUT /usr/local/texlive/2022/texmf-dist/fonts/tfm/public/lm/ec-lmr6.tfm
 INPUT /usr/local/texlive/2022/texmf-dist/fonts/tfm/public/lm/ec-lmbx8.tfm
 INPUT /usr/local/texlive/2022/texmf-dist/fonts/tfm/public/lm/ec-lmbx12.tfm
+INPUT /usr/local/texlive/2022/texmf-dist/fonts/tfm/public/lm/ec-lmr5.tfm
 INPUT /usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/ueuf.fd
 INPUT /usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/ueuf.fd
 INPUT /usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/ueuf.fd

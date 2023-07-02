@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-07-01" />
+<meta name="date" content="2023-07-02" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -396,7 +396,7 @@ C \begin{bmatrix}
 \end{bmatrix} = 1 \neq 0.
 \]</span>
 According to Theorem <a href="linear-system-theory.html#thm:ltidetectable">A.3</a>, we conclude <span class="math inline">\((A,C)\)</span> is detectable. In fact, the pair <span class="math inline">\((A,C)\)</span> is more than just detectable, it is indeed observable (according to Theorem <a href="linear-system-theory.html#thm:ltiobservable">A.2</a>). Therefore, the poles of <span class="math inline">\(A - KC\)</span> can be arbitrarily placed.</p>
-<p>Now we need to find <span class="math inline">\(K\)</span>. An easy choice of <span class="math inline">\(K\)</span> is
+<p><strong>Finding <span class="math inline">\(K\)</span></strong>. Now we need to find <span class="math inline">\(K\)</span>. An easy choice of <span class="math inline">\(K\)</span> is
 <span class="math display">\[
 K = \begin{bmatrix} k \\ 0 \end{bmatrix}, \quad A - KC =
 \begin{bmatrix}
@@ -404,19 +404,75 @@ K = \begin{bmatrix} k \\ 0 \end{bmatrix}, \quad A - KC =
 \end{bmatrix}.
 \]</span>
 With <span class="math inline">\(k &gt; 0\)</span>, we know <span class="math inline">\(A- KC\)</span> is guaranteed to be Hurwitz (the two eigenvalues of <span class="math inline">\(A-KC\)</span> are <span class="math inline">\(-k\)</span> and <span class="math inline">\(-b/ml^2\)</span>), and we have obtained an observer!</p>
-<p>Oftentimes, it is insufficient to ensure the estimator converges to the true state asymptotically, and we need to reason about the convergence rate. Particularly, let us define <span class="math inline">\(e = \hat{x} - x\)</span>, and we know
+<p>We can also estimate the convergence rate of this observer. Let us use <span class="math inline">\(m=1,g=9.8,l=1,b=0.1\)</span> as parameters of the pendulm dynamics. According to Theorem <a href="output-feedback.html#thm:LuenbergerLinear">5.2</a>, we solve the Lyapunov equation
 <span class="math display">\[
-\dot{e} = H e, \quad H = A - KC.
+(A - KC)^T P + P(A - KC) = -I
 \]</span>
-Suppose we are interested in understanding the convergence rate of the squared norm of the error signal, that is,
+and <span class="math inline">\(\gamma = \frac{0.5}{\lambda_{\max}(P)}\)</span> will be our best estimate of the convergence rate (of <span class="math inline">\(\Vert e \Vert = \Vert \hat{x} - x \Vert\)</span> towards zero).</p>
+<p>Table <a href="output-feedback.html#tab:pendulumLuenbergerRate">5.1</a> below shows the convergence rates computed for different values of <span class="math inline">\(k\)</span>. We can see that as <span class="math inline">\(k\)</span> is increased, the convergence rate estimation is also increased. However, it appears that <span class="math inline">\(0.1\)</span> is the best convergence rate we can achieve, regardless of how large <span class="math inline">\(k\)</span> is.</p>
+<table>
+<caption><span id="tab:pendulumLuenbergerRate">Table 5.1: </span> Convergence rate estimation of the Luenberger observer for a simple pendulm.</caption>
+<colgroup>
+<col width="15%" />
+<col width="13%" />
+<col width="15%" />
+<col width="13%" />
+<col width="13%" />
+<col width="13%" />
+<col width="13%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"><span class="math inline">\(k\)</span></th>
+<th align="center"><span class="math inline">\(0.1\)</span></th>
+<th align="center"><span class="math inline">\(1\)</span></th>
+<th align="center"><span class="math inline">\(10\)</span></th>
+<th align="center"><span class="math inline">\(100\)</span></th>
+<th align="center"><span class="math inline">\(1000\)</span></th>
+<th align="center"><span class="math inline">\(10000\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><span class="math inline">\(\gamma\)</span></td>
+<td align="center"><span class="math inline">\(0.0019\)</span></td>
+<td align="center"><span class="math inline">\(0.0523\)</span></td>
+<td align="center"><span class="math inline">\(0.0990\)</span></td>
+<td align="center"><span class="math inline">\(0.1000\)</span></td>
+<td align="center"><span class="math inline">\(0.1000\)</span></td>
+<td align="center"><span class="math inline">\(0.1000\)</span></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Optimal <span class="math inline">\(K\)</span></strong>. Is it true that <span class="math inline">\(0.1\)</span> is the best convergence rate, or in other words, what is the best <span class="math inline">\(K\)</span> that maximizes the convergence rate <span class="math inline">\(\gamma\)</span>?</p>
+<p>A natural way (and my favorite way) to answer this question is to formulate an optimization problem.
+<span class="math display" id="eq:pendulumLuenbergerMaxgammaNonCVX">\[\begin{equation}
+\begin{split}
+\min_{P,K} &amp; \quad \lambda_{\max}(P) \\
+\text{subject to} &amp; \quad (A - KC)^T P + P (A - KC) = -I \\
+&amp; \quad P \succeq 0
+\end{split}
+\tag{5.15}
+\end{equation}\]</span>
+The above formulation seeks the best possible <span class="math inline">\(K\)</span> that minimizes <span class="math inline">\(\lambda_{\max}(P)\)</span> which, according to <span class="math inline">\(\gamma = 0.5 / \lambda_{\max}(P)\)</span>, also maximizes <span class="math inline">\(\gamma\)</span>.</p>
+<p>However, problem <a href="output-feedback.html#eq:pendulumLuenbergerMaxgammaNonCVX">(5.15)</a> is not a convex formulation due to the bilinear term <span class="math inline">\(PK\)</span>. Nevertheless, via a simple change of variable <span class="math inline">\(H = PK\)</span>, we arrive at the following convex formulation
+<span class="math display" id="eq:pendulumLuenbergerMaxgammaCVX">\[\begin{equation}
+\begin{split}
+\min_{P,H} &amp; \quad \lambda_{\max}(P) \\
+\text{subject to} &amp; \quad A^T P - C^T H^T + PA - H C = - I \\
+&amp; \quad P \succeq 0
+\end{split}
+\tag{5.16}
+\end{equation}\]</span>
+Problem <a href="output-feedback.html#eq:pendulumLuenbergerMaxgammaCVX">(5.16)</a> is a semidefinite programming problem (SDP), that can be modeled and solved by off-the-shelf tools. We can recover <span class="math inline">\(K = P^{-1} H\)</span> from <a href="output-feedback.html#eq:pendulumLuenbergerMaxgammaCVX">(5.16)</a> after it is solved.</p>
+<p>Interestingly, solving problem <a href="output-feedback.html#eq:pendulumLuenbergerMaxgammaCVX">(5.16)</a> verifies that the minimum <span class="math inline">\(\lambda_{\max}(P)\)</span> is <span class="math inline">\(5\)</span> and the maximum converge rate is <span class="math inline">\(0.1\)</span>. An optimal solution of <a href="output-feedback.html#eq:pendulumLuenbergerMaxgammaCVX">(5.16)</a> is
 <span class="math display">\[
-V = e^T e.
+P^\star = \begin{bmatrix}
+2.4923 &amp; 0 \\ 0 &amp; 5 \end{bmatrix}, \quad
+K^\star = \begin{bmatrix}
+0.2006 \\ 0.4985 \end{bmatrix}.
 \]</span>
-Differentiating <span class="math inline">\(V\)</span> we obtain
-<span class="math display">\[
-\dot{V} = 2 \dot{e}^T e = e^T (H + H^T) e
-\]</span></p>
-<p><span style="color:red">TBD: simulate the observer.</span></p>
+You should check out the Matlab code of this example <a href="https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/pendulum_luenberger.m">here</a>.</p>
 </div>
 </div>
 </div>
@@ -425,16 +481,16 @@ Differentiating <span class="math inline">\(V\)</span> we obtain
 <p>Consider an instance of the normal form <a href="output-feedback.html#eq:meta-observer-zeta">(5.7)</a> where the dynamics is linear in <span class="math inline">\(\xi\)</span>, but the coefficients are time-varying and dependent on the input and output
 <span class="math display" id="eq:state-affine-template">\[\begin{equation}
 \dot{\xi} = A(u,y) \xi + B(u,y), \quad y = C(u) \xi.
-\tag{5.15}
+\tag{5.17}
 \end{equation}\]</span>
-The difference between the state-affine template <a href="output-feedback.html#eq:state-affine-template">(5.15)</a> and the Luenberger template <a href="output-feedback.html#eq:Luenberger-linear-template">(5.10)</a> is that the linear matrices <span class="math inline">\(A,C\)</span> are allowed to depend nonlinearly on the input <span class="math inline">\((u,y)\)</span>.</p>
+The difference between the state-affine template <a href="output-feedback.html#eq:state-affine-template">(5.17)</a> and the Luenberger template <a href="output-feedback.html#eq:Luenberger-linear-template">(5.10)</a> is that the linear matrices <span class="math inline">\(A,C\)</span> are allowed to depend nonlinearly on the input <span class="math inline">\((u,y)\)</span>.</p>
 <p>Kalman and Bucy originally proposed an observer for linear time-varying systems <span class="citation">(<a href="#ref-kalman61-new">Kalman and Bucy 1961</a>)</span>. The result is later extened by <span class="citation">(<a href="#ref-besanccon96ejc-observer">Besançon, Bornard, and Hammouri 1996</a>)</span> and <span class="citation">(<a href="#ref-hammouri90cdc-observer">Hammouri and Leon Morales 1990</a>)</span> to deal with coefficient matrices dependent on the control. The following theorem is a direct extension of the result from <span class="citation">(<a href="#ref-besanccon96ejc-observer">Besançon, Bornard, and Hammouri 1996</a>)</span> and <span class="citation">(<a href="#ref-hammouri90cdc-observer">Hammouri and Leon Morales 1990</a>)</span> by considering <span class="math inline">\((u,y)\)</span> as an augmented control input.</p>
 <p>Before presenting the theorem, we need to introduce the following terminology.</p>
 <div class="definition">
 <p><span id="def:lineartimevarying" class="definition"><strong>Definition 5.2  (Linear Time-Varying System) </strong></span>For a linear time-varying system of the form
 <span class="math display" id="eq:linear-time-varying">\[\begin{equation}
 \dot{\chi} = A(\nu) \chi, \quad y = C(\nu) \chi,
-\tag{5.16}
+\tag{5.18}
 \end{equation}\]</span>
 with input <span class="math inline">\(\nu\)</span> and output <span class="math inline">\(y\)</span>, we define</p>
 <ul>
@@ -442,7 +498,7 @@ with input <span class="math inline">\(\nu\)</span> and output <span class="math
 <span class="math display">\[
 \Psi_\nu (t,t) = I, \quad \frac{\partial \Psi_\nu}{\partial \tau}(\tau,t) = A(\nu(\tau)) \Psi_\nu (\tau, t).
 \]</span>
-Note that the transition matrix is used to express the solution to <a href="output-feedback.html#eq:linear-time-varying">(5.16)</a> because it satisfies
+Note that the transition matrix is used to express the solution to <a href="output-feedback.html#eq:linear-time-varying">(5.18)</a> because it satisfies
 <span class="math display">\[
 \chi(\chi_0,t_0;t;\nu) = \Psi_\nu (t,t_0) \chi_0.
 \]</span></p></li>
@@ -456,27 +512,27 @@ Note that the transition matrix is used to express the solution to <a href="outp
 \]</span></p></li>
 </ul>
 </div>
-<p>We now introduce the Kalman-Bucy Observer for the state-affine template <a href="output-feedback.html#eq:state-affine-template">(5.15)</a>.</p>
+<p>We now introduce the Kalman-Bucy Observer for the state-affine template <a href="output-feedback.html#eq:state-affine-template">(5.17)</a>.</p>
 <div class="theorembox">
 <div class="theorem">
-<p><span id="thm:kalmanbucystateaffine" class="theorem"><strong>Theorem 5.3  (Kalman-Bucy Observer) </strong></span>Let <span class="math inline">\(y_{\xi_0,u}(t) = C(u(t)) \Xi (\xi_0;t;u)\)</span> be the output of system <a href="output-feedback.html#eq:state-affine-template">(5.15)</a> at time <span class="math inline">\(t\)</span> with initialization <span class="math inline">\(\xi_0\)</span> and control <span class="math inline">\(u\)</span>. Suppose the control <span class="math inline">\(u\)</span> satisfies</p>
+<p><span id="thm:kalmanbucystateaffine" class="theorem"><strong>Theorem 5.3  (Kalman-Bucy Observer) </strong></span>Let <span class="math inline">\(y_{\xi_0,u}(t) = C(u(t)) \Xi (\xi_0;t;u)\)</span> be the output of system <a href="output-feedback.html#eq:state-affine-template">(5.17)</a> at time <span class="math inline">\(t\)</span> with initialization <span class="math inline">\(\xi_0\)</span> and control <span class="math inline">\(u\)</span>. Suppose the control <span class="math inline">\(u\)</span> satisfies</p>
 <ul>
 <li><p>For any <span class="math inline">\(\xi_0\)</span>, <span class="math inline">\(t \mapsto A(u(t),y_{\xi_0,u}(t))\)</span> is bounded by <span class="math inline">\(A_{\max}\)</span></p></li>
 <li><p>For any <span class="math inline">\(\xi_0\)</span>, the augmented input <span class="math inline">\(\nu = (u,y_{\xi_0,u})\)</span> is <em>regularly persistent</em> for the dynamics
 <span class="math display" id="eq:kbobserver-auxilarydynamics">\[\begin{equation}
 \dot{\chi} = A(\nu) \chi , \quad y = C(\nu) \chi
-\tag{5.17}
+\tag{5.19}
 \end{equation}\]</span>
 uniformly with respect to <span class="math inline">\(\xi_0\)</span>. That is, there exist strictly positive numbers <span class="math inline">\(t_0,\bar{t}\)</span>, and <span class="math inline">\(\alpha\)</span> such that for any <span class="math inline">\(\xi_0\)</span> and any time <span class="math inline">\(t \geq t_0 \geq \bar{t}\)</span>,
 <span class="math display">\[
 \Gamma_v^b (t-\bar{t}, t) \succeq \alpha I,
 \]</span>
-where <span class="math inline">\(\Gamma_v^b\)</span> is the <em>backward observability grammian</em> associated with system <a href="output-feedback.html#eq:kbobserver-auxilarydynamics">(5.17)</a>.</p></li>
+where <span class="math inline">\(\Gamma_v^b\)</span> is the <em>backward observability grammian</em> associated with system <a href="output-feedback.html#eq:kbobserver-auxilarydynamics">(5.19)</a>.</p></li>
 </ul>
 <p>Then, given any positive definite matrix <span class="math inline">\(P_0\)</span>, there exist <span class="math inline">\(\alpha_1,\alpha_2 &gt; 0\)</span> such that for any <span class="math inline">\(\lambda \geq 2 A_{\max}\)</span> and any <span class="math inline">\(\xi_0 \in \mathbb{R}^p\)</span>, the matrix differential equation
 <span class="math display" id="eq:kbobserver-matrixdifferential">\[\begin{equation}
 \dot{P} = -\lambda P - A(u,y)^T P - P A(u,y) + C(u)^T C(u)
-\tag{5.18}
+\tag{5.20}
 \end{equation}\]</span>
 initialized at <span class="math inline">\(P(0) = P_0\)</span> admits a unique solution satisfying <span class="math inline">\(P(t)=P(t)^T\)</span> and
 <span class="math display">\[
@@ -485,21 +541,21 @@ initialized at <span class="math inline">\(P(0) = P_0\)</span> admits a unique s
 Moreover, the system
 <span class="math display" id="eq:kbobserver-observer">\[\begin{equation}
 \dot{\hat{\xi}} = A(u,y) \hat{\xi} + B(u,y) + K (y - C(u)\hat{\xi})
-\tag{5.19}
+\tag{5.21}
 \end{equation}\]</span>
 with a time-varying gain matrix
 <span class="math display" id="eq:kbobserver-gain">\[\begin{equation}
 K = P^{-1} C(u)^T
-\tag{5.20}
+\tag{5.22}
 \end{equation}\]</span>
-is an observer for the state-affine system <a href="output-feedback.html#eq:state-affine-template">(5.15)</a>.</p>
+is an observer for the state-affine system <a href="output-feedback.html#eq:state-affine-template">(5.17)</a>.</p>
 </div>
 </div>
 <p>Let us work out an example of the Kalman-Bucy Observer for nonlinear systems.</p>
 <div class="examplebox">
 <div class="example">
 <p><span id="exm:pendulumkbobserver" class="example"><strong>Example 5.2  (Kalman-Bucy Observer for A Simple Pendulum) </strong></span>Let us reconsider the pendulum dynamics <a href="output-feedback.html#eq:kbobserver-pendulum">(5.13)</a> but this time try to design a Kalman-Bucy observer.</p>
-<p>We first write the pendulum dynamics in a new coordinate system so that it is in the state-affine normal form <a href="output-feedback.html#eq:state-affine-template">(5.15)</a>. We choose <span class="math inline">\(\xi = [\mathfrak{s},\mathfrak{c},\dot{\theta}]^T\)</span> with <span class="math inline">\(\mathfrak{s} = \sin \theta\)</span> and <span class="math inline">\(\mathfrak{c} = \cos \theta\)</span>. Clearly, we will be able to observe <span class="math inline">\(y = [\mathfrak{s},\mathfrak{c}]^T\)</span> in this new coordinate. The state-affine normal form of the pendulum dynamics reads
+<p>We first write the pendulum dynamics in a new coordinate system so that it is in the state-affine normal form <a href="output-feedback.html#eq:state-affine-template">(5.17)</a>. We choose <span class="math inline">\(\xi = [\mathfrak{s},\mathfrak{c},\dot{\theta}]^T\)</span> with <span class="math inline">\(\mathfrak{s} = \sin \theta\)</span> and <span class="math inline">\(\mathfrak{c} = \cos \theta\)</span>. Clearly, we will be able to observe <span class="math inline">\(y = [\mathfrak{s},\mathfrak{c}]^T\)</span> in this new coordinate. The state-affine normal form of the pendulum dynamics reads
 <span class="math display" id="eq:pendulum-state-affine">\[\begin{equation}
 \begin{split}
 \dot{\xi} = \begin{bmatrix}
@@ -522,15 +578,15 @@ y &amp; = \underbrace{\begin{bmatrix}
 \end{split}.
 \tag{5.14}
 \end{equation}\]</span>
-Note that <span class="math inline">\(C(u)\)</span> is in fact time-invariant, and <span class="math inline">\(B(u,y)\)</span> only depends on <span class="math inline">\(u\)</span>; but we adopt the same notation as the general state-affine template <a href="output-feedback.html#eq:state-affine-template">(5.15)</a>.</p>
-<p>In order to use the Kalman-Bucy observer in Theorem <a href="output-feedback.html#thm:kalmanbucystateaffine">5.3</a>, we need to verify the boundedness of <span class="math inline">\(A(u,y)\)</span>, and the regular persistence of <a href="output-feedback.html#eq:kbobserver-auxilarydynamics">(5.17)</a>.</p>
+Note that <span class="math inline">\(C(u)\)</span> is in fact time-invariant, and <span class="math inline">\(B(u,y)\)</span> only depends on <span class="math inline">\(u\)</span>; but we adopt the same notation as the general state-affine template <a href="output-feedback.html#eq:state-affine-template">(5.17)</a>.</p>
+<p>In order to use the Kalman-Bucy observer in Theorem <a href="output-feedback.html#thm:kalmanbucystateaffine">5.3</a>, we need to verify the boundedness of <span class="math inline">\(A(u,y)\)</span>, and the regular persistence of <a href="output-feedback.html#eq:kbobserver-auxilarydynamics">(5.19)</a>.</p>
 <p><strong>Boundedness of <span class="math inline">\(A(u,y)\)</span></strong>. We can easily show the boundedness of <span class="math inline">\(A(u,y)\)</span> by writing
 <span class="math display">\[
 \Vert A(u,y) \xi \Vert = \Vert \xi_3 (\mathfrak{c} - \mathfrak{s} - b/ml^2) \Vert  \leq |\xi_3| \sqrt{3} \sqrt{\mathfrak{c}^2 + \mathfrak{s}^2 + b^2 / m^2 l^4} \leq \Vert \xi \Vert \sqrt{3 + 3b^2 / m^2 l^4}.
 \]</span>
 Therefore, we can take <span class="math inline">\(A_{\max} = \sqrt{3 + 3b^2 / m^2 l^4}\)</span>.
 <span style="color:red">Does the <span class="math inline">\(A_{\max}\)</span> in Theorem <a href="output-feedback.html#thm:kalmanbucystateaffine">5.3</a> refer to the bound in operator norm?</span></p>
-<p><strong>Regular persistence</strong>. We write the backward observability grammian of system <a href="output-feedback.html#eq:kbobserver-auxilarydynamics">(5.17)</a>
+<p><strong>Regular persistence</strong>. We write the backward observability grammian of system <a href="output-feedback.html#eq:kbobserver-auxilarydynamics">(5.19)</a>
 <span class="math display">\[
 \Gamma_\nu^b(t - \bar{t},t) = \int_{t - \bar{t}}^t \Psi_\nu(\tau,t)^T C^T C \Psi_\nu (\tau, t) d \tau = \int_{t - \bar{t}}^t \Psi_\nu(\tau,t)^T \begin{bmatrix}
 1 &amp; 0 &amp; 0 \\
