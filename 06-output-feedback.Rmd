@@ -522,3 +522,40 @@ On the other hand,
 :::
 
 ### Triangular Template
+
+
+## Observer Feedback
+
+Now that we have good ways to design a state observer, we will see how we can use the observer for feedback control. 
+
+::: {.examplebox}
+::: {.example #pendulumLuenbergerFeedback name="Pendulum Stabilization with A Luenberger Observer"}
+In Example \@ref(exm:pendulumLuenberger), we have written the dynamics of a pendulum, and the dynamics of a Luenberger observer as 
+\begin{align}
+\dot{x} &= A x + B(u,y) \\
+\dot{\hat{x}} &= A \hat{x} + B(u,y) + KC (x - \hat{x})
+\end{align}
+We wish to understand (so we can optimize) the behavior of this system under certain control input $u$. To do so, let us denote $e = \hat{x} - x$, and write the above dynamics as 
+\begin{align}
+\dot{x} &= A x + B(u,Cx) \\
+\dot{e} & = (A - KC) e
+\end{align}
+Denoting $z = [x,e]^T$, we have the augmented dynamics 
+$$
+\dot{z} = \underbrace{\begin{bmatrix} A & 0 \\ 0 & A - KC \end{bmatrix}}_{=:F} z + \underbrace{\begin{bmatrix} B(u,Dz) \\ 0 \end{bmatrix}}_{=:G(z,u)}
+$$
+We want to stabilize the system at $z_0 = [\pi,0,0,0]^T$ (the upright position) subject to control bounds $u \in \mathbb{U} = [-u_{\max},u_{\max}]$.
+
+We need to find a control Lyapunov function.
+
+<!-- Our controller has access to the observation $y$ (recall this is $\theta$) and the estimated state $\hat{x}$. Let us try a controller of the following form
+$$
+u = mgl \sin \theta - G \hat{x} = mgl \sin \theta - G (x + e).
+$$
+This leads to the dynamics 
+\begin{align}
+\dot{x} & = A x - \frac{1}{ml^2} G (x + e) = \left( A - \frac{1}{ml^2}G \right)x - \frac{1}{ml^2} G e \\
+\dot{e} & = (A - KC)e
+\end{align} -->
+:::
+:::
