@@ -107,7 +107,7 @@
 
 \title{Optimal Control and Estimation}
 \author{Heng Yang}
-\date{2023-07-02}
+\date{2023-07-03}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -958,6 +958,34 @@ Therefore, there must exist \(\alpha > 0\) such that \(\Gamma_\nu^b (t - \bar{t}
 
 \hypertarget{triangular-template}{%
 \subsection{Triangular Template}\label{triangular-template}}
+
+\hypertarget{observer-feedback}{%
+\section{Observer Feedback}\label{observer-feedback}}
+
+Now that we have good ways to design a state observer, we will see how we can use the observer for feedback control.
+
+\begin{example}[Pendulum Stabilization with A Luenberger Observer]
+\protect\hypertarget{exm:pendulumLuenbergerFeedback}{}\label{exm:pendulumLuenbergerFeedback}
+
+In Example \ref{exm:pendulumLuenberger}, we have written the dynamics of a pendulum, and the dynamics of a Luenberger observer as
+\begin{align}
+\dot{x} &= A x + B(u,y) \\
+\dot{\hat{x}} &= A \hat{x} + B(u,y) + KC (x - \hat{x})
+\end{align}
+We wish to understand (so we can optimize) the behavior of this system under certain control input \(u\). To do so, let us denote \(e = \hat{x} - x\), and write the above dynamics as
+\begin{align}
+\dot{x} &= A x + B(u,Cx) \\
+\dot{e} & = (A - KC) e
+\end{align}
+Denoting \(z = [x,e]^T\), we have the augmented dynamics
+\[
+\dot{z} = \underbrace{\begin{bmatrix} A & 0 \\ 0 & A - KC \end{bmatrix}}_{=:F} z + \underbrace{\begin{bmatrix} B(u,Dz) \\ 0 \end{bmatrix}}_{=:G(z,u)}
+\]
+We want to stabilize the system at \(z_0 = [\pi,0,0,0]^T\) (the upright position) subject to control bounds \(u \in \mathbb{U} = [-u_{\max},u_{\max}]\).
+
+We need to find a control Lyapunov function.
+
+\end{example}
 
 \hypertarget{adaptivecontrol}{%
 \chapter{Adaptive Control}\label{adaptivecontrol}}

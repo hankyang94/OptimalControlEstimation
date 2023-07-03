@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-07-02" />
+<meta name="date" content="2023-07-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -115,6 +115,7 @@ div.csl-indent {
 <li class="chapter" data-level="5.1.3" data-path="output-feedback.html"><a href="output-feedback.html#state-affine-template"><i class="fa fa-check"></i><b>5.1.3</b> State-affine Template</a></li>
 <li class="chapter" data-level="5.1.4" data-path="output-feedback.html"><a href="output-feedback.html#triangular-template"><i class="fa fa-check"></i><b>5.1.4</b> Triangular Template</a></li>
 </ul></li>
+<li class="chapter" data-level="5.2" data-path="output-feedback.html"><a href="output-feedback.html#observer-feedback"><i class="fa fa-check"></i><b>5.2</b> Observer Feedback</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html"><i class="fa fa-check"></i><b>6</b> Adaptive Control</a>
 <ul>
@@ -644,8 +645,41 @@ On the other hand,
 </div>
 <div id="triangular-template" class="section level3 hasAnchor" number="5.1.4">
 <h3><span class="header-section-number">5.1.4</span> Triangular Template<a href="output-feedback.html#triangular-template" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-
 </div>
+</div>
+<div id="observer-feedback" class="section level2 hasAnchor" number="5.2">
+<h2><span class="header-section-number">5.2</span> Observer Feedback<a href="output-feedback.html#observer-feedback" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Now that we have good ways to design a state observer, we will see how we can use the observer for feedback control.</p>
+<div class="examplebox">
+<div class="example">
+<p><span id="exm:pendulumLuenbergerFeedback" class="example"><strong>Example 5.3  (Pendulum Stabilization with A Luenberger Observer) </strong></span>In Example <a href="output-feedback.html#exm:pendulumLuenberger">5.1</a>, we have written the dynamics of a pendulum, and the dynamics of a Luenberger observer as
+<span class="math display">\[\begin{align}
+\dot{x} &amp;= A x + B(u,y) \\
+\dot{\hat{x}} &amp;= A \hat{x} + B(u,y) + KC (x - \hat{x})
+\end{align}\]</span>
+We wish to understand (so we can optimize) the behavior of this system under certain control input <span class="math inline">\(u\)</span>. To do so, let us denote <span class="math inline">\(e = \hat{x} - x\)</span>, and write the above dynamics as
+<span class="math display">\[\begin{align}
+\dot{x} &amp;= A x + B(u,Cx) \\
+\dot{e} &amp; = (A - KC) e
+\end{align}\]</span>
+Denoting <span class="math inline">\(z = [x,e]^T\)</span>, we have the augmented dynamics
+<span class="math display">\[
+\dot{z} = \underbrace{\begin{bmatrix} A &amp; 0 \\ 0 &amp; A - KC \end{bmatrix}}_{=:F} z + \underbrace{\begin{bmatrix} B(u,Dz) \\ 0 \end{bmatrix}}_{=:G(z,u)}
+\]</span>
+We want to stabilize the system at <span class="math inline">\(z_0 = [\pi,0,0,0]^T\)</span> (the upright position) subject to control bounds <span class="math inline">\(u \in \mathbb{U} = [-u_{\max},u_{\max}]\)</span>.</p>
+<p>We need to find a control Lyapunov function.</p>
+<!-- Our controller has access to the observation $y$ (recall this is $\theta$) and the estimated state $\hat{x}$. Let us try a controller of the following form
+$$
+u = mgl \sin \theta - G \hat{x} = mgl \sin \theta - G (x + e).
+$$
+This leads to the dynamics 
+\begin{align}
+\dot{x} & = A x - \frac{1}{ml^2} G (x + e) = \left( A - \frac{1}{ml^2}G \right)x - \frac{1}{ml^2} G e \\
+\dot{e} & = (A - KC)e
+\end{align} -->
+</div>
+</div>
+
 </div>
 </div>
 <h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
