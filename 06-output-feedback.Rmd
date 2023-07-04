@@ -570,7 +570,7 @@ $$
 \mathrm{s.t.} \quad L_f V(z) + L_g V(z)u \leq -c V(z)
 $$
 
-where $c$ is some positive constant. The challenge now is in choosing a suitable $V(x)$.
+where $c$ is some positive constant. The challenge now is in choosing a suitable $V(z)$.
 
 <!-- \inf_{u \in \mathcalU}
 -->
