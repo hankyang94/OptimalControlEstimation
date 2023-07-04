@@ -546,7 +546,34 @@ $$
 $$
 We want to stabilize the system at $z_0 = [\pi,0,0,0]^T$ (the upright position) subject to control bounds $u \in \mathbb{U} = [-u_{\max},u_{\max}]$.
 
-We need to find a control Lyapunov function.
+We need to find a control Lyapunov function (CLF), $V(z)$, that satisfies the following constraints:
+$$
+    V(z_0) = 0
+$$
+$$
+    V(z) > 0 \quad \forall x \in \mathcal{X} \,\, \backslash \,\,\{x_g\}
+$$
+$$
+    \inf_{u \in \mathcal{U}} [L_F V(x) + L_G V(x)u] \leq 0 \quad \forall x \in \mathcal{X}
+$$
+
+where $L_F V$ and $L_G V$ are the Lie derivatives of $V$ along $F$ and $G$, respectively. The CLF will define the set of admissable control inputs as follows:
+$$
+    K = \{ u: L_f V(x) + L_g V(x)u \leq 0 \}
+$$
+To find the smallest-magnitude control input such that $u \in K$, we may use a quadratic program:
+
+$$
+    \min_{u \in \mathcal{U}} ||u||^2
+$$
+$$
+\mathrm{s.t.} \quad L_f V(x) + L_g V(x)u \leq -c V(x)
+$$
+
+where $c$ is some positive constant.
+
+<!-- \inf_{u \in \mathcalU}
+-->
 
 <!-- Our controller has access to the observation $y$ (recall this is $\theta$) and the estimated state $\hat{x}$. Let us try a controller of the following form
 $$
