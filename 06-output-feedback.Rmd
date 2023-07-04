@@ -551,15 +551,15 @@ $$
     V(z_0) = 0
 $$
 $$
-    V(z) > 0 \quad \forall x \in \mathcal{X} \,\, \backslash \,\,\{x_g\}
+    V(z) > 0 \quad \forall z \in \mathcal{Z} \,\, \backslash \,\,\{z_0\}
 $$
 $$
-    \inf_{u \in \mathcal{U}} [L_F V(x) + L_G V(x)u] \leq 0 \quad \forall x \in \mathcal{X}
+    \inf_{u \in \mathbb{U}} [L_F V(z) + L_G V(z)u] \leq 0 \quad \forall z \in \mathcal{Z}
 $$
 
-where $L_F V$ and $L_G V$ are the Lie derivatives of $V$ along $F$ and $G$, respectively. The CLF will define the set of admissable control inputs as follows:
+where $L_F V$ and $L_G V$ are the Lie derivatives of $V$ along $F$ and $G$, respectively. $\mathcal{Z}$ is the set of all possible augmented states. The CLF will define the set of admissable control gains $K$ as follows:
 $$
-    K = \{ u: L_f V(x) + L_g V(x)u \leq 0 \}
+    K = \{ u: L_f V(z) + L_g V(z)u \leq 0 \}
 $$
 To find the smallest-magnitude control input such that $u \in K$, we may use a quadratic program:
 
@@ -567,10 +567,10 @@ $$
     \min_{u \in \mathcal{U}} ||u||^2
 $$
 $$
-\mathrm{s.t.} \quad L_f V(x) + L_g V(x)u \leq -c V(x)
+\mathrm{s.t.} \quad L_f V(z) + L_g V(z)u \leq -c V(z)
 $$
 
-where $c$ is some positive constant.
+where $c$ is some positive constant. The challenge now is in choosing a suitable $V(x)$.
 
 <!-- \inf_{u \in \mathcalU}
 -->
