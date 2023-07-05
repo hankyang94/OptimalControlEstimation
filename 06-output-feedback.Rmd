@@ -256,7 +256,7 @@ y & = \underbrace{\begin{bmatrix}
 1 & 0
 \end{bmatrix}}_{=:C} x 
 \end{split}.
-(\#eq:pendulum-state-affine)
+(\#eq:pendulum-Luenberger-Linear)
 \end{equation}
 
 In order for us to use the Luenberger observer, we need to check if the pair $(A,C)$ is detectable. We can easily find the eigenvalues and eigenvectors of $A$:
@@ -490,11 +490,15 @@ $$
 that is, $w$ is the solution of $\dot{\xi} = A(\nu) \xi$ at time $t$ with initial condition $s$ at time $\tau \leq t$. Equivalently, this is saying $s$ is the initial condition of $\dot{\xi} = A(\nu) \xi$ at time $\tau \leq t$ such that its solution at time $t$ is $w$. Note that from \@ref(eq:pendulm-regular-persistence-1) it is clearly that $\int_{t - \bar{t}}^t \left( s_1^2 + s_2^2 \right) d\tau \geq 0$, and $\int_{t - \bar{t}}^t \left( s_1^2 + s_2^2 \right) d\tau = 0$ if and only if $s_1^2 + s_2^2 = 0$, or equivalently $s_1 = s_2 = 0$ for any $\tau \in [t - \bar{t}, t]$.
 
 We then take a closer look at the system $\dot{\xi} = A(\nu) \xi$:
-\begin{align}
+\begin{equation}
+\begin{split}
 \dot{\xi}_1 &= \mathfrak{c} \xi_3 \\
 \dot{\xi}_2 &= -\mathfrak{s} \xi_3 \\
 \dot{\xi}_3 &= - \frac{b}{ml^2} \xi_3.
-\end{align}
+\end{split}
+(\#eq:pendulm-state-affine-auxiliarysystem)
+\end{equation}
+
 If the solution of $\xi_3$ at time $t$ is $w_3$, then 
 $$
 \xi_3(\tau) = w_3 e^{\frac{b}{ml^2}(t - \tau)}, \quad \tau \leq t.
@@ -503,7 +507,44 @@ We can now claim it is impossible that $s_1 = s_2 = 0$ at any time $\tau \in [t 
 
 We can show this by contradiction. First of all, $s_1 = s_2 = 0$ at $\tau = t$ implies $w_1 = w_2 = 0$ and hence $w_3 = \pm 1$. This implies $\xi_3 \neq 0$ for any $\tau \in [t - \bar{t}, t]$. Then, $s_1 = 0, \forall \tau \in [t - \bar{t}, t]$ implies $\dot{\xi}_1 = 0$ which, due to $\xi_3 \neq 0$, implies $\mathfrak{c} = 0$ for all $\tau$. Similarly, $s_2 = 0, \forall \tau \in [t - \bar{t}, t]$ implies $\dot{\xi}_2 = 0$ and $\mathfrak{s} = 0$. This creates a contradiction because $\mathfrak{c}^2 + \mathfrak{s}^2 = 1$ and $\mathfrak{c}, \mathfrak{s}$ cannot be simultaneously zero.
 
-Therefore, there must exist $\alpha > 0$ such that $\Gamma_\nu^b (t - \bar{t},t) \succeq \alpha I$.
+The above reasoning proves that the backward observability Grammian is positive definite, which is, however, still insufficient for the Kalman-Bucy observer. We need a stronger uniformly positive definite condition on $\Gamma_\nu^b$, i.e., to find $t_0, \bar{t}$ and $\alpha>0$ so that $\Gamma_\nu^b(t-\bar{t},t) \succeq \alpha I$ for all $t \geq t_0$.
+
+If the control $u$ is unbounded, then sadly, one can show that the uniform positive definite condition fails to hold, as left by you to show in the following exercise.
+
+::: {.exercise #kbobserverpendulumcounterexample name="Counterexample for Kalman-Bucy Observer"}
+Show that, if the control $u$ is unbounded, then for any $\alpha > 0$, $t_0 \geq \bar{t} > 0$, there exists $t \geq t_0$ such that $\Gamma_\nu^b(t - \bar{t},t) \prec \alpha I$. (Hint: consider a controller that spins the pendulum faster and faster such that in time $\bar{t}$ it has rotated $2k\pi$, in this case the angular velocity becomes unobservable because we are not sure how many rounds the pendulum has rotated.)
+:::
+
+Fortunately, if the control $u$ is bounded, then we can prove the uniform positive define condition holds for $\Gamma_\nu^b(t - \bar{t},t)$. The following proof is given by [Weiyu Li](https://scholar.harvard.edu/weiyuli/home).
+
+Without loss of generality, let $\frac{b}{ml^2} = 1$. Assume $u$ is bounded such that the third entry of $B(u,y)$ in \@ref(eq:pendulum-state-affine) is bounded by $\beta > 0$
+$$
+\left| \frac{u - mgl \mathfrak{s}}{ml^2} \right| \leq \beta.
+$$
+Assuming the initial velocity of the pendulum is $\dot{\theta}(0) = \dot{\theta}_0$, we know $\dot{\theta}(t)$ is bounded by 
+$$
+\dot{\theta}(t) \in \left[ c_1(1-\beta)e^{-t} - \beta  , c_2(1-\beta)e^{-t} + \beta \right],
+$$
+where $c_1,c_2$ are constants chosen to satisfy the initial condition. Clearly, for all $t > 0$, we see $\dot{\theta}(t)$ is bounded, and hence we know $\dot{\mathfrak{c}}$ and $\dot{\mathfrak{s}}$ are bounded (due to $\mathfrak{c}$ and $\mathfrak{s}$ are bounded). Intuitively, what we have just shown says that when the control is bounded, the measurements $\mathfrak{c}$ and $\mathfrak{s}$ will have bounded time derivatives. (This will help us analyze the auxiliary system \@ref(eq:pendulm-state-affine-auxiliarysystem).)
+
+Now back to checking regular persistence of the auxilary system \@ref(eq:pendulm-state-affine-auxiliarysystem). We will discuss two cases: (1) $w_3^2 > 1 - \delta$, and (2) $w_3^2 \leq 1 - \delta$, for some constant $\delta < 0.5$ determined later.
+
+1. $w_3^2 > 1 - \delta > 0.5$. In this case we have $w_1^2 + w_2^2 = 1 - w_3^2 < \delta$, and hence $w_1^2 < \delta$, $w_2^2 < \delta$. On the other hand, from \@ref(eq:pendulm-state-affine-auxiliarysystem) we have 
+$$
+\dot{\xi}_1^2(\tau) + \dot{\xi}_2^2(\tau) = \xi_3^2 = w_3^2 e^{2 (t - \tau)} > w_3^2 > 1 - \delta, \quad \forall \tau < t.
+$$
+Without loss of generality assume $\dot{\xi}_1(t)^2 > (1-\delta)/2$. As $\dot{\xi}_1 = \mathfrak{c} \xi_3$ and both $\mathfrak{c}$ and $\xi_3$ have bounded derivatives, we know $\dot{\xi}_1$ will not change sign for some duration $T$ that is independent from the choice of $\delta$ (because the time derivatives of $\mathfrak{c}$ and $\xi_3$ do not depend on $\delta$). That is $|\dot{\xi}_1| > \sqrt{(1-\delta)/2} > 1/2$ for $\tau \in [t - T,t]$. Consequently,
+$$
+|\xi_1(t - \tau)| > \frac{1}{2} \tau - |w_1| > \frac{1}{2} \tau - \sqrt{\delta}, \quad \tau \in [0,T].
+$$
+Choosing $\delta$ small enough, we have $|\xi_1(t - \tau)| > 0.25 \tau$ for $\tau \in [0.5T,T]$. Then we have 
+$$
+\Gamma_\nu^b(t - T, t) \succ [(0.25 \times 0.5 T)^2 \times 0.5T]I.
+$$
+
+2. $w_3^2 \leq 1-\delta$. In this case $w_1^2 + w_2^2 = 1 - w_3^2 \geq \delta$, and at least one of $w_1$ and $w_2$ has absolute value larger than $\sqrt{\delta/2}$. Because the derivatives of $\xi_1$ and $\xi_2$ are both bounded, we know $\xi_1$ and $\xi_2$ will remain large for some constant time. Thus there is a uniform lower bound.
+
+<!-- Therefore, there must exist $\alpha > 0$ such that $\Gamma_\nu^b (t - \bar{t},t) \succeq \alpha I$. -->
 <!-- On the other hand,
 $$
 \frac{d}{d\tau}\left( \xi_1^2 + \xi_2^2 \right) = 2 \xi_1 \dot{\xi}_1 + 2 \xi_2 \dot{\xi}_2 = 2 \xi_3 \left(\mathfrak{c} \xi_1 - 2 \mathfrak{s}\xi_2 \right).
