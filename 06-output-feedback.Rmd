@@ -544,6 +544,8 @@ $$
 
 2. $w_3^2 \leq 1-\delta$. In this case $w_1^2 + w_2^2 = 1 - w_3^2 \geq \delta$, and at least one of $w_1$ and $w_2$ has absolute value larger than $\sqrt{\delta/2}$. Because the derivatives of $\xi_1$ and $\xi_2$ are both bounded, we know $\xi_1$ and $\xi_2$ will remain large for some constant time. Thus there is a uniform lower bound.
 
+The intuition of the above proof is simple: when $\xi_1$ and/or $\xi_2$ already have large absolute value (case 2), we can find a time window such that $\xi_1$ and/or $\xi_2$ remain large in that time window; when $\xi_1$ and/or $\xi_2$ are small (case 1), using the observation that their time derivatives are large (because $w_3$ is large), together with the fact that these derivatives remain large (because the derivative of these derivatives are bounded), we can also find a time window that $\xi_1$ and/or $\xi_2$ are large (back in time). Therefore, the backward observability Grammian is uniformly positive definite.
+
 <!-- Therefore, there must exist $\alpha > 0$ such that $\Gamma_\nu^b (t - \bar{t},t) \succeq \alpha I$. -->
 <!-- On the other hand,
 $$
