@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.1.13)  3 JUL 2023 13:01
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.1.13)  5 JUL 2023 15:04
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -575,11 +575,7 @@ File: t1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 File: l3backend-pdftex.def 2022-02-07 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count323
 \l__pdf_internal_box=\box76
-) (./optimal-control-estimation.aux
-
-LaTeX Warning: Label `eq:pendulum-state-affine' multiply defined.
-
-)
+) (./optimal-control-estimation.aux)
 \openout1 = `optimal-control-estimation.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 129.
@@ -797,52 +793,52 @@ Package natbib Warning: Citation `besanccon96ejc-observer' on page 26 undefined 
 Package natbib Warning: Citation `hammouri90cdc-observer' on page 26 undefined on input line 794.
 
 [26] [27]
-LaTeX Font Info:    Trying to load font information for U+euf on input line 880.
+LaTeX Font Info:    Trying to load font information for U+euf on input line 882.
  (/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/ueuf.fd
 File: ueuf.fd 2013/01/14 v3.01 Euler Fraktur
 ) (/usr/local/texlive/2022/texmf-dist/tex/latex/microtype/mt-euf.cfg
 File: mt-euf.cfg 2006/07/03 v1.1 microtype config. file: AMS Euler Fraktur (RS)
 )
-Overfull \hbox (15.54147pt too wide) detected at line 910
+Overfull \hbox (15.54147pt too wide) detected at line 912
 \OMS/lmsy/m/n/10 k\OML/lmm/m/it/10 A\OT1/lmr/m/n/10 (\OML/lmm/m/it/10 u; y\OT1/lmr/m/n/10 )\OML/lmm/m/it/10 ^^X\OMS/lmsy/m/n/10 k \OT1/lmr/m/n/10 = \OMS/lmsy/m/n/10 k\OML/lmm/m/it/10 ^^X[]\OT1/lmr/m/n/10 (\U/euf/m/n/10 c \OMS/lmsy/m/n/10 ^^@ \U/euf/m/n/10 s \OMS/lmsy/m/n/10 ^^@ \OML/lmm/m/it/10 b=ml[]\OT1/lmr/m/n/10 )\OMS/lmsy/m/n/10 k ^^T j\OML/lmm/m/it/10 ^^X[]\OMS/lmsy/m/n/10 j[][] ^^T k\OML/lmm/m/it/10 ^^X\OMS/lmsy/m/n/10 k[]\OML/lmm/m/it/10 :
  []
 
 
-Overfull \hbox (7.82411pt too wide) detected at line 922
+Overfull \hbox (7.82411pt too wide) detected at line 924
 \OT1/lmr/m/n/10 ^^@[](\OML/lmm/m/it/10 t \OMS/lmsy/m/n/10 ^^@ []\OML/lmm/m/it/10 ; t\OT1/lmr/m/n/10 ) = [][] 	[](\OML/lmm/m/it/10 ^^\; t\OT1/lmr/m/n/10 )[]\OML/lmm/m/it/10 C[]C\OT1/lmr/m/n/10 	[](\OML/lmm/m/it/10 ^^\; t\OT1/lmr/m/n/10 )\OML/lmm/m/it/10 d^^\ \OT1/lmr/m/n/10 = [][] 	[](\OML/lmm/m/it/10 ^^\; t\OT1/lmr/m/n/10 )[] [] 	[](\OML/lmm/m/it/10 ^^\; t\OT1/lmr/m/n/10 )\OML/lmm/m/it/10 d^^\:
  []
 
-[28] [29] [30]
+[28] [29] [30] [31] [32]
 Chapter 6.
-[31
+[33
 
-] [32] [33] [34] [35] [36]
-<images/drawme.png, id=554, 670.505pt x 310.15875pt>
+] [34] [35] [36] [37] [38]
+<images/drawme.png, id=570, 670.505pt x 310.15875pt>
 File: images/drawme.png Graphic file (type png)
 <use images/drawme.png>
-Package pdftex.def Info: images/drawme.png  used on input line 1268.
+Package pdftex.def Info: images/drawme.png  used on input line 1337.
 (pdftex.def)             Requested size: 206.995pt x 95.75067pt.
- [37] [38 <./images/drawme.png>] [39]
+ [39] [40 <./images/drawme.png>] [41]
 
-Package natbib Warning: Citation `slotine91book-applied' on page 40 undefined on input line 1350.
+Package natbib Warning: Citation `slotine91book-applied' on page 42 undefined on input line 1419.
 
-[40] [41] [42
+[42] [43] [44
 
 ]
 Appendix A.
-[43] [44] [45] [46]
+[45] [46] [47] [48]
 Appendix B.
-[47
+[49
 
-] [48
+] [50
 
 ]
 Appendix C.
-[49] [50
+[51] [52
 
 ]
 Appendix D.
-[51] [52
+[53] [54
 
 ]
 Appendix E.
@@ -850,24 +846,20 @@ No file optimal-control-estimation.bbl.
 
 Package natbib Warning: There were undefined citations.
 
-[53] (./optimal-control-estimation.aux)
-
-LaTeX Warning: There were multiply-defined labels.
-
- ) 
+[55] (./optimal-control-estimation.aux) ) 
 Here is how much of TeX's memory you used:
- 23677 strings out of 478268
- 434540 string characters out of 5846347
- 735303 words of memory out of 5000000
- 40805 multiletter control sequences out of 15000+600000
+ 23684 strings out of 478268
+ 434696 string characters out of 5846347
+ 735481 words of memory out of 5000000
+ 40808 multiletter control sequences out of 15000+600000
  566123 words of font info for 246 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 83i,29n,80p,1188b,529s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 83i,29n,80p,1188b,549s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}</usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/euler/eufm10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/euler/eufm7.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmmi5.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmr17.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmr5.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmr6.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmro10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmsy5.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmsy6.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm7.pfb>
-Output written on optimal-control-estimation.pdf (53 pages, 577017 bytes).
+Output written on optimal-control-estimation.pdf (55 pages, 586734 bytes).
 PDF statistics:
- 1000 PDF objects out of 1000 (max. 8388607)
- 875 compressed objects within 9 object streams
- 322 named destinations out of 1000 (max. 500000)
+ 1018 PDF objects out of 1200 (max. 8388607)
+ 891 compressed objects within 9 object streams
+ 326 named destinations out of 1000 (max. 500000)
  51370 words of extra memory for PDF output out of 51595 (max. 10000000)
 

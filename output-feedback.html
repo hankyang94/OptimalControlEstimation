@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-07-03" />
+<meta name="date" content="2023-07-05" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -361,7 +361,7 @@ x = \begin{bmatrix}
 where <span class="math inline">\(\theta\)</span> the angular position of the pendulum from the vertical line, <span class="math inline">\(m &gt; 0\)</span> the mass of the pendulum, <span class="math inline">\(l &gt; 0\)</span> the length, <span class="math inline">\(g\)</span> the gravitational constant, <span class="math inline">\(b &gt; 0\)</span> the dampling coefficient, and <span class="math inline">\(u\)</span> the control input (torque).</p>
 <p>We assume we can only observe the angular position of the pendulum in <a href="output-feedback.html#eq:kbobserver-pendulum">(5.13)</a>, e.g., using a camera, but not the angular velocity. Our goal is to construct an observer that can provide a full state estimation.</p>
 <p>We first note that the pendulum dynamics <a href="output-feedback.html#eq:kbobserver-pendulum">(5.13)</a> can actually be written in the (linear) Luenberger template <a href="output-feedback.html#eq:Luenberger-linear-template">(5.10)</a> as<a href="#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a>
-<span class="math display" id="eq:pendulum-state-affine">\[\begin{equation}
+<span class="math display" id="eq:pendulum-Luenberger-Linear">\[\begin{equation}
 \begin{split}
 \dot{x} &amp; = \underbrace{\begin{bmatrix}
 0 &amp; 1 \\
@@ -577,7 +577,7 @@ y &amp; = \underbrace{\begin{bmatrix}
 0 &amp; 1 &amp; 0
 \end{bmatrix}}_{=:C(u)} \xi
 \end{split}.
-\tag{5.14}
+\tag{5.23}
 \end{equation}\]</span>
 Note that <span class="math inline">\(C(u)\)</span> is in fact time-invariant, and <span class="math inline">\(B(u,y)\)</span> only depends on <span class="math inline">\(u\)</span>; but we adopt the same notation as the general state-affine template <a href="output-feedback.html#eq:state-affine-template">(5.17)</a>.</p>
 <p>In order to use the Kalman-Bucy observer in Theorem <a href="output-feedback.html#thm:kalmanbucystateaffine">5.3</a>, we need to verify the boundedness of <span class="math inline">\(A(u,y)\)</span>, and the regular persistence of <a href="output-feedback.html#eq:kbobserver-auxilarydynamics">(5.19)</a>.</p>
@@ -606,26 +606,60 @@ With this, we develop <span class="math inline">\(w^T \Gamma_\nu^b(t - \bar{t},t
 w^T \Gamma_\nu^b(t - \bar{t},t) w &amp;= \int_{t - \bar{t}}^t s^T \tilde{C} s d\tau, \\
 &amp; = \int_{t - \bar{t}}^t \left( s_1^2 + s_2^2 \right) d\tau, \quad s = \Psi_\nu (\tau, t) w
 \end{split}
-\tag{5.23}
+\tag{5.24}
 \end{equation}\]</span>
 and observe that <span class="math inline">\(s = \Psi_\nu (\tau,t) w\)</span> is equivalent to
 <span class="math display">\[
 w = (\Psi_\nu (\tau,t))^{-1} s = \Psi_\nu (t,\tau) s,
 \]</span>
-that is, <span class="math inline">\(w\)</span> is the solution of <span class="math inline">\(\dot{\xi} = A(\nu) \xi\)</span> at time <span class="math inline">\(t\)</span> with initial condition <span class="math inline">\(s\)</span> at time <span class="math inline">\(\tau \leq t\)</span>. Equivalently, this is saying <span class="math inline">\(s\)</span> is the initial condition of <span class="math inline">\(\dot{\xi} = A(\nu) \xi\)</span> at time <span class="math inline">\(\tau \leq t\)</span> such that its solution at time <span class="math inline">\(t\)</span> is <span class="math inline">\(w\)</span>. Note that from <a href="output-feedback.html#eq:pendulm-regular-persistence-1">(5.23)</a> it is clearly that <span class="math inline">\(\int_{t - \bar{t}}^t \left( s_1^2 + s_2^2 \right) d\tau \geq 0\)</span>, and <span class="math inline">\(\int_{t - \bar{t}}^t \left( s_1^2 + s_2^2 \right) d\tau = 0\)</span> if and only if <span class="math inline">\(s_1^2 + s_2^2 = 0\)</span>, or equivalently <span class="math inline">\(s_1 = s_2 = 0\)</span> for any <span class="math inline">\(\tau \in [t - \bar{t}, t]\)</span>.</p>
+that is, <span class="math inline">\(w\)</span> is the solution of <span class="math inline">\(\dot{\xi} = A(\nu) \xi\)</span> at time <span class="math inline">\(t\)</span> with initial condition <span class="math inline">\(s\)</span> at time <span class="math inline">\(\tau \leq t\)</span>. Equivalently, this is saying <span class="math inline">\(s\)</span> is the initial condition of <span class="math inline">\(\dot{\xi} = A(\nu) \xi\)</span> at time <span class="math inline">\(\tau \leq t\)</span> such that its solution at time <span class="math inline">\(t\)</span> is <span class="math inline">\(w\)</span>. Note that from <a href="output-feedback.html#eq:pendulm-regular-persistence-1">(5.24)</a> it is clearly that <span class="math inline">\(\int_{t - \bar{t}}^t \left( s_1^2 + s_2^2 \right) d\tau \geq 0\)</span>, and <span class="math inline">\(\int_{t - \bar{t}}^t \left( s_1^2 + s_2^2 \right) d\tau = 0\)</span> if and only if <span class="math inline">\(s_1^2 + s_2^2 = 0\)</span>, or equivalently <span class="math inline">\(s_1 = s_2 = 0\)</span> for any <span class="math inline">\(\tau \in [t - \bar{t}, t]\)</span>.</p>
 <p>We then take a closer look at the system <span class="math inline">\(\dot{\xi} = A(\nu) \xi\)</span>:
-<span class="math display">\[\begin{align}
+<span class="math display" id="eq:pendulm-state-affine-auxiliarysystem">\[\begin{equation}
+\begin{split}
 \dot{\xi}_1 &amp;= \mathfrak{c} \xi_3 \\
 \dot{\xi}_2 &amp;= -\mathfrak{s} \xi_3 \\
 \dot{\xi}_3 &amp;= - \frac{b}{ml^2} \xi_3.
-\end{align}\]</span>
-If the solution of <span class="math inline">\(\xi_3\)</span> at time <span class="math inline">\(t\)</span> is <span class="math inline">\(w_3\)</span>, then
+\end{split}
+\tag{5.25}
+\end{equation}\]</span></p>
+<p>If the solution of <span class="math inline">\(\xi_3\)</span> at time <span class="math inline">\(t\)</span> is <span class="math inline">\(w_3\)</span>, then
 <span class="math display">\[
 \xi_3(\tau) = w_3 e^{\frac{b}{ml^2}(t - \tau)}, \quad \tau \leq t.
 \]</span>
 We can now claim it is impossible that <span class="math inline">\(s_1 = s_2 = 0\)</span> at any time <span class="math inline">\(\tau \in [t - \bar{t}, t]\)</span>.</p>
 <p>We can show this by contradiction. First of all, <span class="math inline">\(s_1 = s_2 = 0\)</span> at <span class="math inline">\(\tau = t\)</span> implies <span class="math inline">\(w_1 = w_2 = 0\)</span> and hence <span class="math inline">\(w_3 = \pm 1\)</span>. This implies <span class="math inline">\(\xi_3 \neq 0\)</span> for any <span class="math inline">\(\tau \in [t - \bar{t}, t]\)</span>. Then, <span class="math inline">\(s_1 = 0, \forall \tau \in [t - \bar{t}, t]\)</span> implies <span class="math inline">\(\dot{\xi}_1 = 0\)</span> which, due to <span class="math inline">\(\xi_3 \neq 0\)</span>, implies <span class="math inline">\(\mathfrak{c} = 0\)</span> for all <span class="math inline">\(\tau\)</span>. Similarly, <span class="math inline">\(s_2 = 0, \forall \tau \in [t - \bar{t}, t]\)</span> implies <span class="math inline">\(\dot{\xi}_2 = 0\)</span> and <span class="math inline">\(\mathfrak{s} = 0\)</span>. This creates a contradiction because <span class="math inline">\(\mathfrak{c}^2 + \mathfrak{s}^2 = 1\)</span> and <span class="math inline">\(\mathfrak{c}, \mathfrak{s}\)</span> cannot be simultaneously zero.</p>
-<p>Therefore, there must exist <span class="math inline">\(\alpha &gt; 0\)</span> such that <span class="math inline">\(\Gamma_\nu^b (t - \bar{t},t) \succeq \alpha I\)</span>.
+<p>The above reasoning proves that the backward observability Grammian is positive definite, which is, however, still insufficient for the Kalman-Bucy observer. We need a stronger uniformly positive definite condition on <span class="math inline">\(\Gamma_\nu^b\)</span>, i.e., to find <span class="math inline">\(t_0, \bar{t}\)</span> and <span class="math inline">\(\alpha&gt;0\)</span> so that <span class="math inline">\(\Gamma_\nu^b(t-\bar{t},t) \succeq \alpha I\)</span> for all <span class="math inline">\(t \geq t_0\)</span>.</p>
+<p>If the control <span class="math inline">\(u\)</span> is unbounded, then sadly, one can show that the uniform positive definite condition fails to hold, as left by you to show in the following exercise.</p>
+<div class="exercise">
+<p><span id="exr:kbobserverpendulumcounterexample" class="exercise"><strong>Exercise 5.1  (Counterexample for Kalman-Bucy Observer) </strong></span>Show that, if the control <span class="math inline">\(u\)</span> is unbounded, then for any <span class="math inline">\(\alpha &gt; 0\)</span>, <span class="math inline">\(t_0 \geq \bar{t} &gt; 0\)</span>, there exists <span class="math inline">\(t \geq t_0\)</span> such that <span class="math inline">\(\Gamma_\nu^b(t - \bar{t},t) \prec \alpha I\)</span>. (Hint: consider a controller that spins the pendulum faster and faster such that in time <span class="math inline">\(\bar{t}\)</span> it has rotated <span class="math inline">\(2k\pi\)</span>, in this case the angular velocity becomes unobservable because we are not sure how many rounds the pendulum has rotated.)</p>
+</div>
+<p>Fortunately, if the control <span class="math inline">\(u\)</span> is bounded, then we can prove the uniform positive define condition holds for <span class="math inline">\(\Gamma_\nu^b(t - \bar{t},t)\)</span>. The following proof is given by <a href="https://scholar.harvard.edu/weiyuli/home">Weiyu Li</a>.</p>
+<p>Without loss of generality, let <span class="math inline">\(\frac{b}{ml^2} = 1\)</span>. Assume <span class="math inline">\(u\)</span> is bounded such that the third entry of <span class="math inline">\(B(u,y)\)</span> in <a href="output-feedback.html#eq:pendulum-state-affine">(5.23)</a> is bounded by <span class="math inline">\(\beta &gt; 0\)</span>
+<span class="math display">\[
+\left| \frac{u - mgl \mathfrak{s}}{ml^2} \right| \leq \beta.
+\]</span>
+Assuming the initial velocity of the pendulum is <span class="math inline">\(\dot{\theta}(0) = \dot{\theta}_0\)</span>, we know <span class="math inline">\(\dot{\theta}(t)\)</span> is bounded by
+<span class="math display">\[
+\dot{\theta}(t) \in \left[ c_1(1-\beta)e^{-t} - \beta  , c_2(1-\beta)e^{-t} + \beta \right],
+\]</span>
+where <span class="math inline">\(c_1,c_2\)</span> are constants chosen to satisfy the initial condition. Clearly, for all <span class="math inline">\(t &gt; 0\)</span>, we see <span class="math inline">\(\dot{\theta}(t)\)</span> is bounded, and hence we know <span class="math inline">\(\dot{\mathfrak{c}}\)</span> and <span class="math inline">\(\dot{\mathfrak{s}}\)</span> are bounded (due to <span class="math inline">\(\mathfrak{c}\)</span> and <span class="math inline">\(\mathfrak{s}\)</span> are bounded). Intuitively, what we have just shown says that when the control is bounded, the measurements <span class="math inline">\(\mathfrak{c}\)</span> and <span class="math inline">\(\mathfrak{s}\)</span> will have bounded time derivatives. (This will help us analyze the auxiliary system <a href="output-feedback.html#eq:pendulm-state-affine-auxiliarysystem">(5.25)</a>.)</p>
+<p>Now back to checking regular persistence of the auxilary system <a href="output-feedback.html#eq:pendulm-state-affine-auxiliarysystem">(5.25)</a>. We will discuss two cases: (1) <span class="math inline">\(w_3^2 &gt; 1 - \delta\)</span>, and (2) <span class="math inline">\(w_3^2 \leq 1 - \delta\)</span>, for some constant <span class="math inline">\(\delta &lt; 0.5\)</span> determined later.</p>
+<ol style="list-style-type: decimal">
+<li><p><span class="math inline">\(w_3^2 &gt; 1 - \delta &gt; 0.5\)</span>. In this case we have <span class="math inline">\(w_1^2 + w_2^2 = 1 - w_3^2 &lt; \delta\)</span>, and hence <span class="math inline">\(w_1^2 &lt; \delta\)</span>, <span class="math inline">\(w_2^2 &lt; \delta\)</span>. On the other hand, from <a href="output-feedback.html#eq:pendulm-state-affine-auxiliarysystem">(5.25)</a> we have
+<span class="math display">\[
+\dot{\xi}_1^2(\tau) + \dot{\xi}_2^2(\tau) = \xi_3^2 = w_3^2 e^{2 (t - \tau)} &gt; w_3^2 &gt; 1 - \delta, \quad \forall \tau &lt; t.
+\]</span>
+Without loss of generality assume <span class="math inline">\(\dot{\xi}_1(t)^2 &gt; (1-\delta)/2\)</span>. As <span class="math inline">\(\dot{\xi}_1 = \mathfrak{c} \xi_3\)</span> and both <span class="math inline">\(\mathfrak{c}\)</span> and <span class="math inline">\(\xi_3\)</span> have bounded derivatives, we know <span class="math inline">\(\dot{\xi}_1\)</span> will not change sign for some duration <span class="math inline">\(T\)</span> that is independent from the choice of <span class="math inline">\(\delta\)</span> (because the time derivatives of <span class="math inline">\(\mathfrak{c}\)</span> and <span class="math inline">\(\xi_3\)</span> do not depend on <span class="math inline">\(\delta\)</span>). That is <span class="math inline">\(|\dot{\xi}_1| &gt; \sqrt{(1-\delta)/2} &gt; 1/2\)</span> for <span class="math inline">\(\tau \in [t - T,t]\)</span>. Consequently,
+<span class="math display">\[
+|\xi_1(t - \tau)| &gt; \frac{1}{2} \tau - |w_1| &gt; \frac{1}{2} \tau - \sqrt{\delta}, \quad \tau \in [0,T].
+\]</span>
+Choosing <span class="math inline">\(\delta\)</span> small enough, we have <span class="math inline">\(|\xi_1(t - \tau)| &gt; 0.25 \tau\)</span> for <span class="math inline">\(\tau \in [0.5T,T]\)</span>. Then we have
+<span class="math display">\[
+\Gamma_\nu^b(t - T, t) \succ [(0.25 \times 0.5 T)^2 \times 0.5T]I.
+\]</span></p></li>
+<li><p><span class="math inline">\(w_3^2 \leq 1-\delta\)</span>. In this case <span class="math inline">\(w_1^2 + w_2^2 = 1 - w_3^2 \geq \delta\)</span>, and at least one of <span class="math inline">\(w_1\)</span> and <span class="math inline">\(w_2\)</span> has absolute value larger than <span class="math inline">\(\sqrt{\delta/2}\)</span>. Because the derivatives of <span class="math inline">\(\xi_1\)</span> and <span class="math inline">\(\xi_2\)</span> are both bounded, we know <span class="math inline">\(\xi_1\)</span> and <span class="math inline">\(\xi_2\)</span> will remain large for some constant time. Thus there is a uniform lower bound.</p></li>
+</ol>
+<!-- Therefore, there must exist $\alpha > 0$ such that $\Gamma_\nu^b (t - \bar{t},t) \succeq \alpha I$. -->
 <!-- On the other hand,
 $$
 \frac{d}{d\tau}\left( \xi_1^2 + \xi_2^2 \right) = 2 \xi_1 \dot{\xi}_1 + 2 \xi_2 \dot{\xi}_2 = 2 \xi_3 \left(\mathfrak{c} \xi_1 - 2 \mathfrak{s}\xi_2 \right).
@@ -639,7 +673,7 @@ $$
 On the other hand,
 \begin{align}
 (\dot{\xi}_1)^2 + (\dot{\xi}_2)^2 = (\mathfrak{c}^2 + \mathfrak{s}^2) \xi_3^2 \leq w_3^2 e^{\frac{2b}{ml^2} \bar{t}}, \quad \forall t - \bar{t} \leq z \leq t.
-\end{align} --></p>
+\end{align} -->
 </div>
 </div>
 </div>
@@ -667,7 +701,30 @@ Denoting <span class="math inline">\(z = [x,e]^T\)</span>, we have the augmented
 \dot{z} = \underbrace{\begin{bmatrix} A &amp; 0 \\ 0 &amp; A - KC \end{bmatrix}}_{=:F} z + \underbrace{\begin{bmatrix} B(u,Dz) \\ 0 \end{bmatrix}}_{=:G(z,u)}
 \]</span>
 We want to stabilize the system at <span class="math inline">\(z_0 = [\pi,0,0,0]^T\)</span> (the upright position) subject to control bounds <span class="math inline">\(u \in \mathbb{U} = [-u_{\max},u_{\max}]\)</span>.</p>
-<p>We need to find a control Lyapunov function.</p>
+<p>We need to find a control Lyapunov function (CLF), <span class="math inline">\(V(z)\)</span>, that satisfies the following constraints:
+<span class="math display">\[
+    V(z_0) = 0
+\]</span>
+<span class="math display">\[
+    V(z) &gt; 0 \quad \forall z \in \mathcal{Z} \,\, \backslash \,\,\{z_0\}
+\]</span>
+<span class="math display">\[
+    \inf_{u \in \mathbb{U}} [L_F V(z) + L_G V(z)u] \leq 0 \quad \forall z \in \mathcal{Z}
+\]</span></p>
+<p>where <span class="math inline">\(L_F V\)</span> and <span class="math inline">\(L_G V\)</span> are the Lie derivatives of <span class="math inline">\(V\)</span> along <span class="math inline">\(F\)</span> and <span class="math inline">\(G\)</span>, respectively. <span class="math inline">\(\mathcal{Z}\)</span> is the set of all possible augmented states. The CLF will define the set of admissable control gains <span class="math inline">\(K\)</span> as follows:
+<span class="math display">\[
+    K = \{ u: L_f V(z) + L_g V(z)u \leq 0 \}
+\]</span>
+To find the smallest-magnitude control input such that <span class="math inline">\(u \in K\)</span>, we may use a quadratic program:</p>
+<p><span class="math display">\[
+    \min_{u \in \mathcal{U}} ||u||^2
+\]</span>
+<span class="math display">\[
+\mathrm{s.t.} \quad L_f V(z) + L_g V(z)u \leq -c V(z)
+\]</span></p>
+<p>where <span class="math inline">\(c\)</span> is some positive constant. The challenge now is in choosing a suitable <span class="math inline">\(V(z)\)</span>.</p>
+<!-- \inf_{u \in \mathcalU}
+-->
 <!-- Our controller has access to the observation $y$ (recall this is $\theta$) and the estimated state $\hat{x}$. Let us try a controller of the following form
 $$
 u = mgl \sin \theta - G \hat{x} = mgl \sin \theta - G (x + e).
