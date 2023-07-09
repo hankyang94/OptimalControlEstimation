@@ -789,15 +789,15 @@ $$
     V(z_0) = 0
 $$
 $$
-    V(z) > 0 \quad \forall z \in \mathcal{Z} \,\, \backslash \,\,\{z_0\}
+    V(z) > 0 \quad \forall z \in \{z: V(z) < \rho, z \neq z_0 \}
 $$
 $$
-    \inf_{u \in \mathbb{U}} [L_F V(z) + L_G V(z)u] \leq 0 \quad \forall z \in \mathcal{Z}
+    \inf_{u \in \mathbb{U}} [L_F V(z) + L_G V(z)] \leq 0 \quad \forall z \in \mathcal{Z}
 $$
 
-where $L_F V$ and $L_G V$ are the Lie derivatives of $V$ along $F$ and $G$, respectively. $\mathcal{Z}$ is the set of all possible augmented states. The CLF will define the set of admissable control gains $K$ as follows:
+where $L_F V$ and $L_G V$ are the Lie derivatives of $V$ along $F$ and $G(z,u)$, respectively. $\mathcal{Z}$ is the set of all possible augmented states. The CLF will define the set of admissible control inputs $U$.
 $$
-    K = \{ u: L_f V(z) + L_g V(z)u \leq 0 \}
+    U = \{ u: L_f V(z) + L_g V(z)u \leq 0 \}
 $$
 To find the smallest-magnitude control input such that $u \in K$, we may use a quadratic program:
 
