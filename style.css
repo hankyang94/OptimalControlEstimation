@@ -28,6 +28,13 @@ pre code {
   border-radius: 10px;
 }
 
+.definitionbox {
+  padding: 1em;
+  border: 2px solid rgb(135, 135, 227);
+  border-radius: 10px;
+}
+
+
 .proofbox {
   color: rgb(128, 128, 128);
 }

@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-07-05" />
+<meta name="date" content="2023-07-09" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -113,7 +113,8 @@ div.csl-indent {
 <li class="chapter" data-level="5.1.1" data-path="output-feedback.html"><a href="output-feedback.html#general-design-strategy"><i class="fa fa-check"></i><b>5.1.1</b> General Design Strategy</a></li>
 <li class="chapter" data-level="5.1.2" data-path="output-feedback.html"><a href="output-feedback.html#luenberger-template"><i class="fa fa-check"></i><b>5.1.2</b> Luenberger Template</a></li>
 <li class="chapter" data-level="5.1.3" data-path="output-feedback.html"><a href="output-feedback.html#state-affine-template"><i class="fa fa-check"></i><b>5.1.3</b> State-affine Template</a></li>
-<li class="chapter" data-level="5.1.4" data-path="output-feedback.html"><a href="output-feedback.html#triangular-template"><i class="fa fa-check"></i><b>5.1.4</b> Triangular Template</a></li>
+<li class="chapter" data-level="5.1.4" data-path="output-feedback.html"><a href="output-feedback.html#kazantzis-kravaris-luenberger-kkl-template"><i class="fa fa-check"></i><b>5.1.4</b> Kazantzis-Kravaris-Luenberger (KKL) Template</a></li>
+<li class="chapter" data-level="5.1.5" data-path="output-feedback.html"><a href="output-feedback.html#triangular-template"><i class="fa fa-check"></i><b>5.1.5</b> Triangular Template</a></li>
 </ul></li>
 <li class="chapter" data-level="5.2" data-path="output-feedback.html"><a href="output-feedback.html#observer-feedback"><i class="fa fa-check"></i><b>5.2</b> Observer Feedback</a></li>
 </ul></li>
@@ -185,7 +186,7 @@ with <span class="math inline">\(\gamma &gt; 0\)</span> a positive constant, the
 \]</span></p>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-7" class="proof"><em>Proof</em>. </span>Let the state-space representation of <a href="adaptivecontrol.html#eq:acbasiclemmaephi">(6.1)</a> be
+<p><span id="unlabeled-div-8" class="proof"><em>Proof</em>. </span>Let the state-space representation of <a href="adaptivecontrol.html#eq:acbasiclemmaephi">(6.1)</a> be
 <span class="math display" id="eq:acbasiclemmastatespace">\[\begin{equation}
 \dot{x} = A x + b [k \phi^T v], \quad e = c^T x.
 \tag{6.3}
@@ -465,7 +466,7 @@ where <span class="math inline">\(\Gamma \in \mathbb{S}^m_{++}\)</span> is a con
 <p><span id="lem:skewsymmetricmanipulator" class="lemma"><strong>Lemma 6.2  </strong></span>For the manipulator dynamics <a href="adaptivecontrol.html#eq:ac-mrac-manipulator-dynamics">(6.21)</a>, there exists a way to define <span class="math inline">\(C\)</span> such that <span class="math inline">\(\dot{H} - 2C\)</span> is skew-symmetric.</p>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-8" class="proof"><em>Proof</em>. </span>See Section 9.1, page 399-402 in <span class="citation">(<a href="#ref-slotine91book-applied">Slotine, Li, et al. 1991</a>)</span>. You should also check if this is true for the planar two-link manipulator dynamics in Example <a href="adaptivecontrol.html#exm:planartwolinkmanipulator">6.1</a>.</p>
+<p><span id="unlabeled-div-9" class="proof"><em>Proof</em>. </span>See Section 9.1, page 399-402 in <span class="citation">(<a href="#ref-slotine91book-applied">Slotine, Li, et al. 1991</a>)</span>. You should also check if this is true for the planar two-link manipulator dynamics in Example <a href="adaptivecontrol.html#exm:planartwolinkmanipulator">6.1</a>.</p>
 </div>
 <p>With Lemma <a href="adaptivecontrol.html#lem:skewsymmetricmanipulator">6.2</a>, the time derivative of <span class="math inline">\(V\)</span> in <a href="adaptivecontrol.html#eq:ac-mrac-manipulator-controller-unknownparam-lyapunov">(6.25)</a> reads
 <span class="math display" id="eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative" id="eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative-3" id="eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative-2" id="eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative-1">\[\begin{align}

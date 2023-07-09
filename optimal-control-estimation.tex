@@ -85,12 +85,19 @@
   boxsep=5pt,
   arc=4pt}
 
-  \newtcolorbox{theorembox}{
-    colback=green,
-    colframe=green,
-    coltext=black,
-    boxsep=5pt,
-    arc=4pt}
+\newtcolorbox{theorembox}{
+  colback=green,
+  colframe=green,
+  coltext=black,
+  boxsep=5pt,
+  arc=4pt}
+
+\newtcolorbox{definitionbox}{
+colback=white,
+colframe=green,
+coltext=black,
+boxsep=5pt,
+arc=4pt}
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
@@ -107,7 +114,7 @@
 
 \title{Optimal Control and Estimation}
 \author{Heng Yang}
-\date{2023-07-05}
+\date{2023-07-09}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -572,7 +579,42 @@ Of course, the general design strategy is rather conceptual, and in order for it
   How to invert the coordinate transformation? Is it analytical or does it require numerical approximation?
 \end{itemize}
 
-In the following sections, we will study several representative normal forms and answer the above questions.
+In the following sections, we will study several representative normal forms and answer the above questions. Before presenting the results, let us first introduce several notions of observability.
+
+\begin{definition}[Observability]
+\protect\hypertarget{def:observability}{}\label{def:observability}
+
+Consider an open subset \(\mathcal{L}\) of the state space \(\mathbb{X} \subseteq \mathbb{R}^n\) of system \eqref{eq:output-feedback-system}. The system \eqref{eq:output-feedback-system} is said to be
+
+\begin{itemize}
+\item
+  \textbf{Distinguishable} on \(\mathcal{L}\) for some input \(u(t)\), if for all \((x_a,x_b) \in \mathcal{L} \times \mathcal{L}\),
+  \[
+  y_{x_a,u}(t) = y_{x_b,u}(t), \forall t \in [0,\min\left\{\sigma^+_{\mathbb{X}}(x_a;u), \sigma^+_{\mathbb{X}}(x_b;u) \right\}] \Longrightarrow x_a = x_b
+  \]
+\item
+  \textbf{Instantaneously distinguishable} on \(\mathcal{L}\) for some input \(u(t)\), if for all \((x_a,x_b) \in \mathcal{L} \times \mathcal{L}\), and for all \(\bar{t} \in (0, \min\left\{\sigma^+_{\mathbb{X}}(x_a;u), \sigma^+_{\mathbb{X}}(x_b;u) \right\})\),
+  \[
+  y_{x_a,u}(t) = y_{x_b,u}(t), \forall t \in [0,\bar{t}) \Longrightarrow x_a = x_b
+  \]
+\item
+  \textbf{Uniformly observable} on \(\mathcal{L}\) if it is distinguishable on \(\mathcal{L}\) for any input \(u(t)\) (not only for \(u \in \mathcal{U}\))
+\item
+  \textbf{Uniformly instantaneously observable} on \(\mathcal{L}\) if it is instantaneously observable on \(\mathcal{L}\) for any input \(u(t)\) (not only for \(u \in \mathcal{U}\)).
+\end{itemize}
+
+Moreover, let \(\mathcal{X}\) be a subset of \(\mathbb{X}\) such that \(\mathrm{cl}(\mathcal{X})\), i.e., the closure of \(\mathcal{X}\), is contained in \(\mathcal{L}\). Then the system \eqref{eq:output-feedback-system} is said to be
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Backward \(\mathcal{L}\)-distinguishable on \(\mathcal{X}\)} for some input \(u(t)\), if for any \((x_a,x_b) \in \mathcal{X} \times \mathcal{X}\) such that \(x_a \neq x_b\), there exists \(t \in (\max\left\{ \sigma^{-}_{\mathcal{L}}(x_a;u), \sigma^{-}_{\mathcal{L}}(x_b;u) \right\},0]\) such that \(y_{x_a,u}(t) \neq y_{x_b,u}(t)\), or in words similar to the definition of distinguishable on \(\mathcal{L}\), for all \((x_a,x_b) \in \mathcal{X} \times \mathcal{X}\)
+  \[
+  y_{x_a,u}(t) = y_{x_b,u}(t), \forall t \in (\max\left\{\sigma^{-}_{\mathcal{L}}(x_a;u), \sigma^{-}_{\mathcal{L}}(x_b;u) \right\},0] \Longrightarrow x_a = x_b.
+  \]
+\end{itemize}
+
+\end{definition}
 
 \hypertarget{luenberger-template}{%
 \subsection{Luenberger Template}\label{luenberger-template}}
@@ -911,7 +953,6 @@ In order to use the Kalman-Bucy observer in Theorem \ref{thm:kalmanbucystateaffi
 \Vert A(u,y) \xi \Vert = \Vert \xi_3 (\mathfrak{c} - \mathfrak{s} - b/ml^2) \Vert  \leq |\xi_3| \sqrt{3} \sqrt{\mathfrak{c}^2 + \mathfrak{s}^2 + b^2 / m^2 l^4} \leq \Vert \xi \Vert \sqrt{3 + 3b^2 / m^2 l^4}. 
 \]
 Therefore, we can take \(A_{\max} = \sqrt{3 + 3b^2 / m^2 l^4}\).
-{Does the \(A_{\max}\) in Theorem \ref{thm:kalmanbucystateaffine} refer to the bound in operator norm?}
 
 \textbf{Regular persistence}. We write the backward observability grammian of system \eqref{eq:kbobserver-auxilarydynamics}
 \[
@@ -1003,6 +1044,164 @@ The intuition of the above proof is simple: when \(\xi_1\) and/or \(\xi_2\) alre
 
 \end{example}
 
+\hypertarget{kazantzis-kravaris-luenberger-kkl-template}{%
+\subsection{Kazantzis-Kravaris-Luenberger (KKL) Template}\label{kazantzis-kravaris-luenberger-kkl-template}}
+
+In Luenberger's original paper about observer design for linear systems \citep{luenberger64-observer}, the goal was to transform a linear system
+\[
+\dot{x} = F x, \quad y = C x
+\]
+into a Hurwitz form
+\begin{equation}
+\dot{\xi} = A \xi + B y
+\label{eq:kkl-history-dynamics}
+\end{equation}
+with \(A\) a Hurwitz (stable) matrix. If such a transformation is available, then the following system
+\[
+\dot{\hat{\xi}} = A \hat{\xi} + B y,
+\]
+which is nothing but a copy of the dynamics \eqref{eq:kkl-history-dynamics}, is in fact an observer. This is because the error \(e = \hat{\xi} - \xi\) evolves as
+\[
+\dot{e} = A e,
+\]
+which implies that \(e\) tends to zero regardless of the initial error \(e(0)\). Luenberger proved that when \((F,C)\) is observable, a stationary transformation \(\xi = T x\) with \(p = n\), i.e., \(T \in \mathbb{R}^{n\times n}\), always exists and is unique, for any matrix \(A\) that is Hurwitz and \((A,B)\) that is controllable. This is based on the fact that
+\begin{align}
+(A T + B C) x =A \xi + B y =\dot{\xi} = T \dot{x} = TF x, \forall x \\
+\Longleftrightarrow AT + BC = TF,
+\end{align}
+known as the Sylvester equation, admits a unique and invertible solution \(T\).
+
+A natural extension of Luenberger's original idea is to find a transformation that converts the nonlinear system \eqref{eq:output-feedback-system} into the following form
+\begin{equation}
+\dot{\xi} = A \xi + B(u,y), \quad y = H(\xi,u),
+\label{eq:kkl-template}
+\end{equation}
+with \(A\) a Hurwitz matrix (but \(H\) can be nonlinear, as opposed to the Luenberger template in Theorem \ref{thm:LuenbergerLinear}). If such a transformation can be found, then we can design a similar observer that copies the dynamics \eqref{eq:kkl-template}
+\begin{equation}
+\dot{\hat{\xi}} = A \hat{\xi} + B(u,y).
+\label{eq:kkl-observer}
+\end{equation}
+We refer to such a nonlinear Luenberger template the Kazantzis-Kravaris-Luenberger (KKL) template, due to the seminal work \citep{kazantzis98scl-kkl}.
+
+The KKL template, once found, is nice in the sense that (i) the observer \eqref{eq:kkl-observer} is a simple copy of the dynamics and also very easy to implement (as opposed to the Kalman-Bucy observer); and (ii) checking if the matrix \(A\) is Hurwitz is easy, at least when \(A\) has reasonable size, (e.g., compared to checking the regular persistence condition in the state-affine template in Theorem \ref{thm:kalmanbucystateaffine}).
+
+However, the KKL template is difficult to realize in the sense that (i) what kind of nonlinear systems can be converted to \eqref{eq:kkl-template}, and (ii) for those systems, how do we find the coordinate transformation?
+
+Recent works have leveraged deep learning to learn the coordinate transformation, for example in \citep{janny21cdc-deepkkl}, \citep{niazi23lacc-earning}, \citep{miao23ll4dc-earning}. Before hammering the problem with deep learning, let us look at the fundamentals of the KKL observer.
+
+\hypertarget{autonomous-systems}{%
+\subsubsection{Autonomous Systems}\label{autonomous-systems}}
+
+Consider the autonomous version of system \eqref{eq:output-feedback-system} without control
+\begin{equation}
+\dot{x} = f(x), \quad y = h(x),
+\label{eq:kkl-autonomous-system}
+\end{equation}
+where \(x \in \mathbb{X} \subseteq \mathbb{R}^n, y \in \mathbb{Y} \subseteq \mathbb{R}^d\).
+
+The following result, established by \citep{andrieu06sicopt-kkl}, states that the KKL observer exists under mild conditions.
+
+\begin{theorem}[KKL Observer for Autonomous Systems]
+\protect\hypertarget{thm:kklautonomous}{}\label{thm:kklautonomous}Assum \(\mathcal{X}\) and \(\mathcal{L}\) are open bounded sets in \(\mathbb{X}\) (the state space) such that \(\mathrm{cl}(\mathcal{X})\) is contained in \(\mathcal{L}\) and the system \eqref{eq:kkl-autonomous-system} is backward \(\mathcal{L}\)-distinguishable on \(\mathcal{X}\) (cf.~Definition \ref{def:observability}). Then there exists a strictly positive number \(\gamma\) and a set \(\mathcal{S}\) of zero Lebesgue measure in \(\mathbb{C}^{n+1}\) such that denoting \(\Omega = \{ \lambda \in \mathbb{C} \mid \mathrm{Re}(\lambda) < - \gamma \}\), for any \((\lambda_1,\dots,\lambda_{n+1}) \in \Omega^{n+1} \backslash \mathcal{S}\), there exists a function \(T: \mathbb{R}^n \rightarrow \mathbb{R}^{(n+1)d}\) uniformly injective on \(\mathcal{X}\) satisfying
+\[
+L_f T(x) = A T(x) + B(h(x))
+\]
+with
+\begin{align}
+A = \tilde{A} \otimes I_d, \quad B(y) = (\tilde{B} \otimes I_d ) y \\
+\tilde{A} = \begin{bmatrix}
+\lambda_1 & & \\
+& \ddots & \\
+& & \lambda_{n+1} \end{bmatrix} 
+\quad \tilde{B} = \begin{bmatrix}
+1 \\ \vdots \\ 1 \end{bmatrix}.
+\end{align}
+Moreover, if \(\mathcal{X}\) is backward invariant, then \(T\) is unique and defined by
+\begin{equation}
+T(x) = \int_{-\infty}^0 e^{-A\tau} B(h(X(x,\tau))) d\tau.
+\label{eq:kkl-autonomous-T}
+\end{equation}
+\end{theorem}
+
+\begin{remark}
+The function \(T\) in Theorem \ref{thm:kklautonomous} takes complex numbers. To simulate the observer
+\[
+\dot{\hat{\xi}} = A \hat{\xi} + B(y),
+\]
+one needs to implement in real numbers, for each \(\lambda_i\) and \(j \in [d]\)
+\[
+\dot{\hat{\xi}}_{\lambda_i,j} = 
+\begin{bmatrix}
+- \mathrm{Re}(\lambda_i) & - \mathrm{Im}(\lambda_i) \\
+\mathrm{Im}(\lambda_i) & - \mathrm{Re}(\lambda_i)
+\end{bmatrix} \hat{\xi}_{\lambda_i,j} + \begin{bmatrix} y_j \\ 0 \end{bmatrix}.   
+\]
+Therefore, the dimension of the observer is \(2 \times d (n+1)\).
+\end{remark}
+
+Theorem \ref{thm:kklautonomous} states that as long as the system \eqref{eq:kkl-autonomous-system} is backward distinguishable, then there exists a stationary transformation \(T\) that can transform the system to a new coordinate system \(\xi\) such that the dynamics in \(\xi\) is Hurwitz. A closer look at the structure of \(A\) and \(B\) reveals that the coordinate transformation needs to satisfy \(n+1\) differential equations of the form
+\[
+\frac{\partial T_{\lambda}}{\partial x}(x) \dot{x} = \lambda T_{\lambda} (x) + y 
+\]
+where each \(T_{\lambda}\) transforms the state \(x\) into a new coordinate having the same dimension of \(y\). Clearly, if \(T = (T_\lambda)\), i.e., there is a single \(\lambda\), then \(T\) is not uniformly injective (as the dimension of \(\xi\) is \(d < n\)). Consequently, by choosing
+\[
+T = (T_{\lambda_1},\dots,T_{\lambda_{n+1}}),
+\]
+the uniform injectivity of \(T\) is ensured.
+
+However, the difficulty lies in the computation of \(T\) (and \(T_\lambda\)), let alone its inverse (that recovers \(x\) from \(\xi\)). Even though \(\mathcal{X}\) is backward invariant, the formulation \eqref{eq:kkl-autonomous-T} is difficult to compute. I tried very hard to find a coordinate transformation \(T\) that can convert the non-controlled pendulum dynamics into the KKL form but did not succeed. \textbf{You should let me know if you were able to find one!} Nevertheless, the following example shows you the flavor of how such a transformation may look like for a different system.
+
+\begin{example}[KKL Observer for an Oscillator with Unknown Frequency]
+\protect\hypertarget{exm:kklOscillator}{}\label{exm:kklOscillator}Consider a harmonic oscillator with unknown frequency
+\[
+\begin{cases}
+\dot{x}_1 = x_2 \\
+\dot{x}_2 = - x_1 x_3 \\
+\dot{x}_3 = 0
+\end{cases}, \quad y = x_1
+\]
+Consider the coordinate transformation
+\[
+T_{\lambda_i} (x) = \frac{\lambda_i x_1 - x_2}{\lambda_i^2 + x_3}, \quad \lambda_i > 0, i=1,\dots,p.
+\]
+We have
+\begin{align} 
+\frac{\partial T_{\lambda_i}(x)}{\partial x} \dot{x} &= \left\langle \begin{bmatrix}
+\frac{\lambda_i}{\lambda_i^2 + x_3} \\
+\frac{-1 }{\lambda_i^2 + x_3} \\
+\frac{x_2 - \lambda_i x_1}{(\lambda_i^2 + x_3)^2}
+\end{bmatrix}, \begin{bmatrix}
+x_2 \\ -x_1 x_3 \\ 0 \end{bmatrix}
+\right \rangle = \frac{\lambda_i x_2 + x_1 x_3}{\lambda_i^2 + x_3} \\
+-\lambda_i T_{\lambda_i}(x) + y &= \frac{-\lambda_i^2 x_1 + \lambda_i x_2 + x_1 \lambda_i^2 + x_1 x_3}{\lambda_i^2 + x_3} = \frac{\lambda_i x_2 + x_1 x_3}{\lambda_i^2 + x_3}
+\end{align}
+Therefore, with
+\[
+\xi = T(x) = [T_{\lambda_1}(x), T_{\lambda_2}(x),\dots,T_{\lambda_p}(x)]^T,
+\]
+we have
+\[
+\dot{\xi} = \underbrace{\begin{bmatrix}
+- \lambda_1 & & \\
+& \ddots & \\
+ & & -\lambda_p \end{bmatrix}}_{A} \xi + \begin{bmatrix}1 \\ \vdots \\ 1 \end{bmatrix} y
+\]
+with \(A\) clearly Hurwitz.
+
+With some extra arguments (cf.~Section 8.1.1 in \citep{bernard19book-observer}), one can see that the transformation \(T\) is injective with \(p \geq 4\) distinct \(\lambda_i\)'s. Therefore, this is a valid KKL observer.
+
+The final issue that one needs to think about is, since the observer is estimating \(\hat{\xi}\), how to recover \(\hat{x}\)? In this example, there is actually no analytical formula for recovering \(\hat{x}\) from \(\hat{\xi}\). In this case, one approach is to solve the following optimization problem
+\[
+\hat{x} = \arg\min_{x} \Vert \hat{\xi} - T(x) \Vert^2,
+\]
+which may be quite expensive.
+
+A more general treatment is given in Section 8.2.2 in \citep{bernard19book-observer}.
+\end{example}
+
+\hypertarget{controlled-systems}{%
+\subsubsection{Controlled Systems}\label{controlled-systems}}
+
 \hypertarget{triangular-template}{%
 \subsection{Triangular Template}\label{triangular-template}}
 
@@ -1035,15 +1234,15 @@ We need to find a control Lyapunov function (CLF), \(V(z)\), that satisfies the 
     V(z_0) = 0
 \]
 \[
-    V(z) > 0 \quad \forall z \in \mathcal{Z} \,\, \backslash \,\,\{z_0\}
+    V(z) > 0 \quad \forall z \in \{z: V(z) < \rho, z \neq z_0 \}
 \]
 \[
-    \inf_{u \in \mathbb{U}} [L_F V(z) + L_G V(z)u] \leq 0 \quad \forall z \in \mathcal{Z}
+    \inf_{u \in \mathbb{U}} [L_F V(z) + L_G V(z)] \leq 0 \quad \forall z \in \mathcal{Z}
 \]
 
-where \(L_F V\) and \(L_G V\) are the Lie derivatives of \(V\) along \(F\) and \(G\), respectively. \(\mathcal{Z}\) is the set of all possible augmented states. The CLF will define the set of admissable control gains \(K\) as follows:
+where \(L_F V\) and \(L_G V\) are the Lie derivatives of \(V\) along \(F\) and \(G(z,u)\), respectively. \(\mathcal{Z}\) is the set of all possible augmented states. The CLF will define the set of admissible control inputs \(U\).
 \[
-    K = \{ u: L_f V(z) + L_g V(z)u \leq 0 \}
+    U = \{ u: L_f V(z) + L_g V(z)u \leq 0 \}
 \]
 To find the smallest-magnitude control input such that \(u \in K\), we may use a quadratic program:
 

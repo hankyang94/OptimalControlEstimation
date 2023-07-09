@@ -11,18 +11,21 @@
 \contentsline {chapter}{\numberline {5}Output Feedback}{19}{chapter.5}%
 \contentsline {section}{\numberline {5.1}State Observer}{19}{section.5.1}%
 \contentsline {subsection}{\numberline {5.1.1}General Design Strategy}{21}{subsection.5.1.1}%
-\contentsline {subsection}{\numberline {5.1.2}Luenberger Template}{23}{subsection.5.1.2}%
-\contentsline {subsection}{\numberline {5.1.3}State-affine Template}{26}{subsection.5.1.3}%
-\contentsline {subsection}{\numberline {5.1.4}Triangular Template}{31}{subsection.5.1.4}%
-\contentsline {section}{\numberline {5.2}Observer Feedback}{31}{section.5.2}%
-\contentsline {chapter}{\numberline {6}Adaptive Control}{33}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Model-Reference Adaptive Control}{33}{section.6.1}%
-\contentsline {subsection}{\numberline {6.1.1}First-Order Systems}{34}{subsection.6.1.1}%
-\contentsline {subsection}{\numberline {6.1.2}High-Order Systems}{37}{subsection.6.1.2}%
-\contentsline {subsection}{\numberline {6.1.3}Robotic Manipulator}{39}{subsection.6.1.3}%
-\contentsline {section}{\numberline {6.2}Certainty-Equivalent Adaptive Control}{43}{section.6.2}%
-\contentsline {chapter}{\numberline {A}Linear System Theory}{45}{appendix.A}%
-\contentsline {chapter}{\numberline {B}Convex Analysis and Optimization}{49}{appendix.B}%
-\contentsline {chapter}{\numberline {C}The Kalman-Yakubovich Lemma}{51}{appendix.C}%
-\contentsline {chapter}{\numberline {D}Feedback Linearization}{53}{appendix.D}%
-\contentsline {chapter}{\numberline {E}Sliding Control}{55}{appendix.E}%
+\contentsline {subsection}{\numberline {5.1.2}Luenberger Template}{24}{subsection.5.1.2}%
+\contentsline {subsection}{\numberline {5.1.3}State-affine Template}{27}{subsection.5.1.3}%
+\contentsline {subsection}{\numberline {5.1.4}Kazantzis-Kravaris-Luenberger (KKL) Template}{31}{subsection.5.1.4}%
+\contentsline {subsubsection}{\numberline {5.1.4.1}Autonomous Systems}{33}{subsubsection.5.1.4.1}%
+\contentsline {subsubsection}{\numberline {5.1.4.2}Controlled Systems}{35}{subsubsection.5.1.4.2}%
+\contentsline {subsection}{\numberline {5.1.5}Triangular Template}{35}{subsection.5.1.5}%
+\contentsline {section}{\numberline {5.2}Observer Feedback}{35}{section.5.2}%
+\contentsline {chapter}{\numberline {6}Adaptive Control}{37}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Model-Reference Adaptive Control}{37}{section.6.1}%
+\contentsline {subsection}{\numberline {6.1.1}First-Order Systems}{38}{subsection.6.1.1}%
+\contentsline {subsection}{\numberline {6.1.2}High-Order Systems}{41}{subsection.6.1.2}%
+\contentsline {subsection}{\numberline {6.1.3}Robotic Manipulator}{43}{subsection.6.1.3}%
+\contentsline {section}{\numberline {6.2}Certainty-Equivalent Adaptive Control}{47}{section.6.2}%
+\contentsline {chapter}{\numberline {A}Linear System Theory}{49}{appendix.A}%
+\contentsline {chapter}{\numberline {B}Convex Analysis and Optimization}{53}{appendix.B}%
+\contentsline {chapter}{\numberline {C}The Kalman-Yakubovich Lemma}{55}{appendix.C}%
+\contentsline {chapter}{\numberline {D}Feedback Linearization}{57}{appendix.D}%
+\contentsline {chapter}{\numberline {E}Sliding Control}{59}{appendix.E}%
