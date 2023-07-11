@@ -760,6 +760,98 @@ A more general treatment is given in Section 8.2.2 in [@bernard19book-observer].
 ### Triangular Template
 
 
+### Design with Convex Optimization
+Consider a nonlinear system
+\begin{equation}
+\dot{x} = f(x) + \psi(u,y), \quad y = Cx
+(\#eq:observerdesignconvex)
+\end{equation}
+where $x \in \mathbb{X} \subseteq \mathbb{R}^n$, $y \in \mathbb{R}^d$, $C$ a constant matrix, and $\psi(u,y)$ a nonlinear function. We assume that $f(x)$ is a polynomial vector map (i.e., each entry of $f$ is a polynomial function in $x$). Certainly the formulation in \@ref(eq:observerdesignconvex) is not as general as \@ref(eq:output-feedback-system), but it is general enough to include many examples in robotics.
+
+Recall that I said the essence of observer design is to (i) simulate the dynamics when the state estimation is correct, and (ii) to correct the state estimation from observation when it is off. Therefore, we wish to design an observer for \@ref(eq:observerdesignconvex) in the following form
+\begin{equation}
+\dot{\hat{x}} = \underbrace{f(\hat{x}) + \psi(u,y)}_{\text{dynamics simulation}} + \underbrace{K(y - \hat{y},y)(C \hat{x} - y)}_{\text{feedback correction}},
+(\#eq:sos-observer)
+\end{equation}
+where, compared to the Luenberger observer \@ref(eq:Luenberger-Linear), we allow the gain matrix $K$ to be nonlinear functions of the true observation $y$ and the estimated observation $\hat{y}$.
+
+With the observer \@ref(eq:sos-observer), the dynamics on the estimation error $e = \hat{x} - x$ becomes
+$$
+\dot{e} = f(x + e) - f(x) + K(Ce,Cx)C e.
+$$
+
+If we can find a Lyapunov-like function $V(e)$ so that $V(e)$ is positive definite and $\dot{V}(e)$ is negative definite, then Lyapunov stability theorem \@ref(thm:lyapunovglobalstability) tells us that $e=0$ is asymptotically stable. Because we do not know the gain matrix $K$ either, we need to jointly search for $V$ and $K$ (that are polynomials). Mathematically, this is 
+\begin{equation}
+\begin{split}
+\text{find} & \quad V, K \\
+\text{subject to} & \quad V(0) = 0, \quad V(e) > 0, \forall e \neq 0 \\
+& \quad \dot{V}(e) = \frac{\partial V}{\partial e} \left( f(x + e) - f(x) + K(Ce,Cx)C e \right) < 0, \forall e \neq 0, \forall x \in \mathbb{X} \\
+& \quad V(e) \geq \epsilon \Vert e \Vert^2, \forall e
+\end{split}
+(\#eq:sos-observer-nonconvex)
+\end{equation}
+where the last constraint is added to make sure $V(e)$ is radially unbounded. Furthermore, if we replace the second constraint by $\dot{V}(e) \leq - \lambda V(e)$, then we can guarantee $V(e)$ converges to zero exponentially.
+
+Problem \@ref(eq:sos-observer-nonconvex), however, is not a convex optimization problem, due to the term $\frac{\partial V}{\partial e} K$ being bilinear in the coefficients of $V$ and $K$. Nevertheless, as shown in [@ebenbauer05cdc-polynomial], we can use a reparameterization trick to formulate a stronger version of \@ref(eq:sos-observer-nonconvex) as follows.
+\begin{equation}
+\begin{split}
+\text{find} & \quad V, Q(Ce), M(Ce,Cx) \\
+\text{subject to} & \quad V(0) = 0, \quad V(e) > 0, \forall e \neq 0 \\
+& \quad \frac{\partial V}{\partial e} = e^T Q(Ce), \quad Q(Ce) \succ 0 \\
+& \quad e^T Q(Ce) \left( f(x + e) - f(x) \right) + e^T M(Ce,Cx) C e < 0, \forall e \neq 0, \forall x \in \mathbb{X} \\
+& \quad V(e) \geq \epsilon \Vert e \Vert^2, \forall e
+\end{split}
+(\#eq:sos-observer-convex-formulation)
+\end{equation}
+Clearly, if we can solve problem \@ref(eq:sos-observer-convex-formulation), then
+$$
+K = Q(Ce)^{-1} M(Ce,Cx)
+$$
+is the right gain matrix for the formulation \@ref(eq:sos-observer-nonconvex).
+
+Let us bring this idea to action in our pendulum example.
+
+::: {.examplebox}
+::: {.example #pendulumobserverconvex name="Pendulum Observer with Convex Optimization"}
+With $x = [\mathfrak{s}, \mathfrak{c}, \dot{\theta}]^T$ ($\mathfrak{s} = \sin \theta, \mathfrak{c} = \cos \theta$), we can write the pendulum dynamics as 
+$$
+\dot{x} = \underbrace{\begin{bmatrix} 
+\mathfrak{c} \dot{\theta} \\
+- \mathfrak{s} \dot{\theta} \\
+- \frac{b}{ml^2} \dot{\theta} 
+\end{bmatrix}}_{=:f(x)} + \underbrace{\begin{bmatrix} 
+0 \\ 0 \\ \frac{u - mgl \mathfrak{s}}{ml^2} \end{bmatrix}}_{=: \psi(u,y)}, \quad y = 
+\underbrace{\begin{bmatrix} 
+1 & 0 & 0 \\ 
+0 & 1 & 0 \end{bmatrix}}_{=:C} x
+$$
+Clearly $f(x)$ is a polynomial. Solving the convex optimization problem \@ref(eq:sos-observer-convex-formulation), we obtain a solution
+$$
+V(e) = 0.5954 e_1^2 + 0.5954 e_2^2 + 0.9431 e_3^2
+$$
+$$
+Q(Ce) = \begin{bmatrix}
+0.4603 e_2^2 + 1.1909 & -0.4603 e_1 e_2 & 0 \\
+-0.4603 e_1 e_2 & 0.4603 e_1^2 + 1.1909 & 0 \\
+0 & 0 & 1.8863 \end{bmatrix}
+$$
+$$
+M(Ce,Cx) = \begin{bmatrix}
+\substack{-2.0878 e_1^2 - 0.8667 e_2^2 - \\ 0.4588 (y_1^2 + y_2^2) - 0.4885} & - 0.8667 e_1 e_2 \\
+- 0.8667 e_1 e_2 & \substack{-0.8667 e_1^2 - 2.0878 e_2^2 - \\ 0.4588 (y_1^2 + y_2^2) - 0.4885} \\
+-1.1909 y_2 & 1.1909 y_1
+\end{bmatrix}
+$$
+
+Simulating this observer, we verify that the observer is in fact exponentially converging, as shown in Fig. \@ref(fig:sos-observer-pendulum-simulation). 
+
+The Matlab code for formulating and solving the convex optimization \@ref(eq:sos-observer-convex-formulation) can be found [here](https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/pendulum_sos_observer.m). The code for simulating the observer can be found [here](https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/pendulum_sos_observer_simulation.m).
+
+```{r sos-observer-pendulum-simulation, out.width='80%', fig.cap='Simulation of the pendulum observer design from convex optimization', fig.align='center', echo=FALSE}
+knitr::include_graphics('images/pendulum-simulation-sos-observer.png')
+```
+:::
+:::
 
 
 ## Observer Feedback
