@@ -17,15 +17,16 @@
 \contentsline {subsubsection}{\numberline {5.1.4.1}Autonomous Systems}{33}{subsubsection.5.1.4.1}%
 \contentsline {subsubsection}{\numberline {5.1.4.2}Controlled Systems}{35}{subsubsection.5.1.4.2}%
 \contentsline {subsection}{\numberline {5.1.5}Triangular Template}{35}{subsection.5.1.5}%
-\contentsline {section}{\numberline {5.2}Observer Feedback}{35}{section.5.2}%
-\contentsline {chapter}{\numberline {6}Adaptive Control}{37}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Model-Reference Adaptive Control}{37}{section.6.1}%
-\contentsline {subsection}{\numberline {6.1.1}First-Order Systems}{38}{subsection.6.1.1}%
-\contentsline {subsection}{\numberline {6.1.2}High-Order Systems}{41}{subsection.6.1.2}%
-\contentsline {subsection}{\numberline {6.1.3}Robotic Manipulator}{43}{subsection.6.1.3}%
-\contentsline {section}{\numberline {6.2}Certainty-Equivalent Adaptive Control}{47}{section.6.2}%
-\contentsline {chapter}{\numberline {A}Linear System Theory}{49}{appendix.A}%
-\contentsline {chapter}{\numberline {B}Convex Analysis and Optimization}{53}{appendix.B}%
-\contentsline {chapter}{\numberline {C}The Kalman-Yakubovich Lemma}{55}{appendix.C}%
-\contentsline {chapter}{\numberline {D}Feedback Linearization}{57}{appendix.D}%
-\contentsline {chapter}{\numberline {E}Sliding Control}{59}{appendix.E}%
+\contentsline {subsection}{\numberline {5.1.6}Design with Convex Optimization}{35}{subsection.5.1.6}%
+\contentsline {section}{\numberline {5.2}Observer Feedback}{38}{section.5.2}%
+\contentsline {chapter}{\numberline {6}Adaptive Control}{39}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Model-Reference Adaptive Control}{39}{section.6.1}%
+\contentsline {subsection}{\numberline {6.1.1}First-Order Systems}{40}{subsection.6.1.1}%
+\contentsline {subsection}{\numberline {6.1.2}High-Order Systems}{43}{subsection.6.1.2}%
+\contentsline {subsection}{\numberline {6.1.3}Robotic Manipulator}{45}{subsection.6.1.3}%
+\contentsline {section}{\numberline {6.2}Certainty-Equivalent Adaptive Control}{49}{section.6.2}%
+\contentsline {chapter}{\numberline {A}Linear System Theory}{51}{appendix.A}%
+\contentsline {chapter}{\numberline {B}Convex Analysis and Optimization}{55}{appendix.B}%
+\contentsline {chapter}{\numberline {C}The Kalman-Yakubovich Lemma}{57}{appendix.C}%
+\contentsline {chapter}{\numberline {D}Feedback Linearization}{59}{appendix.D}%
+\contentsline {chapter}{\numberline {E}Sliding Control}{61}{appendix.E}%

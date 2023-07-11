@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-07-09" />
+<meta name="date" content="2023-07-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -115,6 +115,7 @@ div.csl-indent {
 <li class="chapter" data-level="5.1.3" data-path="output-feedback.html"><a href="output-feedback.html#state-affine-template"><i class="fa fa-check"></i><b>5.1.3</b> State-affine Template</a></li>
 <li class="chapter" data-level="5.1.4" data-path="output-feedback.html"><a href="output-feedback.html#kazantzis-kravaris-luenberger-kkl-template"><i class="fa fa-check"></i><b>5.1.4</b> Kazantzis-Kravaris-Luenberger (KKL) Template</a></li>
 <li class="chapter" data-level="5.1.5" data-path="output-feedback.html"><a href="output-feedback.html#triangular-template"><i class="fa fa-check"></i><b>5.1.5</b> Triangular Template</a></li>
+<li class="chapter" data-level="5.1.6" data-path="output-feedback.html"><a href="output-feedback.html#design-with-convex-optimization"><i class="fa fa-check"></i><b>5.1.6</b> Design with Convex Optimization</a></li>
 </ul></li>
 <li class="chapter" data-level="5.2" data-path="output-feedback.html"><a href="output-feedback.html#observer-feedback"><i class="fa fa-check"></i><b>5.2</b> Observer Feedback</a></li>
 </ul></li>
@@ -859,13 +860,101 @@ which may be quite expensive.</p>
 <div id="triangular-template" class="section level3 hasAnchor" number="5.1.5">
 <h3><span class="header-section-number">5.1.5</span> Triangular Template<a href="output-feedback.html#triangular-template" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 </div>
+<div id="design-with-convex-optimization" class="section level3 hasAnchor" number="5.1.6">
+<h3><span class="header-section-number">5.1.6</span> Design with Convex Optimization<a href="output-feedback.html#design-with-convex-optimization" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Consider a nonlinear system
+<span class="math display" id="eq:observerdesignconvex">\[\begin{equation}
+\dot{x} = f(x) + \psi(u,y), \quad y = Cx
+\tag{5.31}
+\end{equation}\]</span>
+where <span class="math inline">\(x \in \mathbb{X} \subseteq \mathbb{R}^n\)</span>, <span class="math inline">\(y \in \mathbb{R}^d\)</span>, <span class="math inline">\(C\)</span> a constant matrix, and <span class="math inline">\(\psi(u,y)\)</span> a nonlinear function. We assume that <span class="math inline">\(f(x)\)</span> is a polynomial vector map (i.e., each entry of <span class="math inline">\(f\)</span> is a polynomial function in <span class="math inline">\(x\)</span>). Certainly the formulation in <a href="output-feedback.html#eq:observerdesignconvex">(5.31)</a> is not as general as <a href="output-feedback.html#eq:output-feedback-system">(5.1)</a>, but it is general enough to include many examples in robotics.</p>
+<p>Recall that I said the essence of observer design is to (i) simulate the dynamics when the state estimation is correct, and (ii) to correct the state estimation from observation when it is off. Therefore, we wish to design an observer for <a href="output-feedback.html#eq:observerdesignconvex">(5.31)</a> in the following form
+<span class="math display" id="eq:sos-observer">\[\begin{equation}
+\dot{\hat{x}} = \underbrace{f(\hat{x}) + \psi(u,y)}_{\text{dynamics simulation}} + \underbrace{K(y - \hat{y},y)(C \hat{x} - y)}_{\text{feedback correction}},
+\tag{5.32}
+\end{equation}\]</span>
+where, compared to the Luenberger observer <a href="output-feedback.html#eq:Luenberger-Linear">(5.11)</a>, we allow the gain matrix <span class="math inline">\(K\)</span> to be nonlinear functions of the true observation <span class="math inline">\(y\)</span> and the estimated observation <span class="math inline">\(\hat{y}\)</span>.</p>
+<p>With the observer <a href="output-feedback.html#eq:sos-observer">(5.32)</a>, the dynamics on the estimation error <span class="math inline">\(e = \hat{x} - x\)</span> becomes
+<span class="math display">\[
+\dot{e} = f(x + e) - f(x) + K(Ce,Cx)C e.
+\]</span></p>
+<p>If we can find a Lyapunov-like function <span class="math inline">\(V(e)\)</span> so that <span class="math inline">\(V(e)\)</span> is positive definite and <span class="math inline">\(\dot{V}(e)\)</span> is negative definite, then Lyapunov stability theorem <a href="stability.html#thm:lyapunovglobalstability">4.1</a> tells us that <span class="math inline">\(e=0\)</span> is asymptotically stable. Because we do not know the gain matrix <span class="math inline">\(K\)</span> either, we need to jointly search for <span class="math inline">\(V\)</span> and <span class="math inline">\(K\)</span> (that are polynomials). Mathematically, this is
+<span class="math display" id="eq:sos-observer-nonconvex">\[\begin{equation}
+\begin{split}
+\text{find} &amp; \quad V, K \\
+\text{subject to} &amp; \quad V(0) = 0, \quad V(e) &gt; 0, \forall e \neq 0 \\
+&amp; \quad \dot{V}(e) = \frac{\partial V}{\partial e} \left( f(x + e) - f(x) + K(Ce,Cx)C e \right) &lt; 0, \forall e \neq 0, \forall x \in \mathbb{X} \\
+&amp; \quad V(e) \geq \epsilon \Vert e \Vert^2, \forall e
+\end{split}
+\tag{5.33}
+\end{equation}\]</span>
+where the last constraint is added to make sure <span class="math inline">\(V(e)\)</span> is radially unbounded. Furthermore, if we replace the second constraint by <span class="math inline">\(\dot{V}(e) \leq - \lambda V(e)\)</span>, then we can guarantee <span class="math inline">\(V(e)\)</span> converges to zero exponentially.</p>
+<p>Problem <a href="output-feedback.html#eq:sos-observer-nonconvex">(5.33)</a>, however, is not a convex optimization problem, due to the term <span class="math inline">\(\frac{\partial V}{\partial e} K\)</span> being bilinear in the coefficients of <span class="math inline">\(V\)</span> and <span class="math inline">\(K\)</span>. Nevertheless, as shown in <span class="citation">(<a href="#ref-ebenbauer05cdc-polynomial">Ebenbauer, Renz, and Allgower 2005</a>)</span>, we can use a reparameterization trick to formulate a stronger version of <a href="output-feedback.html#eq:sos-observer-nonconvex">(5.33)</a> as follows.
+<span class="math display" id="eq:sos-observer-convex-formulation">\[\begin{equation}
+\begin{split}
+\text{find} &amp; \quad V, Q(Ce), M(Ce,Cx) \\
+\text{subject to} &amp; \quad V(0) = 0, \quad V(e) &gt; 0, \forall e \neq 0 \\
+&amp; \quad \frac{\partial V}{\partial e} = e^T Q(Ce), \quad Q(Ce) \succ 0 \\
+&amp; \quad e^T Q(Ce) \left( f(x + e) - f(x) \right) + e^T M(Ce,Cx) C e &lt; 0, \forall e \neq 0, \forall x \in \mathbb{X} \\
+&amp; \quad V(e) \geq \epsilon \Vert e \Vert^2, \forall e
+\end{split}
+\tag{5.34}
+\end{equation}\]</span>
+Clearly, if we can solve problem <a href="output-feedback.html#eq:sos-observer-convex-formulation">(5.34)</a>, then
+<span class="math display">\[
+K = Q(Ce)^{-1} M(Ce,Cx)
+\]</span>
+is the right gain matrix for the formulation <a href="output-feedback.html#eq:sos-observer-nonconvex">(5.33)</a>.</p>
+<p>Let us bring this idea to action in our pendulum example.</p>
+<div class="examplebox">
+<div class="example">
+<p><span id="exm:pendulumobserverconvex" class="example"><strong>Example 5.4  (Pendulum Observer with Convex Optimization) </strong></span>With <span class="math inline">\(x = [\mathfrak{s}, \mathfrak{c}, \dot{\theta}]^T\)</span> (<span class="math inline">\(\mathfrak{s} = \sin \theta, \mathfrak{c} = \cos \theta\)</span>), we can write the pendulum dynamics as
+<span class="math display">\[
+\dot{x} = \underbrace{\begin{bmatrix}
+\mathfrak{c} \dot{\theta} \\
+- \mathfrak{s} \dot{\theta} \\
+- \frac{b}{ml^2} \dot{\theta}
+\end{bmatrix}}_{=:f(x)} + \underbrace{\begin{bmatrix}
+0 \\ 0 \\ \frac{u - mgl \mathfrak{s}}{ml^2} \end{bmatrix}}_{=: \psi(u,y)}, \quad y =
+\underbrace{\begin{bmatrix}
+1 &amp; 0 &amp; 0 \\
+0 &amp; 1 &amp; 0 \end{bmatrix}}_{=:C} x
+\]</span>
+Clearly <span class="math inline">\(f(x)\)</span> is a polynomial. Solving the convex optimization problem <a href="output-feedback.html#eq:sos-observer-convex-formulation">(5.34)</a>, we obtain a solution
+<span class="math display">\[
+V(e) = 0.5954 e_1^2 + 0.5954 e_2^2 + 0.9431 e_3^2
+\]</span>
+<span class="math display">\[
+Q(Ce) = \begin{bmatrix}
+0.4603 e_2^2 + 1.1909 &amp; -0.4603 e_1 e_2 &amp; 0 \\
+-0.4603 e_1 e_2 &amp; 0.4603 e_1^2 + 1.1909 &amp; 0 \\
+0 &amp; 0 &amp; 1.8863 \end{bmatrix}
+\]</span>
+<span class="math display">\[
+M(Ce,Cx) = \begin{bmatrix}
+\substack{-2.0878 e_1^2 - 0.8667 e_2^2 - \\ 0.4588 (y_1^2 + y_2^2) - 0.4885} &amp; - 0.8667 e_1 e_2 \\
+- 0.8667 e_1 e_2 &amp; \substack{-0.8667 e_1^2 - 2.0878 e_2^2 - \\ 0.4588 (y_1^2 + y_2^2) - 0.4885} \\
+-1.1909 y_2 &amp; 1.1909 y_1
+\end{bmatrix}
+\]</span></p>
+<p>Simulating this observer, we verify that the observer is in fact exponentially converging, as shown in Fig. <a href="output-feedback.html#fig:sos-observer-pendulum-simulation">5.1</a>.</p>
+<p>The Matlab code for formulating and solving the convex optimization <a href="output-feedback.html#eq:sos-observer-convex-formulation">(5.34)</a> can be found <a href="https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/pendulum_sos_observer.m">here</a>. The code for simulating the observer can be found <a href="https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/pendulum_sos_observer_simulation.m">here</a>.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:sos-observer-pendulum-simulation"></span>
+<img src="images/pendulum-simulation-sos-observer.png" alt="Simulation of the pendulum observer design from convex optimization" width="80%" />
+<p class="caption">
+Figure 5.1: Simulation of the pendulum observer design from convex optimization
+</p>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="observer-feedback" class="section level2 hasAnchor" number="5.2">
 <h2><span class="header-section-number">5.2</span> Observer Feedback<a href="output-feedback.html#observer-feedback" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Now that we have good ways to design a state observer, we will see how we can use the observer for feedback control.</p>
 <div class="examplebox">
 <div class="example">
-<p><span id="exm:pendulumLuenbergerFeedback" class="example"><strong>Example 5.4  (Pendulum Stabilization with A Luenberger Observer) </strong></span>In Example <a href="output-feedback.html#exm:pendulumLuenberger">5.1</a>, we have written the dynamics of a pendulum, and the dynamics of a Luenberger observer as
+<p><span id="exm:pendulumLuenbergerFeedback" class="example"><strong>Example 5.5  (Pendulum Stabilization with A Luenberger Observer) </strong></span>In Example <a href="output-feedback.html#exm:pendulumLuenberger">5.1</a>, we have written the dynamics of a pendulum, and the dynamics of a Luenberger observer as
 <span class="math display">\[\begin{align}
 \dot{x} &amp;= A x + B(u,y) \\
 \dot{\hat{x}} &amp;= A \hat{x} + B(u,y) + KC (x - \hat{x})
@@ -934,6 +1023,9 @@ Bernard, Pauline, Vincent Andrieu, and Daniele Astolfi. 2022. <span>“Observer 
 </div>
 <div id="ref-besanccon96ejc-observer" class="csl-entry">
 Besançon, Gildas, Guy Bornard, and Hassan Hammouri. 1996. <span>“Observer Synthesis for a Class of Nonlinear Control Systems.”</span> <em>European Journal of Control</em> 2 (3): 176–92.
+</div>
+<div id="ref-ebenbauer05cdc-polynomial" class="csl-entry">
+Ebenbauer, Christian, Jonathan Renz, and F Allgower. 2005. <span>“Polynomial Feedback and Observer Design Using Nonquadratic Lyapunov Functions.”</span> In <em>Proceedings of the 44th IEEE Conference on Decision and Control</em>, 7587–92. IEEE.
 </div>
 <div id="ref-hammouri90cdc-observer" class="csl-entry">
 Hammouri, Hassan, and Jesus de Leon Morales. 1990. <span>“Observer Synthesis for State-Affine Systems.”</span> In <em>29th IEEE Conference on Decision and Control</em>, 784–85. IEEE.

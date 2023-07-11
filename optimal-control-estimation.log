@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.1.13)  9 JUL 2023 17:48
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.1.13)  10 JUL 2023 20:33
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -842,37 +842,47 @@ Package natbib Warning: Citation `bernard19book-observer' on page 34 undefined o
 
 Package natbib Warning: Citation `bernard19book-observer' on page 35 undefined on input line 1199.
 
-[35] [36]
-Chapter 6.
-[37
+[35]
 
-] [38] [39] [40] [41] [42]
-<images/drawme.png, id=626, 670.505pt x 310.15875pt>
+Package natbib Warning: Citation `ebenbauer05cdc-polynomial' on page 36 undefined on input line 1242.
+
+[36]
+<images/pendulum-simulation-sos-observer.pdf, id=529, 614.295pt x 794.97pt>
+File: images/pendulum-simulation-sos-observer.pdf Graphic file (type pdf)
+<use images/pendulum-simulation-sos-observer.pdf>
+Package pdftex.def Info: images/pendulum-simulation-sos-observer.pdf  used on input line 1300.
+(pdftex.def)             Requested size: 275.99901pt x 357.1752pt.
+ [37 <./images/pendulum-simulation-sos-observer.pdf>] [38]
+Chapter 6.
+[39
+
+] [40] [41] [42] [43] [44]
+<images/drawme.png, id=662, 670.505pt x 310.15875pt>
 File: images/drawme.png Graphic file (type png)
 <use images/drawme.png>
-Package pdftex.def Info: images/drawme.png  used on input line 1538.
+Package pdftex.def Info: images/drawme.png  used on input line 1639.
 (pdftex.def)             Requested size: 206.995pt x 95.75067pt.
- [43] [44 <./images/drawme.png>] [45]
+ [45] [46 <./images/drawme.png>] [47]
 
-Package natbib Warning: Citation `slotine91book-applied' on page 46 undefined on input line 1620.
+Package natbib Warning: Citation `slotine91book-applied' on page 48 undefined on input line 1721.
 
-[46] [47] [48
+[48] [49] [50
 
 ]
 Appendix A.
-[49] [50] [51] [52]
+[51] [52] [53] [54]
 Appendix B.
-[53
+[55
 
-] [54
+] [56
 
 ]
 Appendix C.
-[55] [56
+[57] [58
 
 ]
 Appendix D.
-[57] [58
+[59] [60
 
 ]
 Appendix E.
@@ -880,20 +890,20 @@ No file optimal-control-estimation.bbl.
 
 Package natbib Warning: There were undefined citations.
 
-[59] (./optimal-control-estimation.aux) ) 
+[61] (./optimal-control-estimation.aux) ) 
 Here is how much of TeX's memory you used:
- 23737 strings out of 478268
- 435541 string characters out of 5846347
- 736366 words of memory out of 5000000
- 40822 multiletter control sequences out of 15000+600000
- 566712 words of font info for 252 fonts, out of 8000000 for 9000
+ 23766 strings out of 478268
+ 436374 string characters out of 5846347
+ 736852 words of memory out of 5000000
+ 40837 multiletter control sequences out of 15000+600000
+ 566795 words of font info for 253 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  83i,29n,80p,1188b,529s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}</usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/euler/eufm10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/euler/eufm7.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmmi5.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmr17.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmr5.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmr6.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmro10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmsy5.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmsy6.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm7.pfb>
-Output written on optimal-control-estimation.pdf (59 pages, 607143 bytes).
+Output written on optimal-control-estimation.pdf (61 pages, 1013072 bytes).
 PDF statistics:
- 1078 PDF objects out of 1200 (max. 8388607)
- 946 compressed objects within 10 object streams
- 353 named destinations out of 1000 (max. 500000)
- 51370 words of extra memory for PDF output out of 51595 (max. 10000000)
+ 1117 PDF objects out of 1200 (max. 8388607)
+ 982 compressed objects within 10 object streams
+ 364 named destinations out of 1000 (max. 500000)
+ 51375 words of extra memory for PDF output out of 51595 (max. 10000000)
 
