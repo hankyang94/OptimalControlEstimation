@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-07-10" />
+<meta name="date" content="2023-07-19" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -105,7 +105,15 @@ div.csl-indent {
 <li class="chapter" data-level="2.1" data-path="exactdp.html"><a href="exactdp.html#lqr"><i class="fa fa-check"></i><b>2.1</b> Linear Quadratic Regulator</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="approximatedp.html"><a href="approximatedp.html"><i class="fa fa-check"></i><b>3</b> Approximate Dynamic Programming</a></li>
-<li class="chapter" data-level="4" data-path="stability.html"><a href="stability.html"><i class="fa fa-check"></i><b>4</b> Stability Analysis</a></li>
+<li class="chapter" data-level="4" data-path="stability.html"><a href="stability.html"><i class="fa fa-check"></i><b>4</b> Stability Analysis</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="stability.html"><a href="stability.html#autonomous-systems"><i class="fa fa-check"></i><b>4.1</b> Autonomous Systems</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="stability.html"><a href="stability.html#concepts-of-stability"><i class="fa fa-check"></i><b>4.1.1</b> Concepts of Stability</a></li>
+<li class="chapter" data-level="4.1.2" data-path="stability.html"><a href="stability.html#stability-by-linearization"><i class="fa fa-check"></i><b>4.1.2</b> Stability by Linearization</a></li>
+<li class="chapter" data-level="4.1.3" data-path="stability.html"><a href="stability.html#lyapunov-analysis"><i class="fa fa-check"></i><b>4.1.3</b> Lyapunov Analysis</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="5" data-path="output-feedback.html"><a href="output-feedback.html"><i class="fa fa-check"></i><b>5</b> Output Feedback</a>
 <ul>
 <li class="chapter" data-level="5.1" data-path="output-feedback.html"><a href="output-feedback.html#state-observer"><i class="fa fa-check"></i><b>5.1</b> State Observer</a>
@@ -130,7 +138,10 @@ div.csl-indent {
 <li class="chapter" data-level="6.2" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#certainty-equivalent-adaptive-control"><i class="fa fa-check"></i><b>6.2</b> Certainty-Equivalent Adaptive Control</a></li>
 </ul></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
-<li class="chapter" data-level="A" data-path="linear-system-theory.html"><a href="linear-system-theory.html"><i class="fa fa-check"></i><b>A</b> Linear System Theory</a></li>
+<li class="chapter" data-level="A" data-path="linear-system-theory.html"><a href="linear-system-theory.html"><i class="fa fa-check"></i><b>A</b> Linear System Theory</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="linear-system-theory.html"><a href="linear-system-theory.html#app-lti-stability"><i class="fa fa-check"></i><b>A.1</b> Stability</a></li>
+</ul></li>
 <li class="chapter" data-level="B" data-path="appconvex.html"><a href="appconvex.html"><i class="fa fa-check"></i><b>B</b> Convex Analysis and Optimization</a></li>
 <li class="chapter" data-level="C" data-path="the-kalman-yakubovich-lemma.html"><a href="the-kalman-yakubovich-lemma.html"><i class="fa fa-check"></i><b>C</b> The Kalman-Yakubovich Lemma</a></li>
 <li class="chapter" data-level="D" data-path="feedbacklinearization.html"><a href="feedbacklinearization.html"><i class="fa fa-check"></i><b>D</b> Feedback Linearization</a></li>
@@ -749,8 +760,8 @@ We refer to such a nonlinear Luenberger template the Kazantzis-Kravaris-Luenberg
 <p>The KKL template, once found, is nice in the sense that (i) the observer <a href="output-feedback.html#eq:kkl-observer">(5.28)</a> is a simple copy of the dynamics and also very easy to implement (as opposed to the Kalman-Bucy observer); and (ii) checking if the matrix <span class="math inline">\(A\)</span> is Hurwitz is easy, at least when <span class="math inline">\(A\)</span> has reasonable size, (e.g., compared to checking the regular persistence condition in the state-affine template in Theorem <a href="output-feedback.html#thm:kalmanbucystateaffine">5.3</a>).</p>
 <p>However, the KKL template is difficult to realize in the sense that (i) what kind of nonlinear systems can be converted to <a href="output-feedback.html#eq:kkl-template">(5.27)</a>, and (ii) for those systems, how do we find the coordinate transformation?</p>
 <p>Recent works have leveraged deep learning to learn the coordinate transformation, for example in <span class="citation">(<a href="#ref-janny21cdc-deepkkl">Janny et al. 2021</a>)</span>, <span class="citation">(<a href="#ref-niazi23lacc-earning">Niazi et al. 2023</a>)</span>, <span class="citation">(<a href="#ref-miao23ll4dc-earning">Miao and Gatsis 2023</a>)</span>. Before hammering the problem with deep learning, let us look at the fundamentals of the KKL observer.</p>
-<div id="autonomous-systems" class="section level4 hasAnchor" number="5.1.4.1">
-<h4><span class="header-section-number">5.1.4.1</span> Autonomous Systems<a href="output-feedback.html#autonomous-systems" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div id="autonomous-systems-1" class="section level4 hasAnchor" number="5.1.4.1">
+<h4><span class="header-section-number">5.1.4.1</span> Autonomous Systems<a href="output-feedback.html#autonomous-systems-1" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>Consider the autonomous version of system <a href="output-feedback.html#eq:output-feedback-system">(5.1)</a> without control
 <span class="math display" id="eq:kkl-autonomous-system">\[\begin{equation}
 \dot{x} = f(x), \quad y = h(x),
@@ -878,7 +889,7 @@ where, compared to the Luenberger observer <a href="output-feedback.html#eq:Luen
 <span class="math display">\[
 \dot{e} = f(x + e) - f(x) + K(Ce,Cx)C e.
 \]</span></p>
-<p>If we can find a Lyapunov-like function <span class="math inline">\(V(e)\)</span> so that <span class="math inline">\(V(e)\)</span> is positive definite and <span class="math inline">\(\dot{V}(e)\)</span> is negative definite, then Lyapunov stability theorem <a href="stability.html#thm:lyapunovglobalstability">4.1</a> tells us that <span class="math inline">\(e=0\)</span> is asymptotically stable. Because we do not know the gain matrix <span class="math inline">\(K\)</span> either, we need to jointly search for <span class="math inline">\(V\)</span> and <span class="math inline">\(K\)</span> (that are polynomials). Mathematically, this is
+<p>If we can find a Lyapunov-like function <span class="math inline">\(V(e)\)</span> so that <span class="math inline">\(V(e)\)</span> is positive definite and <span class="math inline">\(\dot{V}(e)\)</span> is negative definite, then Lyapunov stability theorem <a href="stability.html#thm:lyapunovglobalstability">4.2</a> tells us that <span class="math inline">\(e=0\)</span> is asymptotically stable. Because we do not know the gain matrix <span class="math inline">\(K\)</span> either, we need to jointly search for <span class="math inline">\(V\)</span> and <span class="math inline">\(K\)</span> (that are polynomials). Mathematically, this is
 <span class="math display" id="eq:sos-observer-nonconvex">\[\begin{equation}
 \begin{split}
 \text{find} &amp; \quad V, K \\

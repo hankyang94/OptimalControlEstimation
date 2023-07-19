@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-07-10" />
+<meta name="date" content="2023-07-19" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -105,7 +105,15 @@ div.csl-indent {
 <li class="chapter" data-level="2.1" data-path="exactdp.html"><a href="exactdp.html#lqr"><i class="fa fa-check"></i><b>2.1</b> Linear Quadratic Regulator</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="approximatedp.html"><a href="approximatedp.html"><i class="fa fa-check"></i><b>3</b> Approximate Dynamic Programming</a></li>
-<li class="chapter" data-level="4" data-path="stability.html"><a href="stability.html"><i class="fa fa-check"></i><b>4</b> Stability Analysis</a></li>
+<li class="chapter" data-level="4" data-path="stability.html"><a href="stability.html"><i class="fa fa-check"></i><b>4</b> Stability Analysis</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="stability.html"><a href="stability.html#autonomous-systems"><i class="fa fa-check"></i><b>4.1</b> Autonomous Systems</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="stability.html"><a href="stability.html#concepts-of-stability"><i class="fa fa-check"></i><b>4.1.1</b> Concepts of Stability</a></li>
+<li class="chapter" data-level="4.1.2" data-path="stability.html"><a href="stability.html#stability-by-linearization"><i class="fa fa-check"></i><b>4.1.2</b> Stability by Linearization</a></li>
+<li class="chapter" data-level="4.1.3" data-path="stability.html"><a href="stability.html#lyapunov-analysis"><i class="fa fa-check"></i><b>4.1.3</b> Lyapunov Analysis</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="5" data-path="output-feedback.html"><a href="output-feedback.html"><i class="fa fa-check"></i><b>5</b> Output Feedback</a>
 <ul>
 <li class="chapter" data-level="5.1" data-path="output-feedback.html"><a href="output-feedback.html#state-observer"><i class="fa fa-check"></i><b>5.1</b> State Observer</a>
@@ -130,7 +138,10 @@ div.csl-indent {
 <li class="chapter" data-level="6.2" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#certainty-equivalent-adaptive-control"><i class="fa fa-check"></i><b>6.2</b> Certainty-Equivalent Adaptive Control</a></li>
 </ul></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
-<li class="chapter" data-level="A" data-path="linear-system-theory.html"><a href="linear-system-theory.html"><i class="fa fa-check"></i><b>A</b> Linear System Theory</a></li>
+<li class="chapter" data-level="A" data-path="linear-system-theory.html"><a href="linear-system-theory.html"><i class="fa fa-check"></i><b>A</b> Linear System Theory</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="linear-system-theory.html"><a href="linear-system-theory.html#app-lti-stability"><i class="fa fa-check"></i><b>A.1</b> Stability</a></li>
+</ul></li>
 <li class="chapter" data-level="B" data-path="appconvex.html"><a href="appconvex.html"><i class="fa fa-check"></i><b>B</b> Convex Analysis and Optimization</a></li>
 <li class="chapter" data-level="C" data-path="the-kalman-yakubovich-lemma.html"><a href="the-kalman-yakubovich-lemma.html"><i class="fa fa-check"></i><b>C</b> The Kalman-Yakubovich Lemma</a></li>
 <li class="chapter" data-level="D" data-path="feedbacklinearization.html"><a href="feedbacklinearization.html"><i class="fa fa-check"></i><b>D</b> Feedback Linearization</a></li>
@@ -158,6 +169,9 @@ div.csl-indent {
             <section class="normal" id="section-">
 <div id="linear-system-theory" class="section level1 hasAnchor" number="7">
 <h1><span class="header-section-number">A</span> Linear System Theory<a href="linear-system-theory.html#linear-system-theory" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="app-lti-stability" class="section level2 hasAnchor" number="7.1">
+<h2><span class="header-section-number">A.1</span> Stability<a href="linear-system-theory.html#app-lti-stability" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Check this <a href="https://intra.engr.ucr.edu/~enozari/teaching/ME120_Fall20/Lecture%203%20-%20Stability,%20Controllability%20&amp;%20Observability.pdf">note</a>.</p>
 <div class="theorembox">
 <div class="theorem">
 <p><span id="thm:lyapunovequation" class="theorem"><strong>Theorem A.1  (Lyapunov Equation) </strong></span>The following is equivalent for a linear time-invariant system <span class="math inline">\(\dot{x} = A x\)</span></p>
@@ -186,7 +200,7 @@ The time derivative of <span class="math inline">\(V\)</span> reads
 <span class="math display">\[
 \dot{V} = 2 x^T P \dot{x} = x^T (A^T P + P A) x = - x^T Q x.
 \]</span>
-Clearly, <span class="math inline">\(\dot{V} &lt; 0\)</span> for any <span class="math inline">\(x \neq 0\)</span> and <span class="math inline">\(\dot{V}(0) = 0\)</span>. According to Lyapunov’s global stability theorem <a href="stability.html#thm:lyapunovglobalstability">4.1</a>, we conclude the linear system <span class="math inline">\(\dot{x} = Ax\)</span> is globally asymptotically stable at <span class="math inline">\(x = 0\)</span>.</p>
+Clearly, <span class="math inline">\(\dot{V} &lt; 0\)</span> for any <span class="math inline">\(x \neq 0\)</span> and <span class="math inline">\(\dot{V}(0) = 0\)</span>. According to Lyapunov’s global stability theorem <a href="stability.html#thm:lyapunovglobalstability">4.2</a>, we conclude the linear system <span class="math inline">\(\dot{x} = Ax\)</span> is globally asymptotically stable at <span class="math inline">\(x = 0\)</span>.</p>
 <p>(b): <span class="math inline">\(1 \Rightarrow 2\)</span>. Suppose <span class="math inline">\(A\)</span> is Hurwitz, we want to show that, for any <span class="math inline">\(Q \succ 0\)</span>, there exists a unique <span class="math inline">\(P \succ 0\)</span> satisfying the Lyapunov equation <a href="linear-system-theory.html#eq:lyapunov-equation">(A.1)</a>. In fact, consider the matrix
 <span class="math display">\[
 P = \int_{t=0}^{\infty} e^{A^T t} Q e^{At} dt.
@@ -288,6 +302,7 @@ has full column rank;</p></li>
 <li><p>There exists a matrix <span class="math inline">\(L\)</span> such that <span class="math inline">\(A + LC\)</span> is Hurwitz;</p></li>
 <li><p><span class="math inline">\((A^*,C^*)\)</span> is stabilizable.</p></li>
 </ol>
+</div>
 </div>
 </div>
 </div>

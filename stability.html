@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-07-10" />
+<meta name="date" content="2023-07-19" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -105,7 +105,15 @@ div.csl-indent {
 <li class="chapter" data-level="2.1" data-path="exactdp.html"><a href="exactdp.html#lqr"><i class="fa fa-check"></i><b>2.1</b> Linear Quadratic Regulator</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="approximatedp.html"><a href="approximatedp.html"><i class="fa fa-check"></i><b>3</b> Approximate Dynamic Programming</a></li>
-<li class="chapter" data-level="4" data-path="stability.html"><a href="stability.html"><i class="fa fa-check"></i><b>4</b> Stability Analysis</a></li>
+<li class="chapter" data-level="4" data-path="stability.html"><a href="stability.html"><i class="fa fa-check"></i><b>4</b> Stability Analysis</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="stability.html"><a href="stability.html#autonomous-systems"><i class="fa fa-check"></i><b>4.1</b> Autonomous Systems</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="stability.html"><a href="stability.html#concepts-of-stability"><i class="fa fa-check"></i><b>4.1.1</b> Concepts of Stability</a></li>
+<li class="chapter" data-level="4.1.2" data-path="stability.html"><a href="stability.html#stability-by-linearization"><i class="fa fa-check"></i><b>4.1.2</b> Stability by Linearization</a></li>
+<li class="chapter" data-level="4.1.3" data-path="stability.html"><a href="stability.html#lyapunov-analysis"><i class="fa fa-check"></i><b>4.1.3</b> Lyapunov Analysis</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="5" data-path="output-feedback.html"><a href="output-feedback.html"><i class="fa fa-check"></i><b>5</b> Output Feedback</a>
 <ul>
 <li class="chapter" data-level="5.1" data-path="output-feedback.html"><a href="output-feedback.html#state-observer"><i class="fa fa-check"></i><b>5.1</b> State Observer</a>
@@ -130,7 +138,10 @@ div.csl-indent {
 <li class="chapter" data-level="6.2" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#certainty-equivalent-adaptive-control"><i class="fa fa-check"></i><b>6.2</b> Certainty-Equivalent Adaptive Control</a></li>
 </ul></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
-<li class="chapter" data-level="A" data-path="linear-system-theory.html"><a href="linear-system-theory.html"><i class="fa fa-check"></i><b>A</b> Linear System Theory</a></li>
+<li class="chapter" data-level="A" data-path="linear-system-theory.html"><a href="linear-system-theory.html"><i class="fa fa-check"></i><b>A</b> Linear System Theory</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="linear-system-theory.html"><a href="linear-system-theory.html#app-lti-stability"><i class="fa fa-check"></i><b>A.1</b> Stability</a></li>
+</ul></li>
 <li class="chapter" data-level="B" data-path="appconvex.html"><a href="appconvex.html"><i class="fa fa-check"></i><b>B</b> Convex Analysis and Optimization</a></li>
 <li class="chapter" data-level="C" data-path="the-kalman-yakubovich-lemma.html"><a href="the-kalman-yakubovich-lemma.html"><i class="fa fa-check"></i><b>C</b> The Kalman-Yakubovich Lemma</a></li>
 <li class="chapter" data-level="D" data-path="feedbacklinearization.html"><a href="feedbacklinearization.html"><i class="fa fa-check"></i><b>D</b> Feedback Linearization</a></li>
@@ -158,14 +169,199 @@ div.csl-indent {
             <section class="normal" id="section-">
 <div id="stability" class="section level1 hasAnchor" number="4">
 <h1><span class="header-section-number">Chapter 4</span> Stability Analysis<a href="stability.html#stability" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Optimal control formulates a control problem via the language of mathematical optimization. However, there are control problems, and sometimes even the very basic control problems, that cannot be easily stated in the optimal control formulation.</p>
+<p>For example, suppose our goal is to <em>swing up a pendulum to the upright position and stabilize it there</em>. You may want to formalize the problem as
+<span class="math display" id="eq:pendulum-swingup-stability-test-1">\[\begin{equation}
+\min_{u(t) \in \mathbb{U}} \int_{0}^{\infty} \Vert x(t) - x_d \Vert^2 dt, \quad \text{subject to} \quad \dot{x} = f(x,u), x(0) = x_0,
+\tag{4.1}
+\end{equation}\]</span>
+where <span class="math inline">\(x_d\)</span> is the desired upright position for the pendulum. However, does the solution of problem <a href="stability.html#eq:pendulum-swingup-stability-test-1">(4.1)</a>, if exists, guarantee the stabilization of the pendulum at the upright position? The answer is unclear without a rigorous proof.</p>
+<p>However, after a slight change of perspective, the optimal control problem may be formulated to better match the goal. Suppose there exists a region, <span class="math inline">\(\Omega\)</span>, in the state space such that as long as the pendulum enters <span class="math inline">\(\Omega\)</span>, there always exists a sequence of control to bring the pendulum to the goal state <span class="math inline">\(x_d\)</span>, then we can simply formulate a different optimal control problem
+<span class="math display" id="eq:pendulum-swingup-stability-test">\[\begin{equation}
+\min_{u(t) \in \mathbb{U}} \int_{0}^{T} \Vert u(t) \Vert^2 dt, \quad \text{subject to} \quad x(0)=x_0, x(T) \in \Omega, \dot{x} = f(x,u),
+\tag{4.2}
+\end{equation}\]</span>
+where now it is very clear, if a solution exists to problem <a href="stability.html#eq:pendulum-swingup-stability-test">(4.2)</a>, then we will definitely achieve our goal. This is because the constraint <span class="math inline">\(x(T) \in \Omega\)</span> guarantees that we will be able to stabilize the pendulum, and the cost function of <a href="stability.html#eq:pendulum-swingup-stability-test">(4.2)</a> simply encourages minimum control effort along the way.</p>
+<p>This highlights that, sometimes the formulation of a problem may deserve more thoughts than the actual solution. Of course the formulation <a href="stability.html#eq:pendulum-swingup-stability-test">(4.2)</a> may be much more difficult to solve. In fact, does the set <span class="math inline">\(\Omega\)</span> exist, and if so, how to describe it?</p>
+<p>This is the main focus of this chapter: to introduce tools that can help us analyze the <em>stability</em> of uncontrolled and controlled nonlinear systems. Specifically, we will introduce the notion of <em>stability certificates</em>, which are conditions that, if hold, certify the stability of the system (e.g., in the set <span class="math inline">\(\Omega\)</span>). Interestingly, you will see that the notion of stability certificates is intuitive and easy, but what is really challenging is to <em>find</em> and <em>compute</em> the stability certificates. We will highlight the power and also limitation of computational tools, especially those that are based on convex optimization (see Appendix <a href="appconvex.html#appconvex">B</a> for a review of convex optimization).</p>
+<div id="autonomous-systems" class="section level2 hasAnchor" number="4.1">
+<h2><span class="header-section-number">4.1</span> Autonomous Systems<a href="stability.html#autonomous-systems" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Let us first focus on autonomous systems, i.e., systems whose dynamics do not depent on time (and control). We introduce different concepts of stability and ways to certify them.</p>
+<div id="concepts-of-stability" class="section level3 hasAnchor" number="4.1.1">
+<h3><span class="header-section-number">4.1.1</span> Concepts of Stability<a href="stability.html#concepts-of-stability" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Consider the autonomous system
 <span class="math display" id="eq:autonomous-system">\[\begin{equation}
 \dot{x} = f(x)
-\tag{4.1}
-\end{equation}\]</span></p>
+\tag{4.3}
+\end{equation}\]</span>
+where <span class="math inline">\(x \in \mathbb{X} \subseteq \mathbb{R}^n\)</span> is the state and <span class="math inline">\(f: \mathbb{R}^n \rightarrow \mathbb{R}^n\)</span> is the (potentially nonlinear) dynamics.</p>
+<p>Before talking about concepts of stability, we need to define an <em>equilibrium point</em>.</p>
+<div class="definitionbox">
+<div class="definition">
+<p><span id="def:equilibriumpoint" class="definition"><strong>Definition 4.1  (Equilibrium Point) </strong></span>A state <span class="math inline">\(x^\star\)</span> is called an equilibrium point of system <a href="stability.html#eq:autonomous-system">(4.3)</a> if <span class="math inline">\(f(x^\star) = 0\)</span>, i.e., once the system reaches <span class="math inline">\(x^\star\)</span>, it stays at <span class="math inline">\(x^\star\)</span>.</p>
+</div>
+</div>
+<p>For example, a linear system
+<span class="math display">\[
+\dot{x} = A x
+\]</span>
+has a single equilibrium point <span class="math inline">\(x^\star = 0\)</span> when <span class="math inline">\(A\)</span> is nonsingular, and an infinite number of equilibrium points when <span class="math inline">\(A\)</span> is singular (those equilibrium points lie in the kernel of matrix <span class="math inline">\(A\)</span>).</p>
+<p>When analyzing the behavior of a dynamical system around the equilibrium point, it is often helpful to “shift” the dynamics equation so that <span class="math inline">\(0\)</span> is the equilibrium point. For example, if we are interested in the behavior of system <a href="stability.html#eq:autonomous-system">(4.3)</a> near the equilibrium point <span class="math inline">\(x^\star\)</span>, we can create a new variable
+<span class="math display">\[
+z = x - x^\star,
+\]</span>
+so that
+<span class="math display" id="eq:shifted-system-by-equilibrium">\[\begin{equation}
+\dot{z} = \dot{x} = f(x) = f(z + x^\star).
+\tag{4.4}
+\end{equation}\]</span>
+Clearly, <span class="math inline">\(z^\star = 0\)</span> is an equilibrium point for the shifted system <a href="stability.html#eq:shifted-system-by-equilibrium">(4.4)</a>.</p>
+<p>Let us find the equilibrium points of a simple pendulum.</p>
+<div class="examplebox">
+<div class="example">
+<p><span id="exm:pendulumequilibriumpoint" class="example"><strong>Example 4.1  (Equilibrium Points of A Simple Pendulum) </strong></span>Consider the dynamics of an uncontrolled pendulum</p>
+<p><span class="math display" id="eq:pendulum-dynamics-for-equilibrium-point">\[\begin{equation}
+\begin{cases}
+\dot{\theta} = \dot{\theta} \\
+\ddot{\theta} = - \frac{1}{ml^2} (b \dot{\theta} + mgl \sin \theta)
+\end{cases}
+\tag{4.5}
+\end{equation}\]</span>
+where <span class="math inline">\(\theta\)</span> is the angle between the pendulum and the vertical line, and <span class="math inline">\(x = [\theta,\dot{\theta}]^T\)</span> is the state of the pendulum (<span class="math inline">\(m,g,l,b\)</span> denote the mass, gravity constant, length, and damping constant, respectively).</p>
+<p>To find the equilibrium points of the pendulum, we need the right hand sides of <a href="stability.html#eq:pendulum-dynamics-for-equilibrium-point">(4.5)</a> to be equal to zero:
+<span class="math display">\[
+\dot{\theta} = 0, \quad - \frac{1}{ml^2} (b \dot{\theta} + mgl \sin \theta) = 0.
+\]</span>
+The solutions are easy to find
+<span class="math display">\[
+x^\star = \begin{bmatrix} 0 \\ 0 \end{bmatrix} \quad \text{or} \quad \begin{bmatrix} \pi \\ 0 \end{bmatrix},
+\]</span>
+corresponding to the bottomright and upright positions of the pendulum, respectively.</p>
+</div>
+</div>
+<p>The pendulum dynamics has two equilibrium points, but our physics intuition tells us these two equilibrium points are dramatically different. Specifically, the bottomright equilibrium <span class="math inline">\(x^\star = [0,0]^T\)</span> is such that if you perturb the pendulum around the equilibrium, the pendulum will go back to that equilibrium; the upright equilibrium <span class="math inline">\(x^\star = [\pi,0]^T\)</span> is such that if you perturb the pendulum (even just a little bit) around the equilibrium, it will diverge from that equilibrium.</p>
+<p>This physical intuition is exactly what we want to formalize as the concepts of stability.</p>
+<p>In the following, we focus on the nonlinear autonomous system <a href="stability.html#eq:autonomous-system">(4.3)</a> with <span class="math inline">\(f(0) = 0\)</span>, i.e., <span class="math inline">\(x^\star = 0\)</span> is an equilibrium point. We now formally define the different concepts of stability.</p>
+<div class="definitionbox">
+<div class="definition">
+<p><span id="def:lyapunovstability" class="definition"><strong>Definition 4.2  (Lyapunov Stability) </strong></span>The equilibrium point <span class="math inline">\(x=0\)</span> is said to be <em>stable in the sense of Lyapunov</em> if, for any <span class="math inline">\(R &gt; 0\)</span>, there exists <span class="math inline">\(r &gt;0\)</span> such that if <span class="math inline">\(\Vert x(0) \Vert &lt; r\)</span>, then <span class="math inline">\(\Vert x(t) \Vert &lt; R\)</span> for all <span class="math inline">\(t \geq 0\)</span>. Otherwise, the equilibrium point is unstable.</p>
+</div>
+</div>
+<p>For a system that is Lyapunov stable around <span class="math inline">\(x=0\)</span>, the definition says that, if we want to constrain the trajectory of the system to be within the ball <span class="math inline">\(B_R = \{ x \mid \Vert x \Vert &lt; R \}\)</span>, then we can always find a smaller ball <span class="math inline">\(B_r = \{ x \mid \Vert x \Vert &lt; r \}\)</span> such that if the system starts within <span class="math inline">\(B_r\)</span>, it will remain in the larger ball <span class="math inline">\(B_R\)</span>.</p>
+<p>On the other hand, if the system is not Lyapunov stable at <span class="math inline">\(x=0\)</span>, then there exists at least one ball <span class="math inline">\(B_R\)</span>, such that no matter how close the system’s initial condition is to the origin, it will eventually exit the ball <span class="math inline">\(B_R\)</span>. The following exercise is left for you to verify the instability of the Van der Pol oscillator.</p>
+<div class="exercise">
+<p><span id="exr:instabilityvanderpol" class="exercise"><strong>Exercise 4.1  (Instability of the Van der Pol oscillator) </strong></span>Show that the Van der Pol oscillator
+<span class="math display">\[
+\begin{cases}
+\dot{x}_1 = x_2 \\
+\dot{x}_2 = - x_1 + (1-x_1^2) x_2
+\end{cases}
+\]</span>
+is unstable at the equilibrium point <span class="math inline">\(x = 0\)</span>.</p>
+</div>
+<p>Lyapunov stability does not guarantee the system trajectory will actually converge to <span class="math inline">\(x =0\)</span>. Instead, asymptotic stability will ask the system trajectory to converge to <span class="math inline">\(x=0\)</span>.</p>
+<div class="definitionbox">
+<div class="definition">
+<p><span id="def:asymptoticstability" class="definition"><strong>Definition 4.3  (Asymptotic Stability and Domain of Attraction) </strong></span>The equilibrium point <span class="math inline">\(x = 0\)</span> is said to be <em>asymptotically stable</em> if (i) it is Lyapunov stable, and (ii) there exists some <span class="math inline">\(r &gt; 0\)</span> such that <span class="math inline">\(x(0) \in B_r\)</span> implies <span class="math inline">\(x(t) \rightarrow 0\)</span> as <span class="math inline">\(t \rightarrow 0\)</span>.</p>
+<p><em>The</em> domain of attraction (for the equilibrium <span class="math inline">\(x=0\)</span>) is the largest set of points in the state space such that trajectories initiated at those points will converge to the equilibrium point. That is,
+<span class="math display">\[
+\Omega(x^\star) = \{ x \in \mathbb{X} \mid x(0) = x \Longrightarrow \lim_{t \rightarrow \infty} x(t) = x^\star \}.
+\]</span>
+The ball <span class="math inline">\(B_r\)</span> is <em>a</em> domain of attraction for the equilibrium point <span class="math inline">\(x=0\)</span>, but not necessarily the largest domain of attraction.</p>
+</div>
+</div>
+<p>You may immediately realize that in the definition of asymptotic stability, we require Lyapunov stability to hold first. Is this necessary? i.e., does there exist a system where trajectories eventually converge to zero, but is not stable in the sense of Lyapunov? You should work out the following exercise.</p>
+<div class="exercise">
+<p><span id="exr:vinogradequation" class="exercise"><strong>Exercise 4.2  (Vinograd System) </strong></span>Show that for the Vinograd dynamical system <span class="citation">(<a href="#ref-vinograd57-inapplicability">Vinograd 1957</a>)</span>
+<span class="math display">\[
+\begin{cases}
+\dot{x} = \frac{x^2(y-x) + y^5}{(x^2+y^2)(1 + (x^2+y^2)^2)} \\
+\dot{y} = \frac{y^2 (y - 2x)}{(x^2+y^2)(1 + (x^2+y^2)^2)}
+\end{cases},
+\]</span>
+all system trajectories converge to the equilibrium point <span class="math inline">\((x,y) = 0\)</span>, but the equilibrium point is not stable in the sense of Lyapunov.</p>
+<p>(Hint: the system trajectories will behave like the following plot.)</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:vinograd-system"></span>
+<img src="images/vinograd.png" alt="Trajectories of the Vinograd system. Copied from the original article of Vinograd." width="60%" />
+<p class="caption">
+Figure 4.1: Trajectories of the Vinograd system. Copied from the original article of Vinograd.
+</p>
+</div>
+</div>
+<p>In many cases, we want the convergence of the system trajectory towards <span class="math inline">\(x=0\)</span> to be fast, thus bringing in the notion of exponential stability.</p>
+<div class="definitionbox">
+<div class="definition">
+<p><span id="def:exponentialstability" class="definition"><strong>Definition 4.4  (Exponential Stability) </strong></span>An equilibrium point <span class="math inline">\(x=0\)</span> is said to be exponentially stable, if there exists a ball <span class="math inline">\(B_r\)</span> such that as long as as <span class="math inline">\(x(0) \in B_r\)</span>, then
+<span class="math display">\[
+\Vert x(t) \Vert \leq \alpha \Vert x(0) \Vert e^{-\lambda t}, \quad \forall t,
+\]</span>
+for some <span class="math inline">\(\alpha &gt; 0\)</span> and <span class="math inline">\(\lambda &gt; 0\)</span> (<span class="math inline">\(\lambda\)</span> is called the rate of exponential convergence).</p>
+</div>
+</div>
+<p>Exponential stability implies asymptotic stability (and certainly also Lyapunov stability). What is nice about exponential stability is that we can quantify the distance of the system trajectory to the equilibrium point as a function of time (as long as we know the constants <span class="math inline">\(\alpha, \Vert x(0) \Vert, \lambda\)</span>). In many safety-critical applications, we need such performance guarantees. For example, in Chapter <a href="output-feedback.html#state-observer">5.1</a>, we will see the application of exponential stability in observer-feedback control.</p>
+<p>All the concepts of stability we have mentioned so far only talk about the stability of the system <em>locally</em> around the equilibrium point <span class="math inline">\(x=0\)</span> (via arguments like <span class="math inline">\(B_r\)</span> and <span class="math inline">\(B_R\)</span>). It would be much nicer if we can guarantee stability of the system <em>globally</em>, i.e., no matter where the system starts in the state space <span class="math inline">\(\mathbb{X}\)</span>, its trajectoy will converge to <span class="math inline">\(x=0\)</span>.</p>
+<div class="definitionbox">
+<div class="definition">
+<p><span id="def:globalstability" class="definition"><strong>Definition 4.5  (Global Asymptotic and Exponential Stability) </strong></span>The equilibrium point <span class="math inline">\(x = 0\)</span> is said to be globally asymptotically (exponentially) stable if asymptotic (exponential) stability holds for any initial states. That is,
+<span class="math display">\[
+\forall x \in \mathbb{X}, \quad x(0) = x \Longrightarrow \begin{cases}
+\lim_{t \rightarrow \infty} x(t) = 0  &amp; \text{global asymptotic stability} \\
+\exists \alpha, \lambda &gt; 0, \text{ s.t. } \Vert x(t) \Vert \leq \alpha \Vert x(0) \Vert e^{-\lambda t} &amp; \text{global exponential stability}
+\end{cases}
+\]</span></p>
+</div>
+</div>
+<p>This concludes our definitions of stability for nonlinear systems (Definition <a href="stability.html#def:lyapunovstability">4.2</a>-<a href="stability.html#def:globalstability">4.5</a>). It is worth mentioning that the concepts of stability are complicated (refined) here due to our focus on nonlinear systems. For linear systems, the concepts of stability are simpler. Specifically, all local stability properties of linear systems are also global and asymptotic stability is equal to exponential stability. In fact, for a linear time-invariant system <span class="math inline">\(\dot{x} = Ax\)</span>, it is either asymptotically (exponentially) stable, or marginally stable, or unstable. Moreover, we can fully characterize the stability property by inspecting the eigenvalues of <span class="math inline">\(A\)</span> (you can find a refreshment of this in Appendix <a href="linear-system-theory.html#app-lti-stability">A.1</a>).</p>
+<p>How do we characterize the stability property of a nonlinear system? If someone gave me a nonlinear system <a href="stability.html#eq:autonomous-system">(4.3)</a>, how can I provide a certificate to her that the system is stable or unstable (I cannot use eigenvalues anymore in this case)? Let us describe some of these certificates below.</p>
+</div>
+<div id="stability-by-linearization" class="section level3 hasAnchor" number="4.1.2">
+<h3><span class="header-section-number">4.1.2</span> Stability by Linearization<a href="stability.html#stability-by-linearization" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A natural idea is to linearize, if possible, the nonlinear system <a href="stability.html#eq:autonomous-system">(4.3)</a> at a given equilibrium point <span class="math inline">\(x^\star\)</span> and inspect the stability of the linearized system (for which we can compute eigenvalues). Therefore, the key question here is how does the stability and instability of the linearized system relate to the stability and instability of the original nonlinear system.</p>
 <div class="theorembox">
 <div class="theorem">
-<p><span id="thm:lyapunovglobalstability" class="theorem"><strong>Theorem 4.1  (Lyapunov Global Stability) </strong></span>For the autonomous system <a href="stability.html#eq:autonomous-system">(4.1)</a>, suppose there exists a scalar function <span class="math inline">\(V(x)\)</span> with continuous first order derivatives such that</p>
+<p><span id="thm:stabilitybylinearization" class="theorem"><strong>Theorem 4.1  (Stability by Linearization) </strong></span>Assume <span class="math inline">\(x=0\)</span> is an equilibrium point of system <a href="stability.html#eq:autonomous-system">(4.3)</a> and <span class="math inline">\(f\)</span> is continuously differentiable. Let
+<span class="math display" id="eq:linearized-system">\[\begin{equation}
+\dot{x} = Ax, \quad A = \frac{\partial f}{\partial x} \Big\vert_{x=0}
+\tag{4.6}
+\end{equation}\]</span>
+be the linearized system at <span class="math inline">\(x=0\)</span>. The following statements are true about the stability relationship between <a href="stability.html#eq:autonomous-system">(4.3)</a> and <a href="stability.html#eq:linearized-system">(4.6)</a>.</p>
+<ul>
+<li><p>If the linearized system <a href="stability.html#eq:linearized-system">(4.6)</a> is strictly stable (i.e., all eigenvalues of <span class="math inline">\(A\)</span> have strictly negative real parts), then the original system <a href="stability.html#eq:autonomous-system">(4.3)</a> is asymptotically stable at <span class="math inline">\(x=0\)</span>.</p></li>
+<li><p>If the linearized system <a href="stability.html#eq:linearized-system">(4.6)</a> is unstable (i.e., at least one eigenvalue of <span class="math inline">\(A\)</span> has strictly positive real part), then the original system <a href="stability.html#eq:autonomous-system">(4.3)</a> is unstable at <span class="math inline">\(x=0\)</span>.</p></li>
+<li><p>If the linearized system <a href="stability.html#eq:linearized-system">(4.6)</a> is marginally stable (i.e., all eigenvalues of <span class="math inline">\(A\)</span> have nonpositive real parts, and at least one eigenvalue has zero real part), then the stability of the original system <a href="stability.html#eq:autonomous-system">(4.3)</a> at <span class="math inline">\(x=0\)</span> is indeterminate.</p></li>
+</ul>
+</div>
+</div>
+<p>Theorem <a href="stability.html#thm:stabilitybylinearization">4.1</a> is actually quite useful when we want to quickly examine the local stability of a nonlinear system around a given equilibrium point, as we will show in the next example.</p>
+<div class="examplebox">
+<div class="example">
+<p><span id="exm:pendulumstabilitybylinearization" class="example"><strong>Example 4.2  (Stability of A Simple Pendulum by Linearization) </strong></span>Consider the simple pendulum dynamics <a href="stability.html#eq:pendulum-dynamics-for-equilibrium-point">(4.5)</a> in Example <a href="stability.html#exm:pendulumequilibriumpoint">4.1</a>. Without loss of generality, let <span class="math inline">\(m=1,l=1,b=0.1\)</span>. The Jacobian of the nonlinear dynamics reads
+<span class="math display">\[
+A = \frac{\partial f}{\partial x} =
+\begin{bmatrix}
+0 &amp; 1 \\
+-\frac{g}{l} \cos \theta &amp; -\frac{b}{ml^2}
+\end{bmatrix}.
+\]</span></p>
+<p>At the bottomright equilibrium point <span class="math inline">\(\theta =0, \dot{\theta} = 0\)</span>, the matrix <span class="math inline">\(A\)</span> has two eigenvalues
+<span class="math display">\[
+-0.0500 \pm 3.13i,
+\]</span>
+and hence the pendulum is asymptotically stable at the bottomright equilibrium point.</p>
+<p>At the upright equilibrium point <span class="math inline">\(\theta =\pi, \dot{\theta} = 0\)</span>, the matrix <span class="math inline">\(A\)</span> has two eigenvalues
+<span class="math display">\[
+3.08, \quad -3.18,
+\]</span>
+and hence the pendulum is unstable at the upright equilibrium point.</p>
+</div>
+</div>
+<p>The linearization method is easy to carry out. However, it tells us nothing about global stability or exponential stability. Moreover, when the linearized system is marginally stable, the stability of the orignal system is inconclusive. In the next, we will introduce a more general, and perhaps the most popular framework for analyzing the stability of nonliear systems.</p>
+</div>
+<div id="lyapunov-analysis" class="section level3 hasAnchor" number="4.1.3">
+<h3><span class="header-section-number">4.1.3</span> Lyapunov Analysis<a href="stability.html#lyapunov-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="theorembox">
+<div class="theorem">
+<p><span id="thm:lyapunovglobalstability" class="theorem"><strong>Theorem 4.2  (Lyapunov Global Stability) </strong></span>For the autonomous system <a href="stability.html#eq:autonomous-system">(4.3)</a>, suppose there exists a scalar function <span class="math inline">\(V(x)\)</span> with continuous first order derivatives such that</p>
 <ul>
 <li><p><span class="math inline">\(V(x)\)</span> is positive define;</p></li>
 <li><p><span class="math inline">\(\dot{V}(x)\)</span> is negative define;</p></li>
@@ -187,7 +383,7 @@ div.csl-indent {
 </div>
 <div class="theorembox">
 <div class="theorem">
-<p><span id="thm:BarbalatStability" class="theorem"><strong>Theorem 4.2  (Barbalat's Stability Certificate) </strong></span>If a scalar function <span class="math inline">\(V(x,t)\)</span> satisfies</p>
+<p><span id="thm:BarbalatStability" class="theorem"><strong>Theorem 4.3  (Barbalat's Stability Certificate) </strong></span>If a scalar function <span class="math inline">\(V(x,t)\)</span> satisfies</p>
 <ul>
 <li><p><span class="math inline">\(V(x,t)\)</span> is lower bounded,</p></li>
 <li><p><span class="math inline">\(\dot{V}(x,t)\)</span> is negative semidefinite</p></li>
@@ -202,6 +398,14 @@ div.csl-indent {
 </div>
 </div>
 
+</div>
+</div>
+</div>
+<h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-vinograd57-inapplicability" class="csl-entry">
+Vinograd, Robert Èlyukimovich. 1957. <span>“Inapplicability of the Method of Characteristic Exponents to the Study of Non-Linear Differential Equations.”</span> <em>Matematicheskii Sbornik</em> 83 (4): 431–38.
+</div>
 </div>
 <div class="footnotes">
 <hr />

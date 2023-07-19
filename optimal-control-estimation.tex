@@ -114,7 +114,7 @@ arc=4pt}
 
 \title{Optimal Control and Estimation}
 \author{Heng Yang}
-\date{2023-07-10}
+\date{2023-07-19}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -329,11 +329,236 @@ For general optimal control problems with continuous state space and control spa
 \hypertarget{stability}{%
 \chapter{Stability Analysis}\label{stability}}
 
+Optimal control formulates a control problem via the language of mathematical optimization. However, there are control problems, and sometimes even the very basic control problems, that cannot be easily stated in the optimal control formulation.
+
+For example, suppose our goal is to \emph{swing up a pendulum to the upright position and stabilize it there}. You may want to formalize the problem as
+\begin{equation}
+\min_{u(t) \in \mathbb{U}} \int_{0}^{\infty} \Vert x(t) - x_d \Vert^2 dt, \quad \text{subject to} \quad \dot{x} = f(x,u), x(0) = x_0,
+\label{eq:pendulum-swingup-stability-test-1}
+\end{equation}
+where \(x_d\) is the desired upright position for the pendulum. However, does the solution of problem \eqref{eq:pendulum-swingup-stability-test-1}, if exists, guarantee the stabilization of the pendulum at the upright position? The answer is unclear without a rigorous proof.
+
+However, after a slight change of perspective, the optimal control problem may be formulated to better match the goal. Suppose there exists a region, \(\Omega\), in the state space such that as long as the pendulum enters \(\Omega\), there always exists a sequence of control to bring the pendulum to the goal state \(x_d\), then we can simply formulate a different optimal control problem
+\begin{equation}
+\min_{u(t) \in \mathbb{U}} \int_{0}^{T} \Vert u(t) \Vert^2 dt, \quad \text{subject to} \quad x(0)=x_0, x(T) \in \Omega, \dot{x} = f(x,u),
+\label{eq:pendulum-swingup-stability-test}
+\end{equation}
+where now it is very clear, if a solution exists to problem \eqref{eq:pendulum-swingup-stability-test}, then we will definitely achieve our goal. This is because the constraint \(x(T) \in \Omega\) guarantees that we will be able to stabilize the pendulum, and the cost function of \eqref{eq:pendulum-swingup-stability-test} simply encourages minimum control effort along the way.
+
+This highlights that, sometimes the formulation of a problem may deserve more thoughts than the actual solution. Of course the formulation \eqref{eq:pendulum-swingup-stability-test} may be much more difficult to solve. In fact, does the set \(\Omega\) exist, and if so, how to describe it?
+
+This is the main focus of this chapter: to introduce tools that can help us analyze the \emph{stability} of uncontrolled and controlled nonlinear systems. Specifically, we will introduce the notion of \emph{stability certificates}, which are conditions that, if hold, certify the stability of the system (e.g., in the set \(\Omega\)). Interestingly, you will see that the notion of stability certificates is intuitive and easy, but what is really challenging is to \emph{find} and \emph{compute} the stability certificates. We will highlight the power and also limitation of computational tools, especially those that are based on convex optimization (see Appendix \ref{appconvex} for a review of convex optimization).
+
+\hypertarget{autonomous-systems}{%
+\section{Autonomous Systems}\label{autonomous-systems}}
+
+Let us first focus on autonomous systems, i.e., systems whose dynamics do not depent on time (and control). We introduce different concepts of stability and ways to certify them.
+
+\hypertarget{concepts-of-stability}{%
+\subsection{Concepts of Stability}\label{concepts-of-stability}}
+
 Consider the autonomous system
 \begin{equation}
 \dot{x} = f(x)
 \label{eq:autonomous-system}
 \end{equation}
+where \(x \in \mathbb{X} \subseteq \mathbb{R}^n\) is the state and \(f: \mathbb{R}^n \rightarrow \mathbb{R}^n\) is the (potentially nonlinear) dynamics.
+
+Before talking about concepts of stability, we need to define an \emph{equilibrium point}.
+
+\begin{definition}[Equilibrium Point]
+\protect\hypertarget{def:equilibriumpoint}{}\label{def:equilibriumpoint}A state \(x^\star\) is called an equilibrium point of system \eqref{eq:autonomous-system} if \(f(x^\star) = 0\), i.e., once the system reaches \(x^\star\), it stays at \(x^\star\).
+\end{definition}
+
+For example, a linear system
+\[
+\dot{x} = A x
+\]
+has a single equilibrium point \(x^\star = 0\) when \(A\) is nonsingular, and an infinite number of equilibrium points when \(A\) is singular (those equilibrium points lie in the kernel of matrix \(A\)).
+
+When analyzing the behavior of a dynamical system around the equilibrium point, it is often helpful to ``shift'' the dynamics equation so that \(0\) is the equilibrium point. For example, if we are interested in the behavior of system \eqref{eq:autonomous-system} near the equilibrium point \(x^\star\), we can create a new variable
+\[
+z = x - x^\star,
+\]
+so that
+\begin{equation}
+\dot{z} = \dot{x} = f(x) = f(z + x^\star).
+\label{eq:shifted-system-by-equilibrium}
+\end{equation}
+Clearly, \(z^\star = 0\) is an equilibrium point for the shifted system \eqref{eq:shifted-system-by-equilibrium}.
+
+Let us find the equilibrium points of a simple pendulum.
+
+\begin{example}[Equilibrium Points of A Simple Pendulum]
+\protect\hypertarget{exm:pendulumequilibriumpoint}{}\label{exm:pendulumequilibriumpoint}Consider the dynamics of an uncontrolled pendulum
+
+\begin{equation}
+\begin{cases}
+\dot{\theta} = \dot{\theta} \\
+\ddot{\theta} = - \frac{1}{ml^2} (b \dot{\theta} + mgl \sin \theta)
+\end{cases}
+\label{eq:pendulum-dynamics-for-equilibrium-point}
+\end{equation}
+where \(\theta\) is the angle between the pendulum and the vertical line, and \(x = [\theta,\dot{\theta}]^T\) is the state of the pendulum (\(m,g,l,b\) denote the mass, gravity constant, length, and damping constant, respectively).
+
+To find the equilibrium points of the pendulum, we need the right hand sides of \eqref{eq:pendulum-dynamics-for-equilibrium-point} to be equal to zero:
+\[
+\dot{\theta} = 0, \quad - \frac{1}{ml^2} (b \dot{\theta} + mgl \sin \theta) = 0.
+\]
+The solutions are easy to find
+\[
+x^\star = \begin{bmatrix} 0 \\ 0 \end{bmatrix} \quad \text{or} \quad \begin{bmatrix} \pi \\ 0 \end{bmatrix},
+\]
+corresponding to the bottomright and upright positions of the pendulum, respectively.
+\end{example}
+
+The pendulum dynamics has two equilibrium points, but our physics intuition tells us these two equilibrium points are dramatically different. Specifically, the bottomright equilibrium \(x^\star = [0,0]^T\) is such that if you perturb the pendulum around the equilibrium, the pendulum will go back to that equilibrium; the upright equilibrium \(x^\star = [\pi,0]^T\) is such that if you perturb the pendulum (even just a little bit) around the equilibrium, it will diverge from that equilibrium.
+
+This physical intuition is exactly what we want to formalize as the concepts of stability.
+
+In the following, we focus on the nonlinear autonomous system \eqref{eq:autonomous-system} with \(f(0) = 0\), i.e., \(x^\star = 0\) is an equilibrium point. We now formally define the different concepts of stability.
+
+\begin{definition}[Lyapunov Stability]
+\protect\hypertarget{def:lyapunovstability}{}\label{def:lyapunovstability}The equilibrium point \(x=0\) is said to be \emph{stable in the sense of Lyapunov} if, for any \(R > 0\), there exists \(r >0\) such that if \(\Vert x(0) \Vert < r\), then \(\Vert x(t) \Vert < R\) for all \(t \geq 0\). Otherwise, the equilibrium point is unstable.
+\end{definition}
+
+For a system that is Lyapunov stable around \(x=0\), the definition says that, if we want to constrain the trajectory of the system to be within the ball \(B_R = \{ x \mid \Vert x \Vert < R \}\), then we can always find a smaller ball \(B_r = \{ x \mid \Vert x \Vert < r \}\) such that if the system starts within \(B_r\), it will remain in the larger ball \(B_R\).
+
+On the other hand, if the system is not Lyapunov stable at \(x=0\), then there exists at least one ball \(B_R\), such that no matter how close the system's initial condition is to the origin, it will eventually exit the ball \(B_R\). The following exercise is left for you to verify the instability of the Van der Pol oscillator.
+
+\begin{exercise}[Instability of the Van der Pol oscillator]
+\protect\hypertarget{exr:instabilityvanderpol}{}\label{exr:instabilityvanderpol}Show that the Van der Pol oscillator
+\[
+\begin{cases}
+\dot{x}_1 = x_2 \\
+\dot{x}_2 = - x_1 + (1-x_1^2) x_2
+\end{cases}
+\]
+is unstable at the equilibrium point \(x = 0\).
+\end{exercise}
+
+Lyapunov stability does not guarantee the system trajectory will actually converge to \(x =0\). Instead, asymptotic stability will ask the system trajectory to converge to \(x=0\).
+
+\begin{definition}[Asymptotic Stability and Domain of Attraction]
+\protect\hypertarget{def:asymptoticstability}{}\label{def:asymptoticstability}The equilibrium point \(x = 0\) is said to be \emph{asymptotically stable} if (i) it is Lyapunov stable, and (ii) there exists some \(r > 0\) such that \(x(0) \in B_r\) implies \(x(t) \rightarrow 0\) as \(t \rightarrow 0\).
+
+\emph{The} domain of attraction (for the equilibrium \(x=0\)) is the largest set of points in the state space such that trajectories initiated at those points will converge to the equilibrium point. That is,
+\[
+\Omega(x^\star) = \{ x \in \mathbb{X} \mid x(0) = x \Longrightarrow \lim_{t \rightarrow \infty} x(t) = x^\star \}.
+\]
+The ball \(B_r\) is \emph{a} domain of attraction for the equilibrium point \(x=0\), but not necessarily the largest domain of attraction.
+\end{definition}
+
+You may immediately realize that in the definition of asymptotic stability, we require Lyapunov stability to hold first. Is this necessary? i.e., does there exist a system where trajectories eventually converge to zero, but is not stable in the sense of Lyapunov? You should work out the following exercise.
+
+\begin{exercise}[Vinograd System]
+\protect\hypertarget{exr:vinogradequation}{}\label{exr:vinogradequation}
+
+Show that for the Vinograd dynamical system \citep{vinograd57-inapplicability}
+\[
+\begin{cases}
+\dot{x} = \frac{x^2(y-x) + y^5}{(x^2+y^2)(1 + (x^2+y^2)^2)} \\
+\dot{y} = \frac{y^2 (y - 2x)}{(x^2+y^2)(1 + (x^2+y^2)^2)}
+\end{cases},
+\]
+all system trajectories converge to the equilibrium point \((x,y) = 0\), but the equilibrium point is not stable in the sense of Lyapunov.
+
+(Hint: the system trajectories will behave like the following plot.)
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.6\linewidth]{images/vinograd} 
+
+}
+
+\caption{Trajectories of the Vinograd system. Copied from the original article of Vinograd.}\label{fig:vinograd-system}
+\end{figure}
+
+\end{exercise}
+
+In many cases, we want the convergence of the system trajectory towards \(x=0\) to be fast, thus bringing in the notion of exponential stability.
+
+\begin{definition}[Exponential Stability]
+\protect\hypertarget{def:exponentialstability}{}\label{def:exponentialstability}An equilibrium point \(x=0\) is said to be exponentially stable, if there exists a ball \(B_r\) such that as long as as \(x(0) \in B_r\), then
+\[
+\Vert x(t) \Vert \leq \alpha \Vert x(0) \Vert e^{-\lambda t}, \quad \forall t,
+\]
+for some \(\alpha > 0\) and \(\lambda > 0\) (\(\lambda\) is called the rate of exponential convergence).
+\end{definition}
+
+Exponential stability implies asymptotic stability (and certainly also Lyapunov stability). What is nice about exponential stability is that we can quantify the distance of the system trajectory to the equilibrium point as a function of time (as long as we know the constants \(\alpha, \Vert x(0) \Vert, \lambda\)). In many safety-critical applications, we need such performance guarantees. For example, in Chapter \ref{state-observer}, we will see the application of exponential stability in observer-feedback control.
+
+All the concepts of stability we have mentioned so far only talk about the stability of the system \emph{locally} around the equilibrium point \(x=0\) (via arguments like \(B_r\) and \(B_R\)). It would be much nicer if we can guarantee stability of the system \emph{globally}, i.e., no matter where the system starts in the state space \(\mathbb{X}\), its trajectoy will converge to \(x=0\).
+
+\begin{definition}[Global Asymptotic and Exponential Stability]
+\protect\hypertarget{def:globalstability}{}\label{def:globalstability}The equilibrium point \(x = 0\) is said to be globally asymptotically (exponentially) stable if asymptotic (exponential) stability holds for any initial states. That is,
+\[
+\forall x \in \mathbb{X}, \quad x(0) = x \Longrightarrow \begin{cases}
+\lim_{t \rightarrow \infty} x(t) = 0  & \text{global asymptotic stability} \\
+\exists \alpha, \lambda > 0, \text{ s.t. } \Vert x(t) \Vert \leq \alpha \Vert x(0) \Vert e^{-\lambda t} & \text{global exponential stability}
+\end{cases}
+\]
+\end{definition}
+
+This concludes our definitions of stability for nonlinear systems (Definition \ref{def:lyapunovstability}-\ref{def:globalstability}). It is worth mentioning that the concepts of stability are complicated (refined) here due to our focus on nonlinear systems. For linear systems, the concepts of stability are simpler. Specifically, all local stability properties of linear systems are also global and asymptotic stability is equal to exponential stability. In fact, for a linear time-invariant system \(\dot{x} = Ax\), it is either asymptotically (exponentially) stable, or marginally stable, or unstable. Moreover, we can fully characterize the stability property by inspecting the eigenvalues of \(A\) (you can find a refreshment of this in Appendix \ref{app-lti-stability}).
+
+How do we characterize the stability property of a nonlinear system? If someone gave me a nonlinear system \eqref{eq:autonomous-system}, how can I provide a certificate to her that the system is stable or unstable (I cannot use eigenvalues anymore in this case)? Let us describe some of these certificates below.
+
+\hypertarget{stability-by-linearization}{%
+\subsection{Stability by Linearization}\label{stability-by-linearization}}
+
+A natural idea is to linearize, if possible, the nonlinear system \eqref{eq:autonomous-system} at a given equilibrium point \(x^\star\) and inspect the stability of the linearized system (for which we can compute eigenvalues). Therefore, the key question here is how does the stability and instability of the linearized system relate to the stability and instability of the original nonlinear system.
+
+\begin{theorem}[Stability by Linearization]
+\protect\hypertarget{thm:stabilitybylinearization}{}\label{thm:stabilitybylinearization}
+
+Assume \(x=0\) is an equilibrium point of system \eqref{eq:autonomous-system} and \(f\) is continuously differentiable. Let
+\begin{equation}
+\dot{x} = Ax, \quad A = \frac{\partial f}{\partial x} \Big\vert_{x=0}
+\label{eq:linearized-system}
+\end{equation}
+be the linearized system at \(x=0\). The following statements are true about the stability relationship between \eqref{eq:autonomous-system} and \eqref{eq:linearized-system}.
+
+\begin{itemize}
+\item
+  If the linearized system \eqref{eq:linearized-system} is strictly stable (i.e., all eigenvalues of \(A\) have strictly negative real parts), then the original system \eqref{eq:autonomous-system} is asymptotically stable at \(x=0\).
+\item
+  If the linearized system \eqref{eq:linearized-system} is unstable (i.e., at least one eigenvalue of \(A\) has strictly positive real part), then the original system \eqref{eq:autonomous-system} is unstable at \(x=0\).
+\item
+  If the linearized system \eqref{eq:linearized-system} is marginally stable (i.e., all eigenvalues of \(A\) have nonpositive real parts, and at least one eigenvalue has zero real part), then the stability of the original system \eqref{eq:autonomous-system} at \(x=0\) is indeterminate.
+\end{itemize}
+
+\end{theorem}
+
+Theorem \ref{thm:stabilitybylinearization} is actually quite useful when we want to quickly examine the local stability of a nonlinear system around a given equilibrium point, as we will show in the next example.
+
+\begin{example}[Stability of A Simple Pendulum by Linearization]
+\protect\hypertarget{exm:pendulumstabilitybylinearization}{}\label{exm:pendulumstabilitybylinearization}Consider the simple pendulum dynamics \eqref{eq:pendulum-dynamics-for-equilibrium-point} in Example \ref{exm:pendulumequilibriumpoint}. Without loss of generality, let \(m=1,l=1,b=0.1\). The Jacobian of the nonlinear dynamics reads
+\[
+A = \frac{\partial f}{\partial x} = 
+\begin{bmatrix}
+0 & 1 \\
+-\frac{g}{l} \cos \theta & -\frac{b}{ml^2}
+\end{bmatrix}.
+\]
+
+At the bottomright equilibrium point \(\theta =0, \dot{\theta} = 0\), the matrix \(A\) has two eigenvalues
+\[
+-0.0500 \pm 3.13i,
+\]
+and hence the pendulum is asymptotically stable at the bottomright equilibrium point.
+
+At the upright equilibrium point \(\theta =\pi, \dot{\theta} = 0\), the matrix \(A\) has two eigenvalues
+\[
+3.08, \quad -3.18,
+\]
+and hence the pendulum is unstable at the upright equilibrium point.
+\end{example}
+
+The linearization method is easy to carry out. However, it tells us nothing about global stability or exponential stability. Moreover, when the linearized system is marginally stable, the stability of the orignal system is inconclusive. In the next, we will introduce a more general, and perhaps the most popular framework for analyzing the stability of nonliear systems.
+
+\hypertarget{lyapunov-analysis}{%
+\subsection{Lyapunov Analysis}\label{lyapunov-analysis}}
 
 \begin{theorem}[Lyapunov Global Stability]
 \protect\hypertarget{thm:lyapunovglobalstability}{}\label{thm:lyapunovglobalstability}For the autonomous system \eqref{eq:autonomous-system}, suppose there exists a scalar function \(V(x)\) with continuous first order derivatives such that
@@ -1089,8 +1314,8 @@ However, the KKL template is difficult to realize in the sense that (i) what kin
 
 Recent works have leveraged deep learning to learn the coordinate transformation, for example in \citep{janny21cdc-deepkkl}, \citep{niazi23lacc-earning}, \citep{miao23ll4dc-earning}. Before hammering the problem with deep learning, let us look at the fundamentals of the KKL observer.
 
-\hypertarget{autonomous-systems}{%
-\subsubsection{Autonomous Systems}\label{autonomous-systems}}
+\hypertarget{autonomous-systems-1}{%
+\subsubsection{Autonomous Systems}\label{autonomous-systems-1}}
 
 Consider the autonomous version of system \eqref{eq:output-feedback-system} without control
 \begin{equation}
@@ -1764,6 +1989,11 @@ which implies the boundedness of \(\dot{s}\) (note that \(H\) is uniformly posit
 
 \hypertarget{linear-system-theory}{%
 \chapter{Linear System Theory}\label{linear-system-theory}}
+
+\hypertarget{app-lti-stability}{%
+\section{Stability}\label{app-lti-stability}}
+
+Check this \href{https://intra.engr.ucr.edu/~enozari/teaching/ME120_Fall20/Lecture\%203\%20-\%20Stability,\%20Controllability\%20\&\%20Observability.pdf}{note}.
 
 \begin{theorem}[Lyapunov Equation]
 \protect\hypertarget{thm:lyapunovequation}{}\label{thm:lyapunovequation}
