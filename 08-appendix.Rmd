@@ -2,6 +2,10 @@
 
 # Linear System Theory
 
+## Stability {#app-lti-stability}
+
+Check this [note](https://intra.engr.ucr.edu/~enozari/teaching/ME120_Fall20/Lecture%203%20-%20Stability,%20Controllability%20&%20Observability.pdf). 
+
 ::: {.theorembox}
 ::: {.theorem #lyapunovequation name="Lyapunov Equation"}
 The following is equivalent for a linear time-invariant system $\dot{x} = A x$
