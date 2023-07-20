@@ -76,7 +76,7 @@ The notion of feature is commonly used in the theory of computer vision, where $
 By using this architecture, the fitted value iteration \@ref(eq:apprinv-fvi-1), \@ref(eq:apprinv-fvi-2) greatly simplifies and admits a closed-form solution. 
 
 ::: {.examplebox}
-::: {.example #feature-based swinging up a pendulum name="Swinging up a pendulum using feature-based method}
+::: {.example #featurebasedswingingupapendulum name="Swinging up a pendulum using feature-based method"}
 <span style="color:red">EXPERIMENT HERE</span>
 
 ```{r pendulum-feature-example, out.width='60%', fig.show='hold', fig.cap='example of swinging up a pendulum using feature-based value function approximation', fig.align='center', echo=FALSE}
@@ -100,7 +100,7 @@ The selection of features is frequently manually crafted, relying on human intel
 However, the optimization process of the weights is more difficult due to the non-convexity. According to the equation \@ref(eq:apprinv-dp), the $J_{k+1}$ is non-convex which makes the entire equation hard to optimize. 
 
 ::: {.examplebox}
-::: {.example #NN-based swinging up a pendulum name="Swinging up a pendulum using NN-based method"}
+::: {.example #NNbasedswingingupapendulum name="Swinging up a pendulum using NN-based method"}
 <span style="color:red">EXPERIMENT HERE</span>
 
 ```{r pendulum-NN-example, out.width='60%', fig.show='hold', fig.cap='example of swinging up a pendulum using NN-based value function approximation', fig.align='center', echo=FALSE}
