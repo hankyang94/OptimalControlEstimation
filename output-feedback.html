@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-07-19" />
+<meta name="date" content="2023-07-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -104,7 +104,22 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="2.1" data-path="exactdp.html"><a href="exactdp.html#lqr"><i class="fa fa-check"></i><b>2.1</b> Linear Quadratic Regulator</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="approximatedp.html"><a href="approximatedp.html"><i class="fa fa-check"></i><b>3</b> Approximate Dynamic Programming</a></li>
+<li class="chapter" data-level="3" data-path="approximatedp.html"><a href="approximatedp.html"><i class="fa fa-check"></i><b>3</b> Approximate Dynamic Programming</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="approximatedp.html"><a href="approximatedp.html#introduction"><i class="fa fa-check"></i><b>3.1</b> Introduction</a></li>
+<li class="chapter" data-level="3.2" data-path="approximatedp.html"><a href="approximatedp.html#approximation-in-value-space"><i class="fa fa-check"></i><b>3.2</b> Approximation in value space</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="approximatedp.html"><a href="approximatedp.html#problem-approximation"><i class="fa fa-check"></i><b>3.2.1</b> Problem Approximation</a></li>
+<li class="chapter" data-level="3.2.2" data-path="approximatedp.html"><a href="approximatedp.html#parametric-cost-approximation"><i class="fa fa-check"></i><b>3.2.2</b> Parametric cost approximation</a></li>
+<li class="chapter" data-level="3.2.3" data-path="approximatedp.html"><a href="approximatedp.html#online-approximate-optimization"><i class="fa fa-check"></i><b>3.2.3</b> Online approximate optimization</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="approximatedp.html"><a href="approximatedp.html#approximation-in-policy-space"><i class="fa fa-check"></i><b>3.3</b> Approximation in policy space</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="approximatedp.html"><a href="approximatedp.html#training-by-using-an-expert"><i class="fa fa-check"></i><b>3.3.1</b> Training by using an expert</a></li>
+<li class="chapter" data-level="3.3.2" data-path="approximatedp.html"><a href="approximatedp.html#training-by-cost-optimization"><i class="fa fa-check"></i><b>3.3.2</b> Training by cost optimization</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="approximatedp.html"><a href="approximatedp.html#extension"><i class="fa fa-check"></i><b>3.4</b> Extension</a></li>
+</ul></li>
 <li class="chapter" data-level="4" data-path="stability.html"><a href="stability.html"><i class="fa fa-check"></i><b>4</b> Stability Analysis</a>
 <ul>
 <li class="chapter" data-level="4.1" data-path="stability.html"><a href="stability.html#autonomous-systems"><i class="fa fa-check"></i><b>4.1</b> Autonomous Systems</a>
@@ -112,6 +127,7 @@ div.csl-indent {
 <li class="chapter" data-level="4.1.1" data-path="stability.html"><a href="stability.html#concepts-of-stability"><i class="fa fa-check"></i><b>4.1.1</b> Concepts of Stability</a></li>
 <li class="chapter" data-level="4.1.2" data-path="stability.html"><a href="stability.html#stability-by-linearization"><i class="fa fa-check"></i><b>4.1.2</b> Stability by Linearization</a></li>
 <li class="chapter" data-level="4.1.3" data-path="stability.html"><a href="stability.html#lyapunov-analysis"><i class="fa fa-check"></i><b>4.1.3</b> Lyapunov Analysis</a></li>
+<li class="chapter" data-level="4.1.4" data-path="stability.html"><a href="stability.html#invariant-set-theorem"><i class="fa fa-check"></i><b>4.1.4</b> Invariant Set Theorem</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="output-feedback.html"><a href="output-feedback.html"><i class="fa fa-check"></i><b>5</b> Output Feedback</a>
@@ -277,7 +293,7 @@ Moreover, denoting <span class="math inline">\(\mathcal{T}\)</span> the family o
 </div>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-5" class="proof"><em>Proof</em>. </span>See Theorem 1.1 in <span class="citation">(<a href="#ref-bernard19book-observer">Bernard 2019</a>)</span>.</p>
+<p><span id="unlabeled-div-6" class="proof"><em>Proof</em>. </span>See Theorem 1.1 in <span class="citation">(<a href="#ref-bernard19book-observer">Bernard 2019</a>)</span>.</p>
 </div>
 <p>A simpler version of Theorem <a href="output-feedback.html#thm:observerdesignmeta">5.1</a> where the coordinate transformation <span class="math inline">\(T_u\)</span> is stationary and fixed for all <span class="math inline">\(u\)</span> is stated below as a corollary.</p>
 <div class="theorembox">
@@ -363,7 +379,7 @@ is an observer for <a href="output-feedback.html#eq:Luenberger-linear-template">
 </div>
 <div class="proofbox">
 <div class="proof">
-<p><span id="unlabeled-div-6" class="proof"><em>Proof</em>. </span>Define <span class="math inline">\(e(t) = \xi(t) - \hat{\xi}(t)\)</span>. In that case,
+<p><span id="unlabeled-div-7" class="proof"><em>Proof</em>. </span>Define <span class="math inline">\(e(t) = \xi(t) - \hat{\xi}(t)\)</span>. In that case,
 <span class="math display" id="eq:Luenberger-error">\[\begin{equation}
     \dot{e}(t) = [A - KC] e(t)
     \tag{5.12}
@@ -793,7 +809,7 @@ T(x) = \int_{-\infty}^0 e^{-A\tau} B(h(X(x,\tau))) d\tau.
 </div>
 </div>
 <div class="remark">
-<p><span id="unlabeled-div-7" class="remark"><em>Remark</em>. </span>The function <span class="math inline">\(T\)</span> in Theorem <a href="output-feedback.html#thm:kklautonomous">5.4</a> takes complex numbers. To simulate the observer
+<p><span id="unlabeled-div-8" class="remark"><em>Remark</em>. </span>The function <span class="math inline">\(T\)</span> in Theorem <a href="output-feedback.html#thm:kklautonomous">5.4</a> takes complex numbers. To simulate the observer
 <span class="math display">\[
 \dot{\hat{\xi}} = A \hat{\xi} + B(y),
 \]</span>
@@ -889,7 +905,7 @@ where, compared to the Luenberger observer <a href="output-feedback.html#eq:Luen
 <span class="math display">\[
 \dot{e} = f(x + e) - f(x) + K(Ce,Cx)C e.
 \]</span></p>
-<p>If we can find a Lyapunov-like function <span class="math inline">\(V(e)\)</span> so that <span class="math inline">\(V(e)\)</span> is positive definite and <span class="math inline">\(\dot{V}(e)\)</span> is negative definite, then Lyapunov stability theorem <a href="stability.html#thm:lyapunovglobalstability">4.2</a> tells us that <span class="math inline">\(e=0\)</span> is asymptotically stable. Because we do not know the gain matrix <span class="math inline">\(K\)</span> either, we need to jointly search for <span class="math inline">\(V\)</span> and <span class="math inline">\(K\)</span> (that are polynomials). Mathematically, this is
+<p>If we can find a Lyapunov-like function <span class="math inline">\(V(e)\)</span> so that <span class="math inline">\(V(e)\)</span> is positive definite and <span class="math inline">\(\dot{V}(e)\)</span> is negative definite, then Lyapunov stability theorem <a href="stability.html#thm:lyapunovglobalstability">4.3</a> tells us that <span class="math inline">\(e=0\)</span> is asymptotically stable. Because we do not know the gain matrix <span class="math inline">\(K\)</span> either, we need to jointly search for <span class="math inline">\(V\)</span> and <span class="math inline">\(K\)</span> (that are polynomials). Mathematically, this is
 <span class="math display" id="eq:sos-observer-nonconvex">\[\begin{equation}
 \begin{split}
 \text{find} &amp; \quad V, K \\

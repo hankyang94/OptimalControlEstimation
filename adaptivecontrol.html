@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-07-19" />
+<meta name="date" content="2023-07-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -104,7 +104,22 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="2.1" data-path="exactdp.html"><a href="exactdp.html#lqr"><i class="fa fa-check"></i><b>2.1</b> Linear Quadratic Regulator</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="approximatedp.html"><a href="approximatedp.html"><i class="fa fa-check"></i><b>3</b> Approximate Dynamic Programming</a></li>
+<li class="chapter" data-level="3" data-path="approximatedp.html"><a href="approximatedp.html"><i class="fa fa-check"></i><b>3</b> Approximate Dynamic Programming</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="approximatedp.html"><a href="approximatedp.html#introduction"><i class="fa fa-check"></i><b>3.1</b> Introduction</a></li>
+<li class="chapter" data-level="3.2" data-path="approximatedp.html"><a href="approximatedp.html#approximation-in-value-space"><i class="fa fa-check"></i><b>3.2</b> Approximation in value space</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="approximatedp.html"><a href="approximatedp.html#problem-approximation"><i class="fa fa-check"></i><b>3.2.1</b> Problem Approximation</a></li>
+<li class="chapter" data-level="3.2.2" data-path="approximatedp.html"><a href="approximatedp.html#parametric-cost-approximation"><i class="fa fa-check"></i><b>3.2.2</b> Parametric cost approximation</a></li>
+<li class="chapter" data-level="3.2.3" data-path="approximatedp.html"><a href="approximatedp.html#online-approximate-optimization"><i class="fa fa-check"></i><b>3.2.3</b> Online approximate optimization</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="approximatedp.html"><a href="approximatedp.html#approximation-in-policy-space"><i class="fa fa-check"></i><b>3.3</b> Approximation in policy space</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="approximatedp.html"><a href="approximatedp.html#training-by-using-an-expert"><i class="fa fa-check"></i><b>3.3.1</b> Training by using an expert</a></li>
+<li class="chapter" data-level="3.3.2" data-path="approximatedp.html"><a href="approximatedp.html#training-by-cost-optimization"><i class="fa fa-check"></i><b>3.3.2</b> Training by cost optimization</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="approximatedp.html"><a href="approximatedp.html#extension"><i class="fa fa-check"></i><b>3.4</b> Extension</a></li>
+</ul></li>
 <li class="chapter" data-level="4" data-path="stability.html"><a href="stability.html"><i class="fa fa-check"></i><b>4</b> Stability Analysis</a>
 <ul>
 <li class="chapter" data-level="4.1" data-path="stability.html"><a href="stability.html#autonomous-systems"><i class="fa fa-check"></i><b>4.1</b> Autonomous Systems</a>
@@ -112,6 +127,7 @@ div.csl-indent {
 <li class="chapter" data-level="4.1.1" data-path="stability.html"><a href="stability.html#concepts-of-stability"><i class="fa fa-check"></i><b>4.1.1</b> Concepts of Stability</a></li>
 <li class="chapter" data-level="4.1.2" data-path="stability.html"><a href="stability.html#stability-by-linearization"><i class="fa fa-check"></i><b>4.1.2</b> Stability by Linearization</a></li>
 <li class="chapter" data-level="4.1.3" data-path="stability.html"><a href="stability.html#lyapunov-analysis"><i class="fa fa-check"></i><b>4.1.3</b> Lyapunov Analysis</a></li>
+<li class="chapter" data-level="4.1.4" data-path="stability.html"><a href="stability.html#invariant-set-theorem"><i class="fa fa-check"></i><b>4.1.4</b> Invariant Set Theorem</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="output-feedback.html"><a href="output-feedback.html"><i class="fa fa-check"></i><b>5</b> Output Feedback</a>
@@ -198,7 +214,7 @@ with <span class="math inline">\(\gamma &gt; 0\)</span> a positive constant, the
 \]</span></p>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-8" class="proof"><em>Proof</em>. </span>Let the state-space representation of <a href="adaptivecontrol.html#eq:acbasiclemmaephi">(6.1)</a> be
+<p><span id="unlabeled-div-9" class="proof"><em>Proof</em>. </span>Let the state-space representation of <a href="adaptivecontrol.html#eq:acbasiclemmaephi">(6.1)</a> be
 <span class="math display" id="eq:acbasiclemmastatespace">\[\begin{equation}
 \dot{x} = A x + b [k \phi^T v], \quad e = c^T x.
 \tag{6.3}
@@ -219,7 +235,7 @@ clearly <span class="math inline">\(V\)</span> is positive definite (i.e., <span
 &amp; = - x^T Q x \leq 0.
 \end{align}\]</span>
 As a result, we know <span class="math inline">\(x\)</span> and <span class="math inline">\(\phi\)</span> must be bounded (<span class="math inline">\(V(x(t),\phi(t)) \leq V(x(0),\phi(0))\)</span> is bounded). Since <span class="math inline">\(e = c^T x\)</span>, we know <span class="math inline">\(e\)</span> must be bounded as well.</p>
-<p>If the input signal <span class="math inline">\(v\)</span> is also bounded, then <span class="math inline">\(\dot{x}\)</span> is bounded as seen from <a href="adaptivecontrol.html#eq:acbasiclemmastatespace">(6.3)</a>. Because <span class="math inline">\(\ddot{V} = -2x^T Q \dot{x}\)</span> is now bounded, we know <span class="math inline">\(\dot{V}\)</span> is uniformly continuous. Therefore, by Barbalat’s stability certificate (Theorem <a href="stability.html#thm:BarbalatStability">4.3</a>), we know <span class="math inline">\(\dot{V}\)</span> tends to zero as <span class="math inline">\(t\)</span> tends to infinity, which implies <span class="math inline">\(\lim_{t \rightarrow \infty} x(t) = 0\)</span> and hence <span class="math inline">\(\lim_{t \rightarrow \infty} e(t) = 0\)</span>.</p>
+<p>If the input signal <span class="math inline">\(v\)</span> is also bounded, then <span class="math inline">\(\dot{x}\)</span> is bounded as seen from <a href="adaptivecontrol.html#eq:acbasiclemmastatespace">(6.3)</a>. Because <span class="math inline">\(\ddot{V} = -2x^T Q \dot{x}\)</span> is now bounded, we know <span class="math inline">\(\dot{V}\)</span> is uniformly continuous. Therefore, by Barbalat’s stability certificate (Theorem <a href="stability.html#thm:BarbalatStability">4.4</a>), we know <span class="math inline">\(\dot{V}\)</span> tends to zero as <span class="math inline">\(t\)</span> tends to infinity, which implies <span class="math inline">\(\lim_{t \rightarrow \infty} x(t) = 0\)</span> and hence <span class="math inline">\(\lim_{t \rightarrow \infty} e(t) = 0\)</span>.</p>
 </div>
 <div id="first-order-systems" class="section level3 hasAnchor" number="6.1.1">
 <h3><span class="header-section-number">6.1.1</span> First-Order Systems<a href="adaptivecontrol.html#first-order-systems" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -287,7 +303,7 @@ be a positive definite Lyapunov function candidate with time derivative
 <span class="math display">\[
 \dot{V} = - 2a_d e^2 \leq 0.
 \]</span>
-Clearly, <span class="math inline">\(e\)</span> and <span class="math inline">\(\tilde{a}\)</span> are both bounded. Assuming the reference trajectory <span class="math inline">\(r\)</span> is bounded, we know <span class="math inline">\(x_d\)</span> is bounded (due to <a href="adaptivecontrol.html#eq:ac-first-linear-desired">(6.5)</a>) and hence <span class="math inline">\(x\)</span> is bounded (due to <span class="math inline">\(e = x - x_d\)</span> being bounded). Consequently, from the error dynamics <a href="adaptivecontrol.html#eq:ac-first-linear-error-dynamics">(6.8)</a> we know <span class="math inline">\(\dot{e}\)</span> is bounded, which implies <span class="math inline">\(\ddot{V} = -4a_d e \dot{e}\)</span> is bounded and <span class="math inline">\(\dot{V}\)</span> is uniformly continuous. By Barbalat’s stability certificate <a href="stability.html#thm:BarbalatStability">4.3</a>, we conlude <span class="math inline">\(e(t) \rightarrow 0\)</span> as <span class="math inline">\(t \rightarrow \infty\)</span>.</p>
+Clearly, <span class="math inline">\(e\)</span> and <span class="math inline">\(\tilde{a}\)</span> are both bounded. Assuming the reference trajectory <span class="math inline">\(r\)</span> is bounded, we know <span class="math inline">\(x_d\)</span> is bounded (due to <a href="adaptivecontrol.html#eq:ac-first-linear-desired">(6.5)</a>) and hence <span class="math inline">\(x\)</span> is bounded (due to <span class="math inline">\(e = x - x_d\)</span> being bounded). Consequently, from the error dynamics <a href="adaptivecontrol.html#eq:ac-first-linear-error-dynamics">(6.8)</a> we know <span class="math inline">\(\dot{e}\)</span> is bounded, which implies <span class="math inline">\(\ddot{V} = -4a_d e \dot{e}\)</span> is bounded and <span class="math inline">\(\dot{V}\)</span> is uniformly continuous. By Barbalat’s stability certificate <a href="stability.html#thm:BarbalatStability">4.4</a>, we conlude <span class="math inline">\(e(t) \rightarrow 0\)</span> as <span class="math inline">\(t \rightarrow \infty\)</span>.</p>
 <p>It is always better to combine mathematical analysis with intuitive understanding. Can you explain intuitively why the adaptation law <a href="adaptivecontrol.html#eq:ac-first-linear-adaptation-law">(6.10)</a> makes sense? (Hint: think about how the control should react to a negative/positive tracking error.)</p>
 <p><strong>Parameter convergence</strong>. We have shown the control law <a href="adaptivecontrol.html#eq:ac-first-linear-control">(6.6)</a> and the adaptation law <a href="adaptivecontrol.html#eq:ac-first-linear-adaptation-law">(6.10)</a> guarantee to track the reference trajectory. However, is it guaranteed that the gains of the controller <a href="adaptivecontrol.html#eq:ac-first-linear-control">(6.6)</a> also converge to the optimal gains in <a href="adaptivecontrol.html#eq:ac-first-linear-optimal-gain">(6.7)</a>?</p>
 <p>We will now show that the answer is indefinite and it depends on the reference trajectory <span class="math inline">\(r(t)\)</span>. Because the tracking error <span class="math inline">\(e\)</span> converges to zero, and <span class="math inline">\(e\)</span> is the output of a stable filter <a href="adaptivecontrol.html#eq:ac-first-linear-error-dynamics-transfer">(6.9)</a>, we know the input <span class="math inline">\(b(\tilde{a}_x x + \tilde{a}_r r)\)</span> must also converge to zero. On the other hand, the adaptation law <a href="adaptivecontrol.html#eq:ac-first-linear-adaptation-law">(6.10)</a> shows that both <span class="math inline">\(\dot{\tilde{a}}_x\)</span> and <span class="math inline">\(\dot{\tilde{a}}_r\)</span> converge to zero (due to <span class="math inline">\(e\)</span> converging to zero and <span class="math inline">\(x\)</span>, <span class="math inline">\(r\)</span> being bounded). As a result, we know <span class="math inline">\(\tilde{a} = [\tilde{a}_x,\tilde{a}_r]^T\)</span> converges to a constant that satisfies
@@ -478,7 +494,7 @@ where <span class="math inline">\(\Gamma \in \mathbb{S}^m_{++}\)</span> is a con
 <p><span id="lem:skewsymmetricmanipulator" class="lemma"><strong>Lemma 6.2  </strong></span>For the manipulator dynamics <a href="adaptivecontrol.html#eq:ac-mrac-manipulator-dynamics">(6.21)</a>, there exists a way to define <span class="math inline">\(C\)</span> such that <span class="math inline">\(\dot{H} - 2C\)</span> is skew-symmetric.</p>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-9" class="proof"><em>Proof</em>. </span>See Section 9.1, page 399-402 in <span class="citation">(<a href="#ref-slotine91book-applied">Slotine, Li, et al. 1991</a>)</span>. You should also check if this is true for the planar two-link manipulator dynamics in Example <a href="adaptivecontrol.html#exm:planartwolinkmanipulator">6.1</a>.</p>
+<p><span id="unlabeled-div-10" class="proof"><em>Proof</em>. </span>See Section 9.1, page 399-402 in <span class="citation">(<a href="#ref-slotine91book-applied">Slotine, Li, et al. 1991</a>)</span>. You should also check if this is true for the planar two-link manipulator dynamics in Example <a href="adaptivecontrol.html#exm:planartwolinkmanipulator">6.1</a>.</p>
 </div>
 <p>With Lemma <a href="adaptivecontrol.html#lem:skewsymmetricmanipulator">6.2</a>, the time derivative of <span class="math inline">\(V\)</span> in <a href="adaptivecontrol.html#eq:ac-mrac-manipulator-controller-unknownparam-lyapunov">(6.25)</a> reads
 <span class="math display" id="eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative" id="eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative-3" id="eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative-2" id="eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative-1">\[\begin{align}
@@ -502,7 +518,7 @@ to make <span class="math inline">\(s^T Y \tilde{a} + \tilde{a}^T \Gamma^{-1} \d
 <span class="math display">\[
 \dot{V} = - s^T K_D s \leq 0.
 \]</span></p>
-<p>We are not done yet. To show <span class="math inline">\(s\)</span> converges to zero (which is implied by <span class="math inline">\(\dot{V}\)</span> converges to zero), by Barbalat’s stability certificate <a href="stability.html#thm:BarbalatStability">4.3</a>, it suffices to show
+<p>We are not done yet. To show <span class="math inline">\(s\)</span> converges to zero (which is implied by <span class="math inline">\(\dot{V}\)</span> converges to zero), by Barbalat’s stability certificate <a href="stability.html#thm:BarbalatStability">4.4</a>, it suffices to show
 <span class="math display">\[
 \ddot{V} = -2 s^T K_D \dot{s}
 \]</span>

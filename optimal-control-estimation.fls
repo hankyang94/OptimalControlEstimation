@@ -1030,8 +1030,18 @@ INPUT /usr/local/texlive/2022/texmf-dist/fonts/tfm/public/lm/ec-lmri10.tfm
 INPUT /usr/local/texlive/2022/texmf-dist/fonts/tfm/public/lm/ec-lmr7.tfm
 INPUT /usr/local/texlive/2022/texmf-dist/fonts/tfm/public/lm/ec-lmr8.tfm
 INPUT /usr/local/texlive/2022/texmf-dist/fonts/tfm/public/lm/ec-lmr6.tfm
-INPUT /usr/local/texlive/2022/texmf-dist/fonts/tfm/public/lm/ec-lmr5.tfm
 INPUT /usr/local/texlive/2022/texmf-dist/fonts/tfm/public/lm/ec-lmbx12.tfm
+INPUT ./images/drawme.png
+INPUT images/drawme.png
+INPUT ./images/drawme.png
+INPUT ./images/drawme.png
+INPUT ./images/drawme.png
+INPUT images/drawme.png
+INPUT ./images/drawme.png
+INPUT ./images/drawme.png
+INPUT images/drawme.png
+INPUT ./images/drawme.png
+INPUT /usr/local/texlive/2022/texmf-dist/fonts/tfm/public/lm/ec-lmr5.tfm
 INPUT ./images/vinograd.png
 INPUT images/vinograd.png
 INPUT ./images/vinograd.png
@@ -1054,7 +1064,6 @@ INPUT ./images/pendulum-simulation-sos-observer.png
 INPUT ./images/pendulum-simulation-sos-observer.png
 INPUT ./images/drawme.png
 INPUT images/drawme.png
-INPUT ./images/drawme.png
 INPUT ./images/drawme.png
 INPUT /usr/local/texlive/2022/texmf-dist/fonts/tfm/public/amsfonts/euler/eufm10.tfm
 INPUT /usr/local/texlive/2022/texmf-dist/fonts/tfm/public/amsfonts/euler/eufm7.tfm
