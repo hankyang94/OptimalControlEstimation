@@ -232,15 +232,107 @@ The linearization method is easy to carry out. However, it tells us nothing abou
 
 ### Lyapunov Analysis
 
+The basic idea of Lyapunov analysis is quite intuitive: if can find an "energy-like" scalar functin for a system such that the scalar function is zero at an equilibrium point and positive everywhere else, and the time-derivative of the scalar function is zero at the equilibrium point but negative otherwise, then we know that the energy of the system will eventually converge to zero, and hence the state trajectory will converge to the equilibrium point. Lyapunov analysis was originally inspired by the energy function of a mechanical system: the total energy of a mechanical system (potental energy plus kinetic energy) will settle down to its minimum value if it is constantly dissipated (e.g., due to damping). However, the concept of a Lyapunov function is much broader than the energy function, i.e., it can be an arbitrary abstract function without any physical meaning. 
 
+Let us now introduce the concept of a Lyapunov function.
 
+::: {.definitionbox}
+::: {.definition #positivedefinitefunction name="Positive Definite Function"}
+A scalar function $V(x)$ is said to be locally positive definite in a ball $B_R$ if
+$$
+V(0) = 0 \quad \text{and} \quad V(x) > 0, \forall x \in B_R \backslash \{0\},
+$$
+and globally positive definite if 
+$$
+V(0) = 0 \quad \text{and} \quad V(x) > 0, \forall x \in \mathbb{X} \backslash \{0\},
+$$
+where $\mathbb{X}$ is the entire state space.
 
+A function $V(x)$ is said to be negative definite if $-V(x)$ is positive definite.
 
+A function $V(x)$ is said to be positive semidefinite if the "$>$" sign is replaced by the "$\geq$" sign in the above equations.
 
+A function $V(x)$ is said to be negative semidefinite if $-V(x)$ is positive semidefinite.
+:::
+:::
+
+For example, when $\mathbb{X} = \mathbb{R}^2$, the function $V(x) = x_1^2 + x_2^2$ is positive definite, but the function $V(x) = x_1^2$ is only positive semidefinite.
+
+::: {.definitionbox}
+::: {.definition #lyapunovfunction name="Lyapunov Function"}
+In the ball $B_R$, if a function $V(x)$ is positive definite, and its time derivative along any system trajectory
+$$
+\dot{V}(x) = \frac{\partial V}{\partial x} f(x)
+$$
+is negative semidefinite (we assume the partial derivative $\frac{\partial f}{\partial x}$ exists and is continuous), then $V(x)$ is said to be a Lyapunov function for system \@ref(eq:autonomous-system). Note that $\dot{V}(x^\star) = 0$ at any equilibrium point $x^\star$ by definition.
+:::
+:::
+
+With the introduction of positive definite and Lyapunov functions, we are now ready to use them to certify different concepts of stability.
+
+::: {.theorembox}
+::: {.theorem #lyapunovlocalstability name="Lyapunov Local Stability"}
+Consider the nonlinear system \@ref(eq:autonomous-system) in a ball $B_R$ with equilibrium point $x=0$, if there exists a scalar function $V(x)$ (with continuous partial derivatives) such that 
+
+- $V(x)$ is positive definite (in $B_R$)
+
+- $\dot{V}(x)$ is negative semidefinite (in $B_R$)
+
+then the equilibrium point $x=0$ is stable in the sense of Lyapunov (cf. Definition \@ref(def:lyapunovstability)). 
+
+If $\dot{V}(x)$ is negative definite in $B_R$, then the equilibrium point is asymptotically stable (cf. Definition \@ref(def:asymptoticstability)).
+:::
+:::
+
+Let us apply Theorem \@ref(thm:lyapunovlocalstability) to the simple pendulum.
+
+::: {.examplebox}
+::: {.example #lyapunovlocalstabilitypendulum name="Lyapunov Local Stability for A Simple Pendulum"}
+Consider the pendulum dynamics \@ref(eq:pendulum-dynamics-for-equilibrium-point). The total energy of a pendulum is
+\begin{equation}
+V(x) = \frac{1}{2} ml^2 \dot{\theta}^2 + mgl (1 - \cos \theta).
+(\#eq:pendulum-lyapunov-1)
+\end{equation}
+Clearly, $V(x)$ is positive definite on the entire state space, and the only point where $V(x) = 0$ is the equilibrium point $\theta = 0, \dot{\theta} = 0$.
+
+Let us compute the time derivative of $V(x)$:
+$$
+\dot{V}(x) = ml^2 \dot{\theta} \ddot{\theta} + mgl \sin \theta \dot{\theta} = ml^2 \dot{\theta} \left( -\frac{1}{ml^2}(b \dot{\theta} + mgl \sin\theta)  \right) + mgl \sin \theta \dot{\theta} = -b \dot{\theta}^2 ,
+$$
+which is clearly negative semidefinite. In fact, $\dot{V}(x)$ is precisely the energy dissipation rate due to damping. By Theorem \@ref(thm:lyapunovlocalstability) we conclude that the equilibrium point is stable in the sense of Lyapunov.
+
+Note that with this choice of $V(x)$ as in \@ref(eq:pendulum-lyapunov-1), we actually cannot certify asymptotic local stability of the bottomright equilibrium point. So a natural question is, can we find a better Lyapunov function that indeed certifies asymptotic stability?
+
+The answer is yes. Consider a different Lyapunov function
+\begin{equation}
+\tilde{V}(x) = \frac{1}{2} ml^2 \dot{\theta}^2 + \frac{1}{2} ml^2 \left( \frac{b}{ml^2}\theta + \dot{\theta} \right)^2 + 2mgl (1 - \cos \theta),
+(\#eq:pendulum-lyapunov-2)
+\end{equation}
+which is positive definite and admits a single zero-value point $\theta = 0, \dot{\theta} = 0$ that is also the bottomright equilibrium point. Simplifying $\tilde{V}(x)$ we can get 
+\begin{align}
+\tilde{V}(x) &= ml^2 \dot{\theta}^2 + 2mgl(1-\cos \theta) + \frac{1}{2} ml^2 \left( \frac{b^2}{m^2 l^4} \theta^2 + \frac{2b}{ml^2} \theta \dot{\theta} \right) \\
+&= 2V(x) + \frac{1}{2} ml^2 \left( \frac{b^2}{m^2 l^4} \theta^2 + \frac{2b}{ml^2} \theta \dot{\theta} \right).
+\end{align}
+
+The time derivative of the new function $\tilde{V}(x)$ is
+\begin{align}
+\dot{\tilde{V}}(x) &= 2 \dot{V}(x) + \frac{ml^2}{2} \left( \frac{2b^2}{m^2 l^4} \theta \dot{\theta} + \frac{2b}{ml^2} (\dot{\theta}^2 + \theta \ddot{\theta})  \right) \\
+& = 2\dot{V}(x) + b\dot{\theta}^2 + \left( \frac{b^2}{ml^2} \theta\dot{\theta} + b \theta \left( -\frac{1}{ml^2} (b\dot{\theta} + mgl \sin \theta) \right) \right) \\
+& = -b \left( \dot{\theta}^2 + \frac{g}{l} \theta \sin \theta \right).
+\end{align}
+$\dot{\tilde{V}}(x)$ is negative definite locally around the equilibrium point (locally $\sin\theta \approx \theta$). Therefore, with the new Lyapunov function $\tilde{V}(x)$ we can certify asymptotic stability.
+
+Interestingly, $V(x)$ is intuitive (the total energy of the pendulum system), but it fails to certify asymptotic local stability (as least by just using Theorem \@ref(thm:lyapunovlocalstability)). $\tilde{V}(x)$ does not have any physical intuition, but it successfully certifies local asymptotic stability.
+
+In Section \@ref(invariant-set-theorem), we will see that when using $V(x)$ with the invariant set theorem, we can actually still certify the asymptotic stability of the pendulum around the bottomright equilibrium.
+:::
+:::
+
+In many applications, we desire to certify the global stability of an equilibrium point. The following theorem states that if in addition the scalar function $V(x)$ is _radially unbounded_, then global stability can be certified. 
 
 ::: {.theorembox}
 ::: {.theorem #lyapunovglobalstability name="Lyapunov Global Stability"}
-For the autonomous system \@ref(eq:autonomous-system), suppose there exists a scalar function $V(x)$ with continuous first order derivatives such that 
+For the autonomous system \@ref(eq:autonomous-system), suppose there exists a scalar function $V(x)$ with (continuous partial derivatives) such that 
 
 - $V(x)$ is positive define;
 
@@ -248,10 +340,16 @@ For the autonomous system \@ref(eq:autonomous-system), suppose there exists a sc
 
 - $V(x) \rightarrow \infty$ as $\Vert x \Vert \rightarrow \infty$,
 
-then the equilibrium point $x = 0$ is globally asymptotically stable.
+then the equilibrium point $x = 0$ is globally asymptotically stable (cf. Definition \@ref(def:globalstability)).
 :::
 :::
 
+
+### Invariant Set Theorem {#invariant-set-theorem}
+
+Through Theorem \@ref(thm:lyapunovlocalstability), Theorem \@ref(thm:lyapunovglobalstability), and Example \@ref(exm:lyapunovlocalstabilitypendulum), we see that in order to certify asymptotic stability, the time derivative $\dot{V}(x)$ is required to be positive definite. However, in many cases, with Example \@ref(exm:lyapunovlocalstabilitypendulum) being a typical one, $\dot{V}(x)$ is only negative semidefinite, which makes it difficult to certify asymptotic stability. 
+
+In this section, we will introduce the invariant set theorem that can help us reason about asymptotic stability even when $\dot{V}(x)$ is only negative semidefinite.
 
 ::: {.lemma #Barbalat name="Barbalat's Lemma"}
 Let $f(t)$ be differentiable, if 
