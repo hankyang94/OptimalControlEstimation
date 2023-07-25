@@ -280,7 +280,11 @@ Consider the nonlinear system \@ref(eq:autonomous-system) in a ball $B_R$ with e
 
 then the equilibrium point $x=0$ is stable in the sense of Lyapunov (cf. Definition \@ref(def:lyapunovstability)). 
 
-If $\dot{V}(x)$ is negative definite in $B_R$, then the equilibrium point is asymptotically stable (cf. Definition \@ref(def:asymptoticstability)).
+Moreover, 
+
+- if $\dot{V}(x)$ is negative definite in $B_R$, then the equilibrium point is asymptotically stable (cf. Definition \@ref(def:asymptoticstability)).
+
+- if $\dot{V}(x) \leq - \alpha V(x)$ for any $x \in B_R$, then the equilibrium point is exponentially stable (cf. Definition \@ref(def:exponentialstability)). 
 :::
 :::
 
@@ -341,6 +345,10 @@ For the autonomous system \@ref(eq:autonomous-system), suppose there exists a sc
 - $V(x) \rightarrow \infty$ as $\Vert x \Vert \rightarrow \infty$,
 
 then the equilibrium point $x = 0$ is globally asymptotically stable (cf. Definition \@ref(def:globalstability)).
+
+Moreover, if in addition to the three conditions above
+
+- $\dot{V}(x) \leq - \alpha V(x)$ for some $\alpha > 0$, then the equilibrium point is globally exponentially stable.
 :::
 :::
 
@@ -349,7 +357,280 @@ then the equilibrium point $x = 0$ is globally asymptotically stable (cf. Defini
 
 Through Theorem \@ref(thm:lyapunovlocalstability), Theorem \@ref(thm:lyapunovglobalstability), and Example \@ref(exm:lyapunovlocalstabilitypendulum), we see that in order to certify asymptotic stability, the time derivative $\dot{V}(x)$ is required to be positive definite. However, in many cases, with Example \@ref(exm:lyapunovlocalstabilitypendulum) being a typical one, $\dot{V}(x)$ is only negative semidefinite, which makes it difficult to certify asymptotic stability. 
 
-In this section, we will introduce the invariant set theorem that can help us reason about asymptotic stability even when $\dot{V}(x)$ is only negative semidefinite.
+In this section, we will introduce the invariant set theorem that can help us reason about asymptotic stability even when $\dot{V}(x)$ is only negative semidefinite. 
+
+Let us first introduce the notion of an invariant set.
+
+::: {.definitionbox}
+::: {.definition #invariantset name="Invariant Set"}
+A set $G$ is an invariant set for a dynamical system \@ref(eq:autonomous-system) if every system trajectory that starts within $G$ remains in $G$ for all future time. Formally,
+$$
+x(0) \in G \Longrightarrow x(t) \in G,\forall t.
+$$
+:::
+:::
+
+A trivial invariant set if the entire state space $\mathbb{X}$. Another example of an invariant set is the singleton $\{x^\star \}$ with $x^\star$ being an equilibrium point. A nontrivial invariant set is the domain of attraction of an equilibrium point (cf. Definition \@ref(def:asymptoticstability)).
+
+We now state the local invariant set theorem.
+
+::: {.theorembox}
+::: {.theorem #localinvariantsettheorm name="Local Invariant Set"}
+Consider the autonomous system \@ref(eq:autonomous-system), and let $V(x)$ be a scalar function with continuous partial derivatives. Assume that
+
+- the sublevel set $\Omega_{\rho} = \{ x \in \mathbb{X} \mid V(x) < \rho \}$ is bounded for some $\rho > 0$, and 
+
+- $V(x) \leq 0$ for all $x \in \Omega_{\rho}$.
+
+Let $\mathcal{R}$ be the set of all points within $\Omega_{\rho}$ such that $\dot{V}(x) = 0$, and $\mathcal{M}$ be the largest invariant set in $\mathcal{R}$. Then, every trajectory that starts in $\Omega_{\rho}$ will converge to $\mathcal{M}$ as $t \rightarrow \infty$.
+:::
+:::
+
+With this theorem, we can now revisit the pendulum example \@ref(exm:lyapunovlocalstabilitypendulum).
+
+::: {.examplebox}
+::: {.example #pendulumlocalstabilitybyinvariantset name="Revisiting the Local Stability of A Simple Pendulum"}
+In Example \@ref(exm:lyapunovlocalstabilitypendulum), using the Lyapunov function 
+$$
+V(x) = \frac{1}{2} ml^2 \dot{\theta}^2 + mgl(1 - \cos\theta),
+$$
+with time derivative
+$$
+\dot{V}(x) = -b\dot{\theta}^2,
+$$
+we were only able to verify the stability of the bottomright equilibrium point in the sense of Lyapunov.
+
+Now let us use the invariant set theorem \@ref(thm:localinvariantsettheorm) to show the asymptotic stability of the bottomright equilibrium point.
+
+First it is easy to see that the sublevel set of $V(x)$ is bounded. For example, with $\rho = \frac{1}{4} mgl$,
+\begin{align}
+V(x) < \frac{1}{4} mgl \Rightarrow \frac{1}{2} ml^2 \dot{\theta}^2 < \frac{1}{4} mgl \Rightarrow \dot{\theta}^2 < \frac{1}{2} \frac{g}{l} \\
+V(x) < \frac{1}{4} mgl \Rightarrow mgl(1-\cos\theta) < \frac{1}{4} mgl \Rightarrow \cos\theta > \frac{3}{4} \Rightarrow \theta \in (-\arccos \frac{3}{4}, \arccos \frac{3}{4}).
+\end{align}
+
+The set $\mathcal{R}$, including all the points in $\Omega_{\rho}$ such that $\dot{V}(x) = 0$ is 
+$$
+\mathcal{R} = \{ x \in \Omega_{\rho} \mid \dot{\theta} = 0 \}.
+$$
+We now claim that the largest invariant set $\mathcal{M}$ in $\mathcal{R}$ is just the single equilibrium point $x = [0,0]^T$. We can prove this by contradiction. Suppose there is a different point $x' = [\theta,0]^T$ with $\theta \neq 0$ also belonging to the invariant set $\mathcal{M}$, then 
+$$
+\ddot{\theta} = -\frac{1}{ml^2} (b \dot{\theta} + mgl \sin \theta) = - \frac{g}{l} \sin\theta \neq 0,
+$$
+which means $\dot{\theta}$ will immediately become nonzero, and hence the trajectory will exit $\mathcal{R}$ and also $\mathcal{M}$. So that point cannot belong to the invariant set. 
+
+Now by Theorem \@ref(thm:localinvariantsettheorm), we conclude the bottomright equilibrium point is asymptotically stable.
+
+Note that through this analysis we also obtain $\Omega_{\rho}$ as a domain of attraction for the bottomright equilibrium point.
+:::
+:::
+
+Similarly, with the addition of the radial unboundedness of $V(x)$, we have a global version of the invariant set theorem.
+
+::: {.theorembox}
+::: {.theorem #globalinvariantsettheorem name="Global Invariant Set"}
+For the autonomous system \@ref(eq:autonomous-system), let $V(x)$ be a scalar function with continuous partial derivatives that satisfies
+
+- $V(x) \rightarrow \infty$ as $\Vert x \Vert \rightarrow \infty$, and 
+
+- $\dot{V}(x) \leq 0$ over the entire state space.
+
+Let $\mathcal{R} = \{ x\in \mathbb{X} \mid \dot{V}(x)= 0 \}$, and $\mathcal{M}$ be the largest invariant set in $\mathcal{R}$. Then all system trajectories asymptotically converge to $\mathcal{M}$ as $t \rightarrow \infty$.
+:::
+:::
+
+### Computing Lyapunov Certificates 
+
+All the Theorems we have stated so far (Theorems \@ref(thm:lyapunovlocalstability), \@ref(thm:lyapunovglobalstability), \@ref(thm:localinvariantsettheorm), and \@ref(thm:globalinvariantsettheorem)) are very general and powerful tools for certifying stability of nonlinear systems. However, the key requirement for applying the results is a Lyapunov function $V(x)$ that verifies different types of nonnegativity constraints. 
+
+How to find these functions?
+
+In Example \@ref(exm:lyapunovlocalstabilitypendulum), we have seen that physical intuition can help us find a good Lyapunov function \@ref(eq:pendulum-lyapunov-1). Nevertheless, it did not quite give us what we want in terms of asymptotic stability. Instead, a hand-crafted function \@ref(eq:pendulum-lyapunov-2) helped us certify local asymptotic stability. 
+
+Wouldn't it be cool that we can design an algorithm to find the Lyapunov certificates for us?
+
+A closer look at the Theorems \@ref(thm:lyapunovlocalstability), \@ref(thm:lyapunovglobalstability), \@ref(thm:localinvariantsettheorm), and \@ref(thm:globalinvariantsettheorem) tells us the key property of a Lyapunov certificate is that it needs to satisfy the positivity (or negativity) constraint for all states inside a set. This is a nontrivial and difficult requirement, because even if we were given a function $V(x)$, naively evaluting if $V(x)$ is nonnegative inside a set requires enumeration over all the states in the set, which is impractical given that the set is continuous and has infinite number of states.^[In fact, many of the recent works verify "neural" Lyapunov certificates (and other types of certificates) using this idea, see for example [@dawson23tro-safe].]
+
+In the next, I want to introduce a general framework for searching Lyapunov certificates that is based on convex optimization.
+
+This framework, although having deep connections with many other disciplines such as algebraic geometry, theoretical computer science, and mathematical optimization, is based on a very simple intution that we all have since high school.
+
+Suppose I give you a polynomial of a single variable
+$$
+p(x) = x^2 + 2x + 1
+$$
+and ask you if $p(x) \geq 0$ for all $x \in \mathbb{R}$. You would not hesitate to answer "yes", because you know 
+$$
+p(x) = (x+1)^2 
+$$
+is the square of $x+1$ and hence must be nonnegative. 
+
+Let's make it more challenging. Suppose I give you a polynomial
+$$
+p(x) = -x^4 + 2 x^2 + x + 1
+$$
+and ask you if $p(x)$ is nonnegative for any $x \in [-1,1]$. Now it becomes much harder to answer this question because (i) we have a constraint set $x \in [-1,1]$, and (ii) the polynomial $p(x)$ has a higher degree and it is not a polynomial that we are very famliar with (compared to $p(x) = x^2 + 2x +1$).
+
+However, if I show you that $p(x)$ can be written as 
+$$
+p(x) = (x+1)^2 + x^2 (1 - x^2) = -x^4 + 2 x^2 + 2x + 1,
+$$
+it becomes easy again to say that $p(x)$ is nonnegative for any $x \in [-1,1]$. Why?
+
+1. First notice that $(x+1)^2 \geq 0$ for any $x \in \mathbb{R}$, 
+
+2. Then notice that $1 - x^2 \geq 0$ for any $x \in [-1,1]$, and $x^2 \geq 0$ for any $x$. Therefore, $x^2 (1-x^2) \geq 0$ for any $x \in [-1,1]$. 
+
+Combining the above two reasonings, it becomes clear $p(x)$ is nonnegative for any $x \in [-1,1]$.
+
+With this simple intuition, let me now give a short tutorial on sum of squares (SOS).
+
+::: {.theorembox}
+<p style="text-align: center;">Positivstellensatz, Sum of Squares, and Convex Optimization</p>
+
+Let $x = [x_1,\dots,x_n] \in \mathbb{R}^n$ be a list of variables, we define a _basic semialgebraic set_ as 
+\begin{equation}
+\mathcal{X} = \{ x \in \mathbb{R}^{n} \mid p_i(x) = 0, i = 1,\dots,l_{\mathrm{eq}}; p_i(x) \geq 0, i=l_{\mathrm{eq}}+1,\dots,l_{\mathrm{eq}} + l_{\mathrm{ineq}} \}
+(\#eq:basic-semialgebraic-set)
+\end{equation}
+where $p_i(x),i=1,\dots,l_{\mathrm{eq}}+l_{\mathrm{ineq}}$ are polynomial functions in $x$. In other words, the set $\mathcal{X}$ is a subset of $\mathbb{R}^n$ that is defined by $l_{\mathrm{eq}}$ equality constraints and $l_{\mathrm{ineq}}$ inequality constraints. 
+
+Observe that a basic semialgebraic set can capture a lot of the common constraint sets, such as a unit sphere, a unit ball, and a box (try this for yourself).
+
+We are now given the same question. Suppose I give you another polynomial function $p_0(x)$, how can you tell me if $p_0(x)$ is nonnegative for any $x$ in the basic semialgebraic set? That is, to verify if
+$$
+p_0(x) \geq 0, \quad \forall x \in \mathcal{X}.
+$$
+
+Using the intution above, you will say if I can produce a decomposition of $p_0(x)$ as
+\begin{equation}
+p_0(x) = \sigma_0(x) + \sum_{i=1}^{l_{\mathrm{ineq}}} \sigma_i(x) p_{i + l_{\mathrm{eq}}}(x) + \sum_{i=1}^{l_{\mathrm{eq}}} \lambda_i(x) p_{i}(x),
+(\#eq:p-satz-putinar)
+\end{equation}
+where $\sigma_0,\sigma_1,\dots,\sigma_{l_{\mathrm{ineq}}}$ are "some type of" polynomials that we know are always nonnegative (for any $x \in \mathbb{R}^n$), and $\lambda_1,\dots,\lambda_{l_{\mathrm{eq}}}$ are arbitrary polynomials. Then I have a "certificate" that $p_0(x) \geq 0$ for any $x \in \mathcal{X}$.
+
+Why? The reasoning is exactly the same as before.
+
+1. $\sigma_0(x) \geq 0$ for any $x$,
+
+2. $\sigma_i(x) p_{i+l_{\mathrm{eq}}}(x) \geq 0, i=1,\dots,l_{\mathrm{ineq}}$ for any $x \in \mathcal{X}$, because (a) $\sigma_i(x) \geq 0$ for any $x$, and (b) $p_{i+l_{\mathrm{eq}}}(x) \geq 0$ for any $x \in \mathcal{X}$ by definition of the basic semialgebraic set \@ref(eq:basic-semialgebraic-set), 
+
+3. $\lambda_i(x) p_i (x) = 0, i=1,\dots,l_{\mathrm{eq}}$ by definition of the basic semialgebraic set \@ref(eq:basic-semialgebraic-set).
+
+Now it comes the key question: what type of polynomials do we know is always nonnegative? 
+
+A natural choice is a "sum-of-squares" (SOS) polynomial. 
+
+::: {.definitionbox}
+::: {.definition #sumofsquarespolynomial name="Sum-of-Squares Polynomial"}
+A polynomial $\sigma(x)$ is called an SOS polynomial if 
+$$
+\sigma(x) = \sum_{i=1}^k q_i^2(x),
+$$
+i.e., $\sigma(x)$ can be written as a sum of $k$ squared polynomials. 
+:::
+:::
+
+Not only is this a natural choice, it turns out that an SOS polynomial also has a nice connection with positive semidefinite (PSD) matrices. In fact, a polynomial $\sigma(x)$ is SOS if and only if 
+$$
+\sigma(x) = [x]_d^T Q [x]_d
+$$
+for some $Q \succeq 0$, where $[x]_d$ is the vector of monomials in $x$ of degree up to $d$. For example, if $x \in \mathbb{R}^2$ and $d = 2$, then 
+$$
+[x]_2 = [1,x_1,x_2,x_1^2,x_1x_2,x_2^2]^T.
+$$
+With this choice of $\sigma(x)$ as SOS polynomials, we can now formulate a problem that explicitly searches for a certificate in the form of \@ref(eq:p-satz-putinar):
+\begin{align}
+\text{find} &  \quad \{\sigma_i \}_{i=0}^{l_{\mathrm{ineq}}}, \{ \lambda_i \}_{i=1}^{l_{\mathrm{eq}}} \\
+\text{subject to} & \quad 
+p_0(x) = \sigma_0(x) + \sum_{i=1}^{l_{\mathrm{ineq}}} \sigma_i(x) p_{i + l_{\mathrm{eq}}}(x) + \sum_{i=1}^{l_{\mathrm{eq}}} \lambda_i(x) p_{i}(x), \\
+& \quad \sigma_i \text{ is SOS}, i=0,\dots,l_{\mathrm{ineq}}, \\
+& \quad \lambda_i \text{ is polynomial}, i=1,\dots,l_{\mathrm{eq}}.
+\end{align}
+
+
+
+
+
+
+
+
+
+:::
+
+
+
+
+
+
+
+::: {.examplebox}
+::: {.example #lyapunovlocalstabilitypendulumsos name="Computing Lyapunov Local Stability Certificate for the Simple Pendulum with Convex Optimization"}
+We first write the pendulum dynamics in polynomial form via a change of coordinate $x = [\mathfrak{s}, \mathfrak{c}, \dot{\theta}]^T$ with $\mathfrak{s} = \sin \theta$, $\mathfrak{c} = \cos\theta$:
+$$
+\begin{cases}
+\dot{\mathfrak{s}} = \mathfrak{c} \dot{\theta} \\
+\dot{\mathfrak{c}} = -\mathfrak{s} \dot{\theta} \\
+\ddot{\theta} = - \frac{1}{ml^2}(b \dot{\theta} + mgl \mathfrak{s})
+\end{cases}.
+$$
+We will use $m = 1, l = 1, b=0.1$ for our numerical experiment.
+
+We want to find a local Lyapunov certificate in the compact set
+\begin{equation}
+\theta \in \left[-\arccos \frac{3}{4}, \arccos \frac{3}{4} \right], \quad \dot{\theta} \in \left[- \frac{\pi}{2}, \frac{\pi}{2} \right].
+(\#eq:lyapunovlocalstabilitypendulumsos-constraintset)
+\end{equation}
+
+In the new coordinates $x$, this is equivalent to the semialgebraic set
+$$
+\mathcal{X} = \left\{ x \in \mathbb{R}^{3} \mid \mathfrak{s}^2 + \mathfrak{c}^2 = 1, \dot{\theta}^2 \leq \frac{\pi^2}{4}, \mathfrak{c} \geq \frac{3}{4}  \right\}.
+$$
+
+Denoting the bottomright equilibrium point as $x_e = [0,1,0]^T$, and with $\epsilon_1,\epsilon_2 > 0$ two positive constants, we can seek a Lyapunov function $V(x)$ that satisfies the following conditions 
+\begin{align}
+V(x) \geq \epsilon_1 (x - x_e)^T (x - x_e), \quad \forall x \in \mathcal{X} (\#eq:lyapunovlocalstabilitypendulumsos-1)\\
+\dot{V}(x) = \frac{\partial V}{\partial x} \dot{x} \leq - \epsilon_2 (x - x_e)^T (x - x_e), \quad \forall x \in \mathcal{X} (\#eq:lyapunovlocalstabilitypendulumsos-2)\\
+V(x_e) = 0, \quad \dot{V}(x_e) = 0 (\#eq:lyapunovlocalstabilitypendulumsos-3)
+\end{align}
+where \@ref(eq:lyapunovlocalstabilitypendulumsos-1) ensures $V(x)$ is positive definite, \@ref(eq:lyapunovlocalstabilitypendulumsos-2) ensures $\dot{V}(x)$ is negative definite, and \@ref(eq:lyapunovlocalstabilitypendulumsos-3) ensures $V(x),\dot{V}(x)$ vanish at the equilibrium point. 
+
+To leverage the power of convex optimization, we can relax the positivity constraints as SOS constraints
+\begin{align}
+V(x) - \epsilon_1 (x - x_e)^T (x - x_e) \quad \text{is SOS on} \quad \mathcal{X} \\
+- \epsilon_2 (x - x_e)^T (x - x_e) - \frac{\partial V}{\partial x} \dot{x}\quad \text{is SOS on} \quad \mathcal{X} \\
+V(x_e) = 0, \quad \dot{V}(x_e) = 0.
+\end{align}
+
+If we limit the degree of $V$ to $2$, choose the relaxation order $\kappa = 2$, and $\epsilon_1 = \epsilon_2 = 0.01$, we obtain a solution
+$$
+V(x) = 2.7982 \mathfrak{s}^2 + 0.086248 \mathfrak{s} \dot{\theta} + 2.4548\mathfrak{c}^2 + 0.88117 \dot{\theta}^2 - 16.6277 \mathfrak{c} + 14.1728
+$$
+with the time derivative
+$$
+\dot{V}(x) = 0.68675 \mathfrak{s} \mathfrak{c} \dot{\theta} + 0.086248* \mathfrak{c} \dot{\theta}^2 - 0.84523 \mathfrak{s}^2 - 0.65191 \mathfrak{s} \dot{\theta} - 0.17623 \dot{\theta}^2.
+$$
+
+Plotting $V(x)$ in the constraint set \@ref(eq:lyapunovlocalstabilitypendulumsos-constraintset) using $(\theta, \dot{\theta})$ coordinates, we get
+```{r lyapunov-local-certificate-pendulum-V, out.width='60%', fig.show='hold', fig.cap='Lyapunov local stability certificate computed via convex optimization.', fig.align='center', echo=FALSE}
+knitr::include_graphics('images/pendulum-local-lyapunov-certificate-V.png')
+```
+and verify that $V(x)$ is locally positive definite.
+
+Plotting $\dot{V}(x)$ in the constraint set \@ref(eq:lyapunovlocalstabilitypendulumsos-constraintset) using $(\theta, \dot{\theta})$ coordinates, we get
+```{r lyapunov-local-certificate-pendulum-Vdot, out.width='60%', fig.show='hold', fig.cap='Derivative of the lyapunov local stability certificate computed via convex optimization.', fig.align='center', echo=FALSE}
+knitr::include_graphics('images/pendulum-local-lyapunov-certificate-Vdot.png')
+```
+and verify that $\dot{V}(x)$ is locally negative definite.
+
+You should try the code for this example [here](https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/pendulum_local_lyapunov_certificate.m).
+
+:::
+:::
+
+## Controlled Systems
+
+
+## Non-autonomous Systems
 
 ::: {.lemma #Barbalat name="Barbalat's Lemma"}
 Let $f(t)$ be differentiable, if 
