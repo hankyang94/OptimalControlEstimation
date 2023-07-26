@@ -28,9 +28,17 @@ pre code {
   border-radius: 10px;
 }
 
+.highlightbox {
+  padding: 1em;
+  background: rgb(88, 95, 88);
+  color: rgb(255, 255, 255);
+  border: 2px rgb(88, 95, 88);
+  border-radius: 10px;
+}
+
 .definitionbox {
   padding: 1em;
-  border: 2px solid rgb(135, 135, 227);
+  border: 2px solid rgb(143, 227, 135);
   border-radius: 10px;
 }
 
