@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-07-20" />
+<meta name="date" content="2023-07-26" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -128,7 +128,10 @@ div.csl-indent {
 <li class="chapter" data-level="4.1.2" data-path="stability.html"><a href="stability.html#stability-by-linearization"><i class="fa fa-check"></i><b>4.1.2</b> Stability by Linearization</a></li>
 <li class="chapter" data-level="4.1.3" data-path="stability.html"><a href="stability.html#lyapunov-analysis"><i class="fa fa-check"></i><b>4.1.3</b> Lyapunov Analysis</a></li>
 <li class="chapter" data-level="4.1.4" data-path="stability.html"><a href="stability.html#invariant-set-theorem"><i class="fa fa-check"></i><b>4.1.4</b> Invariant Set Theorem</a></li>
+<li class="chapter" data-level="4.1.5" data-path="stability.html"><a href="stability.html#computing-lyapunov-certificates"><i class="fa fa-check"></i><b>4.1.5</b> Computing Lyapunov Certificates</a></li>
 </ul></li>
+<li class="chapter" data-level="4.2" data-path="stability.html"><a href="stability.html#controlled-systems"><i class="fa fa-check"></i><b>4.2</b> Controlled Systems</a></li>
+<li class="chapter" data-level="4.3" data-path="stability.html"><a href="stability.html#non-autonomous-systems"><i class="fa fa-check"></i><b>4.3</b> Non-autonomous Systems</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="output-feedback.html"><a href="output-feedback.html"><i class="fa fa-check"></i><b>5</b> Output Feedback</a>
 <ul>
@@ -412,7 +415,11 @@ is negative semidefinite (we assume the partial derivative <span class="math inl
 <li><p><span class="math inline">\(\dot{V}(x)\)</span> is negative semidefinite (in <span class="math inline">\(B_R\)</span>)</p></li>
 </ul>
 <p>then the equilibrium point <span class="math inline">\(x=0\)</span> is stable in the sense of Lyapunov (cf. Definition <a href="stability.html#def:lyapunovstability">4.2</a>).</p>
-<p>If <span class="math inline">\(\dot{V}(x)\)</span> is negative definite in <span class="math inline">\(B_R\)</span>, then the equilibrium point is asymptotically stable (cf. Definition <a href="stability.html#def:asymptoticstability">4.3</a>).</p>
+<p>Moreover,</p>
+<ul>
+<li><p>if <span class="math inline">\(\dot{V}(x)\)</span> is negative definite in <span class="math inline">\(B_R\)</span>, then the equilibrium point is asymptotically stable (cf. Definition <a href="stability.html#def:asymptoticstability">4.3</a>).</p></li>
+<li><p>if <span class="math inline">\(\dot{V}(x) \leq - \alpha V(x)\)</span> for any <span class="math inline">\(x \in B_R\)</span>, then the equilibrium point is exponentially stable (cf. Definition <a href="stability.html#def:exponentialstability">4.4</a>).</p></li>
+</ul>
 </div>
 </div>
 <p>Let us apply Theorem <a href="stability.html#thm:lyapunovlocalstability">4.2</a> to the simple pendulum.</p>
@@ -461,6 +468,10 @@ which is positive definite and admits a single zero-value point <span class="mat
 <li><p><span class="math inline">\(V(x) \rightarrow \infty\)</span> as <span class="math inline">\(\Vert x \Vert \rightarrow \infty\)</span>,</p></li>
 </ul>
 <p>then the equilibrium point <span class="math inline">\(x = 0\)</span> is globally asymptotically stable (cf. Definition <a href="stability.html#def:globalstability">4.5</a>).</p>
+<p>Moreover, if in addition to the three conditions above</p>
+<ul>
+<li><span class="math inline">\(\dot{V}(x) \leq - \alpha V(x)\)</span> for some <span class="math inline">\(\alpha &gt; 0\)</span>, then the equilibrium point is globally exponentially stable.</li>
+</ul>
 </div>
 </div>
 </div>
@@ -468,11 +479,314 @@ which is positive definite and admits a single zero-value point <span class="mat
 <h3><span class="header-section-number">4.1.4</span> Invariant Set Theorem<a href="stability.html#invariant-set-theorem" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Through Theorem <a href="stability.html#thm:lyapunovlocalstability">4.2</a>, Theorem <a href="stability.html#thm:lyapunovglobalstability">4.3</a>, and Example <a href="stability.html#exm:lyapunovlocalstabilitypendulum">4.3</a>, we see that in order to certify asymptotic stability, the time derivative <span class="math inline">\(\dot{V}(x)\)</span> is required to be positive definite. However, in many cases, with Example <a href="stability.html#exm:lyapunovlocalstabilitypendulum">4.3</a> being a typical one, <span class="math inline">\(\dot{V}(x)\)</span> is only negative semidefinite, which makes it difficult to certify asymptotic stability.</p>
 <p>In this section, we will introduce the invariant set theorem that can help us reason about asymptotic stability even when <span class="math inline">\(\dot{V}(x)\)</span> is only negative semidefinite.</p>
+<p>Let us first introduce the notion of an invariant set.</p>
+<div class="definitionbox">
+<div class="definition">
+<p><span id="def:invariantset" class="definition"><strong>Definition 4.8  (Invariant Set) </strong></span>A set <span class="math inline">\(G\)</span> is an invariant set for a dynamical system <a href="stability.html#eq:autonomous-system">(4.3)</a> if every system trajectory that starts within <span class="math inline">\(G\)</span> remains in <span class="math inline">\(G\)</span> for all future time. Formally,
+<span class="math display">\[
+x(0) \in G \Longrightarrow x(t) \in G,\forall t.
+\]</span></p>
+</div>
+</div>
+<p>A trivial invariant set if the entire state space <span class="math inline">\(\mathbb{X}\)</span>. Another example of an invariant set is the singleton <span class="math inline">\(\{x^\star \}\)</span> with <span class="math inline">\(x^\star\)</span> being an equilibrium point. A nontrivial invariant set is the domain of attraction of an equilibrium point (cf. Definition <a href="stability.html#def:asymptoticstability">4.3</a>).</p>
+<p>We now state the local invariant set theorem.</p>
+<div class="theorembox">
+<div class="theorem">
+<p><span id="thm:localinvariantsettheorm" class="theorem"><strong>Theorem 4.4  (Local Invariant Set) </strong></span>Consider the autonomous system <a href="stability.html#eq:autonomous-system">(4.3)</a>, and let <span class="math inline">\(V(x)\)</span> be a scalar function with continuous partial derivatives. Assume that</p>
+<ul>
+<li><p>the sublevel set <span class="math inline">\(\Omega_{\rho} = \{ x \in \mathbb{X} \mid V(x) &lt; \rho \}\)</span> is bounded for some <span class="math inline">\(\rho &gt; 0\)</span>, and</p></li>
+<li><p><span class="math inline">\(V(x) \leq 0\)</span> for all <span class="math inline">\(x \in \Omega_{\rho}\)</span>.</p></li>
+</ul>
+<p>Let <span class="math inline">\(\mathcal{R}\)</span> be the set of all points within <span class="math inline">\(\Omega_{\rho}\)</span> such that <span class="math inline">\(\dot{V}(x) = 0\)</span>, and <span class="math inline">\(\mathcal{M}\)</span> be the largest invariant set in <span class="math inline">\(\mathcal{R}\)</span>. Then, every trajectory that starts in <span class="math inline">\(\Omega_{\rho}\)</span> will converge to <span class="math inline">\(\mathcal{M}\)</span> as <span class="math inline">\(t \rightarrow \infty\)</span>.</p>
+</div>
+</div>
+<p>With this theorem, we can now revisit the pendulum example <a href="stability.html#exm:lyapunovlocalstabilitypendulum">4.3</a>.</p>
+<div class="examplebox">
+<div class="example">
+<p><span id="exm:pendulumlocalstabilitybyinvariantset" class="example"><strong>Example 4.4  (Revisiting the Local Stability of A Simple Pendulum) </strong></span>In Example <a href="stability.html#exm:lyapunovlocalstabilitypendulum">4.3</a>, using the Lyapunov function
+<span class="math display">\[
+V(x) = \frac{1}{2} ml^2 \dot{\theta}^2 + mgl(1 - \cos\theta),
+\]</span>
+with time derivative
+<span class="math display">\[
+\dot{V}(x) = -b\dot{\theta}^2,
+\]</span>
+we were only able to verify the stability of the bottomright equilibrium point in the sense of Lyapunov.</p>
+<p>Now let us use the invariant set theorem <a href="stability.html#thm:localinvariantsettheorm">4.4</a> to show the asymptotic stability of the bottomright equilibrium point.</p>
+<p>First it is easy to see that the sublevel set of <span class="math inline">\(V(x)\)</span> is bounded. For example, with <span class="math inline">\(\rho = \frac{1}{4} mgl\)</span>,
+<span class="math display">\[\begin{align}
+V(x) &lt; \frac{1}{4} mgl \Rightarrow \frac{1}{2} ml^2 \dot{\theta}^2 &lt; \frac{1}{4} mgl \Rightarrow \dot{\theta}^2 &lt; \frac{1}{2} \frac{g}{l} \\
+V(x) &lt; \frac{1}{4} mgl \Rightarrow mgl(1-\cos\theta) &lt; \frac{1}{4} mgl \Rightarrow \cos\theta &gt; \frac{3}{4} \Rightarrow \theta \in (-\arccos \frac{3}{4}, \arccos \frac{3}{4}).
+\end{align}\]</span></p>
+<p>The set <span class="math inline">\(\mathcal{R}\)</span>, including all the points in <span class="math inline">\(\Omega_{\rho}\)</span> such that <span class="math inline">\(\dot{V}(x) = 0\)</span> is
+<span class="math display">\[
+\mathcal{R} = \{ x \in \Omega_{\rho} \mid \dot{\theta} = 0 \}.
+\]</span>
+We now claim that the largest invariant set <span class="math inline">\(\mathcal{M}\)</span> in <span class="math inline">\(\mathcal{R}\)</span> is just the single equilibrium point <span class="math inline">\(x = [0,0]^T\)</span>. We can prove this by contradiction. Suppose there is a different point <span class="math inline">\(x&#39; = [\theta,0]^T\)</span> with <span class="math inline">\(\theta \neq 0\)</span> also belonging to the invariant set <span class="math inline">\(\mathcal{M}\)</span>, then
+<span class="math display">\[
+\ddot{\theta} = -\frac{1}{ml^2} (b \dot{\theta} + mgl \sin \theta) = - \frac{g}{l} \sin\theta \neq 0,
+\]</span>
+which means <span class="math inline">\(\dot{\theta}\)</span> will immediately become nonzero, and hence the trajectory will exit <span class="math inline">\(\mathcal{R}\)</span> and also <span class="math inline">\(\mathcal{M}\)</span>. So that point cannot belong to the invariant set.</p>
+<p>Now by Theorem <a href="stability.html#thm:localinvariantsettheorm">4.4</a>, we conclude the bottomright equilibrium point is asymptotically stable.</p>
+<p>Note that through this analysis we also obtain <span class="math inline">\(\Omega_{\rho}\)</span> as a domain of attraction for the bottomright equilibrium point.</p>
+</div>
+</div>
+<p>Similarly, with the addition of the radial unboundedness of <span class="math inline">\(V(x)\)</span>, we have a global version of the invariant set theorem.</p>
+<div class="theorembox">
+<div class="theorem">
+<p><span id="thm:globalinvariantsettheorem" class="theorem"><strong>Theorem 4.5  (Global Invariant Set) </strong></span>For the autonomous system <a href="stability.html#eq:autonomous-system">(4.3)</a>, let <span class="math inline">\(V(x)\)</span> be a scalar function with continuous partial derivatives that satisfies</p>
+<ul>
+<li><p><span class="math inline">\(V(x) \rightarrow \infty\)</span> as <span class="math inline">\(\Vert x \Vert \rightarrow \infty\)</span>, and</p></li>
+<li><p><span class="math inline">\(\dot{V}(x) \leq 0\)</span> over the entire state space.</p></li>
+</ul>
+<p>Let <span class="math inline">\(\mathcal{R} = \{ x\in \mathbb{X} \mid \dot{V}(x)= 0 \}\)</span>, and <span class="math inline">\(\mathcal{M}\)</span> be the largest invariant set in <span class="math inline">\(\mathcal{R}\)</span>. Then all system trajectories asymptotically converge to <span class="math inline">\(\mathcal{M}\)</span> as <span class="math inline">\(t \rightarrow \infty\)</span>.</p>
+</div>
+</div>
+</div>
+<div id="computing-lyapunov-certificates" class="section level3 hasAnchor" number="4.1.5">
+<h3><span class="header-section-number">4.1.5</span> Computing Lyapunov Certificates<a href="stability.html#computing-lyapunov-certificates" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>All the Theorems we have stated so far (Theorems <a href="stability.html#thm:lyapunovlocalstability">4.2</a>, <a href="stability.html#thm:lyapunovglobalstability">4.3</a>, <a href="stability.html#thm:localinvariantsettheorm">4.4</a>, and <a href="stability.html#thm:globalinvariantsettheorem">4.5</a>) are very general and powerful tools for certifying stability of nonlinear systems. However, the key requirement for applying the results is a Lyapunov function <span class="math inline">\(V(x)\)</span> that verifies different types of nonnegativity constraints.</p>
+<p>How to find these functions?</p>
+<p>In Example <a href="stability.html#exm:lyapunovlocalstabilitypendulum">4.3</a>, we have seen that physical intuition can help us find a good Lyapunov function <a href="stability.html#eq:pendulum-lyapunov-1">(4.7)</a>. Nevertheless, it did not quite give us what we want in terms of asymptotic stability. Instead, a hand-crafted function <a href="stability.html#eq:pendulum-lyapunov-2">(4.8)</a> helped us certify local asymptotic stability.</p>
+<p>Wouldn’t it be cool that we can design an algorithm to find the Lyapunov certificates for us?</p>
+<p>A closer look at the Theorems <a href="stability.html#thm:lyapunovlocalstability">4.2</a>, <a href="stability.html#thm:lyapunovglobalstability">4.3</a>, <a href="stability.html#thm:localinvariantsettheorm">4.4</a>, and <a href="stability.html#thm:globalinvariantsettheorem">4.5</a> tells us the key property of a Lyapunov certificate is that it needs to satisfy the positivity (or negativity) constraint for all states inside a set. This is a nontrivial and difficult requirement, because even if we were given a function <span class="math inline">\(V(x)\)</span>, naively evaluting if <span class="math inline">\(V(x)\)</span> is nonnegative inside a set requires enumeration over all the states in the set, which is impractical given that the set is continuous and has infinite number of states.<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a> When the dynamics <a href="stability.html#eq:autonomous-system">(4.3)</a> is linear, searching for Lyapunov functions is well understood and presented in Appendix <a href="linear-system-theory.html#app-lti-stability">A.1</a>. However, when the dynamics is nonlinear, things can get very complicated.</p>
+<p>In the next, I want to introduce a general framework for searching Lyapunov certificates for nonlinear systems that is based on convex optimization.</p>
+<p>This framework, although having deep connections with many other disciplines such as algebraic geometry, theoretical computer science, and mathematical optimization, is based on a very simple intution that we all have since high school.</p>
+<div class="examplebox">
+<div class="example">
+<p><span id="exm:simpleexamplesos" class="example"><strong>Example 4.5  (A Simple Example for Certifying Nonnegativity) </strong></span>Suppose I give you a polynomial of a single variable <span class="math inline">\(x \in \mathbb{R}\)</span>
+<span class="math display">\[
+p(x) = x^2 + 2x + 1
+\]</span>
+and ask you if <span class="math inline">\(p(x) \geq 0\)</span> for all <span class="math inline">\(x\)</span>. You would not hesitate to answer “yes”, because you know
+<span class="math display">\[
+p(x) = (x+1)^2
+\]</span>
+is the square of <span class="math inline">\(x+1\)</span> and hence must be nonnegative.</p>
+<p>Let me make it more challenging. Suppose I give you a different polynomial
+<span class="math display">\[
+p(x) = -x^4 + 2 x^2 + x + 1
+\]</span>
+and ask you if <span class="math inline">\(p(x)\)</span> is nonnegative for any <span class="math inline">\(x \in [-1,1]\)</span> (instead of any <span class="math inline">\(x \in \mathbb{R}\)</span>). At first glance, it seems much harder to answer this question because (i) we have a constraint set <span class="math inline">\(x \in [-1,1]\)</span>, and (ii) the polynomial <span class="math inline">\(p(x)\)</span> has a higher degree and it is not a polynomial that we are very famliar with (compared to <span class="math inline">\(p(x) = x^2 + 2x +1\)</span>).</p>
+<p>However, if I show you that <span class="math inline">\(p(x)\)</span> can be written as
+<span class="math display" id="eq:sos-simple-intuition-multiplier">\[\begin{equation}
+p(x) = -x^4 + 2 x^2 + 2x + 1 = (x+1)^2 + x^2 (1 - x^2),
+\tag{4.9}
+\end{equation}\]</span>
+it becomes easy again to certify that <span class="math inline">\(p(x)\)</span> is nonnegative for any <span class="math inline">\(x \in [-1,1]\)</span>. Why?</p>
+<ol style="list-style-type: decimal">
+<li><p>First notice that <span class="math inline">\((x+1)^2 \geq 0\)</span> for any <span class="math inline">\(x \in \mathbb{R}\)</span>,</p></li>
+<li><p>Then notice that <span class="math inline">\(1 - x^2 \geq 0\)</span> for any <span class="math inline">\(x \in [-1,1]\)</span>, and <span class="math inline">\(x^2 \geq 0\)</span> for any <span class="math inline">\(x\)</span>. Therefore, <span class="math inline">\(x^2 (1-x^2) \geq 0\)</span> for any <span class="math inline">\(x \in [-1,1]\)</span>.</p></li>
+</ol>
+<p>Combining the above two reasonings, it becomes clear <span class="math inline">\(p(x)\)</span> is nonnegative for any <span class="math inline">\(x \in [-1,1]\)</span>.</p>
+</div>
+</div>
+<p>What we have learned from this simple example is that</p>
+<blockquote>
+<p>Given a polynomial <span class="math inline">\(p(x)\)</span> and a constraint set <span class="math inline">\(x \in \mathcal{X} \subseteq \mathbb{R}^n\)</span>, if we can write <span class="math inline">\(p(x)\)</span> as a sum of a finite number of products
+<span class="math display">\[
+p(x) = \sum_{i=1}^K \sigma_i(x) g_i(x)
+\]</span>
+where <span class="math inline">\(\sigma_i(x)\)</span> is a polynomial that we know is always nonnegative for any <span class="math inline">\(x \in \mathbb{R}^n\)</span> (just like <span class="math inline">\((x+1)^2\)</span> and <span class="math inline">\(x^2\)</span> in <a href="stability.html#eq:sos-simple-intuition-multiplier">(4.9)</a>), and <span class="math inline">\(g_i(x)\)</span> is a polynomial that we know is always nonnegative for any <span class="math inline">\(x\)</span> in the constraint set <span class="math inline">\(\mathcal{X}\)</span> (just like <span class="math inline">\(1-x^2\)</span> for the set <span class="math inline">\([-1,1]\)</span> in <a href="stability.html#eq:sos-simple-intuition-multiplier">(4.9)</a>), then we have a certificate that <span class="math inline">\(p(x) \geq 0\)</span> for any <span class="math inline">\(x \in \mathcal{X}\)</span>.</p>
+</blockquote>
+<p>With this simple intuition, let me now formalize the framework of sum of squares (SOS) certificates for proving nonnegativity (also known as <em>positivstellensatz</em>, or in short P-satz).</p>
+<div class="highlightbox">
+<p style="text-align: center;">
+<b>Positivstellensatz, Sum of Squares, and Convex Optimization</b>
+</p>
+<p><strong>Basic Semialgebraic Set</strong>. Let <span class="math inline">\(x = [x_1,\dots,x_n] \in \mathbb{R}^n\)</span> be a list of variables, we define a <em>basic semialgebraic set</em> as
+<span class="math display" id="eq:basic-semialgebraic-set">\[\begin{equation}
+\mathcal{X} = \{ x \in \mathbb{R}^{n} \mid p_i(x) = 0, i = 1,\dots,l_{\mathrm{eq}}; p_i(x) \geq 0, i=l_{\mathrm{eq}}+1,\dots,l_{\mathrm{eq}} + l_{\mathrm{ineq}} \}
+\tag{4.10}
+\end{equation}\]</span>
+where <span class="math inline">\(p_i(x),i=1,\dots,l_{\mathrm{eq}}+l_{\mathrm{ineq}}\)</span> are polynomial functions in <span class="math inline">\(x\)</span>. In other words, the set <span class="math inline">\(\mathcal{X}\)</span> is a subset of <span class="math inline">\(\mathbb{R}^n\)</span> that is defined by <span class="math inline">\(l_{\mathrm{eq}}\)</span> equality constraints and <span class="math inline">\(l_{\mathrm{ineq}}\)</span> inequality constraints.</p>
+<p>Observe that a basic semialgebraic set can capture a lot of the common constraint sets, such as a unit sphere, a unit ball, and a box (try this for yourself).</p>
+<p><strong>Positivstellensatz</strong>. We are now given the same question as in Example <a href="stability.html#exm:simpleexamplesos">4.5</a>. Suppose I give you another polynomial function <span class="math inline">\(p_0(x)\)</span>, how can you tell me if <span class="math inline">\(p_0(x)\)</span> is nonnegative for any <span class="math inline">\(x\)</span> in the basic semialgebraic set <span class="math inline">\(\mathcal{X}\)</span>? That is, to verify if
+<span class="math display">\[
+p_0(x) \geq 0, \quad \forall x \in \mathcal{X}.
+\]</span></p>
+<p>Formalizing the intution obtained from Example <a href="stability.html#exm:simpleexamplesos">4.5</a>, you will say if someone can produce a decomposition of <span class="math inline">\(p_0(x)\)</span> as
+<span class="math display" id="eq:p-satz-putinar">\[\begin{equation}
+p_0(x) = \sigma_0(x) + \sum_{i=1}^{l_{\mathrm{ineq}}} \sigma_i(x) p_{i + l_{\mathrm{eq}}}(x) + \sum_{i=1}^{l_{\mathrm{eq}}} \lambda_i(x) p_{i}(x),
+\tag{4.11}
+\end{equation}\]</span>
+where <span class="math inline">\(\sigma_0,\sigma_1,\dots,\sigma_{l_{\mathrm{ineq}}}\)</span> are “some type of” polynomials that we know are always nonnegative (for any <span class="math inline">\(x \in \mathbb{R}^n\)</span>), and <span class="math inline">\(\lambda_1,\dots,\lambda_{l_{\mathrm{eq}}}\)</span> are arbitrary polynomials. Then I have a “certificate” that <span class="math inline">\(p_0(x) \geq 0\)</span> for any <span class="math inline">\(x \in \mathcal{X}\)</span>.</p>
+<p>Why? The reasoning is exactly the same as before.</p>
+<ol style="list-style-type: decimal">
+<li><p><span class="math inline">\(\sigma_0(x) \geq 0\)</span> for any <span class="math inline">\(x\)</span>,</p></li>
+<li><p><span class="math inline">\(\sigma_i(x) p_{i+l_{\mathrm{eq}}}(x) \geq 0, i=1,\dots,l_{\mathrm{ineq}}\)</span> for any <span class="math inline">\(x \in \mathcal{X}\)</span>, because (a) <span class="math inline">\(\sigma_i(x) \geq 0\)</span> for any <span class="math inline">\(x\)</span>, and (b) <span class="math inline">\(p_{i+l_{\mathrm{eq}}}(x) \geq 0\)</span> for any <span class="math inline">\(x \in \mathcal{X}\)</span> by definition of the basic semialgebraic set <a href="stability.html#eq:basic-semialgebraic-set">(4.10)</a>,</p></li>
+<li><p><span class="math inline">\(\lambda_i(x) p_i (x) = 0, i=1,\dots,l_{\mathrm{eq}}\)</span> for any <span class="math inline">\(x \in \mathcal{X}\)</span> by definition of the basic semialgebraic set <a href="stability.html#eq:basic-semialgebraic-set">(4.10)</a>.</p></li>
+</ol>
+<p>We call <span class="math inline">\(\sigma_i\)</span>’s “nonnegative polynomial multipliers”, and <span class="math inline">\(\lambda_i\)</span>’s “polynomial multipliers”.</p>
+<p><strong>Sum-of-Squares</strong>. Now it comes the key question: what type of polynomials should we choose as the nonnegative polynomial multipliers? Ideally, this type of polynomials should</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>be always (trivially) nonnegative, and</p></li>
+<li><p>have a nice representation for its unknown parameters (coefficients).</p></li>
+</ol>
+<p>Looking back at our choice of multipliers, i.e., <span class="math inline">\((x+1)^2\)</span> and <span class="math inline">\(x^2\)</span> in Example <a href="stability.html#exm:simpleexamplesos">4.5</a>, it is natural to come up with the choice of a “sum-of-squares” (SOS) polynomial.</p>
+<div class="definitionbox">
+<div class="definition">
+<p><span id="def:sumofsquarespolynomial" class="definition"><strong>Definition 4.9  (Sum-of-Squares Polynomial) </strong></span>A polynomial <span class="math inline">\(\sigma(x)\)</span> is called an SOS polynomial if
+<span class="math display">\[
+\sigma(x) = \sum_{i=1}^k q_i^2(x),
+\]</span>
+i.e., <span class="math inline">\(\sigma(x)\)</span> can be written as a sum of <span class="math inline">\(k\)</span> squared polynomials.</p>
+</div>
+</div>
+<p>OK, an SOS polynomial is trivially nonnegative (satisfying requirement (a) above), but does it have a nice representation for its parameters? The following Lemma gives us an affirmative answer.</p>
+<div class="definitionbox">
 <div class="lemma">
-<p><span id="lem:Barbalat" class="lemma"><strong>Lemma 4.1  (Barbalat's Lemma) </strong></span>Let <span class="math inline">\(f(t)\)</span> be differentiable, if</p>
+<p><span id="lem:psdrepresentationsospolynomial" class="lemma"><strong>Lemma 4.1  (SOS Polynomial and Positive Semidefinite Matrix) </strong></span>A polynomial <span class="math inline">\(\sigma(x)\)</span> is SOS if and only if
+<span class="math display">\[
+\sigma(x) = [x]_d^T Q [x]_d
+\]</span>
+for some <span class="math inline">\(Q \succeq 0\)</span>, where <span class="math inline">\([x]_d\)</span> is the vector of monomials in <span class="math inline">\(x\)</span> of degree up to <span class="math inline">\(d\)</span>. For example, if <span class="math inline">\(x \in \mathbb{R}^2\)</span> and <span class="math inline">\(d = 2\)</span>, then
+<span class="math display">\[
+[x]_2 = [1,x_1,x_2,x_1^2,x_1x_2,x_2^2]^T.
+\]</span></p>
+</div>
+</div>
+<p>With the choice of <span class="math inline">\(\sigma(x)\)</span> as SOS polynomials, we are now ready to explicitly search for a nonnegativity certificate in the form of <a href="stability.html#eq:p-satz-putinar">(4.11)</a>:
+<span class="math display" id="eq:sos-tutorial-search-certificate">\[\begin{equation}
+\begin{split}
+\text{find} &amp;  \quad \{\sigma_i \}_{i=0}^{l_{\mathrm{ineq}}}, \{ \lambda_i \}_{i=1}^{l_{\mathrm{eq}}} \\
+\text{subject to} &amp; \quad
+p_0(x) = \sigma_0(x) + \sum_{i=1}^{l_{\mathrm{ineq}}} \sigma_i(x) p_{i + l_{\mathrm{eq}}}(x) + \sum_{i=1}^{l_{\mathrm{eq}}} \lambda_i(x) p_{i}(x), \\
+&amp; \quad \sigma_i \text{ is SOS}, i=0,\dots,l_{\mathrm{ineq}}, \\
+&amp; \quad \lambda_i \text{ is polynomial}, i=1,\dots,l_{\mathrm{eq}} \\
+&amp; \quad \mathrm{deg}(\sigma_0) \leq 2 \kappa, \mathrm{deg}(\sigma_i p_{i+l_{\mathrm{eq}}}) \leq 2 \kappa, i=1,\dots,l_{\mathrm{ineq}}, \\
+&amp; \quad \mathrm{deg}(\lambda_i p_i) \leq 2 \kappa, i=1,\dots,l_{\mathrm{eq}}.
+\end{split}
+\tag{4.12}
+\end{equation}\]</span></p>
+<p><strong>Bounding the Degree</strong>. The careful reader realizes that in <a href="stability.html#eq:sos-tutorial-search-certificate">(4.12)</a> we have added constraints on the degrees of the polynomial multipliers <span class="math inline">\(\sigma_i\)</span>’s and <span class="math inline">\(\lambda_i\)</span>’s.<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a> Precisely, we choose an integer <span class="math inline">\(\kappa\)</span>, which we call the relaxation order, such that
+<span class="math display">\[
+2 \kappa \geq \max \{ \mathrm{deg}(p_i(x)) \}_{i=0}^{l_{\mathrm{eq}} + l_{\mathrm{ineq}}},
+\]</span>
+and restrict the products <span class="math inline">\(\sigma_i p_{i+l_{\mathrm{eq}}}\)</span>’s and <span class="math inline">\(\lambda_i p_i\)</span>’s to have degrees at most <span class="math inline">\(2\kappa\)</span>. With this, we are explicitly limiting the degrees of the multipliers <span class="math inline">\(\sigma_i\)</span>’s and <span class="math inline">\(\lambda_i\)</span>’s, and hence asking the formulation <a href="stability.html#eq:sos-tutorial-search-certificate">(4.12)</a> to search for a finite number of parameters (otherwise, if the degree of the multipliers is unbounded, then the number of parameters to be searched is infinite).</p>
+<p><strong>Convex Optimization</strong>. The last crucial (and surprising) observation is that the problem <a href="stability.html#eq:sos-tutorial-search-certificate">(4.12)</a> is a convex optimization! This is due to the following three reasons</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>The polynomial multipliers <span class="math inline">\(\lambda_i\)</span>’s can be fully parametrized by their coefficients, and these coefficients can be arbitrary vectors. Precisely, if <span class="math inline">\(\lambda(x)\)</span> is a polynomial with degree up to <span class="math inline">\(d\)</span>, then
+<span class="math display">\[
+\lambda(x) = c^T [x]_d,
+\]</span>
+where <span class="math inline">\([x]_d\)</span> is the vector of monomials in <span class="math inline">\(x\)</span> of degree up to <span class="math inline">\(d\)</span>, and <span class="math inline">\(c\)</span> is the vector of coefficients.</p></li>
+<li><p>The SOS multipliers <span class="math inline">\(\sigma_i\)</span>’s can be fully parametrized by their coefficients, and these coefficients are positive semidefinite matrices, according to Lemma <a href="stability.html#lem:psdrepresentationsospolynomial">4.1</a>.</p></li>
+<li><p>The equality constraint of decomposing <span class="math inline">\(p_0(x)\)</span> as a sum of products in <a href="stability.html#eq:sos-tutorial-search-certificate">(4.12)</a> therefore becomes a set of affine equality constraints on the parameters of <span class="math inline">\(\lambda_i\)</span>’s and <span class="math inline">\(\sigma_i\)</span>’s, by matching coefficients of the monomials on the left-hand size and the right-hand side.</p></li>
+</ol>
+<p>Therefore, the problem <a href="stability.html#eq:sos-tutorial-search-certificate">(4.12)</a> is a convex semidefinite program (SDP). There are multiple software packages, e.g., <a href="https://github.com/oxfordcontrol/SOSTOOLS">SOSTOOLS</a>, <a href="https://yalmip.github.io/">YALMIP</a>, <a href="https://github.com/yuanchenyang/SumOfSquares.py">SumOfSquares.py</a>, that allow us to model our problem in the form of <a href="stability.html#eq:sos-tutorial-search-certificate">(4.12)</a>, convert the formulation into SDPs, and pass them to SDP solvers (such as <a href="https://www.mosek.com/">MOSEK</a>). We will see an example of this soon.</p>
+<p><strong>Extensions</strong>. I want to congratulate, and welcome you to enter the world of SOS relaxations! Like I said before, this is an active area of research and the framework I just introduced is just a tip of the iceberg. Therefore, before I end this tutorial, I want to point out several extensions of the SOS framework.</p>
+<ul>
+<li><p><strong>Necessary Condition</strong>. We have seen that a decomposition in the form of <a href="stability.html#eq:sos-tutorial-search-certificate">(4.12)</a> is a <em>sufficient</em> condition to prove the nonnegativity of <span class="math inline">\(p_0(x)\)</span>. Is it also a <em>necessary</em> condition? That is, for any <span class="math inline">\(p_0(x)\)</span> that is nonnegative on the set <span class="math inline">\(\mathcal{X}\)</span>, does it admit a decomposition in the form of <a href="stability.html#eq:sos-tutorial-search-certificate">(4.12)</a>? In general, the answer is no, and there exist nonnegative polynomials that cannot be written in the form of SOS decompositions (e.g., the <a href="https://en.wikipedia.org/wiki/Theodore_Motzkin">Motzkin’s polynomial</a>). However, with certain assumptions on the set <span class="math inline">\(\mathcal{X}\)</span>, the decomposition <a href="stability.html#eq:sos-tutorial-search-certificate">(4.12)</a> is also necessary for nonnegativity! A well-known assumption is called the Archimedean condition (which, roughly speaking, requires the set <span class="math inline">\(\mathcal{X}\)</span> to be compact)). I suggest you to read <span class="citation">(<a href="#ref-blekherman12book-semidefinite">Blekherman, Parrilo, and Thomas 2012</a>)</span> for more details.</p></li>
+<li><p><strong>Global Polynomial Optimization</strong>. The SOS framework can be used for global optimization of polynomials in a straightforward way. Consider the polynomial optimization problem (POP)
+<span class="math display">\[
+\min_{x \in \mathcal{X}} p_0(x),
+\]</span>
+where one seeks the global minimum of the polynomial <span class="math inline">\(p_0(x)\)</span> on the set <span class="math inline">\(\mathcal{X}\)</span>.
+A POP is generally a nonconvex optimization problem, and it is difficult to obtain a globally optimal solution. However, with a slight change of perspective, we can write the problem above equivalently as
+<span class="math display" id="eq:polynomial-optimization-dual">\[\begin{equation}
+\begin{split}
+\max &amp; \quad \gamma \\
+\text{subject to} &amp; \quad p_0(x) - \gamma \geq 0, \quad \forall x \in \mathcal{X}.
+\end{split}
+\tag{4.13}
+\end{equation}\]</span>
+Basically I want to push the lower bound <span class="math inline">\(\gamma\)</span> as high as possible. The constraint in <a href="stability.html#eq:polynomial-optimization-dual">(4.13)</a> asks <span class="math inline">\(p_0(x) -\gamma\)</span> to be nonnegative on <span class="math inline">\(\mathcal{X}\)</span>. With the SOS framework introduced above, we can naturally relax it to
+<span class="math display" id="eq:polynomial-optimization-dual-sos">\[\begin{equation}
+\begin{split}
+\max &amp; \quad \gamma \\
+\text{subject to} &amp; \quad p_0(x) - \gamma \quad \text{is SOS on} \quad \mathcal{X},
+\end{split}
+\tag{4.14}
+\end{equation}\]</span>
+where the “SOS on <span class="math inline">\(\mathcal{X}\)</span>” constraint is exactly the problem <a href="stability.html#eq:sos-tutorial-search-certificate">(4.12)</a>. Therefore, we have relaxed the nonconvex optimization <a href="stability.html#eq:polynomial-optimization-dual">(4.13)</a> into a convex problem <a href="stability.html#eq:polynomial-optimization-dual-sos">(4.14)</a>! Moreover, by increasing the relaxation order <span class="math inline">\(\kappa\)</span>, we obtain a sequence of lower bounds that asymptotically converge to the true global optimum of the nonconvex problem <a href="stability.html#eq:polynomial-optimization-dual">(4.13)</a>. This is called Lasserre’s hierarchy of moment-SOS relaxations, originally proposed by Lasserre in the seminal work <span class="citation">(<a href="#ref-lasserre01siopt-global">Jean B. Lasserre 2001</a>)</span>. As this name suggests, the dual problem to the SOS relaxation <a href="stability.html#eq:polynomial-optimization-dual-sos">(4.14)</a> is called the moment relaxation. Lasserre’s hierarchy has recently gained a lot of attention due to the empirical observation in many engineering disciplines that the convergence to global optimum is finite, i.e., by solving the convex problem <a href="stability.html#eq:polynomial-optimization-dual-sos">(4.14)</a> at a finite relaxation order <span class="math inline">\(\kappa\)</span>, an exact global optimizer of the original nonconvex problem <a href="stability.html#eq:polynomial-optimization-dual">(4.13)</a> can be extracted. For a pragmatic introduction to the moment relaxation, I suggest to read Section 2.2 of <span class="citation">(<a href="#ref-yang22pami-certifiably">Yang and Carlone 2022</a>)</span>. For more applications of Lasserre’s hierarchy, please refer to <span class="citation">(<a href="#ref-lasserre09book-moments">Jean Bernard Lasserre 2009</a>)</span>.</p></li>
+<li><p><strong>Scalability</strong>. I have to warn you that there is no free lunch. The fact that so many challenging problems can be relaxed or restated as convex optimization problems should send you an alert. Does this mean that we can use convex optimization to solve all the challenging problems? Well, although we hope this is the case, in practice we are limited by the computational resources. The caveat is that the problem <a href="stability.html#eq:sos-tutorial-search-certificate">(4.12)</a> and <a href="stability.html#eq:polynomial-optimization-dual-sos">(4.14)</a>, despite being convex, grows very large as the dimension <span class="math inline">\(n\)</span> and relaxation order <span class="math inline">\(\kappa\)</span> increases. Another way of saying this is that, we seek to solve small-to-medium scale nonconvex problems with large-scale convex problems. Unfortunately, today’s SDP solver cannot solve all the problems we formulate, and hence a major research direction in the mathematical optimization community is to develop SDP solvers that are more scalable. You can read <span class="citation">(<a href="#ref-yang22mp-inexact">Yang et al. 2022</a>)</span> and references therein for more details.</p></li>
+<li><p><strong>Non-SOS Certificates</strong>. Nobody is preventing us to use a different choice of nonnegative polynomial multipliers (other than SOS multipliers) in <a href="stability.html#eq:p-satz-putinar">(4.11)</a>. For example, one can use a decomposition as the sum of nonnegative circuit polynomials <span class="citation">(<a href="#ref-wang22-nonnegative">Wang 2022</a>)</span> or signomials <span class="citation">(<a href="#ref-murray21mpc-signomial">Murray, Chandrasekaran, and Wierman 2021</a>)</span>. However, to the best of my knowledge, non-SOS certificates are far less popular than SOS certificates.</p></li>
+</ul>
+<p>There are many other extensions to the SOS framework, and a complete enumeration is beyond the scope of this lecture notes. For the connection between SOS and theoretical computer science, you can see the <a href="https://www.sumofsquares.org/public/index.html">lecture notes by Boaz Barak and David Steurer</a>. There are also more recent monographs about SOS, for example <span class="citation">(<a href="#ref-magron23book-sparse">Magron and Wang 2023</a>)</span> and <span class="citation">(<a href="#ref-nie23book-moment">Nie 2023</a>)</span>. I plan to introduce these in more details in an upcoming graduate-level class at Harvard.</p>
+</div>
+<p>That was a long detour from Lyapunov analysis! The SOS machinery will come back later when we study multiple other topics in optimal control and estimation. But now let us show how to tackle the problem of computing Lyapunov certificates using the SOS machinery.</p>
+<p>According to Theorem <a href="stability.html#thm:lyapunovlocalstability">4.2</a>, given a set <span class="math inline">\(\mathcal{X}\)</span> that contains an equilibrium point <span class="math inline">\(x^\star\)</span>, if we can find a Lyapunov function <span class="math inline">\(V(x)\)</span> such that <span class="math inline">\(V(x)\)</span> is positive definite on <span class="math inline">\(\mathcal{X}\)</span> and <span class="math inline">\(\dot{V}(x)\)</span> is negative definite on <span class="math inline">\(\mathcal{X}\)</span>, then the equilibrium point <span class="math inline">\(x^\star\)</span> is locally asymptotically stable. With the SOS machinery, we can search for a <span class="math inline">\(V(x)\)</span> that is a polynomial as
+<span class="math display">\[\begin{align}
+\text{find} &amp; \quad V(x) \\
+\text{subject to} &amp; \quad V(x) - \epsilon_1 \Vert x - x^\star \Vert^2 \quad \text{is SOS on} \quad \mathcal{X} \\
+&amp; \quad - \epsilon_2 \Vert x - x^\star \Vert^2 - \frac{\partial V(x)}{\partial x} f(x) \quad \text{is SOS on} \quad \mathcal{X} \\
+&amp; \quad V(x^\star) = 0,
+\end{align}\]</span>
+where <span class="math inline">\(\epsilon_1, \epsilon_2 &gt; 0\)</span> are (small) positive constants. This is a convex optimization problem, just like <a href="stability.html#eq:sos-tutorial-search-certificate">(4.12)</a> (try to convince yourself my claim is true). Similarly, we can choose a relaxation order <span class="math inline">\(\kappa\)</span> and solve the above problem. If a solution exists, then we find a valid Lyapunov certificate.</p>
+<p>Let us apply it to the simple pendulum to synthesize local stability certificates.</p>
+<div class="examplebox">
+<div class="example">
+<p><span id="exm:lyapunovlocalstabilitypendulumsos" class="example"><strong>Example 4.6  (Computing Lyapunov Local Stability Certificate for the Simple Pendulum with Convex Optimization) </strong></span>The SOS framework works with polynomials, so let us first write the pendulum dynamics in polynomial form via a change of coordinate <span class="math inline">\(x = [\mathfrak{s}, \mathfrak{c}, \dot{\theta}]^T\)</span> with <span class="math inline">\(\mathfrak{s} = \sin \theta\)</span>, <span class="math inline">\(\mathfrak{c} = \cos\theta\)</span>:
+<span class="math display">\[
+\begin{cases}
+\dot{\mathfrak{s}} = \mathfrak{c} \dot{\theta} \\
+\dot{\mathfrak{c}} = -\mathfrak{s} \dot{\theta} \\
+\ddot{\theta} = - \frac{1}{ml^2}(b \dot{\theta} + mgl \mathfrak{s})
+\end{cases}.
+\]</span>
+We will use <span class="math inline">\(m = 1, l = 1, b=0.1\)</span> for our numerical experiment.</p>
+<p>We want to find a local Lyapunov certificate in the compact set
+<span class="math display" id="eq:lyapunovlocalstabilitypendulumsos-constraintset">\[\begin{equation}
+\theta \in \left[-\arccos \frac{3}{4}, \arccos \frac{3}{4} \right], \quad \dot{\theta} \in \left[- \frac{\pi}{2}, \frac{\pi}{2} \right].
+\tag{4.15}
+\end{equation}\]</span></p>
+<p>In the new coordinates <span class="math inline">\(x\)</span>, this is equivalent to the semialgebraic set
+<span class="math display">\[
+\mathcal{X} = \left\{ x \in \mathbb{R}^{3} \mid \mathfrak{s}^2 + \mathfrak{c}^2 = 1, \dot{\theta}^2 \leq \frac{\pi^2}{4}, \mathfrak{c} \geq \frac{3}{4}  \right\}.
+\]</span></p>
+<p>Denoting the bottomright equilibrium point as <span class="math inline">\(x_e = [0,1,0]^T\)</span>, and with <span class="math inline">\(\epsilon_1,\epsilon_2 &gt; 0\)</span> two positive constants, we can seek a Lyapunov function <span class="math inline">\(V(x)\)</span> that satisfies the following conditions
+<span class="math display" id="eq:lyapunovlocalstabilitypendulumsos-3" id="eq:lyapunovlocalstabilitypendulumsos-2" id="eq:lyapunovlocalstabilitypendulumsos-1">\[\begin{align}
+V(x) \geq \epsilon_1 (x - x_e)^T (x - x_e), \quad \forall x \in \mathcal{X} \tag{4.16}\\
+\dot{V}(x) = \frac{\partial V}{\partial x} \dot{x} \leq - \epsilon_2 (x - x_e)^T (x - x_e), \quad \forall x \in \mathcal{X} \tag{4.17}\\
+V(x_e) = 0, \quad \dot{V}(x_e) = 0 \tag{4.18}
+\end{align}\]</span>
+where <a href="stability.html#eq:lyapunovlocalstabilitypendulumsos-1">(4.16)</a> ensures <span class="math inline">\(V(x)\)</span> is positive definite, <a href="stability.html#eq:lyapunovlocalstabilitypendulumsos-2">(4.17)</a> ensures <span class="math inline">\(\dot{V}(x)\)</span> is negative definite, and <a href="stability.html#eq:lyapunovlocalstabilitypendulumsos-3">(4.18)</a> ensures <span class="math inline">\(V(x),\dot{V}(x)\)</span> vanish at the equilibrium point.</p>
+<p>To leverage the power of convex optimization, we can relax the positivity constraints as SOS constraints
+<span class="math display">\[\begin{align}
+V(x) - \epsilon_1 (x - x_e)^T (x - x_e) \quad \text{is SOS on} \quad \mathcal{X} \\
+- \epsilon_2 (x - x_e)^T (x - x_e) - \frac{\partial V}{\partial x} \dot{x}\quad \text{is SOS on} \quad \mathcal{X} \\
+V(x_e) = 0, \quad \dot{V}(x_e) = 0.
+\end{align}\]</span></p>
+<p>If we limit the degree of <span class="math inline">\(V\)</span> to <span class="math inline">\(2\)</span>, choose the relaxation order <span class="math inline">\(\kappa = 2\)</span>, and <span class="math inline">\(\epsilon_1 = \epsilon_2 = 0.01\)</span>, we obtain a solution
+<span class="math display">\[
+V(x) = 2.7982 \mathfrak{s}^2 + 0.086248 \mathfrak{s} \dot{\theta} + 2.4548\mathfrak{c}^2 + 0.88117 \dot{\theta}^2 - 16.6277 \mathfrak{c} + 14.1728
+\]</span>
+with the time derivative
+<span class="math display">\[
+\dot{V}(x) = 0.68675 \mathfrak{s} \mathfrak{c} \dot{\theta} + 0.086248* \mathfrak{c} \dot{\theta}^2 - 0.84523 \mathfrak{s}^2 - 0.65191 \mathfrak{s} \dot{\theta} - 0.17623 \dot{\theta}^2.
+\]</span></p>
+Plotting <span class="math inline">\(V(x)\)</span> in the constraint set <a href="stability.html#eq:lyapunovlocalstabilitypendulumsos-constraintset">(4.15)</a> using <span class="math inline">\((\theta, \dot{\theta})\)</span> coordinates, we get
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:lyapunov-local-certificate-pendulum-V"></span>
+<img src="images/pendulum-local-lyapunov-certificate-V.png" alt="Lyapunov local stability certificate computed via convex optimization." width="60%" />
+<p class="caption">
+Figure 4.2: Lyapunov local stability certificate computed via convex optimization.
+</p>
+</div>
+<p>and verify that <span class="math inline">\(V(x)\)</span> is locally positive definite.</p>
+Plotting <span class="math inline">\(\dot{V}(x)\)</span> in the constraint set <a href="stability.html#eq:lyapunovlocalstabilitypendulumsos-constraintset">(4.15)</a> using <span class="math inline">\((\theta, \dot{\theta})\)</span> coordinates, we get
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:lyapunov-local-certificate-pendulum-Vdot"></span>
+<img src="images/pendulum-local-lyapunov-certificate-Vdot.png" alt="Derivative of the lyapunov local stability certificate computed via convex optimization." width="60%" />
+<p class="caption">
+Figure 4.3: Derivative of the lyapunov local stability certificate computed via convex optimization.
+</p>
+</div>
+<p>and verify that <span class="math inline">\(\dot{V}(x)\)</span> is locally negative definite.</p>
+<p>You should try the code for this example <a href="https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/pendulum_local_lyapunov_certificate.m">here</a>.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="controlled-systems" class="section level2 hasAnchor" number="4.2">
+<h2><span class="header-section-number">4.2</span> Controlled Systems<a href="stability.html#controlled-systems" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+</div>
+<div id="non-autonomous-systems" class="section level2 hasAnchor" number="4.3">
+<h2><span class="header-section-number">4.3</span> Non-autonomous Systems<a href="stability.html#non-autonomous-systems" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="lemma">
+<p><span id="lem:Barbalat" class="lemma"><strong>Lemma 4.2  (Barbalat's Lemma) </strong></span>Let <span class="math inline">\(f(t)\)</span> be differentiable, if</p>
 <ul>
 <li><p><span class="math inline">\(\lim_{t \rightarrow \infty} f(t)\)</span> is finite, and</p></li>
-<li><p><span class="math inline">\(\dot{f}(t)\)</span> is uniformly continuous,<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a></p></li>
+<li><p><span class="math inline">\(\dot{f}(t)\)</span> is uniformly continuous,<a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a></p></li>
 </ul>
 <p>then
 <span class="math display">\[
@@ -481,7 +795,7 @@ which is positive definite and admits a single zero-value point <span class="mat
 </div>
 <div class="theorembox">
 <div class="theorem">
-<p><span id="thm:BarbalatStability" class="theorem"><strong>Theorem 4.4  (Barbalat's Stability Certificate) </strong></span>If a scalar function <span class="math inline">\(V(x,t)\)</span> satisfies</p>
+<p><span id="thm:BarbalatStability" class="theorem"><strong>Theorem 4.6  (Barbalat's Stability Certificate) </strong></span>If a scalar function <span class="math inline">\(V(x,t)\)</span> satisfies</p>
 <ul>
 <li><p><span class="math inline">\(V(x,t)\)</span> is lower bounded,</p></li>
 <li><p><span class="math inline">\(\dot{V}(x,t)\)</span> is negative semidefinite</p></li>
@@ -492,23 +806,54 @@ which is positive definite and admits a single zero-value point <span class="mat
 </div>
 <div class="proofbox">
 <div class="proof">
-<p><span id="unlabeled-div-5" class="proof"><em>Proof</em>. </span><span class="math inline">\(V(x,t)\)</span> is lower bounded and <span class="math inline">\(\dot{V}\)</span> is negative semidefinite implies the limit of <span class="math inline">\(V\)</span> as <span class="math inline">\(t \rightarrow \infty\)</span> is finite (note that <span class="math inline">\(V(x,t) \leq V(x(0),0)\)</span>). Then the theorem clearly follows from Barbalat’s Lemma <a href="stability.html#lem:Barbalat">4.1</a>.</p>
+<p><span id="unlabeled-div-5" class="proof"><em>Proof</em>. </span><span class="math inline">\(V(x,t)\)</span> is lower bounded and <span class="math inline">\(\dot{V}\)</span> is negative semidefinite implies the limit of <span class="math inline">\(V\)</span> as <span class="math inline">\(t \rightarrow \infty\)</span> is finite (note that <span class="math inline">\(V(x,t) \leq V(x(0),0)\)</span>). Then the theorem clearly follows from Barbalat’s Lemma <a href="stability.html#lem:Barbalat">4.2</a>.</p>
 </div>
 </div>
 
 </div>
 </div>
-</div>
 <h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-blekherman12book-semidefinite" class="csl-entry">
+Blekherman, Grigoriy, Pablo A Parrilo, and Rekha R Thomas. 2012. <em>Semidefinite Optimization and Convex Algebraic Geometry</em>. SIAM.
+</div>
+<div id="ref-dawson23tro-safe" class="csl-entry">
+Dawson, Charles, Sicun Gao, and Chuchu Fan. 2023. <span>“Safe Control with Learned Certificates: A Survey of Neural Lyapunov, Barrier, and Contraction Methods for Robotics and Control.”</span> <em>IEEE Transactions on Robotics</em>.
+</div>
+<div id="ref-lasserre01siopt-global" class="csl-entry">
+Lasserre, Jean B. 2001. <span>“Global Optimization with Polynomials and the Problem of Moments.”</span> <em>SIAM Journal on Optimization</em> 11 (3): 796–817.
+</div>
+<div id="ref-lasserre09book-moments" class="csl-entry">
+Lasserre, Jean Bernard. 2009. <em>Moments, Positive Polynomials and Their Applications</em>. Vol. 1. World Scientific.
+</div>
+<div id="ref-magron23book-sparse" class="csl-entry">
+Magron, Victor, and Jie Wang. 2023. <em>Sparse Polynomial Optimization: Theory and Practice</em>. World Scientific.
+</div>
+<div id="ref-murray21mpc-signomial" class="csl-entry">
+Murray, Riley, Venkat Chandrasekaran, and Adam Wierman. 2021. <span>“Signomial and Polynomial Optimization via Relative Entropy and Partial Dualization.”</span> <em>Mathematical Programming Computation</em> 13: 257–95.
+</div>
+<div id="ref-nie23book-moment" class="csl-entry">
+Nie, Jiawang. 2023. <em>Moment and Polynomial Optimization</em>. SIAM.
+</div>
 <div id="ref-vinograd57-inapplicability" class="csl-entry">
 Vinograd, Robert Èlyukimovich. 1957. <span>“Inapplicability of the Method of Characteristic Exponents to the Study of Non-Linear Differential Equations.”</span> <em>Matematicheskii Sbornik</em> 83 (4): 431–38.
+</div>
+<div id="ref-wang22-nonnegative" class="csl-entry">
+Wang, Jie. 2022. <span>“Nonnegative Polynomials and Circuit Polynomials.”</span> <em>SIAM Journal on Applied Algebra and Geometry</em> 6 (2): 111–33.
+</div>
+<div id="ref-yang22pami-certifiably" class="csl-entry">
+Yang, Heng, and Luca Carlone. 2022. <span>“Certifiably Optimal Outlier-Robust Geometric Perception: Semidefinite Relaxations and Scalable Global Optimization.”</span> <em>IEEE Transactions on Pattern Analysis and Machine Intelligence</em> 45 (3): 2816–34.
+</div>
+<div id="ref-yang22mp-inexact" class="csl-entry">
+Yang, Heng, Ling Liang, Luca Carlone, and Kim-Chuan Toh. 2022. <span>“An Inexact Projected Gradient Method with Rounding and Lifting by Nonlinear Programming for Solving Rank-One Semidefinite Relaxation of Polynomial Optimization.”</span> <em>Mathematical Programming</em>, 1–64.
 </div>
 </div>
 <div class="footnotes">
 <hr />
 <ol start="3">
-<li id="fn3"><p>A sufficient condition for this to hold is that <span class="math inline">\(\ddot{f}\)</span> exists and is bounded.<a href="stability.html#fnref3" class="footnote-back">↩︎</a></p></li>
+<li id="fn3"><p>In fact, many of the recent works verify “neural” Lyapunov certificates (and other types of certificates) using this idea, see for example <span class="citation">(<a href="#ref-dawson23tro-safe">Dawson, Gao, and Fan 2023</a>)</span>.<a href="stability.html#fnref3" class="footnote-back">↩︎</a></p></li>
+<li id="fn4"><p>The degree of a monomial is the sum of its exponents. For example, <span class="math inline">\(\mathrm{deg}(x_1 x_2^4 x_3^2) = 1 + 4 + 2 = 7\)</span>. The degree of a polynomial is the maximum degree of its monomials. For example, the polynomial <span class="math inline">\(p(x) = 1 + x_2 + x_1^2 x_2^3\)</span> has three monomials with degrees <span class="math inline">\(0\)</span>, <span class="math inline">\(1\)</span>, and <span class="math inline">\(5\)</span>, respectively. Therefore, <span class="math inline">\(\mathrm{deg}(p) = 5\)</span>.<a href="stability.html#fnref4" class="footnote-back">↩︎</a></p></li>
+<li id="fn5"><p>A sufficient condition for this to hold is that <span class="math inline">\(\ddot{f}\)</span> exists and is bounded.<a href="stability.html#fnref5" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
             </section>
