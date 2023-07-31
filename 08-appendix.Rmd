@@ -108,6 +108,8 @@ and $Q = I$ maximizes the convergence rate estimation.
 
 ## Controllability and Observability {#app-lti-controllable-observable}
 
+### Definition
+
 Consider the following linear time-invariant (LTI) system
 \begin{equation}
     (\#eq:app-linear-system)
@@ -128,16 +130,25 @@ where $x \in \mathbb{R}^n$ the state, $u \in \mathbb{R}^m$ the control input, $y
 To study the inner structure of linear systems, two important properties should be considered: controllability and observability. In the following analysis, we will see that they are actually dual concepts. Their definitions [@chen1984book-linear] are shown below:
 
 ::: {.definitionbox}
-::: {.definition #lti-controllable name="Controllability"}
+::: {.definition #lticontrollable name="Controllability"}
 The LTI system \@ref(eq:app-linear-system) or the pair $(A, B)$ is controllable, if for any initial state $x(0) = x_0$ and final state $x_f$, there exists a sequence of control inputs that transfer the system from $x_0$ to $x_f$ in finite time.
 :::
 :::
 
 ::: {.definitionbox}
-::: {.definition #lti-observable name="Observability"}
+::: {.definition #ltiobservable name="Observability"}
 The LTI system \@ref(eq:app-linear-system) or the pair $(C, A)$ is observable, if for any unknown initial state $x(0)$, there exists a finite $t_1 > 0$, such that knowing $y$ and $u$ over $[0, t_1]$ suffices to determine $x(0)$.
 :::
 :::
+
+Sometimes we want to analyze the system \@ref(eq:app-linear-system) under another basis, i.e., $z = T x$, where the similarity transformation matrix $T$ is nonsingular. Define $A' = TAT^{-1}, B' = PB, C' = CT^{-1}, D' = D$, we get 
+\begin{equation*}
+   \begin{split}
+      \dot{z} = A' z + B' u \\ 
+      y = C' z + D' u
+   \end{split}
+\end{equation*}
+Since the similar transformation only changes system's basis for description, physical properties like controllability and observability will not change.
 
 ### Cayley Hamilton Theorem
 
@@ -261,7 +272,13 @@ $$
       \bar{B}_c \\ 0
    \end{bmatrix}
 $$
-where $\bar{A}_c \in \mathbb{C}^{k_1 \times k_1}, \bar{B}_c \in \mathbb{C}^{k_1 \times m}$. 
+where $\bar{A}_c \in \mathbb{C}^{k_1 \times k_1}, \bar{B}_c \in \mathbb{C}^{k_1 \times m}$. Moreover, the matrix 
+\begin{equation*}
+   \bar{\mathcal{C}} := \begin{bmatrix}
+      \bar{B}_c & \bar{A}_c \bar{B}_c & \bar{A}_c^2 \bar{B}_c & \dots & \bar{A}_c^{k_1 - 1} \bar{B}_c
+   \end{bmatrix}
+\end{equation*} 
+has full row rank.
 :::
 :::
 
@@ -302,6 +319,16 @@ Similarly, $B$ itself is part of $\mathcal{C}$. Therefore, each column of $B$ is
       \bar{B}_c \\ 0
    \end{bmatrix}
 \end{equation*}
+To see $\bar{\mathcal{C}}$ has full row rank, note that $\text{rank} \mathcal{C} = k_1$ and 
+\begin{equation*}
+   \mathcal{C} = T^{-1} \begin{bmatrix}
+      \bar{B}_c & \bar{A}_c \bar{B}_c & \bar{A}_c^2 \bar{B}_c & \dots & \bar{A}_c^{k_1 - 1} \bar{B}_c & \dots & \bar{A}_c^{n - 1} \bar{B}_c \\
+      0 & 0 & 0 & \dots & 0 & \dots & 0
+   \end{bmatrix}
+\end{equation*}
+Thus, $\text{rank}\begin{bmatrix}
+   \bar{B}_c & \bar{A}_c \bar{B}_c & \bar{A}_c^2 \bar{B}_c & \dots & \bar{A}_c^{k_1 - 1} \bar{B}_c & \dots & \bar{A}_c^{n - 1} \bar{B}_c
+\end{bmatrix} = k_1$. By Corollary \@ref(cor:cayham-2), $\text{rank}\bar{\mathcal{C}} = k_1$.
 :::
 :::
 
@@ -648,7 +675,7 @@ On the other hand, however, $W_c \succ 0$ implies there exists $t_3 > 0$, such t
 
 ### Duality
 
-Although controllability and observability seemingly have no direct connections from their definitions \@ref(def:lti-controllable) and \@ref(def:lti-observable), the following theorem [@chen1984book-linear] states their tight relations:
+Although controllability and observability seemingly have no direct connections from their definitions \@ref(def:lticontrollable) and \@ref(def:ltiobservable), the following theorem [@chen1984book-linear] states their tight relations:
 
 ::: {.theorembox}
 ::: {.theorem #lti-dual-conobs name="Theorem of Duality"}
@@ -740,10 +767,174 @@ is positive definite. The solution is called the *observability Gramian* and can
 :::
 :::
 
+--- 
+
+## Stabilizability And Detectability
+
+### Definition
+
+To define stabilizability and detectability of an LTI system, we first introduce the concept of *system mode*, which can be naturally derived from the fifth definition of controllability \@ref(thm:lticontrollable) (observability \@ref(thm:ltiobservable)).
+
+::: {.definitionbox}
+::: {.definition #ltisystemmode name="System Mode"}
+$\lambda$ is a mode of an LTI system, if it is an eigenvalue of $A$. The mode $\lambda$ is said to be stable if $\text{Re}\lambda < 0$, is controllable (observable) if $x^* B \ne 0$ ($C x \ne 0$) for all left (right) eigenvectors of $A$ associated with $\lambda$. Otherwise, the mode is said to be uncontrollable (unobservable).
+:::
+:::
+
+With the concept of system mode, the fifth definition of controllability \@ref(thm:lticontrollable) (observability \@ref(thm:ltiobservable)) can be restated as: an LTI system is controllable (observable) if and only if all modes are controllable (observable). Stabilizability (detectability) is defined similarly via loosening part of controllability (observability)'s conditions.
+
+::: {.definitionbox}
+::: {.definition #ltistabilizable name="Stabilizability"}
+An LTI system is said to be stabilizable if all of its unstable modes are controllable.
+:::
+:::
+
+::: {.definitionbox}
+::: {.definition #ltidetectable name="Detectability"}
+An LTI system is said to be detectable if all of its unstable modes are observable.
+:::
+:::
+
+Like in the case of controllability and observability, duality also holds in stabilizability and detectability. Moreover, similarity transformation will not influence an LTI system's stabilizability and detectability.
+
+### Equivalent Statements for Stabilizability
+
+::: {.theorembox}
+::: {.theorem #ltistabilizable name="Equivalent Statements for Stabilizability"}
+The following statements are equivalent [@zhou1996book-robust]: 
+
+1. $(A,B)$ is stabilizable.
+
+2. For all $\lambda$ and $x$ such that $x^* A = \lambda x^*$ and $\text{Re} \lambda \ge 0$, $x^* B \ne 0$.
+
+3. The matrix $[A-\lambda I, B]$ has full rank for all $\text{Re} \lambda \ge 0$.
+
+4. There exists a matrix $F$ such that $A+BF$ are Hurwitz.
+:::
+:::
+
+::: {.proofbox}
+::: {.proof}
+($1. \Leftrightarrow 2.$) Directly from stabilizability's definition.
+
+($2. \Leftrightarrow 3.$) If 2. holds but 3. not hold, then there exists $v \ne 0 \in \mathbb{C}^n$, s.t. 
+\begin{equation*}
+   v^* [A-\lambda I, B] = 0 \Leftrightarrow v^* A = \lambda v^*, v^* B = 0, \text{Re} \lambda \ge 0
+\end{equation*}
+Contradiction! Vice versa.
+
+($4. \Rightarrow 2.$) Prove by contradiction. Suppose there $x \ne 0 \in \mathbb{C}^n$, s.t.
+\begin{equation*}
+   x^* [A-\lambda I, B] = 0 \Leftrightarrow x^* A = \lambda x^*, x^* B = 0, \text{Re} \lambda \ge 0
+\end{equation*}
+Thus, for any $F$,
+\begin{equation*}
+   x^* (A+BF) = \lambda x^*, \text{Re} \lambda \ge 0
+\end{equation*}
+On the other hand, suppose $A+BF$ has $I$ Jordon blocks, with each equipped with an eigenvalue $\eta_i, i = 1\dots I$ (note that $\eta_\alpha$ may be equal to $\eta_\beta$, i.e., they are equivalent eigenvalues with different Jordon blocks). Since $A+BF$'s eigenvalues all have negative real parts, $\text{Re} (\eta_i) < 0, i = 1\dots I$. For each $\eta_i,i \in \left\{1\dots i\right\}$, denote its $K_i$ generalized left eigenvectors as $v_{i,1}, v_{i,2}, \dots v_{i,K_i}$. By definition, $\sum_{i=1}^{I} K_i = n$ and  
+\begin{equation*}
+   \begin{split}
+      v_{i,1}^* (A+BF) & = v_{i,1}^* \cdot \eta_i \\
+      v_{i,2}^* (A+BF) & = v_{i,1}^* + v_{i,2}^* \cdot \eta_i \\
+      & \vdots \\
+      v_{i,K_i}^* (A+BF) & = v_{i,K_i-1}^* + v_{i,K_i}^* \cdot \eta_i
+   \end{split}
+\end{equation*}
+for all $i \in \left\{1\dots i\right\}$. Also, $v_{i,k},i=1\dots I, k=1\dots K_i$ are linearly independent and spans $\mathbb{C}^n$. Therefore, 
+\begin{equation*}
+   x^* = \sum_{i=1}^{I} \sum_{k=1}^{K_i} \xi_{i,k} \cdot v_{i,k}^*
+\end{equation*}
+which leads to
+\begin{equation*}
+   \sum_{i=1}^{I} \sum_{k=1}^{K_i} \xi_{i,k} \cdot v_{i,k}^* (A+BF) 
+   = \sum_{i=1}^{I} \sum_{k=1}^{K_i} \xi_{i,k} \cdot \lambda \cdot v_{i,k}^* 
+\end{equation*}
+Since $v_{i,k}$'s are $A+BF$'s generalized eigenvectors, we have
+\begin{equation*}
+   \begin{split}
+      & \sum_{i=1}^{I} \sum_{k=1}^{K_i} \xi_{i,k} \cdot v_{i,k}^* \cdot (A+BF) \\
+      = & \sum_{i=1}^{I} \left\{
+         \xi_{i,1} \cdot \eta_i \cdot v_{i,1}^*  + \sum_{k=2}^{K_i} \xi_{i,k} (v_{i,k-1}^* + \eta_i \cdot v_{i,k}^* )
+      \right\} \\
+      = & \sum_{i=1}^{I} \left\{
+         \sum_{k=1}^{K_i - 1} (\xi_{i,k}\cdot \eta_i + \xi_{i,k+1}) v_{i,k}^* + \xi_{i,K_i} \cdot \eta_i \cdot v_{i,K_i}^*
+      \right\}
+   \end{split}
+\end{equation*}
+Combining the above two equations:
+\begin{equation*}
+   \sum_{i=1}^{I} \left\{
+      \sum_{k=1}^{K_i - 1} \left[ \xi_{i,k}\cdot (\eta_i - \lambda) + \xi_{i,k+1} \right] v_{i,k}^* 
+      + \xi_{i,K_i} \cdot (\eta_i - \lambda) \cdot v_{i,K_i}^*
+   \right\}
+\end{equation*}
+Since $v_{i,k}$'s are linearly independent, for any $i \in \left\{i\dots I\right\}$:
+\begin{equation*}
+   \begin{split}
+      \xi_{i,1} \cdot (\eta_i - \lambda) + \xi_{i,2} & = 0 \Rightarrow \xi_{i,2} = (-1) \cdot \xi_{i,1} \cdot (\eta_i - \lambda) \\
+      \xi_{i,2} \cdot (\eta_i - \lambda) + \xi_{i,3} & = 0 \Rightarrow \xi_{i,3} = (-1)^2 \cdot \xi_{i,1} \cdot (\eta_i - \lambda)^2 \\
+      & \vdots \\
+      \xi_{i,K_i-1} \cdot (\eta_i - \lambda) + \xi_{i,K_i} & = 0 \Rightarrow \xi_{i,K_i} = (-1)^{K_i-1} \cdot \xi_{i,1} \cdot (\eta_i - \lambda)^{K_i-1} \\
+      \xi_{i,K_i} \cdot (\eta_i - \lambda) & = 0
+   \end{split}
+\end{equation*}
+Thus, 
+\begin{equation*}
+   (-1)^{K_i-1} \cdot \xi_{i,1} \cdot (\eta_i - \lambda)^{K_i} = 0
+\end{equation*}
+Denote $\xi_{i,1}$ as $r_1 e^{\theta_1}$, $(\eta_i - \lambda)$ as $r_2 e^{\theta_2}$. Since $\text{Re} \lambda \ge 0, \text{Re}(\eta_i) < 0$, $r_2 > 0$. On the other hand, the following equation suggests
+\begin{equation*}
+   r_1 r_2^{K_i-1} e^{j[\theta_1 + \theta_2 (K_i-1)]} = 0 
+\end{equation*}
+Thus, $r_1$ has to be $0$, which implies $\xi_{i,1} = 0$. By recursion, $\xi_{i,k} = 0, \forall k = 1\dots K_i$. Contradiction!
+
+($1. \Rightarrow 4.$) If $(A,B)$ is controllable, then from Theorem \ref@(thm:lticontrollable)'s sixth definition, we can freely assign the poles of $A+BF$ via choosing $F$ properly. 
+
+Otherwise, if $(A,B)$ is uncontrollable, then from Corollary \@ref(cor:cayham-3) and proof of Theorem \@ref(thm:lticontrollable) ($6. \Rightarrow 1.$), there exists a similarity transformation $T$, s.t. 
+\begin{equation*}
+   TAT^{-1} = \begin{bmatrix}
+      \bar{A}_c & \bar{A}_{12} \\
+      0 & \bar{A}_{\bar{c}}
+   \end{bmatrix}, \quad TB = \begin{bmatrix}
+      \bar{B}_c \\
+      0
+   \end{bmatrix}
+\end{equation*}
+and 
+\begin{equation*}
+   \text{det}(A+BF-\lambda I) = \underbrace{\text{det}(\bar{A}_c + \bar{B}_c F_1 - \lambda I_1)}_{\chi_c(\lambda)} \cdot 
+   \underbrace{\text{det}(\bar{A}_{\bar{c}} - \lambda I_2)}_{\chi_\bar{c}(\lambda)}
+\end{equation*}
+where $\bar{A}_c \in \mathbb{C}^{k_1 \times k_1}$, $I_1$ identity matrix of size $k_1$, $[F_1,F_2] = FT^{-1}$, and $k_1 = \text{rank} \mathcal{C}$. Additionally, $(\bar{A}_c, \bar{B}_c)$ is controllable. Thus, $\chi_c(\lambda)$'s zeros can be freely assigned by choosing proper $F$, i.e., system modes with $\chi_c(\lambda)$ is controllable, regardless of its stability. On the other hand, system modes with $\chi_\bar{c}(\lambda)$ must be stable. Otherwise, we cannot affect it by assigning $F$, which is a contradiction to statement (1). Therefore, $(TAT^{-1}, TB)$ is stabilizable. Since similarity transformation does not change stabilizability, $(A,B)$ is stabilizable.
+:::
+:::
+
+### Equivalent Statements for Detectability
+
+Thanks to duality, we can directly write down the equivalent statements of observability without any additional proofs:
+
+::: {.theorembox}
+::: {.theorem #ltidetectable name="Equivalent Statements for Detectability"}
+The following statements are equivalent [@zhou1996book-robust]: 
+
+1. $(C,A)$ is detectable.
+
+2. For all $\lambda$ and $x$ such that $A x = \lambda x$ and $\text{Re} \lambda \ge 0$, $C x \ne 0$.
+
+3. The matrix $\begin{bmatrix} A - \lambda I \\ C \end{bmatrix}$ has full rank for all $\text{Re} \lambda \ge 0$.
+
+4. There exists a matrix $L$ such that $A+LC$ are Hurwitz.
+
+5. $(A^*, C^*)$ is stabilizable.
+:::
+:::
 
 
 
 
+
+
+---
 
 <!-- Consider the linear time-invariant (LTI) system 
 \begin{equation}
