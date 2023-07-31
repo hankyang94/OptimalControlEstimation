@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-07-26" />
+<meta name="date" content="2023-07-31" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -159,7 +159,22 @@ div.csl-indent {
 <li class="appendix"><span><b>Appendix</b></span></li>
 <li class="chapter" data-level="A" data-path="linear-system-theory.html"><a href="linear-system-theory.html"><i class="fa fa-check"></i><b>A</b> Linear System Theory</a>
 <ul>
-<li class="chapter" data-level="A.1" data-path="linear-system-theory.html"><a href="linear-system-theory.html#app-lti-stability"><i class="fa fa-check"></i><b>A.1</b> Stability</a></li>
+<li class="chapter" data-level="A.1" data-path="linear-system-theory.html"><a href="linear-system-theory.html#app-lti-stability"><i class="fa fa-check"></i><b>A.1</b> Stability</a>
+<ul>
+<li class="chapter" data-level="A.1.1" data-path="linear-system-theory.html"><a href="linear-system-theory.html#lyapunov-analysis-1"><i class="fa fa-check"></i><b>A.1.1</b> Lyapunov Analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="A.2" data-path="linear-system-theory.html"><a href="linear-system-theory.html#app-lti-controllable-observable"><i class="fa fa-check"></i><b>A.2</b> Controllability and Observability</a>
+<ul>
+<li class="chapter" data-level="A.2.1" data-path="linear-system-theory.html"><a href="linear-system-theory.html#cayley-hamilton-theorem"><i class="fa fa-check"></i><b>A.2.1</b> Cayley-Hamilton Theorem</a></li>
+<li class="chapter" data-level="A.2.2" data-path="linear-system-theory.html"><a href="linear-system-theory.html#equivalent-statements-for-controllability"><i class="fa fa-check"></i><b>A.2.2</b> Equivalent Statements for Controllability</a></li>
+<li class="chapter" data-level="A.2.3" data-path="linear-system-theory.html"><a href="linear-system-theory.html#duality"><i class="fa fa-check"></i><b>A.2.3</b> Duality</a></li>
+<li class="chapter" data-level="A.2.4" data-path="linear-system-theory.html"><a href="linear-system-theory.html#equivalent-statements-for-observability"><i class="fa fa-check"></i><b>A.2.4</b> Equivalent Statements for Observability</a></li>
+</ul></li>
+<li class="chapter" data-level="A.3" data-path="linear-system-theory.html"><a href="linear-system-theory.html#stabilizability-and-detectability"><i class="fa fa-check"></i><b>A.3</b> Stabilizability And Detectability</a>
+<ul>
+<li class="chapter" data-level="A.3.1" data-path="linear-system-theory.html"><a href="linear-system-theory.html#equivalent-statements-for-stabilizability"><i class="fa fa-check"></i><b>A.3.1</b> Equivalent Statements for Stabilizability</a></li>
+<li class="chapter" data-level="A.3.2" data-path="linear-system-theory.html"><a href="linear-system-theory.html#equivalent-statements-for-detectability"><i class="fa fa-check"></i><b>A.3.2</b> Equivalent Statements for Detectability</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="B" data-path="appconvex.html"><a href="appconvex.html"><i class="fa fa-check"></i><b>B</b> Convex Analysis and Optimization</a></li>
 <li class="chapter" data-level="C" data-path="the-kalman-yakubovich-lemma.html"><a href="the-kalman-yakubovich-lemma.html"><i class="fa fa-check"></i><b>C</b> The Kalman-Yakubovich Lemma</a></li>
@@ -249,7 +264,7 @@ where all the controls are planned at <span class="math inline">\(k=0\)</span>. 
 <div id="dynamic-programming-and-principle-of-optimality" class="section level2 hasAnchor" number="1.2">
 <h2><span class="header-section-number">1.2</span> Dynamic Programming and Principle of Optimality<a href="formulation.html#dynamic-programming-and-principle-of-optimality" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>We now introduce a general and powerful algorithm, namely <em>dynamic programming</em> (DP), for solving the optimal control problem <a href="formulation.html#def:basicproblem">1.1</a>. The DP algorithm builds upon a quite simple intuition called the <em>Bellman principle of optimality</em>.</p>
-<div class="theorembox">
+<div class="{.}">
 <div class="theorem">
 <p><span id="thm:bellmanoptimality" class="theorem"><strong>Theorem 1.1  (Bellman Principle of Optimality) </strong></span>Let <span class="math inline">\(\pi^\star = \{ \mu_0^\star,\mu_1^\star,\dots,\mu_{N-1}^\star \}\)</span> be an optimal policy for the optimal control problem <a href="formulation.html#def:basicproblem">1.1</a>. Assume that when using <span class="math inline">\(\pi^\star\)</span>, a given state <span class="math inline">\(x_i\)</span> occurs at timestep <span class="math inline">\(i\)</span> with positive probability (i.e., <span class="math inline">\(x_i\)</span> is reachable at time <span class="math inline">\(i\)</span>).</p>
 <p>Now consider the following subproblem where we are at <span class="math inline">\(x_i\)</span> at time <span class="math inline">\(i\)</span> and wish to minimize the cost-to-go from time <span class="math inline">\(i\)</span> to time <span class="math inline">\(N\)</span>

@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-07-26" />
+<meta name="date" content="2023-07-31" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -159,7 +159,22 @@ div.csl-indent {
 <li class="appendix"><span><b>Appendix</b></span></li>
 <li class="chapter" data-level="A" data-path="linear-system-theory.html"><a href="linear-system-theory.html"><i class="fa fa-check"></i><b>A</b> Linear System Theory</a>
 <ul>
-<li class="chapter" data-level="A.1" data-path="linear-system-theory.html"><a href="linear-system-theory.html#app-lti-stability"><i class="fa fa-check"></i><b>A.1</b> Stability</a></li>
+<li class="chapter" data-level="A.1" data-path="linear-system-theory.html"><a href="linear-system-theory.html#app-lti-stability"><i class="fa fa-check"></i><b>A.1</b> Stability</a>
+<ul>
+<li class="chapter" data-level="A.1.1" data-path="linear-system-theory.html"><a href="linear-system-theory.html#lyapunov-analysis-1"><i class="fa fa-check"></i><b>A.1.1</b> Lyapunov Analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="A.2" data-path="linear-system-theory.html"><a href="linear-system-theory.html#app-lti-controllable-observable"><i class="fa fa-check"></i><b>A.2</b> Controllability and Observability</a>
+<ul>
+<li class="chapter" data-level="A.2.1" data-path="linear-system-theory.html"><a href="linear-system-theory.html#cayley-hamilton-theorem"><i class="fa fa-check"></i><b>A.2.1</b> Cayley-Hamilton Theorem</a></li>
+<li class="chapter" data-level="A.2.2" data-path="linear-system-theory.html"><a href="linear-system-theory.html#equivalent-statements-for-controllability"><i class="fa fa-check"></i><b>A.2.2</b> Equivalent Statements for Controllability</a></li>
+<li class="chapter" data-level="A.2.3" data-path="linear-system-theory.html"><a href="linear-system-theory.html#duality"><i class="fa fa-check"></i><b>A.2.3</b> Duality</a></li>
+<li class="chapter" data-level="A.2.4" data-path="linear-system-theory.html"><a href="linear-system-theory.html#equivalent-statements-for-observability"><i class="fa fa-check"></i><b>A.2.4</b> Equivalent Statements for Observability</a></li>
+</ul></li>
+<li class="chapter" data-level="A.3" data-path="linear-system-theory.html"><a href="linear-system-theory.html#stabilizability-and-detectability"><i class="fa fa-check"></i><b>A.3</b> Stabilizability And Detectability</a>
+<ul>
+<li class="chapter" data-level="A.3.1" data-path="linear-system-theory.html"><a href="linear-system-theory.html#equivalent-statements-for-stabilizability"><i class="fa fa-check"></i><b>A.3.1</b> Equivalent Statements for Stabilizability</a></li>
+<li class="chapter" data-level="A.3.2" data-path="linear-system-theory.html"><a href="linear-system-theory.html#equivalent-statements-for-detectability"><i class="fa fa-check"></i><b>A.3.2</b> Equivalent Statements for Detectability</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="B" data-path="appconvex.html"><a href="appconvex.html"><i class="fa fa-check"></i><b>B</b> Convex Analysis and Optimization</a></li>
 <li class="chapter" data-level="C" data-path="the-kalman-yakubovich-lemma.html"><a href="the-kalman-yakubovich-lemma.html"><i class="fa fa-check"></i><b>C</b> The Kalman-Yakubovich Lemma</a></li>
@@ -372,7 +387,7 @@ where <span class="math inline">\(A,C\)</span> are constant matrices, and <span 
 <p>For this template, we have the well-known Luenberger observer.</p>
 <div class="theorembox">
 <div class="theorem">
-<p><span id="thm:LuenbergerLinear" class="theorem"><strong>Theorem 5.2  (Luenberger Observer) </strong></span>If the pair <span class="math inline">\((A,C)\)</span> is detectable (see Theorem <a href="linear-system-theory.html#thm:ltidetectable">A.3</a>), then there exists a matrix <span class="math inline">\(K\)</span> such that <span class="math inline">\(A-KC\)</span> is Hurwitz and the system
+<p><span id="thm:LuenbergerLinear" class="theorem"><strong>Theorem 5.2  (Luenberger Observer) </strong></span>If the pair <span class="math inline">\((A,C)\)</span> is detectable (see Theorem <a href="linear-system-theory.html#thm:ltidetectable">A.7</a>), then there exists a matrix <span class="math inline">\(K\)</span> such that <span class="math inline">\(A-KC\)</span> is Hurwitz and the system
 <span class="math display" id="eq:Luenberger-Linear">\[\begin{equation}
 \dot{\hat{\xi}} = A \hat{\xi} + B(u,y) + K(y - C \hat{\xi})
 \tag{5.11}
@@ -391,7 +406,7 @@ is an observer for <a href="output-feedback.html#eq:Luenberger-linear-template">
 <p><span class="math display">\[\begin{equation}
     e(t) = \mathrm{exp}[(A - KC)t] e(0)
 \end{equation}\]</span></p>
-<p>Then, if the real components of the eigenvalues of <span class="math inline">\(A - KC\)</span> are strictly negative (i.e., <span class="math inline">\(A - KC\)</span> is Hurwitz), then <span class="math inline">\(e(t) \rightarrow 0\)</span> as <span class="math inline">\(t \rightarrow \infty\)</span>, independent of the initial error <span class="math inline">\(e(0) = \xi(0) - \hat{\xi}(0)\)</span>. From Theorem <a href="linear-system-theory.html#thm:ltidetectable">A.3</a>, we know that <span class="math inline">\((A,C)\)</span> being detectable implies the existence of <span class="math inline">\(K\)</span> such that <span class="math inline">\(A - KC\)</span> is Hurwitz.</p>
+<p>Then, if the real components of the eigenvalues of <span class="math inline">\(A - KC\)</span> are strictly negative (i.e., <span class="math inline">\(A - KC\)</span> is Hurwitz), then <span class="math inline">\(e(t) \rightarrow 0\)</span> as <span class="math inline">\(t \rightarrow \infty\)</span>, independent of the initial error <span class="math inline">\(e(0) = \xi(0) - \hat{\xi}(0)\)</span>. From Theorem <a href="linear-system-theory.html#thm:ltidetectable">A.7</a>, we know that <span class="math inline">\((A,C)\)</span> being detectable implies the existence of <span class="math inline">\(K\)</span> such that <span class="math inline">\(A - KC\)</span> is Hurwitz.</p>
 <p>If one is further interested in estimating the convergence rate of the Luenberger observer, then one can use the result from Corollary <a href="linear-system-theory.html#cor:bestconvergencerate">A.1</a>. Particularly, one can solve the Lyapunov equation
 <span class="math display">\[
 (A - KC)^T P + P (A - KC) = - I
@@ -456,7 +471,7 @@ C \begin{bmatrix}
 1 \\ 0
 \end{bmatrix} = 1 \neq 0.
 \]</span>
-According to Theorem <a href="linear-system-theory.html#thm:ltidetectable">A.3</a>, we conclude <span class="math inline">\((A,C)\)</span> is detectable. In fact, the pair <span class="math inline">\((A,C)\)</span> is more than just detectable, it is indeed observable (according to Theorem <a href="linear-system-theory.html#thm:ltiobservable">A.2</a>). Therefore, the poles of <span class="math inline">\(A - KC\)</span> can be arbitrarily placed.</p>
+According to Theorem <a href="linear-system-theory.html#thm:ltidetectable">A.7</a>, we conclude <span class="math inline">\((A,C)\)</span> is detectable. In fact, the pair <span class="math inline">\((A,C)\)</span> is more than just detectable, it is indeed observable (according to Theorem <a href="linear-system-theory.html#thm:ltiobservable">A.5</a>). Therefore, the poles of <span class="math inline">\(A - KC\)</span> can be arbitrarily placed.</p>
 <p><strong>Finding <span class="math inline">\(K\)</span></strong>. Now we need to find <span class="math inline">\(K\)</span>. An easy choice of <span class="math inline">\(K\)</span> is
 <span class="math display">\[
 K = \begin{bmatrix} k \\ 0 \end{bmatrix}, \quad A - KC =
