@@ -2,9 +2,18 @@
 
 # Linear System Theory
 
+_Thanks to Shucheng Kang for writing this Appendix._
+
 ## Stability {#app-lti-stability}
 
 Check this [note](https://intra.engr.ucr.edu/~enozari/teaching/ME120_Fall20/Lecture%203%20-%20Stability,%20Controllability%20&%20Observability.pdf). 
+
+- Add definition of LTI Stability
+- Add how to check LTI stability (eigenvalues)
+
+Continuous-time results are sufficent.
+
+### Lyapunov Analysis
 
 ::: {.theorembox}
 ::: {.theorem #lyapunovequation name="Lyapunov Equation"}
@@ -108,8 +117,6 @@ and $Q = I$ maximizes the convergence rate estimation.
 
 ## Controllability and Observability {#app-lti-controllable-observable}
 
-### Definition
-
 Consider the following linear time-invariant (LTI) system
 \begin{equation}
     (\#eq:app-linear-system)
@@ -118,7 +125,7 @@ Consider the following linear time-invariant (LTI) system
       y = C x + D u
    \end{split}
 \end{equation}
-where $x \in \mathbb{R}^n$ the state, $u \in \mathbb{R}^m$ the control input, $y \in \mathbb{R}^p$ the output, and and $A,B,C,D$ are constant matrices with proper sizes. If we know the initial state $x(0)$ and the control inputs $u(t)$ over a period $t \in [0, t_1]$, $(x(t), y(t))$ can be expressed as
+where $x \in \mathbb{R}^n$ the state, $u \in \mathbb{R}^m$ the control input, $y \in \mathbb{R}^p$ the output, and $A,B,C,D$ are constant matrices with proper sizes. If we know the initial state $x(0)$ and the control inputs $u(t)$ over a period of time $t \in [0, t_1]$, the system trajectory $(x(t), y(t))$ can be determined as
 \begin{equation}
     (\#eq:app-lti-xy)
    \begin{split}
@@ -127,39 +134,40 @@ where $x \in \mathbb{R}^n$ the state, $u \in \mathbb{R}^m$ the control input, $y
    \end{split}
 \end{equation}
 
-To study the inner structure of linear systems, two important properties should be considered: controllability and observability. In the following analysis, we will see that they are actually dual concepts. Their definitions [@chen1984book-linear] are shown below:
+To study the internal structure of linear systems, two important properties should be considered: controllability and observability. In the following analysis, we will see that they are actually dual concepts. Their definitions [@chen1984book-linear] are given below.
 
 ::: {.definitionbox}
 ::: {.definition #lticontrollable name="Controllability"}
-The LTI system \@ref(eq:app-linear-system) or the pair $(A, B)$ is controllable, if for any initial state $x(0) = x_0$ and final state $x_f$, there exists a sequence of control inputs that transfer the system from $x_0$ to $x_f$ in finite time.
+The LTI system \@ref(eq:app-linear-system), or the pair $(A, B)$, is controllable, if for any initial state $x(0) = x_0$ and final state $x_f$, there exists a sequence of control inputs that transfer the system from $x_0$ to $x_f$ in finite time.
 :::
 :::
 
 ::: {.definitionbox}
 ::: {.definition #ltiobservable name="Observability"}
-The LTI system \@ref(eq:app-linear-system) or the pair $(C, A)$ is observable, if for any unknown initial state $x(0)$, there exists a finite $t_1 > 0$, such that knowing $y$ and $u$ over $[0, t_1]$ suffices to determine $x(0)$.
+The LTI system \@ref(eq:app-linear-system), or the pair $(C, A)$, is observable, if for any unknown initial state $x(0)$, there exists a finite time $t_1 > 0$, such that knowing $y$ and $u$ over $[0, t_1]$ suffices to determine $x(0)$.
 :::
 :::
 
-Sometimes we want to analyze the system \@ref(eq:app-linear-system) under another basis, i.e., $z = T x$, where the similarity transformation matrix $T$ is nonsingular. Define $A' = TAT^{-1}, B' = PB, C' = CT^{-1}, D' = D$, we get 
+Sometimes it will become more convenient for us to analyze the system \@ref(eq:app-linear-system) under another coordinate basis, i.e., $z = T x$, where the coordinate transformation $T$ is nonsingular (i.e., full-rank). Define $A' = TAT^{-1}, B' = PB, C' = CT^{-1}, D' = D$, we get 
 \begin{equation*}
    \begin{split}
       \dot{z} = A' z + B' u \\ 
       y = C' z + D' u
    \end{split}
 \end{equation*}
-Since the similar transformation only changes system's basis for description, physical properties like controllability and observability will not change.
+Since the coordinate transformation only changes the system's coordinate basis, physical properties like controllability and observability will not change.
 
-### Cayley Hamilton Theorem
+### Cayley-Hamilton Theorem
 
-In the analysis of controllability and observability, Cayley Hamilton Theorem lays the foundation. The theory statement and an elegant proof of it are shown below. Some useful corollaries and their proofs are also given. 
+In the analysis of controllability and observability, Cayley Hamilton Theorem lays the foundation. The statement of the theory and its (elegant) proof are given blow. Some useful corollaries are also presented. 
 
 ::: {.theorembox}
-::: {.theorem #cayham name="Cayley Hamilton"}
-Let $A \in \mathbb{C}^{n \times n}$ and denote 
+::: {.theorem #cayham name="Cayley-Hamilton"}
+Let $A \in \mathbb{C}^{n \times n}$ and denote the characteristic polynomial of $A$ as 
 $$
-   \text{det}(\lambda I - A) = \lambda^n + a_1 \lambda^{n-1} + \dots + a_n
+   \text{det}(\lambda I - A) = \lambda^n + a_1 \lambda^{n-1} + \dots + a_n \in \mathbb{C}[\lambda],
 $$
+which is a polynomial in a single variable $\lambda$ with coefficients $a_1,\dots,a_n$.
 Then
 $$
    A^n + a_1 A^{n-1} + \dots + a_n I = 0
@@ -169,28 +177,29 @@ $$
 
 ::: {.proofbox}
 ::: {.proof}
-Define the adjugate of $\lambda I - A$ as 
+Define the [adjugate](https://en.wikipedia.org/wiki/Adjugate_matrix) of $\lambda I - A$ as 
 $$
    B = \text{adj}(\lambda I - A)
 $$
 From $B$'s definition, we have 
-$$
-   (\lambda I - A) B  = \text{det}(\lambda I - A) I = (\lambda^n + a_1 \lambda^{n-1} + \dots + a_n) I
-$$
+\begin{equation}
+(\lambda I - A) B  = \text{det}(\lambda I - A) I = (\lambda^n + a_1 \lambda^{n-1} + \dots + a_n) I
+(\#eq:adjugate-1)
+\end{equation}
 Also, $B$ is a polynomial matrix over $\lambda$, whose maximum degree is no more than $n - 1$. Therefore, we write $B$ as follows:
 $$
    B = \sum_{i=0}^{n-1} \lambda^i B_i
 $$ 
 where $B_i$'s are constant matrices. In this way, we unfold $(\lambda I - A)B$:
-\begin{equation*}
+\begin{equation}
+(\#eq:adjugate-2)
    \begin{split}
       (\lambda I - A) B & = (\lambda I - A) \sum_{i=0}^{n-1} \lambda^i B_i \\
-      & = \lambda^n B_{n-1} + \sum_{i=1}^{n-1} \lambda^i (-A B_i + B_{i-1}) - A B_0 \\
-      & = \lambda^n I + \sum_{i=1}^{n-1} \lambda^i a_{n-i} I + a_n I  
+      & = \lambda^n B_{n-1} + \sum_{i=1}^{n-1} \lambda^i (-A B_i + B_{i-1}) - A B_0
    \end{split}
-\end{equation*}
+\end{equation}
 
-Since $\lambda$ can be arbitrarily set, we must have
+Since $\lambda$ can be arbitrarily set, matching the coefficients of \@ref(eq:adjugate-1) and \@ref(eq:adjugate-2), we have
 \begin{equation*}
    \begin{split}
       B_{n-1} & = I \\
@@ -212,12 +221,13 @@ $$
 $$
 since each term offsets completely. Therefore,
 $$
-   A^n + a_1 A^{n-1} + a_2 A^{n-2} + \dots + a_n I = 0
+   A^n + a_1 A^{n-1} + a_2 A^{n-2} + \dots + a_n I = 0,
 $$
+concluding the proof.
 :::
 :::
 
-Here are some corollaries of Cayley Hamilton Theorem. 
+Here are some corollaries of the Cayley-Hamilton Theorem. 
 
 ::: {.theorembox}
 ::: {.corollary #cayham-1}
@@ -326,9 +336,12 @@ To see $\bar{\mathcal{C}}$ has full row rank, note that $\text{rank} \mathcal{C}
       0 & 0 & 0 & \dots & 0 & \dots & 0
    \end{bmatrix}
 \end{equation*}
-Thus, $\text{rank}\begin{bmatrix}
+Thus, 
+$$\text{rank}\begin{bmatrix}
    \bar{B}_c & \bar{A}_c \bar{B}_c & \bar{A}_c^2 \bar{B}_c & \dots & \bar{A}_c^{k_1 - 1} \bar{B}_c & \dots & \bar{A}_c^{n - 1} \bar{B}_c
-\end{bmatrix} = k_1$. By Corollary \@ref(cor:cayham-2), $\text{rank}\bar{\mathcal{C}} = k_1$.
+\end{bmatrix} = k_1.
+$$
+By Corollary \@ref(cor:cayham-2), $\text{rank}\bar{\mathcal{C}} = k_1$.
 :::
 :::
 
@@ -431,7 +444,7 @@ where the penultimate equality uses Cayley Hamilton Theorem.
 :::
 
 ### Equivalent Statements for Controllability
-There are a few equivalent statements to express a LTS system's controllability that one should be familiar with:
+There are a few equivalent statements to express an LTI system's controllability that one should be familiar with:
 
 ::: {.theorembox}
 ::: {.theorem #lticontrollable name="Equivalent Statements for Controllability"}
@@ -459,7 +472,7 @@ has full row rank.
 
 6. The eigenvalues of $A+BF$ can be freely assigned (with the restriction that complex eigenvalues are in conjugate pairs) by a suitable choice of $F$.
 
-7. If, in addition, all eigenvalues of $A$ have negative parts, then the unique solution of 
+7. If, in addition, all eigenvalues of $A$ have negative real parts, then the unique solution of 
 $$ 
    A W_c + W_c A^* = -B B^* 
 $$
@@ -675,7 +688,7 @@ On the other hand, however, $W_c \succ 0$ implies there exists $t_3 > 0$, such t
 
 ### Duality
 
-Although controllability and observability seemingly have no direct connections from their definitions \@ref(def:lticontrollable) and \@ref(def:ltiobservable), the following theorem [@chen1984book-linear] states their tight relations:
+Although controllability and observability seemingly have no direct connections from their definitions \@ref(def:lticontrollable) and \@ref(def:ltiobservable), the following theorem [@chen1984book-linear] states their tight relations.
 
 ::: {.theorembox}
 ::: {.theorem #lti-dual-conobs name="Theorem of Duality"}
@@ -718,7 +731,7 @@ From (1) we know $(C,A)$ is controllable if and only of
 \begin{equation*}
    \int_{0}^{t} e^{A^*\tau} C^*C e^{A\tau} d\tau = \int_{0}^{t} e^{(A^*)\tau} (C^*)^* (C^*) e^{(A^*)^*\tau} d\tau
 \end{equation*}
-is nonsingular for all $t >0$. The latter is exactly the definition of $(A^*, C^*)$'s $W_c(t)$.
+is nonsingular for all $t >0$. The latter is exactly the definition of $(A^*, C^*)$'s controllability Gramian $W_c(t)$.
 :::
 :::
 
@@ -771,17 +784,25 @@ is positive definite. The solution is called the *observability Gramian* and can
 
 ## Stabilizability And Detectability
 
-### Definition
-
 To define stabilizability and detectability of an LTI system, we first introduce the concept of *system mode*, which can be naturally derived from the fifth definition of controllability \@ref(thm:lticontrollable) (observability \@ref(thm:ltiobservable)).
 
 ::: {.definitionbox}
 ::: {.definition #ltisystemmode name="System Mode"}
-$\lambda$ is a mode of an LTI system, if it is an eigenvalue of $A$. The mode $\lambda$ is said to be stable if $\text{Re}\lambda < 0$, is controllable (observable) if $x^* B \ne 0$ ($C x \ne 0$) for all left (right) eigenvectors of $A$ associated with $\lambda$. Otherwise, the mode is said to be uncontrollable (unobservable).
+$\lambda$ is a mode of an LTI system, if it is an eigenvalue of $A$. The mode $\lambda$ is said to be:
+
+- stable, if $\text{Re}\lambda < 0$, 
+- controllable, if $x^* B \ne 0$ for all left eigenvectors of $A$ associated with $\lambda$,
+- observable, if $C x \ne 0$ for all right eigenvectors of $A$ associated with $\lambda$. 
+
+Otherwise, the mode is said to be uncontrollable (unobservable).
 :::
 :::
 
-With the concept of system mode, the fifth definition of controllability \@ref(thm:lticontrollable) (observability \@ref(thm:ltiobservable)) can be restated as: an LTI system is controllable (observable) if and only if all modes are controllable (observable). Stabilizability (detectability) is defined similarly via loosening part of controllability (observability)'s conditions.
+With the concept of system mode, the fifth definition of controllability \@ref(thm:lticontrollable) (observability \@ref(thm:ltiobservable)) can be restated as
+
+> An LTI system is controllable (observable) if and only if all modes are controllable (observable).
+
+Stabilizability (detectability) is defined similarly via loosening part of controllability (observability) conditions.
 
 ::: {.definitionbox}
 ::: {.definition #ltistabilizable name="Stabilizability"}
@@ -903,9 +924,9 @@ Otherwise, if $(A,B)$ is uncontrollable, then from Corollary \@ref(cor:cayham-3)
 and 
 \begin{equation*}
    \text{det}(A+BF-\lambda I) = \underbrace{\text{det}(\bar{A}_c + \bar{B}_c F_1 - \lambda I_1)}_{\chi_c(\lambda)} \cdot 
-   \underbrace{\text{det}(\bar{A}_{\bar{c}} - \lambda I_2)}_{\chi_\bar{c}(\lambda)}
+   \underbrace{\text{det}(\bar{A}_{\bar{c}} - \lambda I_2)}_{\chi_{\bar{c}}(\lambda)}
 \end{equation*}
-where $\bar{A}_c \in \mathbb{C}^{k_1 \times k_1}$, $I_1$ identity matrix of size $k_1$, $[F_1,F_2] = FT^{-1}$, and $k_1 = \text{rank} \mathcal{C}$. Additionally, $(\bar{A}_c, \bar{B}_c)$ is controllable. Thus, $\chi_c(\lambda)$'s zeros can be freely assigned by choosing proper $F$, i.e., system modes with $\chi_c(\lambda)$ is controllable, regardless of its stability. On the other hand, system modes with $\chi_\bar{c}(\lambda)$ must be stable. Otherwise, we cannot affect it by assigning $F$, which is a contradiction to statement (1). Therefore, $(TAT^{-1}, TB)$ is stabilizable. Since similarity transformation does not change stabilizability, $(A,B)$ is stabilizable.
+where $\bar{A}_c \in \mathbb{C}^{k_1 \times k_1}$, $I_1$ identity matrix of size $k_1$, $[F_1,F_2] = FT^{-1}$, and $k_1 = \text{rank} \mathcal{C}$. Additionally, $(\bar{A}_c, \bar{B}_c)$ is controllable. Thus, $\chi_c(\lambda)$'s zeros can be freely assigned by choosing proper $F$, i.e., system modes with $\chi_c(\lambda)$ is controllable, regardless of its stability. On the other hand, system modes with $\chi_{\bar{c}}(\lambda)$ must be stable. Otherwise, we cannot affect it by assigning $F$, which is a contradiction to statement (1). Therefore, $(TAT^{-1}, TB)$ is stabilizable. Since similarity transformation does not change stabilizability, $(A,B)$ is stabilizable.
 :::
 :::
 
