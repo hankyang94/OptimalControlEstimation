@@ -8,10 +8,82 @@ _Thanks to Shucheng Kang for writing this Appendix._
 
 Check this [note](https://intra.engr.ucr.edu/~enozari/teaching/ME120_Fall20/Lecture%203%20-%20Stability,%20Controllability%20&%20Observability.pdf). 
 
-- Add definition of LTI Stability
-- Add how to check LTI stability (eigenvalues)
+### Definition
 
-Continuous-time results are sufficent.
+::: {.definitionbox}
+::: {.definition #ltistable name="Asymptotic and Marginal Stability"}
+The zero-input linear time-invariant (LTI) system $\dot{x} = A x$ is
+
+1. "asymptotically stable" if $x(t) \rightarrow 0$ as $t \rightarrow \infty$ for every initial condition $x_0$
+
+2. "marginally stable" if $x(t) \nrightarrow 0$ but remains bounded as $t \rightarrow \infty$ for every initial condition $x_0$
+
+3. "stable" if it is either asymptotically or marginally stable
+
+4. "unstable" if it is not stable
+:::
+:::
+
+One can show that $A$'s eigenvalues determines the zero-input LTI system's stability, as the following Theorem states:
+
+::: {.theorembox}
+::: {.theorem #ltistable name="Criteria for Asymptotic and Marginal Stability"}
+
+1. asymptotically stable if $\text{Re} (\lambda_i) < 0$ for all $i$
+
+2. marginally stable if $\text{Re} (\lambda_i) \le 0$ for all $i$ and there exists at least one $i$ for which $\text{Re} (\lambda_i) = 0$
+
+3. stable if $\text{Re} (\lambda_i) \le 0$ for all $i$
+
+4. unstable if $\text{Re} (\lambda_i) > 0$ for at least one $i$
+:::
+:::
+
+::: {.proofbox}
+::: {.proof}
+Here we only represent the proof of (1). Similar procedure can be adopted for the proof of (2) - (4). 
+
+Suppose $A \in \mathbb{C}^{n \times n}$. There exists a similarity transformation matrix $V := \begin{bmatrix} v_1 & \dots & v_n \end{bmatrix}$, s.t. $A = V J V^{-1}$, where $J$ is the Jordan form of $A$ (Please note that $A$ may be non-diagonalizable so eigenvalue decomposition will fail in general.) Since $\left\{v_1 \dots v_n\right\}$ spans $\mathbb{C}^n$, we can denote the state $x(t)$ as $V a(t)$. Therefore, under the coordinate transformation $V^{-1}$,
+\begin{equation*}
+   \dot{x}(t) = A x(t) \Longrightarrow \dot{a}(t) = J a(t) 
+\end{equation*}
+Now suppose $J$ has $I$ Jordan blocks with corresponding block sizes $K_1, \dots K_I$ and eigenvalues $\lambda_1, \dots, \lambda_I$. Inside the $i$'s Jordan block, the differential equations are:
+\begin{equation*}
+   \begin{split}
+      \dot{a}_{i,1}(t) & = \lambda_i \cdot a_{i,1}(t) \\
+      \dot{a}_{i,2}(t) & = a_{i,1}(t) + \lambda_i \cdot a_{i,2}(t) \\
+      \vdots & \\
+      \dot{a}(t)_{i,K_i} & = a_{i,K_i-1}(t) + \lambda_i \cdot a_{i,K_i}(t)
+   \end{split}
+\end{equation*}
+With Laplace transformation, we represent the above equations in the frequency domain:
+\begin{equation*}
+   \begin{split}
+      s \cdot A_{i,1}(s) - a_{i,1}(0) & = \lambda_i \cdot A_{i,1}(s) \\
+      s \cdot A_{i,2}(s) - a_{i,2}(0) & = A_{i,1}(s) + \lambda_i \cdot A_{i,2}(s) \\
+      \vdots & \\
+      s \cdot A_{i,K_i}(s) - a_{i,K_i}(0) & = A_{i,K_i-1}(s) + \lambda_i \cdot A_{i,K_i}(s) 
+   \end{split}
+\end{equation*}
+where $A_{i,k}(s)$ corresponds to $a_{i,k}(t)$'s Laplace transformation. By solving the above algebraic equations, 
+\begin{equation*}
+   A_{i,k}(s) = \sum_{j=1}^{k} \frac{
+      a_{i, k+1-j}(0)
+   }{
+      (s - \lambda_i)^j
+   }, \quad \forall k \in \left\{1 \dots K_i\right\}
+\end{equation*}
+Via the inverse Laplace transformation:
+\begin{equation*}
+   a_{i,k}(t) = \sum_{j=1}^{k} \frac{
+      a_{i, k+1-j}(0)
+   }{
+      (j-1)!
+   } \cdot e^{\lambda_i t} t^{j-1}, \quad \forall k \in \left\{1 \dots K_i\right\}
+\end{equation*}
+Since $\text{Re}(\lambda_i) < 0$, no matter how we choose $a_{i,k}(0)$, $a_{i,k}(t)$ will always converge to $0$. 
+:::
+:::
 
 ### Lyapunov Analysis
 
@@ -31,11 +103,11 @@ is positive definite.
 :::
 ::: {.proofbox}
 ::: {.proof}
-(a): $2 \Rightarrow 1$. Suppose we are given two positive definie matrices $P, Q \succ 0$ that satisfies the Lyapunov equation \@ref(eq:lyapunov-equation). Define a scalar function 
+(a): $2 \Rightarrow 1$. Suppose we are given two positive definite matrices $P, Q \succ 0$ that satisfies the Lyapunov equation \@ref(eq:lyapunov-equation). Define a scalar function 
 $$
 V(x) = x^T P x.
 $$
-It is clear that $V > 0$ for any $x \neq 0$ and $V(x) = 0$ (i.e., $V(x)$ is positive definie). We also see $V(x)$ is radially unbounded because:
+It is clear that $V > 0$ for any $x \neq 0$ and $V(x) = 0$ (i.e., $V(x)$ is positive definite). We also see $V(x)$ is radially unbounded because:
 $$
 V(x) \geq \lambda_{\min}(P) \Vert x \Vert^2 \Rightarrow \lim_{x \rightarrow \infty} V(x) \rightarrow \infty.
 $$
@@ -886,7 +958,7 @@ Combining the above two equations:
 \begin{equation*}
    \sum_{i=1}^{I} \left\{
       \sum_{k=1}^{K_i - 1} \left[ \xi_{i,k}\cdot (\eta_i - \lambda) + \xi_{i,k+1} \right] v_{i,k}^* 
-      + \xi_{i,K_i} \cdot (\eta_i - \lambda) \cdot v_{i,K_i}^*
+      + \xi_{i,K_i} \cdot (\eta_i - \lambda) \cdot v_{i,K_i}^* = 0
    \right\}
 \end{equation*}
 Since $v_{i,k}$'s are linearly independent, for any $i \in \left\{i\dots I\right\}$:
