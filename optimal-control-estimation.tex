@@ -114,7 +114,7 @@ arc=4pt}
 
 \title{Optimal Control and Estimation}
 \author{Heng Yang}
-\date{2023-07-31}
+\date{2023-08-02}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -320,11 +320,190 @@ For general optimal control problems with continuous state space and control spa
 \hypertarget{exactdp}{%
 \chapter{Exact Dynamic Programming}\label{exactdp}}
 
+In Chapter \ref{formulation}, we introduced the basic formulation of the finite-horizon and discrete-time optimal control problem, presented the Bellman principle of optimality, and derived the dynamic programming (DP) algorithm. We mentioned that, despite being a general-purpose algorithm, it can be difficult to implement DP exactly in practical applications.
+
+In this Chapter, we will introduce two problem setups where DP can in fact be implemented exactly.
+
 \hypertarget{lqr}{%
 \section{Linear Quadratic Regulator}\label{lqr}}
 
+Consider a linear discrete-time dynamical system
+\begin{equation}
+x_{k+1} = A_k x_k + B_k u_k + w_k, \quad k=0,1,\dots,N-1,
+\label{eq:lqr-linear-system}
+\end{equation}
+where \(x_k \in \mathbb{R}^n\) the state, \(u_k \in \mathbb{R}^m\) the control, \(w_k \in \mathbb{R}^n\) the independent, zero-mean disturbance with given probability distribution that does not depend on \(x_k,u_k\), and \(A_k \in \mathbb{R}^{n \times n}, B_k \in \mathbb{R}^{n \times m}\) are known matrices determining the transition dynamics.
+
+We want to solve the following optimal control problem
+\begin{equation}
+\min_{\mu_0,\dots,\mu_{N-1}} \mathbb{E} \left\{ x_N^T Q_N x_N + \sum_{k=0}^{N-1} \left( x_k^T Q_k x_k + u_k^T R_k u_k \right) \right\},
+\label{eq:lqr-formulation}
+\end{equation}
+where the expectation is taken over the randomness in \(w_0,\dots,w_{N-1}\). In \eqref{eq:lqr-formulation}, \(\{Q_k \}_{k=0}^N\) are positive semidefinite matrices, and \(\{ R_k \}_{k=0}^{N-1}\) are positive definite matrices. The formulation \eqref{eq:lqr-formulation} is typically known as the linear quadratic regulator (LQR) problem because the dynamics is linear, the cost is quadratic, and the formulation can be considered to ``regulate'' the system around the origin \(x=0\).
+
+We will now show that the DP algorithm in Theorem \ref{thm:dynamicprogramming} can be exactly implemented for LQR.
+
+The DP algorithm computes the optimal cost-to-go backwards in time.
+The terminal cost is
+\[
+J_N(x_N) = x_N^T Q_N x_N
+\]
+by definition.
+
+The optimal cost-to-go at time \(N-1\) is equal to
+\begin{equation}
+\begin{split}
+J_{N-1}(x_{N-1}) = \min_{u_{N-1}} \mathbb{E}_{w_{N-1}} \{ x_{N-1}^T Q_{N-1} x_{N-1} + u_{N-1}^T R_{N-1} u_{N-1} + \\ \Vert \underbrace{A_{N-1} x_{N-1} + B_{N-1} u_{N-1} + w_{N-1} }_{x_N} \Vert^2_{Q_N} \}
+\end{split}
+\label{eq:lqr-cost-N-1}
+\end{equation}
+where \(\Vert v \Vert_Q^2 = v^T Q v\) for \(Q \succeq 0\). Now observe that the objective in \eqref{eq:lqr-cost-N-1} is
+\begin{equation}
+\begin{split}
+x_{N-1}^T Q_{N-1} x_{N-1} + u_{N-1}^T R_{N-1} u_{N-1} + \Vert A_{N-1} x_{N-1} + B_{N-1} u_{N-1} \Vert_{Q_N}^2 + \\
+\mathbb{E}_{w_{N-1}} \left[ 2(A_{N-1} x_{N-1} + B_{N-1} u_{N-1} )^T Q_{N-1} w_{N-1} \right] + \\
+\mathbb{E}_{w_{N-1}} \left[ w_{N-1}^T Q_N w_{N-1} \right]
+\end{split}
+\end{equation}
+where the second line is zero due to \(\mathbb{E}(w_{N-1}) = 0\) and the third line is a constant with respect to \(u_{N-1}\). Consequently, the optimal control \(u_{N-1}^\star\) can be computed by setting the derivative of the objective with respect to \(u_{N-1}\) equal to zero
+\begin{equation}
+u_{N-1}^\star = - \left[ \left( R_{N-1} + B_{N-1}^T Q_N B_{N-1} \right)^{-1} B_{N-1}^T Q_N A_{N-1} \right] x_{N-1}.
+\label{eq:optimal-u-N-1}
+\end{equation}
+Plugging the optimal controller \(u^\star_{N-1}\) back to the objective of \eqref{eq:lqr-cost-N-1} leads to
+\begin{equation}
+J_{N-1}(x_{N-1}) = x_{N-1}^T S_{N-1} x_{N-1} + \mathbb{E} \left[ w_{N-1}^T Q_N w_{N-1} \right],
+\label{eq:optimal-cost-N-1}
+\end{equation}
+with
+\[
+S_{N-1} = Q_{N-1} + A_{N-1}^T \left[ Q_N - Q_N B_{N-1} \left( R_{N-1} + B_{N-1}^T Q_N B_{N-1} \right)^{-1} B_{N-1}^T Q_N \right] A_{N-1}.
+\]
+We note that \(S_{N-1}\) is positive semidefinite (this is an exercise for you to convince yourself).
+
+Now we realize that something surprising and nice has happened.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  The optimal controller \(u^{\star}_{N-1}\) in \eqref{eq:optimal-u-N-1} is a linear feedback policy of the state \(x_{N-1}\), and
+\item
+  The optimal cost-to-go \(J_{N-1}(x_{N-1})\) in \eqref{eq:optimal-cost-N-1} is quadratic in \(x_{N-1}\), just the same as \(J_{N}(x_N)\).
+\end{enumerate}
+
+This implies that, if we continue to compute the optimal cost-to-go at time \(N-2\), we will again compute a linear optimal controller and a quadratic optimal cost-to-go. This is the rare nice property for the LQR problem, that is,
+
+\begin{quote}
+The (representation) complexity of the optimal controller and cost-to-go does not grow as we run the DP recursion backwards in time.
+\end{quote}
+
+We summarize the solution for the LQR problem \eqref{eq:lqr-formulation} as follows.
+
+\begin{proposition}[Solution of Discrete-Time Finite-Horizon LQR]
+\protect\hypertarget{prp:discretetimefinitehorizonlqrsolution}{}\label{prp:discretetimefinitehorizonlqrsolution}The optimal controller for the LQR problem \eqref{eq:lqr-formulation} is a linear state-feedback policy
+\begin{equation}
+\mu_k^\star(x_k) = - K_k x_k, \quad k=0,\dots,N-1.
+\label{eq:lqr-solution-control}
+\end{equation}
+The gain matrix \(K_k\) can be computed as
+\[
+K_k = \left( R_k + B_k^T S_{k+1} B_k  \right)^{-1} B_k^T S_{k+1} A_k,
+\]
+where the matrix \(S_k\) satisfies the following backwards recursion
+\begin{equation}
+\hspace{-6mm}
+\begin{split}
+S_N &= Q_N \\
+S_k &= Q_k + A_k^T \left[ S_{k+1} - S_{k+1}B_k \left( R_k + B_k^T S_{k+1} B_k  \right)^{-1}  B_k^T S_{k+1}  \right] A_k, k=N-1,\dots,0.
+\end{split}
+\label{eq:finite-discrete-lqr-riccati}
+\end{equation}
+The optimal cost-to-go is given by
+\[
+J_0(x_0) = x_0^T S_0 x_0 + \sum_{k=0}^{N-1} \mathbb{E} \left[ w_k^T S_{k+1} w_k\right].
+\]
+The recursion \eqref{eq:finite-discrete-lqr-riccati} is called the \emph{discrete-time Riccati equation}.
+\end{proposition}
+
+Proposition \ref{prp:discretetimefinitehorizonlqrsolution} states that, to evaluate the optimal policy \eqref{eq:lqr-solution-control}, one can first run the backwards Riccati equation \eqref{eq:finite-discrete-lqr-riccati} to compute all the positive definite matrices \(S_k\), and then compute the gain matrices \(K_k\). For systems of reasonable dimensions, evalutating the matrix inversion in \eqref{eq:finite-discrete-lqr-riccati} should be fairly efficient.
+
+\hypertarget{infinite-horizon-lqr}{%
+\subsection{Infinite-Horizon LQR}\label{infinite-horizon-lqr}}
+
+In many robotics applications, it is often more useful to study the infinite-horizon LQR problem
+\begin{align}
+\min_{u_k} & \quad  \sum_{k=0}^{\infty} \left( x_k^T Q x_k + u_k^T R u_k \right) \label{eq:infinite-horizon-lqr-cost} \\
+\text{subject to} & \quad x_{k+1} = A x_k + B u_k, \quad k=0,\dots,\infty, \label{eq:infinite-horizon-lqr-system}
+\end{align}
+where \(Q \succeq 0\), \(R \succ 0\), and \(A,B\) are constant matrices. The reason for studying the formulation \eqref{eq:infinite-horizon-lqr-cost} is twofold. First, for nonlinear systems, we often linearize the nonlinear dynamics around an (equilibrium) point we care about, leading to constant \(A\) and \(B\) matrices. Second, we care more about the \emph{asymptotic} effect of our controller than its behavior in a fixed number of steps. We will soon see an example of this formulation for balancing a simple pendulum.
+
+The infinite-horizon formulation is essentially the finite-horizon formulation \eqref{eq:lqr-formulation} with \(N \rightarrow \infty\). Based on our intuition in deriving the finite-horizon LQR solution, we may want to hypothesize that the optimal cost-to-go is a quadratic function
+\begin{equation}
+J_{k}(x_{k}) = x_{k}^T S x_{k}, k=0,\dots,\infty
+\label{eq:infinite-horizon-lqr-optimal-cost}
+\end{equation}
+for some positive definite matrix \(S\), and proceed to invoke the DP algorithm. Notice that we hypothesize the matrix \(S\) is in fact \emph{stationary}, i.e., it does not change with respect to time. This hypothesis makes sense because the \(A,B,Q,R\) matrices are stationary in the formulation \eqref{eq:infinite-horizon-lqr-cost}. Invoking the DP algorithm we have
+\begin{equation}
+x_k^T S x_k = J_k(x_k) = \min_{u_k} \left\{ x_k^T Q x_k + u_k^T R u_k + \Vert \underbrace{A x_k + B u_k}_{x_{k+1}} \Vert_S^2  \right\}.
+\label{eq:infinite-horizon-lqr-invoke-dp}
+\end{equation}
+The minimization over \(u_k\) in \eqref{eq:infinite-horizon-lqr-invoke-dp} can again be solved in closed-form by setting the gradient of the objective with respect to \(u_k\) to be zero
+\begin{equation}
+u_k^\star = - \underbrace{\left[ \left( R + B^T S B \right)^{-1} B^T S A \right]}_{K} x_k.
+\label{eq:infinite-horizon-lqr-control}
+\end{equation}
+Plugging the optimal \(u_k^\star\) back into \eqref{eq:infinite-horizon-lqr-invoke-dp}, we see that the matrix \(S\) has to satisfy the following equation
+\begin{equation}
+S = Q + A^T \left[  S - SB \left( R + B^T S B  \right)^{-1} B^T S \right] A.
+\label{eq:algebraic-riccati}
+\end{equation}
+Equation \eqref{eq:algebraic-riccati} is the famous \emph{algebraic Riccati equation}.
+
+Let's zoom out to see what we have done. We started with a hypothetical optimal cost-to-go \eqref{eq:infinite-horizon-lqr-optimal-cost} that is stationary, and invoked the DP algorithm in \eqref{eq:infinite-horizon-lqr-invoke-dp}, which led us to the algebraic Riccati equation \eqref{eq:algebraic-riccati}. Therefore, if there actually exists a solution to the algebraic Riccati equation \eqref{eq:algebraic-riccati}, then the linear controller \eqref{eq:infinite-horizon-lqr-control} is indeed optimal (by the optimality of DP)!
+
+So the question boils down to if the algebraic Riccati equation has a solution \(S\) that is positive definite? The following proposition gives an answer.
+
+\begin{proposition}[Solution of Discrete-Time Infinite-Horizon LQR]
+\protect\hypertarget{prp:infinitehorizonlqrsolution}{}\label{prp:infinitehorizonlqrsolution}Consider a linear system
+\[
+x_{k+1} = A x_k + B u_k,
+\]
+with \((A,B)\) controllable (see Appendix \ref{app-lti-controllable-observable}). Let \(Q \succeq 0\) in \eqref{eq:infinite-horizon-lqr-cost} be such that \(Q\) can be written as \(Q = C^T C\) with \((A,C)\) observable.
+
+Then the optimal controller for the infinite-horizon LQR problem \eqref{eq:infinite-horizon-lqr-cost} is a stationary linear policy
+\[
+\mu^\star (x) = - K x,
+\]
+with
+\[
+K = \left( R + B^T S B \right)^{-1} B^T S A.
+\]
+The matrix \(S\) is the unique positive definite matrix that satisfies the algebraic Riccati equation
+\[
+S = Q + A^T \left[  S - SB \left( R + B^T S B  \right)^{-1} B^T S \right] A.
+\]
+
+Moreover, the closed-loop system
+\[
+x_{k+1} = A x_k + B (-K x_k) = (A - BK) x_k
+\]
+is stable, i.e., the eigenvalues of the matrix \(A - BK\) are strictly within the unit circle (see Appendix \ref{app-lti-stability-dt}).
+\end{proposition}
+
+A rigorous proof of Proposition \ref{prp:infinitehorizonlqrsolution} is available in Proposition 3.1.1 of \citep{bertsekas12book-dpocI}. The proof basically studies the limit of the discrete-time Riccati equation \eqref{eq:finite-discrete-lqr-riccati} when \(N \rightarrow \infty\). Indeed, the algebraic Riccati equation \eqref{eq:algebraic-riccati} is the limit of the discrete-time Riccati equation \eqref{eq:finite-discrete-lqr-riccati} when \(N \rightarrow \infty\). The assumptions of \((A,B)\) being controllable and \((A,C)\) being observable can be relaxted to \((A,B)\) being stabilizable and \((A,C)\) being detectable (for definitions of stabilizability and detectability, see Appendix \ref{app-lti-system-theory}).
+
+We have not discussed how to solve the algebraic Riccati equation \eqref{eq:finite-discrete-lqr-riccati}. It is clear that \eqref{eq:finite-discrete-lqr-riccati} is not a linear system of equations in \(S\). In fact, the numerical algorithms for solving the algebraic Riccati equation can be highly nontrivial, for example see \citep{arnold84ieee-generalized}. Fortunately, such algorithms are often readily available, and as practitioners we do not need to worry about solving the algebraic Riccati equation by ourselves. For example, the Matlab \href{https://www.mathworks.com/help/control/ref/dlqr.html}{\texttt{dlqr}} function computes the \(K\) and \(S\) matrices from \(A,B,Q,R\).
+
+Let us now apply the infinite-horizon LQR solution to stabilizing a simple pendulum.
+
+\begin{example}[Pendulum Stabilization by LQR]
+\protect\hypertarget{exm:lqr-pendulum-stabilization}{}\label{exm:lqr-pendulum-stabilization}Consider the simple pendulum dynamics
+\end{example}
+
 \hypertarget{approximatedp}{%
 \chapter{Approximate Dynamic Programming}\label{approximatedp}}
+
+\emph{Thanks to \href{https://jrli.org/}{Jiarui Li} for writing this Chapter.}
 
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
@@ -2849,25 +3028,133 @@ which implies the boundedness of \(\dot{s}\) (note that \(H\) is uniformly posit
 \appendix}
 
 
-\hypertarget{linear-system-theory}{%
-\chapter{Linear System Theory}\label{linear-system-theory}}
+\hypertarget{app-lti-system-theory}{%
+\chapter{Linear System Theory}\label{app-lti-system-theory}}
 
 \emph{Thanks to Shucheng Kang for writing this Appendix.}
 
 \hypertarget{app-lti-stability}{%
 \section{Stability}\label{app-lti-stability}}
 
-Check this \href{https://intra.engr.ucr.edu/~enozari/teaching/ME120_Fall20/Lecture\%203\%20-\%20Stability,\%20Controllability\%20\&\%20Observability.pdf}{note}.
+\hypertarget{app-lti-stability-ct}{%
+\subsection{Continuous-Time Stability}\label{app-lti-stability-ct}}
 
-\begin{itemize}
-\tightlist
-\item
-  Add definition of LTI Stability
-\item
-  Add how to check LTI stability (eigenvalues)
-\end{itemize}
+Consider the continuous-time linear time-invariant (LTI) system
+\begin{equation}
+\dot{x} = A x.
+\label{eq:app-stability-ct-linear-system}
+\end{equation}
 
-Continuous-time results are sufficent.
+\begin{definition}[Asymptotic and Marginal Stability]
+\protect\hypertarget{def:ltistable}{}\label{def:ltistable}
+
+The LTI system \eqref{eq:app-stability-ct-linear-system} is
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  ``asymptotically stable'' if \(x(t) \rightarrow 0\) as \(t \rightarrow \infty\) for every initial condition \(x_0\)
+\item
+  ``marginally stable'' if \(x(t) \nrightarrow 0\) but remains bounded as \(t \rightarrow \infty\) for every initial condition \(x_0\)
+\item
+  ``stable'' if it is either asymptotically or marginally stable
+\item
+  ``unstable'' if it is not stable
+\end{enumerate}
+
+\end{definition}
+
+One can show that \(A\)'s eigenvalues determine the LTI system's stability, as the following Theorem states:
+
+\begin{theorem}[Criteria for Asymptotic and Marginal Stability]
+\protect\hypertarget{thm:ltistable}{}\label{thm:ltistable}
+
+The LTI system \eqref{eq:app-stability-ct-linear-system} is
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  asymptotically stable if \(\text{Re} (\lambda_i) < 0\) for all \(i\)
+\item
+  marginally stable if \(\text{Re} (\lambda_i) \le 0\) for all \(i\) and there exists at least one \(i\) for which \(\text{Re} (\lambda_i) = 0\)
+\item
+  stable if \(\text{Re} (\lambda_i) \le 0\) for all \(i\)
+\item
+  unstable if \(\text{Re} (\lambda_i) > 0\) for at least one \(i\)
+\end{enumerate}
+
+\end{theorem}
+
+\begin{proof}
+Here we only represent the proof of (1). Similar procedure can be adopted for the proof of (2) - (4).
+
+Suppose \(A \in \mathbb{C}^{n \times n}\). There exists a similarity transformation matrix \(V := \begin{bmatrix} v_1 & \dots & v_n \end{bmatrix}\), s.t. \(A = V J V^{-1}\), where \(J\) is the Jordan form of \(A\) (Please note that \(A\) may be non-diagonalizable so eigenvalue decomposition will fail in general.) Since \(\left\{v_1 \dots v_n\right\}\) spans \(\mathbb{C}^n\), we can denote the state \(x(t)\) as \(V a(t)\). Therefore, under the coordinate transformation \(V^{-1}\),
+\begin{equation*}
+   \dot{x}(t) = A x(t) \Longrightarrow \dot{a}(t) = J a(t) 
+\end{equation*}
+Now suppose \(J\) has \(I\) Jordan blocks with corresponding block sizes \(K_1, \dots K_I\) and eigenvalues \(\lambda_1, \dots, \lambda_I\). Inside the \(i\)'s Jordan block, the differential equations are:
+\begin{equation*}
+   \begin{split}
+      \dot{a}_{i,1}(t) & = \lambda_i \cdot a_{i,1}(t) \\
+      \dot{a}_{i,2}(t) & = a_{i,1}(t) + \lambda_i \cdot a_{i,2}(t) \\
+      \vdots & \\
+      \dot{a}(t)_{i,K_i} & = a_{i,K_i-1}(t) + \lambda_i \cdot a_{i,K_i}(t)
+   \end{split}
+\end{equation*}
+With Laplace transformation, we represent the above equations in the frequency domain:
+\begin{equation*}
+   \begin{split}
+      s \cdot A_{i,1}(s) - a_{i,1}(0) & = \lambda_i \cdot A_{i,1}(s) \\
+      s \cdot A_{i,2}(s) - a_{i,2}(0) & = A_{i,1}(s) + \lambda_i \cdot A_{i,2}(s) \\
+      \vdots & \\
+      s \cdot A_{i,K_i}(s) - a_{i,K_i}(0) & = A_{i,K_i-1}(s) + \lambda_i \cdot A_{i,K_i}(s) 
+   \end{split}
+\end{equation*}
+where \(A_{i,k}(s)\) corresponds to \(a_{i,k}(t)\)'s Laplace transformation. By solving the above algebraic equations,
+\begin{equation*}
+   A_{i,k}(s) = \sum_{j=1}^{k} \frac{
+      a_{i, k+1-j}(0)
+   }{
+      (s - \lambda_i)^j
+   }, \quad \forall k \in \left\{1 \dots K_i\right\}
+\end{equation*}
+Via the inverse Laplace transformation:
+\begin{equation*}
+   a_{i,k}(t) = \sum_{j=1}^{k} \frac{
+      a_{i, k+1-j}(0)
+   }{
+      (j-1)!
+   } \cdot e^{\lambda_i t} t^{j-1}, \quad \forall k \in \left\{1 \dots K_i\right\}
+\end{equation*}
+Since \(\text{Re}(\lambda_i) < 0\), no matter how we choose \(a_{i,k}(0)\), \(a_{i,k}(t)\) will always converge to \(0\).
+\end{proof}
+
+\hypertarget{app-lti-stability-dt}{%
+\subsection{Discrete-Time Stability}\label{app-lti-stability-dt}}
+
+Consider the discrete-time linear time-invariant (LTI) system
+\begin{equation}
+x_{t+1} = A x_t.
+\label{eq:app-stability-dt-linear-system}
+\end{equation}
+
+\begin{theorem}[Stability of Discrete-Time LTI System]
+\protect\hypertarget{thm:dtltisystemstability}{}\label{thm:dtltisystemstability}The discrete-time LTI system \eqref{eq:app-stability-dt-linear-system} is
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  asymptotically stable if \(|\lambda_i| < 1\) for all \(i\)
+\item
+  marginally stable if \(|\lambda_i| \leq 1\) for all \(i\) and there exists at least one \(i\) for which \(|\lambda_i| = 1\)
+\item
+  stable if \(|\lambda_i| \leq 1\) for all \(i\)
+\item
+  unstable if \(|\lambda_i| > 1\) for at least one \(i\).
+\end{enumerate}
+
+Note that \(|\lambda_i| < 1\) means the eigenvalue lies strictly inside the unit circle in the complex plane.
+\end{theorem}
 
 \hypertarget{lyapunov-analysis-1}{%
 \subsection{Lyapunov Analysis}\label{lyapunov-analysis-1}}
@@ -2893,11 +3180,11 @@ The following is equivalent for a linear time-invariant system \(\dot{x} = A x\)
 \end{theorem}
 
 \begin{proof}
-(a): \(2 \Rightarrow 1\). Suppose we are given two positive definie matrices \(P, Q \succ 0\) that satisfies the Lyapunov equation \eqref{eq:lyapunov-equation}. Define a scalar function
+(a): \(2 \Rightarrow 1\). Suppose we are given two positive definite matrices \(P, Q \succ 0\) that satisfies the Lyapunov equation \eqref{eq:lyapunov-equation}. Define a scalar function
 \[
 V(x) = x^T P x.
 \]
-It is clear that \(V > 0\) for any \(x \neq 0\) and \(V(x) = 0\) (i.e., \(V(x)\) is positive definie). We also see \(V(x)\) is radially unbounded because:
+It is clear that \(V > 0\) for any \(x \neq 0\) and \(V(x) = 0\) (i.e., \(V(x)\) is positive definite). We also see \(V(x)\) is radially unbounded because:
 \[
 V(x) \geq \lambda_{\min}(P) \Vert x \Vert^2 \Rightarrow \lim_{x \rightarrow \infty} V(x) \rightarrow \infty.
 \]
@@ -3748,7 +4035,7 @@ Combining the above two equations:
 \begin{equation*}
    \sum_{i=1}^{I} \left\{
       \sum_{k=1}^{K_i - 1} \left[ \xi_{i,k}\cdot (\eta_i - \lambda) + \xi_{i,k+1} \right] v_{i,k}^* 
-      + \xi_{i,K_i} \cdot (\eta_i - \lambda) \cdot v_{i,K_i}^*
+      + \xi_{i,K_i} \cdot (\eta_i - \lambda) \cdot v_{i,K_i}^* = 0
    \right\}
 \end{equation*}
 Since \(v_{i,k}\)'s are linearly independent, for any \(i \in \left\{i\dots I\right\}\):
