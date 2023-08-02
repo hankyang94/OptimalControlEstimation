@@ -1,18 +1,24 @@
 # (APPENDIX) Appendix {-} 
 
-# Linear System Theory
+# Linear System Theory {#app-lti-system-theory}
 
 _Thanks to Shucheng Kang for writing this Appendix._
 
 ## Stability {#app-lti-stability}
 
-Check this [note](https://intra.engr.ucr.edu/~enozari/teaching/ME120_Fall20/Lecture%203%20-%20Stability,%20Controllability%20&%20Observability.pdf). 
+<!-- Check this [note](https://intra.engr.ucr.edu/~enozari/teaching/ME120_Fall20/Lecture%203%20-%20Stability,%20Controllability%20&%20Observability.pdf).  -->
 
-### Definition
+### Continuous-Time Stability {#app-lti-stability-ct}
+
+Consider the continuous-time linear time-invariant (LTI) system 
+\begin{equation}
+\dot{x} = A x.
+(\#eq:app-stability-ct-linear-system)
+\end{equation}
 
 ::: {.definitionbox}
 ::: {.definition #ltistable name="Asymptotic and Marginal Stability"}
-The zero-input linear time-invariant (LTI) system $\dot{x} = A x$ is
+The LTI system \@ref(eq:app-stability-ct-linear-system) is
 
 1. "asymptotically stable" if $x(t) \rightarrow 0$ as $t \rightarrow \infty$ for every initial condition $x_0$
 
@@ -24,10 +30,13 @@ The zero-input linear time-invariant (LTI) system $\dot{x} = A x$ is
 :::
 :::
 
-One can show that $A$'s eigenvalues determines the zero-input LTI system's stability, as the following Theorem states:
+One can show that $A$'s eigenvalues determine the LTI system's stability, as the following Theorem states:
 
 ::: {.theorembox}
 ::: {.theorem #ltistable name="Criteria for Asymptotic and Marginal Stability"}
+
+The LTI system \@ref(eq:app-stability-ct-linear-system) is
+
 
 1. asymptotically stable if $\text{Re} (\lambda_i) < 0$ for all $i$
 
@@ -84,6 +93,31 @@ Via the inverse Laplace transformation:
 Since $\text{Re}(\lambda_i) < 0$, no matter how we choose $a_{i,k}(0)$, $a_{i,k}(t)$ will always converge to $0$. 
 :::
 :::
+
+### Discrete-Time Stability {#app-lti-stability-dt}
+
+Consider the discrete-time linear time-invariant (LTI) system 
+\begin{equation}
+x_{t+1} = A x_t.
+(\#eq:app-stability-dt-linear-system)
+\end{equation}
+
+::: {.theorembox}
+::: {.theorem #dtltisystemstability name="Stability of Discrete-Time LTI System"}
+The discrete-time LTI system \@ref(eq:app-stability-dt-linear-system) is
+
+1. asymptotically stable if $|\lambda_i| < 1$ for all $i$
+
+2. marginally stable if $|\lambda_i| \leq 1$ for all $i$ and there exists at least one $i$ for which $|\lambda_i| = 1$
+
+3. stable if $|\lambda_i| \leq 1$ for all $i$
+
+4. unstable if $|\lambda_i| > 1$ for at least one $i$.
+
+Note that $|\lambda_i| < 1$ means the eigenvalue lies strictly inside the unit circle in the complex plane.
+:::
+:::
+
 
 ### Lyapunov Analysis
 

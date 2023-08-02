@@ -1,5 +1,7 @@
 # Approximate Dynamic Programming {#approximatedp}
 
+_Thanks to [Jiarui Li](https://jrli.org/) for writing this Chapter._
+
 ## Introduction
 The limitations of classical deterministic dynamic programming (DP) were mentioned in Chapter \@ref(formulation), particularly its inefficiency in fields such as robotics where both the state and control spaces are typically large and continuous. The process of discretization in such contexts is not only challenging but also costly. Even when discretization is achievable, the resultant state and control spaces tend to be extraordinarily vast and often high-dimensional, leading to prohibitive computational demands. This issue, commonly called the _curse of dimensionality_, renders the use of classical DP unfeasible. <span style="color:red">Add time complexity analysis here</span>. 
 To circumvent the constraints of traditional DP algorithms in such contexts, a pragmatic approach involves the adoption of a suboptimal control scheme. This compromises between the ease of implementation and adequate performance. The principal objective of this chapter is to find such suboptimal control. In this chapter, we will spend most of the time discussing finite horizon problems with discrete state and control space, which is the classical scenario. We will also mention the infinite horizon problem and continuous state and control spaces scenario later. 
