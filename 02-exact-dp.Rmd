@@ -176,8 +176,64 @@ Let us now apply the infinite-horizon LQR solution to stabilizing a simple pendu
 
 ::: {.examplebox}
 ::: {.example #lqr-pendulum-stabilization name="Pendulum Stabilization by LQR"}
-Consider the simple pendulum dynamics
+Consider the simple pendulum in Fig. \@ref(fig:pendulum-drawing) with dynamics
+\begin{equation}
+x = \begin{bmatrix} \theta \\ \dot{\theta} \end{bmatrix}, \quad 
+\dot{x} = f(x,u) = \begin{bmatrix}
+\dot{\theta} \\
+-\frac{1}{ml^2}(b \dot{\theta} + mgl \sin \theta) + \frac{1}{ml^2} u
+\end{bmatrix}
+(\#eq:lqr-pendulum-dynamics)
+\end{equation}
+where $m$ is the mass of the pendulum, $l$ is the length of the pole, $g$ is the gravitational constant, $b$ is the damping ratio, and $u$ is the torque applied to the pendulum. 
 
+We are interested in applying the LQR controller to balance the pendulum in the upright position $x_d = [\pi,0]^T$ with a zero velocity.
+
+```{r pendulum-drawing, out.width='40%', fig.show='hold', fig.cap='A Simple Pendulum.', fig.align='center', echo=FALSE}
+knitr::include_graphics('images/pendulum-drawing.png')
+```
+
+Let us first shift the dynamics so that "$0$" is the upright position. This can be done by defining a new variable $z = x - x_d = [\theta - \pi, \dot{\theta}]^T$, which leads to 
+$$
+\dot{z} = \dot{x} = f(x,u) = f(z + x_d,u) = \begin{bmatrix}
+z_2 \\
+\frac{1}{ml^2} \left( u - b z_2 + mgl \sin z_1  \right)
+\end{bmatrix} = f'(z,u).
+$$
+We then linearize the nonlinear dynamics $\dot{z} = f'(z,u)$ at the point $z^\star = 0, u^\star = 0$:
+\begin{align}
+\dot{z} & \approx f'(z^\star,u^\star) + \left( \frac{\partial f'}{\partial z} \right)_{z^\star,u^\star} (z - z^\star) + \left( \frac{\partial f'}{\partial u} \right)_{z^\star,u^\star} (u - u^\star) \\
+& = \begin{bmatrix}
+0 & 1 \\
+\frac{g}{l} \cos z_1 & - \frac{b}{ml^2}
+\end{bmatrix}_{z^\star, u^\star} z + 
+\begin{bmatrix}
+0 \\
+\frac{1}{ml^2}
+\end{bmatrix} u \\
+& = \underbrace{\begin{bmatrix}
+0 & 1 \\
+\frac{g}{l} & - \frac{b}{ml^2}
+\end{bmatrix}}_{A_c} z  + 
+\underbrace{\begin{bmatrix}
+0 \\
+\frac{1}{ml^2}
+\end{bmatrix}}_{B_c} u.
+\end{align} 
+Finally, we convert the continuous-time dynamics to discrete time with a fixed discretization $h$
+$$
+z_{k+1} = \dot{z}_k \cdot h + z_k = \underbrace{(h \cdot A_c + I )}_{A} z_k + \underbrace{(h \cdot B_c)}_{B} u_k.
+$$
+
+We are now ready to implement the LQR controller. In the formulation \@ref(eq:infinite-horizon-lqr-cost), we choose $Q = I$, $R = I$, and solve the gain matrix $K$ using the Matlab `dlqr` function.
+
+Fig. \@ref(fig:pendulum-stabilization-sim) shows the simulation result for $m=1,l=1,b=0.1$, $g = 9.8$, and $h = 0.01$, with an initial condition $z^0 = [0.1,0.1]^T$. We can see that the LQR controller successfully stabilizes the pendulum at $z^\star$, the upright position.
+
+You can play with the Matlab code [here](https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/pendulum_stabilization_lqr.m).
+
+```{r pendulum-stabilization-sim, out.width='60%', fig.show='hold', fig.cap='LQR stabilization of a simple pendulum.', fig.align='center', echo=FALSE}
+knitr::include_graphics('images/pendulum-stabilization-lqr.png')
+```
 
 :::
 :::
