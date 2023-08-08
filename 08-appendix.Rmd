@@ -15,10 +15,11 @@ Consider the continuous-time linear time-invariant (LTI) system
 \dot{x} = A x.
 (\#eq:app-stability-ct-linear-system)
 \end{equation}
+the system is said to be "diagonalizable" if $A$ is diagonalizable.
 
 ::: {.definitionbox}
 ::: {.definition #ltistable name="Asymptotic and Marginal Stability"}
-The LTI system \@ref(eq:app-stability-ct-linear-system) is
+The diagonalizable, LTI system \@ref(eq:app-stability-ct-linear-system) is
 
 1. "asymptotically stable" if $x(t) \rightarrow 0$ as $t \rightarrow \infty$ for every initial condition $x_0$
 
@@ -33,10 +34,9 @@ The LTI system \@ref(eq:app-stability-ct-linear-system) is
 One can show that $A$'s eigenvalues determine the LTI system's stability, as the following Theorem states:
 
 ::: {.theorembox}
-::: {.theorem #ltistable name="Criteria for Asymptotic and Marginal Stability"}
+::: {.theorem #ltistable name="Stability of Continuous-Time LTI System"}
 
-The LTI system \@ref(eq:app-stability-ct-linear-system) is
-
+The diagonalizable^[when $A$ is not diagonalizable, similar results can be derived via Jordan decomposition.], LTI system \@ref(eq:app-stability-ct-linear-system) is
 
 1. asymptotically stable if $\text{Re} (\lambda_i) < 0$ for all $i$
 
@@ -52,7 +52,13 @@ The LTI system \@ref(eq:app-stability-ct-linear-system) is
 ::: {.proof}
 Here we only represent the proof of (1). Similar procedure can be adopted for the proof of (2) - (4). 
 
-Suppose $A \in \mathbb{C}^{n \times n}$. There exists a similarity transformation matrix $V := \begin{bmatrix} v_1 & \dots & v_n \end{bmatrix}$, s.t. $A = V J V^{-1}$, where $J$ is the Jordan form of $A$ (Please note that $A$ may be non-diagonalizable so eigenvalue decomposition will fail in general.) Since $\left\{v_1 \dots v_n\right\}$ spans $\mathbb{C}^n$, we can denote the state $x(t)$ as $V a(t)$. Therefore, under the coordinate transformation $V^{-1}$,
+Since $A$ is diagonalizable, there exists an similarity transformation matrix $T$, s.t. $A = T \Lambda T^{-1}$, where $\Lambda = \text{diag}(\lambda_1, \dots, \lambda_n)$. Then, under the coordinate transformation $z = T^{-1} x$, $\dot{x} = Ax$ can be restated as $\dot{z} = \Lambda z$. Consider the $i$'s component of $z$:
+\begin{equation*}
+   \dot{z}_i = \lambda_i z_i \Longrightarrow z_i(t) = e^{\lambda_i t} z_i(0)
+\end{equation*}
+Since $\text{Re}(\lambda_i) < 0$, $z_I(t)$ will go to $0$ as $t \rightarrow 0$ regardless how we choose $z_i(0)$. 
+
+<!-- Suppose $A \in \mathbb{C}^{n \times n}$. There exists a similarity transformation matrix $V := \begin{bmatrix} v_1 & \dots & v_n \end{bmatrix}$, s.t. $A = V J V^{-1}$, where $J$ is the Jordan form of $A$ (Please note that $A$ may be non-diagonalizable so eigenvalue decomposition will fail in general.) Since $\left\{v_1 \dots v_n\right\}$ spans $\mathbb{C}^n$, we can denote the state $x(t)$ as $V a(t)$. Therefore, under the coordinate transformation $V^{-1}$,
 \begin{equation*}
    \dot{x}(t) = A x(t) \Longrightarrow \dot{a}(t) = J a(t) 
 \end{equation*}
@@ -90,13 +96,13 @@ Via the inverse Laplace transformation:
       (j-1)!
    } \cdot e^{\lambda_i t} t^{j-1}, \quad \forall k \in \left\{1 \dots K_i\right\}
 \end{equation*}
-Since $\text{Re}(\lambda_i) < 0$, no matter how we choose $a_{i,k}(0)$, $a_{i,k}(t)$ will always converge to $0$. 
+Since $\text{Re}(\lambda_i) < 0$, no matter how we choose $a_{i,k}(0)$, $a_{i,k}(t)$ will always converge to $0$.  -->
 :::
 :::
 
 ### Discrete-Time Stability {#app-lti-stability-dt}
 
-Consider the discrete-time linear time-invariant (LTI) system 
+Now consider the diagonalizable, discrete-time linear time-invariant (LTI) system 
 \begin{equation}
 x_{t+1} = A x_t.
 (\#eq:app-stability-dt-linear-system)
@@ -104,7 +110,7 @@ x_{t+1} = A x_t.
 
 ::: {.theorembox}
 ::: {.theorem #dtltisystemstability name="Stability of Discrete-Time LTI System"}
-The discrete-time LTI system \@ref(eq:app-stability-dt-linear-system) is
+The diagonalizable, discrete-time LTI system \@ref(eq:app-stability-dt-linear-system) is
 
 1. asymptotically stable if $|\lambda_i| < 1$ for all $i$
 
@@ -118,6 +124,18 @@ Note that $|\lambda_i| < 1$ means the eigenvalue lies strictly inside the unit c
 :::
 :::
 
+::: {.proofbox}
+::: {.proof}
+Here we only represent the proof of (1). Similar procedure can be adopted for the proof of (2) - (4).
+
+Since $A$ is diagonalizable, there exists an similarity transformation matrix $T$, s.t. $A = T \Lambda T^{-1}$, where $\Lambda = \text{diag}(\lambda_1, \dots, \lambda_n)$. Then, under the coordinate transformation $z = T^{-1} x$, $x_{t+1} = Ax$ can be restated as $z_{t+1} = \Lambda z_t$. Expanding the recursion, we have 
+\begin{equation*}
+   z_{t} = \Lambda^{t-1} z_0 \Longrightarrow
+   z_{t,i} = \lambda_i^{t-1} z_{0,i}
+\end{equation*}
+Since $|\lambda_i| < 1$, $z_{t,i}$ will go to $0$ as $t \rightarrow 0$ regardless how we choose $z_{0,i}$.
+:::
+:::
 
 ### Lyapunov Analysis
 
