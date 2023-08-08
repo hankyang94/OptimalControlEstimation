@@ -114,7 +114,7 @@ arc=4pt}
 
 \title{Optimal Control and Estimation}
 \author{Heng Yang}
-\date{2023-08-02}
+\date{2023-08-08}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -497,7 +497,77 @@ We have not discussed how to solve the algebraic Riccati equation \eqref{eq:fini
 Let us now apply the infinite-horizon LQR solution to stabilizing a simple pendulum.
 
 \begin{example}[Pendulum Stabilization by LQR]
-\protect\hypertarget{exm:lqr-pendulum-stabilization}{}\label{exm:lqr-pendulum-stabilization}Consider the simple pendulum dynamics
+\protect\hypertarget{exm:lqr-pendulum-stabilization}{}\label{exm:lqr-pendulum-stabilization}
+
+Consider the simple pendulum in Fig. \ref{fig:pendulum-drawing} with dynamics
+\begin{equation}
+x = \begin{bmatrix} \theta \\ \dot{\theta} \end{bmatrix}, \quad 
+\dot{x} = f(x,u) = \begin{bmatrix}
+\dot{\theta} \\
+-\frac{1}{ml^2}(b \dot{\theta} + mgl \sin \theta) + \frac{1}{ml^2} u
+\end{bmatrix}
+\label{eq:lqr-pendulum-dynamics}
+\end{equation}
+where \(m\) is the mass of the pendulum, \(l\) is the length of the pole, \(g\) is the gravitational constant, \(b\) is the damping ratio, and \(u\) is the torque applied to the pendulum.
+
+We are interested in applying the LQR controller to balance the pendulum in the upright position \(x_d = [\pi,0]^T\) with a zero velocity.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.4\linewidth]{images/pendulum-drawing} 
+
+}
+
+\caption{A Simple Pendulum.}\label{fig:pendulum-drawing}
+\end{figure}
+
+Let us first shift the dynamics so that ``\(0\)'' is the upright position. This can be done by defining a new variable \(z = x - x_d = [\theta - \pi, \dot{\theta}]^T\), which leads to
+\[
+\dot{z} = \dot{x} = f(x,u) = f(z + x_d,u) = \begin{bmatrix}
+z_2 \\
+\frac{1}{ml^2} \left( u - b z_2 + mgl \sin z_1  \right)
+\end{bmatrix} = f'(z,u).
+\]
+We then linearize the nonlinear dynamics \(\dot{z} = f'(z,u)\) at the point \(z^\star = 0, u^\star = 0\):
+\begin{align}
+\dot{z} & \approx f'(z^\star,u^\star) + \left( \frac{\partial f'}{\partial z} \right)_{z^\star,u^\star} (z - z^\star) + \left( \frac{\partial f'}{\partial u} \right)_{z^\star,u^\star} (u - u^\star) \\
+& = \begin{bmatrix}
+0 & 1 \\
+\frac{g}{l} \cos z_1 & - \frac{b}{ml^2}
+\end{bmatrix}_{z^\star, u^\star} z + 
+\begin{bmatrix}
+0 \\
+\frac{1}{ml^2}
+\end{bmatrix} u \\
+& = \underbrace{\begin{bmatrix}
+0 & 1 \\
+\frac{g}{l} & - \frac{b}{ml^2}
+\end{bmatrix}}_{A_c} z  + 
+\underbrace{\begin{bmatrix}
+0 \\
+\frac{1}{ml^2}
+\end{bmatrix}}_{B_c} u.
+\end{align}
+Finally, we convert the continuous-time dynamics to discrete time with a fixed discretization \(h\)
+\[
+z_{k+1} = \dot{z}_k \cdot h + z_k = \underbrace{(h \cdot A_c + I )}_{A} z_k + \underbrace{(h \cdot B_c)}_{B} u_k.
+\]
+
+We are now ready to implement the LQR controller. In the formulation \eqref{eq:infinite-horizon-lqr-cost}, we choose \(Q = I\), \(R = I\), and solve the gain matrix \(K\) using the Matlab \texttt{dlqr} function.
+
+Fig. \ref{fig:pendulum-stabilization-sim} shows the simulation result for \(m=1,l=1,b=0.1\), \(g = 9.8\), and \(h = 0.01\), with an initial condition \(z^0 = [0.1,0.1]^T\). We can see that the LQR controller successfully stabilizes the pendulum at \(z^\star\), the upright position.
+
+You can play with the Matlab code \href{https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/pendulum_stabilization_lqr.m}{here}.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.6\linewidth]{images/pendulum-stabilization-lqr} 
+
+}
+
+\caption{LQR stabilization of a simple pendulum.}\label{fig:pendulum-stabilization-sim}
+\end{figure}
+
 \end{example}
 
 \hypertarget{approximatedp}{%
@@ -866,6 +936,12 @@ POLICY GRADIENT
 \section{Extension}\label{extension}}
 
 It is possible for a suboptimal control scheme to employ both types of approximation: in policy space and in value space, with a distinct architecture for each case. This is known as the simultaneous use of a ``policy network'' (or ``actor network'') and a ``value network'' (or ``critic network''), each with its own set of parameters. Simultaneous approximation in policy space and value space through the use of deep neural networks are central in AlphaGo and AlphaZero, DeepMind's Go and chess playing programs.
+
+\hypertarget{continuous-time-optimal-control}{%
+\chapter{Continuous-time Optimal Control}\label{continuous-time-optimal-control}}
+
+\hypertarget{linear-quadratic-regulator}{%
+\section{Linear Quadratic Regulator}\label{linear-quadratic-regulator}}
 
 \hypertarget{stability}{%
 \chapter{Stability Analysis}\label{stability}}
@@ -3024,6 +3100,9 @@ which implies the boundedness of \(\dot{s}\) (note that \(H\) is uniformly posit
 \hypertarget{certainty-equivalent-adaptive-control}{%
 \section{Certainty-Equivalent Adaptive Control}\label{certainty-equivalent-adaptive-control}}
 
+\hypertarget{psets}{%
+\chapter{Problem Sets}\label{psets}}
+
 \hypertarget{appendix-appendix}{%
 \appendix}
 
@@ -3044,11 +3123,12 @@ Consider the continuous-time linear time-invariant (LTI) system
 \dot{x} = A x.
 \label{eq:app-stability-ct-linear-system}
 \end{equation}
+the system is said to be ``diagonalizable'' if \(A\) is diagonalizable.
 
 \begin{definition}[Asymptotic and Marginal Stability]
 \protect\hypertarget{def:ltistable}{}\label{def:ltistable}
 
-The LTI system \eqref{eq:app-stability-ct-linear-system} is
+The diagonalizable, LTI system \eqref{eq:app-stability-ct-linear-system} is
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -3066,10 +3146,10 @@ The LTI system \eqref{eq:app-stability-ct-linear-system} is
 
 One can show that \(A\)'s eigenvalues determine the LTI system's stability, as the following Theorem states:
 
-\begin{theorem}[Criteria for Asymptotic and Marginal Stability]
+\begin{theorem}[Stability of Continuous-Time LTI System]
 \protect\hypertarget{thm:ltistable}{}\label{thm:ltistable}
 
-The LTI system \eqref{eq:app-stability-ct-linear-system} is
+The diagonalizable\footnote{when \(A\) is not diagonalizable, similar results can be derived via Jordan decomposition.}, LTI system \eqref{eq:app-stability-ct-linear-system} is
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -3086,60 +3166,28 @@ The LTI system \eqref{eq:app-stability-ct-linear-system} is
 \end{theorem}
 
 \begin{proof}
+
 Here we only represent the proof of (1). Similar procedure can be adopted for the proof of (2) - (4).
 
-Suppose \(A \in \mathbb{C}^{n \times n}\). There exists a similarity transformation matrix \(V := \begin{bmatrix} v_1 & \dots & v_n \end{bmatrix}\), s.t. \(A = V J V^{-1}\), where \(J\) is the Jordan form of \(A\) (Please note that \(A\) may be non-diagonalizable so eigenvalue decomposition will fail in general.) Since \(\left\{v_1 \dots v_n\right\}\) spans \(\mathbb{C}^n\), we can denote the state \(x(t)\) as \(V a(t)\). Therefore, under the coordinate transformation \(V^{-1}\),
+Since \(A\) is diagonalizable, there exists an similarity transformation matrix \(T\), s.t. \(A = T \Lambda T^{-1}\), where \(\Lambda = \text{diag}(\lambda_1, \dots, \lambda_n)\). Then, under the coordinate transformation \(z = T^{-1} x\), \(\dot{x} = Ax\) can be restated as \(\dot{z} = \Lambda z\). Consider the \(i\)'s component of \(z\):
 \begin{equation*}
-   \dot{x}(t) = A x(t) \Longrightarrow \dot{a}(t) = J a(t) 
+   \dot{z}_i = \lambda_i z_i \Longrightarrow z_i(t) = e^{\lambda_i t} z_i(0)
 \end{equation*}
-Now suppose \(J\) has \(I\) Jordan blocks with corresponding block sizes \(K_1, \dots K_I\) and eigenvalues \(\lambda_1, \dots, \lambda_I\). Inside the \(i\)'s Jordan block, the differential equations are:
-\begin{equation*}
-   \begin{split}
-      \dot{a}_{i,1}(t) & = \lambda_i \cdot a_{i,1}(t) \\
-      \dot{a}_{i,2}(t) & = a_{i,1}(t) + \lambda_i \cdot a_{i,2}(t) \\
-      \vdots & \\
-      \dot{a}(t)_{i,K_i} & = a_{i,K_i-1}(t) + \lambda_i \cdot a_{i,K_i}(t)
-   \end{split}
-\end{equation*}
-With Laplace transformation, we represent the above equations in the frequency domain:
-\begin{equation*}
-   \begin{split}
-      s \cdot A_{i,1}(s) - a_{i,1}(0) & = \lambda_i \cdot A_{i,1}(s) \\
-      s \cdot A_{i,2}(s) - a_{i,2}(0) & = A_{i,1}(s) + \lambda_i \cdot A_{i,2}(s) \\
-      \vdots & \\
-      s \cdot A_{i,K_i}(s) - a_{i,K_i}(0) & = A_{i,K_i-1}(s) + \lambda_i \cdot A_{i,K_i}(s) 
-   \end{split}
-\end{equation*}
-where \(A_{i,k}(s)\) corresponds to \(a_{i,k}(t)\)'s Laplace transformation. By solving the above algebraic equations,
-\begin{equation*}
-   A_{i,k}(s) = \sum_{j=1}^{k} \frac{
-      a_{i, k+1-j}(0)
-   }{
-      (s - \lambda_i)^j
-   }, \quad \forall k \in \left\{1 \dots K_i\right\}
-\end{equation*}
-Via the inverse Laplace transformation:
-\begin{equation*}
-   a_{i,k}(t) = \sum_{j=1}^{k} \frac{
-      a_{i, k+1-j}(0)
-   }{
-      (j-1)!
-   } \cdot e^{\lambda_i t} t^{j-1}, \quad \forall k \in \left\{1 \dots K_i\right\}
-\end{equation*}
-Since \(\text{Re}(\lambda_i) < 0\), no matter how we choose \(a_{i,k}(0)\), \(a_{i,k}(t)\) will always converge to \(0\).
+Since \(\text{Re}(\lambda_i) < 0\), \(z_i(t)\) will go to \(0\) as \(t \rightarrow 0\) regardless how we choose \(z_i(0)\).
+
 \end{proof}
 
 \hypertarget{app-lti-stability-dt}{%
 \subsection{Discrete-Time Stability}\label{app-lti-stability-dt}}
 
-Consider the discrete-time linear time-invariant (LTI) system
+Now consider the diagonalizable, discrete-time linear time-invariant (LTI) system
 \begin{equation}
 x_{t+1} = A x_t.
 \label{eq:app-stability-dt-linear-system}
 \end{equation}
 
 \begin{theorem}[Stability of Discrete-Time LTI System]
-\protect\hypertarget{thm:dtltisystemstability}{}\label{thm:dtltisystemstability}The discrete-time LTI system \eqref{eq:app-stability-dt-linear-system} is
+\protect\hypertarget{thm:dtltisystemstability}{}\label{thm:dtltisystemstability}The diagonalizable, discrete-time LTI system \eqref{eq:app-stability-dt-linear-system} is
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -3155,6 +3203,17 @@ x_{t+1} = A x_t.
 
 Note that \(|\lambda_i| < 1\) means the eigenvalue lies strictly inside the unit circle in the complex plane.
 \end{theorem}
+
+\begin{proof}
+Here we only represent the proof of (1). Similar procedure can be adopted for the proof of (2) - (4).
+
+Since \(A\) is diagonalizable, there exists an similarity transformation matrix \(T\), s.t. \(A = T \Lambda T^{-1}\), where \(\Lambda = \text{diag}(\lambda_1, \dots, \lambda_n)\). Then, under the coordinate transformation \(z = T^{-1} x\), \(x_{t+1} = Ax\) can be restated as \(z_{t+1} = \Lambda z_t\). Expanding the recursion, we have
+\begin{equation*}
+   z_{t} = \Lambda^{t-1} z_0 \Longrightarrow
+   z_{t,i} = \lambda_i^{t-1} z_{0,i}
+\end{equation*}
+Since \(|\lambda_i| < 1\), \(z_{t,i}\) will go to \(0\) as \(t \rightarrow 0\) regardless how we choose \(z_{0,i}\).
+\end{proof}
 
 \hypertarget{lyapunov-analysis-1}{%
 \subsection{Lyapunov Analysis}\label{lyapunov-analysis-1}}
@@ -4108,6 +4167,203 @@ The following statements are equivalent \citep{zhou1996book-robust}:
 
 \hypertarget{appconvex}{%
 \chapter{Convex Analysis and Optimization}\label{appconvex}}
+
+\hypertarget{theory}{%
+\section{Theory}\label{theory}}
+
+\hypertarget{sets}{%
+\subsection{Sets}\label{sets}}
+
+Convex set is one of the most important concepts in convex optimization. Checking convexity of sets is crucial to determining whether a problem is a convex problem. Here we will present some definitions of some set notations in convex optimization.
+
+\begin{definition}[Affine set]
+\protect\hypertarget{def:affineset}{}\label{def:affineset}A set \(C\subset \mathbb{R}^n\) is affine if the line through any two distinct points in \(C\) lies in \(C\), i.e., if for any \(x_1,x_2 \in C\) and any \(\theta \in \mathbb{R}\), we have \(\theta x_1 + (1-\theta)x_2 \in C\).
+\end{definition}
+
+\begin{definition}[Convex set]
+\protect\hypertarget{def:convexset}{}\label{def:convexset}A set \(C\subset \mathbb{R}^n\) is convex if the line segment between any two distinct points in \(C\) lies in \(C\), i.e., if for any \(x_1,x_2 \in C\) and any \(\theta \in [0,1]\), we have \(\theta x_1 + (1-\theta)x_2 \in C\).
+\end{definition}
+
+\begin{definition}[Cone]
+\protect\hypertarget{def:cone}{}\label{def:cone}A set \(C\subset \mathbb{R}^n\) is a cone if for any \(x\in C\) and any \(\theta\geq 0\), we have \(\theta x \in C\).
+\end{definition}
+
+\begin{definition}[Convex Cone]
+\protect\hypertarget{def:convexcone}{}\label{def:convexcone}A set \(C\subset \mathbb{R}^n\) is a convex cone if \(C\) is convex and a cone.
+\end{definition}
+
+Below are some important examples of convex sets:
+
+\begin{definition}[Hyperplane]
+\protect\hypertarget{def:hyperplane}{}\label{def:hyperplane}A hyperplane is a set of the form \[\{x|a^Tx = b\}\]
+\end{definition}
+
+\begin{definition}[Halfspaces]
+\protect\hypertarget{def:halfspaces}{}\label{def:halfspaces}A (closed) halfspace is a set of the form \[\{x|a^Tx \leq b\}\]
+\end{definition}
+
+\begin{definition}[Balls]
+\protect\hypertarget{def:balls}{}\label{def:balls}A ball is a set of the form \[B(x,r) = \{y|\|y-x\|_2 \leq r\} = \{x+ru|\|u\|_2\leq 1\}\]
+where \(r >0\).
+\end{definition}
+
+\begin{definition}[Ellipsoids]
+\protect\hypertarget{def:ellipsoids}{}\label{def:ellipsoids}A ellipsoid is a set of the form \[\mathcal{E} = \{y|(y-x)^TP^{-1}(y-x)\leq 1\}\]
+where \(P\) is symmetric and positive definite.
+\end{definition}
+
+\begin{definition}[Polyhedra]
+\protect\hypertarget{def:polyhedra}{}\label{def:polyhedra}A polyhedra is defined as the solution set of a finite number of linear equalities
+and inequalities: \[\mathcal{P} = \{x|a_j^Tx\leq b_j, j=1,...,m, c_k^Tx=d_k,k=1,...,p\}\]
+\end{definition}
+
+\begin{definition}[Norm ball]
+\protect\hypertarget{def:normball}{}\label{def:normball}A norm ball \(B\) of radius \(r\) and a center \(x_c\) associated with the norm \(\|\cdot\|\) is defined as: \[B = \{x|\|x-x_c\|\leq r\}\]
+\end{definition}
+
+\begin{definition}[Norm cone]
+\protect\hypertarget{def:normcone}{}\label{def:normcone}A norm cone \(C\) associated with the norm \(\|\cdot\|\) is defined as: \[C = \{(x,t)|\|x\|\leq t\}\subset \mathbb{R}^{n+1}\]
+\end{definition}
+
+Simplexes are important family of polyhedra. Suppose the \(k+1\) points \(v_0,...,v_k\in \mathbb{R}^n\) are affinely independent, which means \(v_1-v_0,...,v_k-v_0\) are linearly independent.
+
+\begin{definition}[Simplex]
+\protect\hypertarget{def:simplex}{}\label{def:simplex}A simplex \(C\) defined by points \(v_0,...,v_k\) is: \[C = \textbf{conv}\{v_0,...,v_k\} = \{\theta_0v_0 + ... \theta_kv_k|\theta \succeq 0, \textbf{1}^T\theta = 1\}\]
+\end{definition}
+
+Extremely important examples of convex sets are positive semidefinite cones:
+
+\begin{definition}[Symmetric,positive semidefinite,positive definite matrices]
+\protect\hypertarget{def:symmetricmatrices}{}\label{def:symmetricmatrices}\leavevmode
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Symmetric matrices: \(\textbf{S}^n = \{X\in\mathbb{R}^{n\times n}| X=X^T\}\)
+\item
+  Symmetric Positive Semidefinite matrices: \(\textbf{S}_+^n = \{X\in\textbf{S}^n| X\succeq0\}\)
+\item
+  Symmetric Positive definite matrices: \(\textbf{S}_{++}^n = \{X\in\textbf{S}^n| X\succ0\}\)
+\end{enumerate}
+
+\end{definition}
+
+In most scenarios, the set we encounter is more complicated. In general it is extermely hard to determine whether a set in convex or not. But if the set is `generated' by some convex sets, we can easily determine its convexity. So let's focus on operations that preserve convexity:
+
+\begin{proposition}
+\protect\hypertarget{prp:operationpreserveconvexity}{}\label{prp:operationpreserveconvexity}
+
+Assume \(S\) is convex, \(S_\alpha,\alpha\in\mathcal{A}\) is a family of convex sets. Following operations on convex sets will preserve convexity:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Intersection: \(\bigcap_{\alpha\in\mathcal{A}}S_\alpha\) is convex.
+\item
+  Image under affine function: A function \(f:\mathbb{R}^n\to\mathbb{R}^m\) is affine if it has the form \(f(x) = Ax+b\). The image of \(S\) under affine function \(f\) is convex. I.e. \(f(S) = \{f(x)|x\in S\}\) is convex
+\item
+  Image under perspective function: We define the perspective function \(P:\mathbb{R}^{n+1}\), with domain \(\textbf{dom}P = \mathbb{R}^n\times \mathbb{R}_{++}\)(where \(\mathbb{R}_{++}=\{x\in \mathbb{R}|x>0\}\)) as \(P(z,t) = z/t\). The image of \(S\) under perspective function is convex.
+\item
+  Image under linear-fractional function: We define linear fractional function \(f:\mathbb{R}^n\to\mathbb{R}^m\) as:\(f(x) = (Ax+b)/(c^Tx+d)\) with \(\textbf{dom}f = \{x|c^Tx+d>0\|\). The image of \(S\) under linear fractional functions is convex.
+\end{enumerate}
+
+\end{proposition}
+
+In some cases, the restrictions of \textbf{interior} is too strict. For example, imagine a plane in \(\mathbb{R}^3\). The interior of the plane is \(\emptyset\). But intuitively many property should be extended to this kind of situation. Because the points in the plane also lies `inside' the convex set. Thus, we will define \textbf{relative interior}. First we will define \textbf{affine hull}.
+
+\begin{definition}[Affine hull]
+\protect\hypertarget{def:affinehull}{}\label{def:affinehull}The affine hull of a set \(S\) is the smallest affine set that contains \(S\), which can be written as:
+\[\text{aff}(S) = \{\sum_{i=1}^k\alpha_ix_i|k>0,x_i\in S,\alpha_i\in\mathbb{R},\sum_{i=1}^k\alpha_i=1\}\]
+\end{definition}
+
+\begin{definition}[Relative Interior]
+\protect\hypertarget{def:relint}{}\label{def:relint}The relative interior of a set \(S\) (denoted \(\text{relint}(S)\)) is defined as its interior within the affine hull of \(S\). I.e.
+\[\text{relint}(S):=\{x\in S: \text{there exists } \epsilon>0 \text{ such that }N_\epsilon \cap \text{aff}(S)\subset S\}\]
+where \(N_\epsilon(x)\) is a ball of radius \(\epsilon\) centered on \(x\).
+\end{definition}
+
+\hypertarget{convex-function}{%
+\subsection{Convex function}\label{convex-function}}
+
+In this section, let's define convex functions:
+
+\begin{definition}[Convex function]
+\protect\hypertarget{def:defcvxfunc}{}\label{def:defcvxfunc}A function \(f:\mathbb{R}^n\to\mathbb{R}\) is \textbf{convex} if \(\textbf{dom}\ f\) is convex and \(\forall x,y\in \textbf{dom}\ f\) and with \(\theta \in [0,1]\), we have:\[f(\theta x +(1-\theta)y)\leq \theta f(x) + (1-\theta)f(y)\]
+The function is \textbf{strictly convex} if the inequality holds whenever \(x\neq y\) and \(\theta\in (0,1)\).
+\end{definition}
+
+If a function is differentiable, it will be easier for us to check its convexity:
+
+\begin{proposition}[Conditions for Convex function]
+\protect\hypertarget{prp:decidecvx}{}\label{prp:decidecvx}1.(First order condition) Suppose \(f\) is differentiable, then \(f\) is convex if and only if \(\textbf{dom} f\) is convex and \(\forall x,y\in \textbf{dom} f\), \[f(y)\geq f(x) +\nabla f(x)^T(y-x)\]
+2.(Second order conditions) Suppose \(f\) is twice differentiable, then \(f\) is convex if and only if \(\textbf{dom} f\) is convex and \(\forall x\in \textbf{dom} f\), \[\nabla^2 f(x) \succeq \textbf{0}\]
+\end{proposition}
+
+For the same purpose, some operations that preserve the convexity of the convex functions are presented here:
+
+\begin{proposition}[Operations that preserve convexity]
+\protect\hypertarget{prp:preservecvx}{}\label{prp:preservecvx}Let \(f:\mathbb{R}^n\to\mathbb{R}\) be a convex function and \(g_1,...,g_n\) be convex functions. The following operations will preserve convexity of the function:
+
+1.(Nonnegative weighted sum): A nonnegative weighted sum of convex functions: \[f = \omega_1f_1 + ... +\omega_mf_m\]
+
+2.(Composition with an affine mapping) Suppose \(A\in \mathbb{R}^{n\times m}\) and \(b\in \mathbb{R}^n\), then \(g(x) = f(Ax+b)\) is convex.
+
+3.(Pointwise maximum and supremum) \(g(x) = \max\{g_1(x),...,g_n(x)\}\) is convex. If \(h(x,y)\) is convex in \(x\) for each \(y\in\mathcal{A}\), then \(\sup_{y\in\mathcal{A}} h(x,y)\) is also convex in \(x\).
+
+4.(Minimization) If \(h(x,y)\) is convex in \((x,y)\), and \(C\) is a convex nonempty set, then \(\inf_{x\in C} h(x,y)\) is convex in \(x\).
+
+5.(Perspective of a function) The perspective of \(f\) is the function \(h:\mathbb{R}^{n+1}\to\mathbb{R}\) defined by: \(h(x,t) = tf(x/t)\) with domain \(\textbf{dom}\ h=\{(x,t)|x/t\in\textbf{dom} f,t>0\}\). And \(h\) is convex.
+\end{proposition}
+
+\hypertarget{lagrange-dual}{%
+\subsection{Lagrange dual}\label{lagrange-dual}}
+
+We consider an optimization problem in the standard form (without assuming convexity of anything):
+\begin{equation}
+\begin{aligned}
+p^* = \quad \min_{x} \quad & f_0(x)\\
+\textrm{s.t.} \quad & f_i(x)\leq 0\quad i=1...,m\\
+  & h_i(x) = 0\quad i=1,...,p   \\
+\end{aligned}
+\end{equation}
+
+\begin{definition}[Lagrange dual function]
+\protect\hypertarget{def:defdualfunc}{}\label{def:defdualfunc}The Lagrangian related to the problem above is defined as: \[L(x,\lambda,\nu)=f_0(x)+\sum_{i=1}^m\lambda_if_i(x)+\sum_{i=1}^p\nu_ih_i(x)\]
+The Lagrange dual function is defined as: \[g(\lambda,\nu) = \inf_{x\in\mathcal{D}}L(x,\lambda,\nu)\]
+\end{definition}
+
+When the Lagrangian is unbounded below in \(x\), the dual function takes on the value \(-\infty\). Note that since the Lagrange dual function is a pointwise infimum of a family of affine functions of \((\lambda,\nu)\), so it's concave. The Lagrange dual function will give us lower bounds of the optimal value of the original problem: \[g(\lambda,\nu)\leq p^*\]. We can see that, the dual function can give a nontrivial lower bound only when \(\lambda\succeq 0\). Thus we can solve the following dual problem to get the best lower bound.
+
+\begin{definition}[Lagrange dual problem]
+\protect\hypertarget{def:defdualprob}{}\label{def:defdualprob}The lagrangian dual problem is defined as follows:
+\begin{equation}
+  \begin{aligned}
+  d^* = \quad \max_{\lambda,\nu} \quad & g(\lambda,\nu)\\
+  \textrm{s.t.} \quad & \lambda\succeq 0
+  \end{aligned}
+  \end{equation}
+This is a convex optimization problem.
+\end{definition}
+
+We can easily see that \[d^*\leq p^*\] always hold. This property is called \textbf{weak duality}. If \[d^*=p^*\], it's called \textbf{strong duality}. Strong duality does not hold in general, but it usually holfs for convex problems. We can find conditions that guarantee strong duality in convex problems, which are called constrained qualifications. Slater's constraint qualification is a useful one.
+
+\begin{theorem}[Slater's constraint qualification]
+\protect\hypertarget{thm:slater}{}\label{thm:slater}Strong duality holds for a convex problem
+\begin{equation}
+  \begin{aligned}
+  p^* = \quad \min_{x} \quad & f_0(x)\\
+  \textrm{s.t.} \quad & f_i(x)\leq 0\quad i=1...,m\\
+    & Ax=b   \\
+  \end{aligned}
+  \end{equation}
+if it is strictly feasible, i.e.
+\[\exists x\in\textbf{relint}\mathcal{D}:\quad f_i(x)<0,\quad i=1...m,\quad Ax=b\]
+And the linear inequalities do not need to hold with strict inequality.
+\end{theorem}
+
+\hypertarget{kkt-condition}{%
+\subsection{KKT condition}\label{kkt-condition}}
 
 \hypertarget{the-kalman-yakubovich-lemma}{%
 \chapter{The Kalman-Yakubovich Lemma}\label{the-kalman-yakubovich-lemma}}

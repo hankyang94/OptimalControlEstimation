@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>B Convex Analysis and Optimization | Optimal Control and Estimation</title>
   <meta name="description" content="Lecture notes for Harvard ES/AM 158 Introduction to Optimal Control and Estimation." />
-  <meta name="generator" content="bookdown 0.33 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
 
   <meta property="og:title" content="B Convex Analysis and Optimization | Optimal Control and Estimation" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-08-02" />
+<meta name="date" content="2023-08-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -55,6 +55,10 @@
 
 
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 <style type="text/css">
 /* Used with Pandoc 2.11+ new --citeproc when CSL is used */
 div.csl-bib-body { }
@@ -123,42 +127,47 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="3.4" data-path="approximatedp.html"><a href="approximatedp.html#extension"><i class="fa fa-check"></i><b>3.4</b> Extension</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="stability.html"><a href="stability.html"><i class="fa fa-check"></i><b>4</b> Stability Analysis</a>
+<li class="chapter" data-level="4" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html"><i class="fa fa-check"></i><b>4</b> Continuous-time Optimal Control</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="stability.html"><a href="stability.html#autonomous-systems"><i class="fa fa-check"></i><b>4.1</b> Autonomous Systems</a>
+<li class="chapter" data-level="4.1" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#linear-quadratic-regulator"><i class="fa fa-check"></i><b>4.1</b> Linear Quadratic Regulator</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="stability.html"><a href="stability.html"><i class="fa fa-check"></i><b>5</b> Stability Analysis</a>
 <ul>
-<li class="chapter" data-level="4.1.1" data-path="stability.html"><a href="stability.html#concepts-of-stability"><i class="fa fa-check"></i><b>4.1.1</b> Concepts of Stability</a></li>
-<li class="chapter" data-level="4.1.2" data-path="stability.html"><a href="stability.html#stability-by-linearization"><i class="fa fa-check"></i><b>4.1.2</b> Stability by Linearization</a></li>
-<li class="chapter" data-level="4.1.3" data-path="stability.html"><a href="stability.html#lyapunov-analysis"><i class="fa fa-check"></i><b>4.1.3</b> Lyapunov Analysis</a></li>
-<li class="chapter" data-level="4.1.4" data-path="stability.html"><a href="stability.html#invariant-set-theorem"><i class="fa fa-check"></i><b>4.1.4</b> Invariant Set Theorem</a></li>
-<li class="chapter" data-level="4.1.5" data-path="stability.html"><a href="stability.html#computing-lyapunov-certificates"><i class="fa fa-check"></i><b>4.1.5</b> Computing Lyapunov Certificates</a></li>
-</ul></li>
-<li class="chapter" data-level="4.2" data-path="stability.html"><a href="stability.html#controlled-systems"><i class="fa fa-check"></i><b>4.2</b> Controlled Systems</a></li>
-<li class="chapter" data-level="4.3" data-path="stability.html"><a href="stability.html#non-autonomous-systems"><i class="fa fa-check"></i><b>4.3</b> Non-autonomous Systems</a></li>
-</ul></li>
-<li class="chapter" data-level="5" data-path="output-feedback.html"><a href="output-feedback.html"><i class="fa fa-check"></i><b>5</b> Output Feedback</a>
+<li class="chapter" data-level="5.1" data-path="stability.html"><a href="stability.html#autonomous-systems"><i class="fa fa-check"></i><b>5.1</b> Autonomous Systems</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="output-feedback.html"><a href="output-feedback.html#state-observer"><i class="fa fa-check"></i><b>5.1</b> State Observer</a>
+<li class="chapter" data-level="5.1.1" data-path="stability.html"><a href="stability.html#concepts-of-stability"><i class="fa fa-check"></i><b>5.1.1</b> Concepts of Stability</a></li>
+<li class="chapter" data-level="5.1.2" data-path="stability.html"><a href="stability.html#stability-by-linearization"><i class="fa fa-check"></i><b>5.1.2</b> Stability by Linearization</a></li>
+<li class="chapter" data-level="5.1.3" data-path="stability.html"><a href="stability.html#lyapunov-analysis"><i class="fa fa-check"></i><b>5.1.3</b> Lyapunov Analysis</a></li>
+<li class="chapter" data-level="5.1.4" data-path="stability.html"><a href="stability.html#invariant-set-theorem"><i class="fa fa-check"></i><b>5.1.4</b> Invariant Set Theorem</a></li>
+<li class="chapter" data-level="5.1.5" data-path="stability.html"><a href="stability.html#computing-lyapunov-certificates"><i class="fa fa-check"></i><b>5.1.5</b> Computing Lyapunov Certificates</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="stability.html"><a href="stability.html#controlled-systems"><i class="fa fa-check"></i><b>5.2</b> Controlled Systems</a></li>
+<li class="chapter" data-level="5.3" data-path="stability.html"><a href="stability.html#non-autonomous-systems"><i class="fa fa-check"></i><b>5.3</b> Non-autonomous Systems</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="output-feedback.html"><a href="output-feedback.html"><i class="fa fa-check"></i><b>6</b> Output Feedback</a>
 <ul>
-<li class="chapter" data-level="5.1.1" data-path="output-feedback.html"><a href="output-feedback.html#general-design-strategy"><i class="fa fa-check"></i><b>5.1.1</b> General Design Strategy</a></li>
-<li class="chapter" data-level="5.1.2" data-path="output-feedback.html"><a href="output-feedback.html#luenberger-template"><i class="fa fa-check"></i><b>5.1.2</b> Luenberger Template</a></li>
-<li class="chapter" data-level="5.1.3" data-path="output-feedback.html"><a href="output-feedback.html#state-affine-template"><i class="fa fa-check"></i><b>5.1.3</b> State-affine Template</a></li>
-<li class="chapter" data-level="5.1.4" data-path="output-feedback.html"><a href="output-feedback.html#kazantzis-kravaris-luenberger-kkl-template"><i class="fa fa-check"></i><b>5.1.4</b> Kazantzis-Kravaris-Luenberger (KKL) Template</a></li>
-<li class="chapter" data-level="5.1.5" data-path="output-feedback.html"><a href="output-feedback.html#triangular-template"><i class="fa fa-check"></i><b>5.1.5</b> Triangular Template</a></li>
-<li class="chapter" data-level="5.1.6" data-path="output-feedback.html"><a href="output-feedback.html#design-with-convex-optimization"><i class="fa fa-check"></i><b>5.1.6</b> Design with Convex Optimization</a></li>
-</ul></li>
-<li class="chapter" data-level="5.2" data-path="output-feedback.html"><a href="output-feedback.html#observer-feedback"><i class="fa fa-check"></i><b>5.2</b> Observer Feedback</a></li>
-</ul></li>
-<li class="chapter" data-level="6" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html"><i class="fa fa-check"></i><b>6</b> Adaptive Control</a>
+<li class="chapter" data-level="6.1" data-path="output-feedback.html"><a href="output-feedback.html#state-observer"><i class="fa fa-check"></i><b>6.1</b> State Observer</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#model-reference-adaptive-control"><i class="fa fa-check"></i><b>6.1</b> Model-Reference Adaptive Control</a>
+<li class="chapter" data-level="6.1.1" data-path="output-feedback.html"><a href="output-feedback.html#general-design-strategy"><i class="fa fa-check"></i><b>6.1.1</b> General Design Strategy</a></li>
+<li class="chapter" data-level="6.1.2" data-path="output-feedback.html"><a href="output-feedback.html#luenberger-template"><i class="fa fa-check"></i><b>6.1.2</b> Luenberger Template</a></li>
+<li class="chapter" data-level="6.1.3" data-path="output-feedback.html"><a href="output-feedback.html#state-affine-template"><i class="fa fa-check"></i><b>6.1.3</b> State-affine Template</a></li>
+<li class="chapter" data-level="6.1.4" data-path="output-feedback.html"><a href="output-feedback.html#kazantzis-kravaris-luenberger-kkl-template"><i class="fa fa-check"></i><b>6.1.4</b> Kazantzis-Kravaris-Luenberger (KKL) Template</a></li>
+<li class="chapter" data-level="6.1.5" data-path="output-feedback.html"><a href="output-feedback.html#triangular-template"><i class="fa fa-check"></i><b>6.1.5</b> Triangular Template</a></li>
+<li class="chapter" data-level="6.1.6" data-path="output-feedback.html"><a href="output-feedback.html#design-with-convex-optimization"><i class="fa fa-check"></i><b>6.1.6</b> Design with Convex Optimization</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="output-feedback.html"><a href="output-feedback.html#observer-feedback"><i class="fa fa-check"></i><b>6.2</b> Observer Feedback</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html"><i class="fa fa-check"></i><b>7</b> Adaptive Control</a>
 <ul>
-<li class="chapter" data-level="6.1.1" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#first-order-systems"><i class="fa fa-check"></i><b>6.1.1</b> First-Order Systems</a></li>
-<li class="chapter" data-level="6.1.2" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#high-order-systems"><i class="fa fa-check"></i><b>6.1.2</b> High-Order Systems</a></li>
-<li class="chapter" data-level="6.1.3" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#robotic-manipulator"><i class="fa fa-check"></i><b>6.1.3</b> Robotic Manipulator</a></li>
+<li class="chapter" data-level="7.1" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#model-reference-adaptive-control"><i class="fa fa-check"></i><b>7.1</b> Model-Reference Adaptive Control</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#first-order-systems"><i class="fa fa-check"></i><b>7.1.1</b> First-Order Systems</a></li>
+<li class="chapter" data-level="7.1.2" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#high-order-systems"><i class="fa fa-check"></i><b>7.1.2</b> High-Order Systems</a></li>
+<li class="chapter" data-level="7.1.3" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#robotic-manipulator"><i class="fa fa-check"></i><b>7.1.3</b> Robotic Manipulator</a></li>
 </ul></li>
-<li class="chapter" data-level="6.2" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#certainty-equivalent-adaptive-control"><i class="fa fa-check"></i><b>6.2</b> Certainty-Equivalent Adaptive Control</a></li>
+<li class="chapter" data-level="7.2" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#certainty-equivalent-adaptive-control"><i class="fa fa-check"></i><b>7.2</b> Certainty-Equivalent Adaptive Control</a></li>
 </ul></li>
+<li class="chapter" data-level="8" data-path="psets.html"><a href="psets.html"><i class="fa fa-check"></i><b>8</b> Problem Sets</a></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
 <li class="chapter" data-level="A" data-path="app-lti-system-theory.html"><a href="app-lti-system-theory.html"><i class="fa fa-check"></i><b>A</b> Linear System Theory</a>
 <ul>
@@ -181,7 +190,16 @@ div.csl-indent {
 <li class="chapter" data-level="A.3.2" data-path="app-lti-system-theory.html"><a href="app-lti-system-theory.html#equivalent-statements-for-detectability"><i class="fa fa-check"></i><b>A.3.2</b> Equivalent Statements for Detectability</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="B" data-path="appconvex.html"><a href="appconvex.html"><i class="fa fa-check"></i><b>B</b> Convex Analysis and Optimization</a></li>
+<li class="chapter" data-level="B" data-path="appconvex.html"><a href="appconvex.html"><i class="fa fa-check"></i><b>B</b> Convex Analysis and Optimization</a>
+<ul>
+<li class="chapter" data-level="B.1" data-path="appconvex.html"><a href="appconvex.html#theory"><i class="fa fa-check"></i><b>B.1</b> Theory</a>
+<ul>
+<li class="chapter" data-level="B.1.1" data-path="appconvex.html"><a href="appconvex.html#sets"><i class="fa fa-check"></i><b>B.1.1</b> Sets</a></li>
+<li class="chapter" data-level="B.1.2" data-path="appconvex.html"><a href="appconvex.html#convex-function"><i class="fa fa-check"></i><b>B.1.2</b> Convex function</a></li>
+<li class="chapter" data-level="B.1.3" data-path="appconvex.html"><a href="appconvex.html#lagrange-dual"><i class="fa fa-check"></i><b>B.1.3</b> Lagrange dual</a></li>
+<li class="chapter" data-level="B.1.4" data-path="appconvex.html"><a href="appconvex.html#kkt-condition"><i class="fa fa-check"></i><b>B.1.4</b> KKT condition</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="C" data-path="the-kalman-yakubovich-lemma.html"><a href="the-kalman-yakubovich-lemma.html"><i class="fa fa-check"></i><b>C</b> The Kalman-Yakubovich Lemma</a></li>
 <li class="chapter" data-level="D" data-path="feedbacklinearization.html"><a href="feedbacklinearization.html"><i class="fa fa-check"></i><b>D</b> Feedback Linearization</a></li>
 <li class="chapter" data-level="E" data-path="slidingcontrol.html"><a href="slidingcontrol.html"><i class="fa fa-check"></i><b>E</b> Sliding Control</a></li>
@@ -206,8 +224,194 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="appconvex" class="section level1 hasAnchor" number="8">
+<div id="appconvex" class="section level1 hasAnchor" number="10">
 <h1><span class="header-section-number">B</span> Convex Analysis and Optimization<a href="appconvex.html#appconvex" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="theory" class="section level2 hasAnchor" number="10.1">
+<h2><span class="header-section-number">B.1</span> Theory<a href="appconvex.html#theory" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="sets" class="section level3 hasAnchor" number="10.1.1">
+<h3><span class="header-section-number">B.1.1</span> Sets<a href="appconvex.html#sets" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Convex set is one of the most important concepts in convex optimization. Checking convexity of sets is crucial to determining whether a problem is a convex problem. Here we will present some definitions of some set notations in convex optimization.</p>
+<div class="definitionbox">
+<div class="definition">
+<p><span id="def:affineset" class="definition"><strong>Definition B.1  (Affine set) </strong></span>A set <span class="math inline">\(C\subset \mathbb{R}^n\)</span> is affine if the line through any two distinct points in <span class="math inline">\(C\)</span> lies in <span class="math inline">\(C\)</span>, i.e., if for any <span class="math inline">\(x_1,x_2 \in C\)</span> and any <span class="math inline">\(\theta \in \mathbb{R}\)</span>, we have <span class="math inline">\(\theta x_1 + (1-\theta)x_2 \in C\)</span>.</p>
+</div>
+</div>
+<div class="definitionbox">
+<div class="definition">
+<p><span id="def:convexset" class="definition"><strong>Definition B.2  (Convex set) </strong></span>A set <span class="math inline">\(C\subset \mathbb{R}^n\)</span> is convex if the line segment between any two distinct points in <span class="math inline">\(C\)</span> lies in <span class="math inline">\(C\)</span>, i.e., if for any <span class="math inline">\(x_1,x_2 \in C\)</span> and any <span class="math inline">\(\theta \in [0,1]\)</span>, we have <span class="math inline">\(\theta x_1 + (1-\theta)x_2 \in C\)</span>.</p>
+</div>
+</div>
+<div class="definitionbox">
+<div class="definition">
+<p><span id="def:cone" class="definition"><strong>Definition B.3  (Cone) </strong></span>A set <span class="math inline">\(C\subset \mathbb{R}^n\)</span> is a cone if for any <span class="math inline">\(x\in C\)</span> and any <span class="math inline">\(\theta\geq 0\)</span>, we have <span class="math inline">\(\theta x \in C\)</span>.</p>
+</div>
+</div>
+<div class="definitionbox">
+<div class="definition">
+<p><span id="def:convexcone" class="definition"><strong>Definition B.4  (Convex Cone) </strong></span>A set <span class="math inline">\(C\subset \mathbb{R}^n\)</span> is a convex cone if <span class="math inline">\(C\)</span> is convex and a cone.</p>
+</div>
+</div>
+<p>Below are some important examples of convex sets:</p>
+<div class="definitionbox">
+<div class="definition">
+<p><span id="def:hyperplane" class="definition"><strong>Definition B.5  (Hyperplane) </strong></span>A hyperplane is a set of the form <span class="math display">\[\{x|a^Tx = b\}\]</span></p>
+</div>
+</div>
+<div class="definitionbox">
+<div class="definition">
+<p><span id="def:halfspaces" class="definition"><strong>Definition B.6  (Halfspaces) </strong></span>A (closed) halfspace is a set of the form <span class="math display">\[\{x|a^Tx \leq b\}\]</span></p>
+</div>
+</div>
+<div class="definitionbox">
+<div class="definition">
+<p><span id="def:balls" class="definition"><strong>Definition B.7  (Balls) </strong></span>A ball is a set of the form <span class="math display">\[B(x,r) = \{y|\|y-x\|_2 \leq r\} = \{x+ru|\|u\|_2\leq 1\}\]</span>
+where <span class="math inline">\(r &gt;0\)</span>.</p>
+</div>
+</div>
+<div class="definitionbox">
+<div class="definition">
+<p><span id="def:ellipsoids" class="definition"><strong>Definition B.8  (Ellipsoids) </strong></span>A ellipsoid is a set of the form <span class="math display">\[\mathcal{E} = \{y|(y-x)^TP^{-1}(y-x)\leq 1\}\]</span>
+where <span class="math inline">\(P\)</span> is symmetric and positive definite.</p>
+</div>
+</div>
+<div class="definitionbox">
+<div class="definition">
+<p><span id="def:polyhedra" class="definition"><strong>Definition B.9  (Polyhedra) </strong></span>A polyhedra is defined as the solution set of a finite number of linear equalities
+and inequalities: <span class="math display">\[\mathcal{P} = \{x|a_j^Tx\leq b_j, j=1,...,m, c_k^Tx=d_k,k=1,...,p\}\]</span></p>
+</div>
+</div>
+<div class="definitionbox">
+<div class="definition">
+<p><span id="def:normball" class="definition"><strong>Definition B.10  (Norm ball) </strong></span>A norm ball <span class="math inline">\(B\)</span> of radius <span class="math inline">\(r\)</span> and a center <span class="math inline">\(x_c\)</span> associated with the norm <span class="math inline">\(\|\cdot\|\)</span> is defined as: <span class="math display">\[B = \{x|\|x-x_c\|\leq r\}\]</span></p>
+</div>
+</div>
+<div class="definitionbox">
+<div class="definition">
+<p><span id="def:normcone" class="definition"><strong>Definition B.11  (Norm cone) </strong></span>A norm cone <span class="math inline">\(C\)</span> associated with the norm <span class="math inline">\(\|\cdot\|\)</span> is defined as: <span class="math display">\[C = \{(x,t)|\|x\|\leq t\}\subset \mathbb{R}^{n+1}\]</span></p>
+</div>
+</div>
+<p>Simplexes are important family of polyhedra. Suppose the <span class="math inline">\(k+1\)</span> points <span class="math inline">\(v_0,...,v_k\in \mathbb{R}^n\)</span> are affinely independent, which means <span class="math inline">\(v_1-v_0,...,v_k-v_0\)</span> are linearly independent.</p>
+<div class="definitionbox">
+<div class="definition">
+<p><span id="def:simplex" class="definition"><strong>Definition B.12  (Simplex) </strong></span>A simplex <span class="math inline">\(C\)</span> defined by points <span class="math inline">\(v_0,...,v_k\)</span> is: <span class="math display">\[C = \textbf{conv}\{v_0,...,v_k\} = \{\theta_0v_0 + ... \theta_kv_k|\theta \succeq 0, \textbf{1}^T\theta = 1\}\]</span></p>
+</div>
+</div>
+<p>Extremely important examples of convex sets are positive semidefinite cones:</p>
+<div class="definitionbox">
+<div class="definition">
+<p><span id="def:symmetricmatrices" class="definition"><strong>Definition B.13  (Symmetric,positive semidefinite,positive definite matrices) </strong></span></p>
+<ol style="list-style-type: decimal">
+<li>Symmetric matrices: <span class="math inline">\(\textbf{S}^n = \{X\in\mathbb{R}^{n\times n}| X=X^T\}\)</span></li>
+<li>Symmetric Positive Semidefinite matrices: <span class="math inline">\(\textbf{S}_+^n = \{X\in\textbf{S}^n| X\succeq0\}\)</span></li>
+<li>Symmetric Positive definite matrices: <span class="math inline">\(\textbf{S}_{++}^n = \{X\in\textbf{S}^n| X\succ0\}\)</span></li>
+</ol>
+</div>
+</div>
+<p>In most scenarios, the set we encounter is more complicated. In general it is extermely hard to determine whether a set in convex or not. But if the set is ‘generated’ by some convex sets, we can easily determine its convexity. So let’s focus on operations that preserve convexity:</p>
+<div class="theorembox">
+<div class="proposition">
+<p><span id="prp:operationpreserveconvexity" class="proposition"><strong>Proposition B.1  </strong></span>Assume <span class="math inline">\(S\)</span> is convex, <span class="math inline">\(S_\alpha,\alpha\in\mathcal{A}\)</span> is a family of convex sets. Following operations on convex sets will preserve convexity:</p>
+<ol style="list-style-type: decimal">
+<li><p>Intersection: <span class="math inline">\(\bigcap_{\alpha\in\mathcal{A}}S_\alpha\)</span> is convex.</p></li>
+<li><p>Image under affine function: A function <span class="math inline">\(f:\mathbb{R}^n\to\mathbb{R}^m\)</span> is affine if it has the form <span class="math inline">\(f(x) = Ax+b\)</span>. The image of <span class="math inline">\(S\)</span> under affine function <span class="math inline">\(f\)</span> is convex. I.e. <span class="math inline">\(f(S) = \{f(x)|x\in S\}\)</span> is convex</p></li>
+<li><p>Image under perspective function: We define the perspective function <span class="math inline">\(P:\mathbb{R}^{n+1}\)</span>, with domain <span class="math inline">\(\textbf{dom}P = \mathbb{R}^n\times \mathbb{R}_{++}\)</span>(where <span class="math inline">\(\mathbb{R}_{++}=\{x\in \mathbb{R}|x&gt;0\}\)</span>) as <span class="math inline">\(P(z,t) = z/t\)</span>. The image of <span class="math inline">\(S\)</span> under perspective function is convex.</p></li>
+<li><p>Image under linear-fractional function: We define linear fractional function <span class="math inline">\(f:\mathbb{R}^n\to\mathbb{R}^m\)</span> as:<span class="math inline">\(f(x) = (Ax+b)/(c^Tx+d)\)</span> with <span class="math inline">\(\textbf{dom}f = \{x|c^Tx+d&gt;0\|\)</span>. The image of <span class="math inline">\(S\)</span> under linear fractional functions is convex.</p></li>
+</ol>
+</div>
+</div>
+<p>In some cases, the restrictions of <strong>interior</strong> is too strict. For example, imagine a plane in <span class="math inline">\(\mathbb{R}^3\)</span>. The interior of the plane is <span class="math inline">\(\emptyset\)</span>. But intuitively many property should be extended to this kind of situation. Because the points in the plane also lies ‘inside’ the convex set. Thus, we will define <strong>relative interior</strong>. First we will define <strong>affine hull</strong>.</p>
+<div class="definitionbox">
+<div class="definition">
+<p><span id="def:affinehull" class="definition"><strong>Definition B.14  (Affine hull) </strong></span>The affine hull of a set <span class="math inline">\(S\)</span> is the smallest affine set that contains <span class="math inline">\(S\)</span>, which can be written as:
+<span class="math display">\[\text{aff}(S) = \{\sum_{i=1}^k\alpha_ix_i|k&gt;0,x_i\in S,\alpha_i\in\mathbb{R},\sum_{i=1}^k\alpha_i=1\}\]</span></p>
+</div>
+</div>
+<div class="definitionbox">
+<div class="definition">
+<p><span id="def:relint" class="definition"><strong>Definition B.15  (Relative Interior) </strong></span>The relative interior of a set <span class="math inline">\(S\)</span> (denoted <span class="math inline">\(\text{relint}(S)\)</span>) is defined as its interior within the affine hull of <span class="math inline">\(S\)</span>. I.e.
+<span class="math display">\[\text{relint}(S):=\{x\in S: \text{there exists } \epsilon&gt;0 \text{ such that }N_\epsilon \cap \text{aff}(S)\subset S\}\]</span>
+where <span class="math inline">\(N_\epsilon(x)\)</span> is a ball of radius <span class="math inline">\(\epsilon\)</span> centered on <span class="math inline">\(x\)</span>.</p>
+</div>
+</div>
+</div>
+<div id="convex-function" class="section level3 hasAnchor" number="10.1.2">
+<h3><span class="header-section-number">B.1.2</span> Convex function<a href="appconvex.html#convex-function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>In this section, let’s define convex functions:</p>
+<div class="definitionbox">
+<div class="definition">
+<p><span id="def:defcvxfunc" class="definition"><strong>Definition B.16  (Convex function) </strong></span>A function <span class="math inline">\(f:\mathbb{R}^n\to\mathbb{R}\)</span> is <strong>convex</strong> if <span class="math inline">\(\textbf{dom}\ f\)</span> is convex and <span class="math inline">\(\forall x,y\in \textbf{dom}\ f\)</span> and with <span class="math inline">\(\theta \in [0,1]\)</span>, we have:<span class="math display">\[f(\theta x +(1-\theta)y)\leq \theta f(x) + (1-\theta)f(y)\]</span>
+The function is <strong>strictly convex</strong> if the inequality holds whenever <span class="math inline">\(x\neq y\)</span> and <span class="math inline">\(\theta\in (0,1)\)</span>.</p>
+</div>
+</div>
+<p>If a function is differentiable, it will be easier for us to check its convexity:</p>
+<div class="theorembox">
+<div class="proposition">
+<p><span id="prp:decidecvx" class="proposition"><strong>Proposition B.2  (Conditions for Convex function) </strong></span>1.(First order condition) Suppose <span class="math inline">\(f\)</span> is differentiable, then <span class="math inline">\(f\)</span> is convex if and only if <span class="math inline">\(\textbf{dom} f\)</span> is convex and <span class="math inline">\(\forall x,y\in \textbf{dom} f\)</span>, <span class="math display">\[f(y)\geq f(x) +\nabla f(x)^T(y-x)\]</span>
+2.(Second order conditions) Suppose <span class="math inline">\(f\)</span> is twice differentiable, then <span class="math inline">\(f\)</span> is convex if and only if <span class="math inline">\(\textbf{dom} f\)</span> is convex and <span class="math inline">\(\forall x\in \textbf{dom} f\)</span>, <span class="math display">\[\nabla^2 f(x) \succeq \textbf{0}\]</span></p>
+</div>
+</div>
+<p>For the same purpose, some operations that preserve the convexity of the convex functions are presented here:</p>
+<div class="theorembox">
+<div class="proposition">
+<p><span id="prp:preservecvx" class="proposition"><strong>Proposition B.3  (Operations that preserve convexity) </strong></span>Let <span class="math inline">\(f:\mathbb{R}^n\to\mathbb{R}\)</span> be a convex function and <span class="math inline">\(g_1,...,g_n\)</span> be convex functions. The following operations will preserve convexity of the function:</p>
+<p>1.(Nonnegative weighted sum): A nonnegative weighted sum of convex functions: <span class="math display">\[f = \omega_1f_1 + ... +\omega_mf_m\]</span></p>
+<p>2.(Composition with an affine mapping) Suppose <span class="math inline">\(A\in \mathbb{R}^{n\times m}\)</span> and <span class="math inline">\(b\in \mathbb{R}^n\)</span>, then <span class="math inline">\(g(x) = f(Ax+b)\)</span> is convex.</p>
+<p>3.(Pointwise maximum and supremum) <span class="math inline">\(g(x) = \max\{g_1(x),...,g_n(x)\}\)</span> is convex. If <span class="math inline">\(h(x,y)\)</span> is convex in <span class="math inline">\(x\)</span> for each <span class="math inline">\(y\in\mathcal{A}\)</span>, then <span class="math inline">\(\sup_{y\in\mathcal{A}} h(x,y)\)</span> is also convex in <span class="math inline">\(x\)</span>.</p>
+<p>4.(Minimization) If <span class="math inline">\(h(x,y)\)</span> is convex in <span class="math inline">\((x,y)\)</span>, and <span class="math inline">\(C\)</span> is a convex nonempty set, then <span class="math inline">\(\inf_{x\in C} h(x,y)\)</span> is convex in <span class="math inline">\(x\)</span>.</p>
+<p>5.(Perspective of a function) The perspective of <span class="math inline">\(f\)</span> is the function <span class="math inline">\(h:\mathbb{R}^{n+1}\to\mathbb{R}\)</span> defined by: <span class="math inline">\(h(x,t) = tf(x/t)\)</span> with domain <span class="math inline">\(\textbf{dom}\ h=\{(x,t)|x/t\in\textbf{dom} f,t&gt;0\}\)</span>. And <span class="math inline">\(h\)</span> is convex.</p>
+</div>
+</div>
+</div>
+<div id="lagrange-dual" class="section level3 hasAnchor" number="10.1.3">
+<h3><span class="header-section-number">B.1.3</span> Lagrange dual<a href="appconvex.html#lagrange-dual" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We consider an optimization problem in the standard form (without assuming convexity of anything):
+<span class="math display">\[\begin{equation}
+\begin{aligned}
+p^* = \quad \min_{x} \quad &amp; f_0(x)\\
+\textrm{s.t.} \quad &amp; f_i(x)\leq 0\quad i=1...,m\\
+  &amp; h_i(x) = 0\quad i=1,...,p   \\
+\end{aligned}
+\end{equation}\]</span></p>
+<div class="definitionbox">
+<div class="definition">
+<p><span id="def:defdualfunc" class="definition"><strong>Definition B.17  (Lagrange dual function) </strong></span>The Lagrangian related to the problem above is defined as: <span class="math display">\[L(x,\lambda,\nu)=f_0(x)+\sum_{i=1}^m\lambda_if_i(x)+\sum_{i=1}^p\nu_ih_i(x)\]</span>
+The Lagrange dual function is defined as: <span class="math display">\[g(\lambda,\nu) = \inf_{x\in\mathcal{D}}L(x,\lambda,\nu)\]</span></p>
+</div>
+</div>
+<p>When the Lagrangian is unbounded below in <span class="math inline">\(x\)</span>, the dual function takes on the value <span class="math inline">\(-\infty\)</span>. Note that since the Lagrange dual function is a pointwise infimum of a family of affine functions of <span class="math inline">\((\lambda,\nu)\)</span>, so it’s concave. The Lagrange dual function will give us lower bounds of the optimal value of the original problem: <span class="math display">\[g(\lambda,\nu)\leq p^*\]</span>. We can see that, the dual function can give a nontrivial lower bound only when <span class="math inline">\(\lambda\succeq 0\)</span>. Thus we can solve the following dual problem to get the best lower bound.</p>
+<div class="definitionbox">
+<div class="definition">
+<p><span id="def:defdualprob" class="definition"><strong>Definition B.18  (Lagrange dual problem) </strong></span>The lagrangian dual problem is defined as follows:
+<span class="math display">\[\begin{equation}
+  \begin{aligned}
+  d^* = \quad \max_{\lambda,\nu} \quad &amp; g(\lambda,\nu)\\
+  \textrm{s.t.} \quad &amp; \lambda\succeq 0
+  \end{aligned}
+  \end{equation}\]</span>
+This is a convex optimization problem.</p>
+</div>
+</div>
+<p>We can easily see that <span class="math display">\[d^*\leq p^*\]</span> always hold. This property is called <strong>weak duality</strong>. If <span class="math display">\[d^*=p^*\]</span>, it’s called <strong>strong duality</strong>. Strong duality does not hold in general, but it usually holfs for convex problems. We can find conditions that guarantee strong duality in convex problems, which are called constrained qualifications. Slater’s constraint qualification is a useful one.</p>
+<div class="theorembox">
+<div class="theorem">
+<p><span id="thm:slater" class="theorem"><strong>Theorem B.1  (Slater's constraint qualification) </strong></span>Strong duality holds for a convex problem
+<span class="math display">\[\begin{equation}
+  \begin{aligned}
+  p^* = \quad \min_{x} \quad &amp; f_0(x)\\
+  \textrm{s.t.} \quad &amp; f_i(x)\leq 0\quad i=1...,m\\
+    &amp; Ax=b   \\
+  \end{aligned}
+  \end{equation}\]</span>
+if it is strictly feasible, i.e.
+<span class="math display">\[\exists x\in\textbf{relint}\mathcal{D}:\quad f_i(x)&lt;0,\quad i=1...m,\quad Ax=b\]</span>
+And the linear inequalities do not need to hold with strict inequality.</p>
+</div>
+</div>
+</div>
+<div id="kkt-condition" class="section level3 hasAnchor" number="10.1.4">
+<h3><span class="header-section-number">B.1.4</span> KKT condition<a href="appconvex.html#kkt-condition" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+</div>
+</div>
 </div>
             </section>
 
@@ -246,7 +450,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/hankyang94/OptimalControlEstimation/blob/main/08-appendix.Rmd",
+"link": "https://github.com/hankyang94/OptimalControlEstimation/blob/main/11-appendix.Rmd",
 "text": "Edit"
 },
 "history": {
