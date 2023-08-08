@@ -1247,7 +1247,7 @@ In most scenarios, the set we encounter is more complicated. In general it is ex
 :::
 :::
 
-In some cases, the restrictions of **interior** is too strict. For example, imagine a plane in \mathbb{R}^3. The interior of the plane is $\emptyset$. But intuitively many property should be extended to this kind of situation. Because the points in the plane also lies 'inside' the convex set. Thus, we will define **relative interior**. First we will define **affine hull**.
+In some cases, the restrictions of **interior** is too strict. For example, imagine a plane in $\mathbb{R}^3$. The interior of the plane is $\emptyset$. But intuitively many property should be extended to this kind of situation. Because the points in the plane also lies 'inside' the convex set. Thus, we will define **relative interior**. First we will define **affine hull**.
 
 ::: {.definitionbox}
 ::: {.definition #affinehull name="Affine hull"}
