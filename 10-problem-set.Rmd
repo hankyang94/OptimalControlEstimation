@@ -1,1 +1,5 @@
 # Problem Sets {#psets}
+
+::: {.exercise #lqrmanifold name="LQR on A Manifold"}
+LQR [@saccon13tac-lie] [@teng22cdc-lie]
+:::
