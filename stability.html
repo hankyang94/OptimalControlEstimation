@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-08-08" />
+<meta name="date" content="2023-08-15" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -129,7 +129,11 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="4" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html"><i class="fa fa-check"></i><b>4</b> Continuous-time Optimal Control</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#linear-quadratic-regulator"><i class="fa fa-check"></i><b>4.1</b> Linear Quadratic Regulator</a></li>
+<li class="chapter" data-level="4.1" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#the-basic-problem-1"><i class="fa fa-check"></i><b>4.1</b> The Basic Problem</a></li>
+<li class="chapter" data-level="4.2" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#the-hamilton-jacobi-bellman-equation"><i class="fa fa-check"></i><b>4.2</b> The Hamilton-Jacobi-Bellman Equation</a></li>
+<li class="chapter" data-level="4.3" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#linear-quadratic-regulator"><i class="fa fa-check"></i><b>4.3</b> Linear Quadratic Regulator</a></li>
+<li class="chapter" data-level="4.4" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#the-pontryagin-minimum-principle"><i class="fa fa-check"></i><b>4.4</b> The Pontryagin Minimum Principle</a></li>
+<li class="chapter" data-level="4.5" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#infinite-horizon-problems"><i class="fa fa-check"></i><b>4.5</b> Infinite-Horizon Problems</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="stability.html"><a href="stability.html"><i class="fa fa-check"></i><b>5</b> Stability Analysis</a>
 <ul>
@@ -587,7 +591,7 @@ which means <span class="math inline">\(\dot{\theta}\)</span> will immediately b
 <p>How to find these functions?</p>
 <p>In Example <a href="stability.html#exm:lyapunovlocalstabilitypendulum">5.3</a>, we have seen that physical intuition can help us find a good Lyapunov function <a href="stability.html#eq:pendulum-lyapunov-1">(5.7)</a>. Nevertheless, it did not quite give us what we want in terms of asymptotic stability. Instead, a hand-crafted function <a href="stability.html#eq:pendulum-lyapunov-2">(5.8)</a> helped us certify local asymptotic stability.</p>
 <p>Wouldn’t it be cool that we can design an algorithm to find the Lyapunov certificates for us?</p>
-<p>A closer look at the Theorems <a href="stability.html#thm:lyapunovlocalstability">5.2</a>, <a href="stability.html#thm:lyapunovglobalstability">5.3</a>, <a href="stability.html#thm:localinvariantsettheorm">5.4</a>, and <a href="stability.html#thm:globalinvariantsettheorem">5.5</a> tells us the key property of a Lyapunov certificate is that it needs to satisfy the positivity (or negativity) constraint for all states inside a set. This is a nontrivial and difficult requirement, because even if we were given a function <span class="math inline">\(V(x)\)</span>, naively evaluting if <span class="math inline">\(V(x)\)</span> is nonnegative inside a set requires enumeration over all the states in the set, which is impractical given that the set is continuous and has infinite number of states.<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a> When the dynamics <a href="stability.html#eq:autonomous-system">(5.3)</a> is linear, searching for Lyapunov functions is well understood and presented in Appendix <a href="app-lti-system-theory.html#app-lti-stability">A.1</a>. However, when the dynamics is nonlinear, things can get very complicated.</p>
+<p>A closer look at the Theorems <a href="stability.html#thm:lyapunovlocalstability">5.2</a>, <a href="stability.html#thm:lyapunovglobalstability">5.3</a>, <a href="stability.html#thm:localinvariantsettheorm">5.4</a>, and <a href="stability.html#thm:globalinvariantsettheorem">5.5</a> tells us the key property of a Lyapunov certificate is that it needs to satisfy the positivity (or negativity) constraint for all states inside a set. This is a nontrivial and difficult requirement, because even if we were given a function <span class="math inline">\(V(x)\)</span>, naively evaluting if <span class="math inline">\(V(x)\)</span> is nonnegative inside a set requires enumeration over all the states in the set, which is impractical given that the set is continuous and has infinite number of states.<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a> When the dynamics <a href="stability.html#eq:autonomous-system">(5.3)</a> is linear, searching for Lyapunov functions is well understood and presented in Appendix <a href="app-lti-system-theory.html#app-lti-stability">A.1</a>. However, when the dynamics is nonlinear, things can get very complicated.</p>
 <p>In the next, I want to introduce a general framework for searching Lyapunov certificates for nonlinear systems that is based on convex optimization.</p>
 <p>This framework, although having deep connections with many other disciplines such as algebraic geometry, theoretical computer science, and mathematical optimization, is based on a very simple intution that we all have since high school.</p>
 <div class="examplebox">
@@ -697,7 +701,7 @@ p_0(x) = \sigma_0(x) + \sum_{i=1}^{l_{\mathrm{ineq}}} \sigma_i(x) p_{i + l_{\mat
 \end{split}
 \tag{5.12}
 \end{equation}\]</span></p>
-<p><strong>Bounding the Degree</strong>. The careful reader realizes that in <a href="stability.html#eq:sos-tutorial-search-certificate">(5.12)</a> we have added constraints on the degrees of the polynomial multipliers <span class="math inline">\(\sigma_i\)</span>’s and <span class="math inline">\(\lambda_i\)</span>’s.<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a> Precisely, we choose an integer <span class="math inline">\(\kappa\)</span>, which we call the relaxation order, such that
+<p><strong>Bounding the Degree</strong>. The careful reader realizes that in <a href="stability.html#eq:sos-tutorial-search-certificate">(5.12)</a> we have added constraints on the degrees of the polynomial multipliers <span class="math inline">\(\sigma_i\)</span>’s and <span class="math inline">\(\lambda_i\)</span>’s.<a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a> Precisely, we choose an integer <span class="math inline">\(\kappa\)</span>, which we call the relaxation order, such that
 <span class="math display">\[
 2 \kappa \geq \max \{ \mathrm{deg}(p_i(x)) \}_{i=0}^{l_{\mathrm{eq}} + l_{\mathrm{ineq}}},
 \]</span>
@@ -824,7 +828,7 @@ Figure 5.3: Derivative of the lyapunov local stability certificate computed via 
 <p><span id="lem:Barbalat" class="lemma"><strong>Lemma 5.2  (Barbalat's Lemma) </strong></span>Let <span class="math inline">\(f(t)\)</span> be differentiable, if</p>
 <ul>
 <li><p><span class="math inline">\(\lim_{t \rightarrow \infty} f(t)\)</span> is finite, and</p></li>
-<li><p><span class="math inline">\(\dot{f}(t)\)</span> is uniformly continuous,<a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a></p></li>
+<li><p><span class="math inline">\(\dot{f}(t)\)</span> is uniformly continuous,<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a></p></li>
 </ul>
 <p>then
 <span class="math display">\[
@@ -844,7 +848,7 @@ Figure 5.3: Derivative of the lyapunov local stability certificate computed via 
 </div>
 <div class="proofbox">
 <div class="proof">
-<p><span id="unlabeled-div-5" class="proof"><em>Proof</em>. </span><span class="math inline">\(V(x,t)\)</span> is lower bounded and <span class="math inline">\(\dot{V}\)</span> is negative semidefinite implies the limit of <span class="math inline">\(V\)</span> as <span class="math inline">\(t \rightarrow \infty\)</span> is finite (note that <span class="math inline">\(V(x,t) \leq V(x(0),0)\)</span>). Then the theorem clearly follows from Barbalat’s Lemma <a href="stability.html#lem:Barbalat">5.2</a>.</p>
+<p><span id="unlabeled-div-6" class="proof"><em>Proof</em>. </span><span class="math inline">\(V(x,t)\)</span> is lower bounded and <span class="math inline">\(\dot{V}\)</span> is negative semidefinite implies the limit of <span class="math inline">\(V\)</span> as <span class="math inline">\(t \rightarrow \infty\)</span> is finite (note that <span class="math inline">\(V(x,t) \leq V(x(0),0)\)</span>). Then the theorem clearly follows from Barbalat’s Lemma <a href="stability.html#lem:Barbalat">5.2</a>.</p>
 </div>
 </div>
 
@@ -888,10 +892,10 @@ Yang, Heng, Ling Liang, Luca Carlone, and Kim-Chuan Toh. 2022. <span>“An Inexa
 </div>
 <div class="footnotes">
 <hr />
-<ol start="3">
-<li id="fn3"><p>In fact, many of the recent works verify “neural” Lyapunov certificates (and other types of certificates) using this idea, see for example <span class="citation">(<a href="#ref-dawson23tro-safe">Dawson, Gao, and Fan 2023</a>)</span>.<a href="stability.html#fnref3" class="footnote-back">↩︎</a></p></li>
-<li id="fn4"><p>The degree of a monomial is the sum of its exponents. For example, <span class="math inline">\(\mathrm{deg}(x_1 x_2^4 x_3^2) = 1 + 4 + 2 = 7\)</span>. The degree of a polynomial is the maximum degree of its monomials. For example, the polynomial <span class="math inline">\(p(x) = 1 + x_2 + x_1^2 x_2^3\)</span> has three monomials with degrees <span class="math inline">\(0\)</span>, <span class="math inline">\(1\)</span>, and <span class="math inline">\(5\)</span>, respectively. Therefore, <span class="math inline">\(\mathrm{deg}(p) = 5\)</span>.<a href="stability.html#fnref4" class="footnote-back">↩︎</a></p></li>
-<li id="fn5"><p>A sufficient condition for this to hold is that <span class="math inline">\(\ddot{f}\)</span> exists and is bounded.<a href="stability.html#fnref5" class="footnote-back">↩︎</a></p></li>
+<ol start="4">
+<li id="fn4"><p>In fact, many of the recent works verify “neural” Lyapunov certificates (and other types of certificates) using this idea, see for example <span class="citation">(<a href="#ref-dawson23tro-safe">Dawson, Gao, and Fan 2023</a>)</span>.<a href="stability.html#fnref4" class="footnote-back">↩︎</a></p></li>
+<li id="fn5"><p>The degree of a monomial is the sum of its exponents. For example, <span class="math inline">\(\mathrm{deg}(x_1 x_2^4 x_3^2) = 1 + 4 + 2 = 7\)</span>. The degree of a polynomial is the maximum degree of its monomials. For example, the polynomial <span class="math inline">\(p(x) = 1 + x_2 + x_1^2 x_2^3\)</span> has three monomials with degrees <span class="math inline">\(0\)</span>, <span class="math inline">\(1\)</span>, and <span class="math inline">\(5\)</span>, respectively. Therefore, <span class="math inline">\(\mathrm{deg}(p) = 5\)</span>.<a href="stability.html#fnref5" class="footnote-back">↩︎</a></p></li>
+<li id="fn6"><p>A sufficient condition for this to hold is that <span class="math inline">\(\ddot{f}\)</span> exists and is bounded.<a href="stability.html#fnref6" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
             </section>

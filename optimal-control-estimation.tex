@@ -114,7 +114,7 @@ arc=4pt}
 
 \title{Optimal Control and Estimation}
 \author{Heng Yang}
-\date{2023-08-08}
+\date{2023-08-15}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -940,8 +940,141 @@ It is possible for a suboptimal control scheme to employ both types of approxima
 \hypertarget{continuous-time-optimal-control}{%
 \chapter{Continuous-time Optimal Control}\label{continuous-time-optimal-control}}
 
+So far we have been focusing on stochastic and discrete-time optimal control problems. In this Chapter, we will switch gear to deterministic and continuous-time optimal control (still with continuous state and action space).
+
+The goal of a continuous-time introduction is threefold. (1) Real-world systems are natively continuous-time. (2) We will see the continuous-time analog of the Bellman principle of optimality in discrete-time (cf.~Theorem \ref{thm:bellmanoptimality}). (3) The continuous-time setup is more natural and popular for stability analysis to be introduced in Chapter \ref{stability}.
+
+\hypertarget{the-basic-problem-1}{%
+\section{The Basic Problem}\label{the-basic-problem-1}}
+
+Consider a continuous-time dynamical system
+\begin{equation}
+\dot{x}(t) = f(x(t),u(t)),\ t \in [0,T], \quad x(0) = x_0,
+\label{eq:ct-optimal-control-system}
+\end{equation}
+where
+
+\begin{itemize}
+\item
+  \(x(t) \in \mathbb{R}^n\) is the state of the system,
+\item
+  \(u(t) \in \mathbb{U} \subseteq \mathbb{R}^m\) is the control we wish to design,
+\item
+  \(f: \mathbb{R}^{n} \times \mathbb{R}^m \rightarrow \mathbb{R}^n\) models the system dynamics, and
+\item
+  \(x_0 \in \mathbb{R}^n\) is the initial state of the system.
+\end{itemize}
+
+We assume the admissible control functions \(\{u(t) \mid u(t) \in \mathbb{U}, t\in [0,T] \}\), also called control trajectories, must be \emph{piecewise continuous}.\footnote{Even though we write \(dx_i(t)/dt\) in the system \eqref{eq:ct-optimal-control-system}, we allow \(x(t)\) to be only directionally differentiable at a finite number of points to account for the possible discontinuity of \(u(t)\).} For any control trajectory, we assume the system \eqref{eq:ct-optimal-control-system} has a unique solution \(\{x(t)\mid t \in [0,T] \}\), called the state trajectory.
+
+We now state the continuous-time optimal control problem.
+
+\begin{definition}[Continuous-time, Finite-horizon Optimal Control]
+\protect\hypertarget{def:continuoustimeoptimalcontrol}{}\label{def:continuoustimeoptimalcontrol}Find the best admissible control trajectory \(\{u(t) \mid t \in [0,T] \}\) that minimizes the cost function
+\begin{equation}
+J(0,x_0) = \min_{u(t) \in \mathbb{U}} h(x(T)) + \int_0^T g(x(t),u(t)) dt,
+\label{eq:ct-optimal-control-definition}
+\end{equation}
+subject to \eqref{eq:ct-optimal-control-system}, where the functions \(g\) and \(h\) are continuously differentiable with respect to \(x\), and \(g\) is continuous with respect to \(u\).
+\end{definition}
+
+The function \(J\) in \eqref{eq:ct-optimal-control-definition} is called the \emph{optimal cost-to-go}, or the \emph{optimal value function}. Notice that the optimal cost-to-go is a function of both the state \(x\) and the time \(t\), just as in the discrete-time case we used \(J_k\) with a subscript \(k\) to denote the optimal cost-to-go for the tail problem starting at timestep \(k\) (cf.~Theorem \ref{thm:dynamicprogramming}). Specifically, we should interpret
+\[
+J(t,x_0) = \min_{u(t) \in \mathbb{U}} h(x(T)) + \int_t^T g(x(\tau),u(\tau)) d\tau, \quad x(t) = x_0,
+\]
+as the optimal cost-to-go of the system starting from \(x_0\) at time \(t\) (i.e., the tail problem).
+We assume \(J(0,x_0)\) is finite when \(x_0\) is in some set \(\mathcal{X}_0\).
+
+\hypertarget{the-hamilton-jacobi-bellman-equation}{%
+\section{The Hamilton-Jacobi-Bellman Equation}\label{the-hamilton-jacobi-bellman-equation}}
+
+Recall that in discrete-time, the dynamic programming (DP) algorithm in Theorem \ref{thm:dynamicprogramming} states that the optimal cost-to-go has to satisfy a recursive equation \eqref{eq:dpbackwardrecursion}, i.e., the optimal cost-to-go at time \(k\) can be calculated by choosing the best action that minimizes the stage cost at time \(k\) plus the optimal cost-to-go at time \(k+1\). In the next, we will show a result of similar flavor to \eqref{eq:dpbackwardrecursion}, but in the form of a partial differential equation (PDE), known as the Hamilton-Jacobi-Bellman (HJB) equation.
+
+Let us informally derive the HJB equation by applying the DP algorithm to a discrete-time approximation of the continuous-time optimal control problem. We divide the time horizon \([0,T]\) into \(N\) pieces of equal length \(\delta = T/N\), and denote
+\[
+x_k = x(k\delta), \quad u_k = u(k \delta), \quad k = 0,1,\dots,N.
+\]
+We then approximate the continuous-time dynamics \eqref{eq:ct-optimal-control-system} as
+\[
+x_{k+1} = x_k + \dot{x}_k \cdot \delta = x_k + f(x_k,u_k) \cdot \delta,
+\]
+and the cost function in \eqref{eq:ct-optimal-control-definition} as
+\[
+h(x_N) + \sum_{k=0}^{N-1} g(x_k, u_k)\cdot \delta.
+\]
+This problem now is in the form of a discrete-time, finite-horizon optimal control \ref{def:basicproblem}, for which we can apply dynamic programming.
+
+Let us use \(\tilde{J}(t,x)\) (as opposed to \(J(t,x)\)) to denote the optimal cost-to-go at time \(t\) and state \(x\) for the discrete-time approximation. According to \eqref{eq:dpbackwardrecursion}, the DP backward recursion is
+\begin{align}
+\tilde{J}(N\delta,x) = h(x), \\
+\tilde{J}(k\delta,x) = \min_{u \in \mathbb{U}} \left[ g(x,u)\cdot \delta + \tilde{J}((k+1)\delta,x + f(x,u)\cdot \delta)  \right], \quad k = N-1,\dots,0.
+\label{eq:ct-optimal-control-discrete-approx-dp}
+\end{align}
+Suppose \(\tilde{J}(t,x)\) is differentiable, we can perform a Taylor-series expansion of \(\tilde{J}((k+1)\delta,x+f(x,u)\delta)\) in \eqref{eq:ct-optimal-control-discrete-approx-dp} as follows
+\[
+\tilde{J}((k+1)\delta,x+f(x,u)\delta) = \tilde{J}(k\delta,x) + \nabla_t \tilde{J} (k\delta,x) \cdot \delta + \nabla_x \tilde{J}(k\delta,x) f(x,u) \cdot \delta + o(\delta),
+\]
+where \(o(\delta)\) includes high-order terms that approach zero when \(\delta\) tends to zero, \(\nabla_t \tilde{J}\) and \(\nabla_x \tilde{J}\) (a row vector) denote the partial derivates of \(\tilde{J}\) with respect to \(t\) and \(x\), respectively. Plugging the first-order Taylor expansion into the DP recursion \eqref{eq:ct-optimal-control-discrete-approx-dp}, we obtain
+\begin{equation}
+\tilde{J}(k\delta,x) = \min_{u \in \mathbb{U}} \left[ g(x,u) \cdot \delta + \tilde{J}(k \delta,x) + \nabla_t \tilde{J}(k \delta,x) \delta + \nabla_x \tilde{J}(k\delta,x)f(x,u) \delta + o(\delta)  \right].
+\label{eq:ct-optimal-control-discrete-approx-taylor}
+\end{equation}
+Cancelling \(\tilde{J}(k \delta,x)\) from both sides, dividing both sides by \(\delta\), and assuming \(\tilde{J}\) converges to \(J\) uniformly in time and state, i.e.,
+\[
+\lim_{\delta \rightarrow 0, k\delta = t} \tilde{J}(k\delta,x) = J(t,x), \quad \forall t,x,
+\]
+we obtain from \eqref{eq:ct-optimal-control-discrete-approx-taylor} the following partial differential equation
+\begin{equation}
+0 = \min_{u \in \mathbb{U}} \left[ g(x,u) + \nabla_t J(t,x) + \nabla_x J(t,x) f(x,u)  \right], \quad \forall t, x,
+\label{eq:hjb-informal}
+\end{equation}
+with the boundary condition \(J(T,x) = h(x)\). Equation \eqref{eq:hjb-informal} is called the Hamilton-Jacobi-Bellman equation.
+
+Our derivation above is informal, let us formally state the HJB equation.
+
+\begin{theorem}[Hamilton-Jacobi-Bellman Equation as A Sufficient Condition for Optimality]
+\protect\hypertarget{thm:hjbsufficient}{}\label{thm:hjbsufficient}Consider the optimal control problem \ref{def:continuoustimeoptimalcontrol} for system \eqref{eq:ct-optimal-control-system}. Suppose \(V(t,x)\) is a solution to the Hamilton-Jacobi-Bellman equation, i.e., \(V(t,x)\) is continuously differentiable and satisfies
+\begin{align}
+\label{eq:hjb-eqution-formal-1}
+0 = \min_{u \in \mathbb{U}} \left[ g(x,u) + \nabla_t V(t,x) + \nabla_x V(t,x) f(x,u)\right], \quad \forall t,x, \\
+V(T,x) = h(x), \quad \forall x.
+\end{align}
+Suppose \(\mu^\star(t,x)\) attains the minimum in \eqref{eq:hjb-eqution-formal-1} for all \(t\) and \(x\). Let \(\{x^\star(t) \mid t \in [0,T] \}\) be the state trajectory obtained from the given initial condition \(x(0)\) when the control trajectory \(u^\star(t) = \mu^\star(t,x^\star(t))\) is applied, i.e., \(x^\star(0) = x(0)\) and for any \(t \in [0,T]\), \(\dot{x}^\star(t) = f(x^\star(t), \mu^\star(t,x^\star(t)))\) and we assume this differential equation has a unique solution starting at any \((t,x)\) and that the control trajectory \(\{ \mu^\star(t,x^\star(t)) \mid t \in [0,T] \}\) is piecewise continuous as a function of \(t\).
+Then \(V(t,x)\) is equal to the optimal cost-to-go \(J(t,x)\) for all \(t\) and \(x\). Moreover, the control trajectory \(u^\star(t)\) is optimal.
+\end{theorem}
+
+\begin{proof}
+Let \(\{\hat{u}(t) \mid t \in [0,T] \}\) be any admissible control trajectory and let \(\hat{x}(t)\) be the resulting state trajectory. From the ``\(\min\)'' in \eqref{eq:hjb-eqution-formal-1}, we know
+\[
+0 \leq g(\hat{x},\hat{u}) + \nabla_t V(t,\hat{x}) + \nabla_x V(t,\hat{x}) f(\hat{x},\hat{u}) = g(\hat{x},\hat{u}) + \frac{d}{dt} V(t,\hat{x}).
+\]
+Integrating the above inequality over \(t \in [0,T]\), we obtain
+\[
+0 \leq \left( \int_{0}^T g(\hat{x}(t),\hat{u}(t))dt \right) + V(T,\hat{x}(T)) - V(0,\hat{x}(0)).
+\]
+Using the terminal constraint \(V(T,x) = h(x)\) for any \(x\) and the initial condition \(\hat{x}(0) = x(0)\), we have
+\[
+V(0,x(0)) \leq h(\hat{x}(T)) + \int_{0}^T g(\hat{x}(t),\hat{u}(t)) dt.
+\]
+This shows that \(V(0,x(0))\) is a lower bound to the optimal cost-to-go, because any admissible control trajectory \(\hat{u}(t)\) leads to a cost no smaller than \(V(0,x(0))\).
+
+It remains to show that \(V(0,x(0))\) is attainable. This is done by plugging the optimal control trajectory \(u^\star(t)\) and state trajectory \(x^\star(t)\) to the derivation above, leading to
+\[
+V(0,x(0)) = h(x^\star(T)) + \int_0^T g(x^\star(t),u^\star(t)) dt.
+\]
+This shows that \(V(0,x(0)) = J(0,x(0))\).
+
+The argument above is generic and holds for any initial time \(t \in [0,T]\) and initial state \(x\). Therefore, \(V(t,x) = J(t,x)\) is the optimal cost-to-go.
+\end{proof}
+
 \hypertarget{linear-quadratic-regulator}{%
 \section{Linear Quadratic Regulator}\label{linear-quadratic-regulator}}
+
+\hypertarget{the-pontryagin-minimum-principle}{%
+\section{The Pontryagin Minimum Principle}\label{the-pontryagin-minimum-principle}}
+
+\hypertarget{infinite-horizon-problems}{%
+\section{Infinite-Horizon Problems}\label{infinite-horizon-problems}}
 
 \hypertarget{stability}{%
 \chapter{Stability Analysis}\label{stability}}
@@ -3102,6 +3235,10 @@ which implies the boundedness of \(\dot{s}\) (note that \(H\) is uniformly posit
 
 \hypertarget{psets}{%
 \chapter{Problem Sets}\label{psets}}
+
+\begin{exercise}[LQR on A Manifold]
+\protect\hypertarget{exr:lqrmanifold}{}\label{exr:lqrmanifold}LQR \citep{saccon13tac-lie} \citep{teng22cdc-lie}
+\end{exercise}
 
 \hypertarget{appendix-appendix}{%
 \appendix}

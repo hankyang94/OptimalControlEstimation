@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-08-08" />
+<meta name="date" content="2023-08-15" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -129,7 +129,11 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="4" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html"><i class="fa fa-check"></i><b>4</b> Continuous-time Optimal Control</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#linear-quadratic-regulator"><i class="fa fa-check"></i><b>4.1</b> Linear Quadratic Regulator</a></li>
+<li class="chapter" data-level="4.1" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#the-basic-problem-1"><i class="fa fa-check"></i><b>4.1</b> The Basic Problem</a></li>
+<li class="chapter" data-level="4.2" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#the-hamilton-jacobi-bellman-equation"><i class="fa fa-check"></i><b>4.2</b> The Hamilton-Jacobi-Bellman Equation</a></li>
+<li class="chapter" data-level="4.3" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#linear-quadratic-regulator"><i class="fa fa-check"></i><b>4.3</b> Linear Quadratic Regulator</a></li>
+<li class="chapter" data-level="4.4" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#the-pontryagin-minimum-principle"><i class="fa fa-check"></i><b>4.4</b> The Pontryagin Minimum Principle</a></li>
+<li class="chapter" data-level="4.5" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#infinite-horizon-problems"><i class="fa fa-check"></i><b>4.5</b> Infinite-Horizon Problems</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="stability.html"><a href="stability.html"><i class="fa fa-check"></i><b>5</b> Stability Analysis</a>
 <ul>
@@ -252,7 +256,7 @@ the system is said to be “diagonalizable” if <span class="math inline">\(A\)
 <p>One can show that <span class="math inline">\(A\)</span>’s eigenvalues determine the LTI system’s stability, as the following Theorem states:</p>
 <div class="theorembox">
 <div class="theorem">
-<p><span id="thm:ltistable" class="theorem"><strong>Theorem A.1  (Stability of Continuous-Time LTI System) </strong></span>The diagonalizable<a href="#fn13" class="footnote-ref" id="fnref13"><sup>13</sup></a>, LTI system <a href="app-lti-system-theory.html#eq:app-stability-ct-linear-system">(A.1)</a> is</p>
+<p><span id="thm:ltistable" class="theorem"><strong>Theorem A.1  (Stability of Continuous-Time LTI System) </strong></span>The diagonalizable<a href="#fn14" class="footnote-ref" id="fnref14"><sup>14</sup></a>, LTI system <a href="app-lti-system-theory.html#eq:app-stability-ct-linear-system">(A.1)</a> is</p>
 <ol style="list-style-type: decimal">
 <li><p>asymptotically stable if <span class="math inline">\(\text{Re} (\lambda_i) &lt; 0\)</span> for all <span class="math inline">\(i\)</span></p></li>
 <li><p>marginally stable if <span class="math inline">\(\text{Re} (\lambda_i) \le 0\)</span> for all <span class="math inline">\(i\)</span> and there exists at least one <span class="math inline">\(i\)</span> for which <span class="math inline">\(\text{Re} (\lambda_i) = 0\)</span></p></li>
@@ -263,7 +267,7 @@ the system is said to be “diagonalizable” if <span class="math inline">\(A\)
 </div>
 <div class="proofbox">
 <div class="proof">
-<p><span id="unlabeled-div-11" class="proof"><em>Proof</em>. </span>Here we only represent the proof of (1). Similar procedure can be adopted for the proof of (2) - (4).</p>
+<p><span id="unlabeled-div-12" class="proof"><em>Proof</em>. </span>Here we only represent the proof of (1). Similar procedure can be adopted for the proof of (2) - (4).</p>
 <p>Since <span class="math inline">\(A\)</span> is diagonalizable, there exists an similarity transformation matrix <span class="math inline">\(T\)</span>, s.t. <span class="math inline">\(A = T \Lambda T^{-1}\)</span>, where <span class="math inline">\(\Lambda = \text{diag}(\lambda_1, \dots, \lambda_n)\)</span>. Then, under the coordinate transformation <span class="math inline">\(z = T^{-1} x\)</span>, <span class="math inline">\(\dot{x} = Ax\)</span> can be restated as <span class="math inline">\(\dot{z} = \Lambda z\)</span>. Consider the <span class="math inline">\(i\)</span>’s component of <span class="math inline">\(z\)</span>:
 <span class="math display">\[\begin{equation*}
    \dot{z}_i = \lambda_i z_i \Longrightarrow z_i(t) = e^{\lambda_i t} z_i(0)
@@ -332,7 +336,7 @@ x_{t+1} = A x_t.
 </div>
 <div class="proofbox">
 <div class="proof">
-<p><span id="unlabeled-div-12" class="proof"><em>Proof</em>. </span>Here we only represent the proof of (1). Similar procedure can be adopted for the proof of (2) - (4).</p>
+<p><span id="unlabeled-div-13" class="proof"><em>Proof</em>. </span>Here we only represent the proof of (1). Similar procedure can be adopted for the proof of (2) - (4).</p>
 <p>Since <span class="math inline">\(A\)</span> is diagonalizable, there exists an similarity transformation matrix <span class="math inline">\(T\)</span>, s.t. <span class="math inline">\(A = T \Lambda T^{-1}\)</span>, where <span class="math inline">\(\Lambda = \text{diag}(\lambda_1, \dots, \lambda_n)\)</span>. Then, under the coordinate transformation <span class="math inline">\(z = T^{-1} x\)</span>, <span class="math inline">\(x_{t+1} = Ax\)</span> can be restated as <span class="math inline">\(z_{t+1} = \Lambda z_t\)</span>. Expanding the recursion, we have
 <span class="math display">\[\begin{equation*}
    z_{t} = \Lambda^{t-1} z_0 \Longrightarrow
@@ -360,7 +364,7 @@ is positive definite.</p></li>
 </div>
 <div class="proofbox">
 <div class="proof">
-<p><span id="unlabeled-div-13" class="proof"><em>Proof</em>. </span>(a): <span class="math inline">\(2 \Rightarrow 1\)</span>. Suppose we are given two positive definite matrices <span class="math inline">\(P, Q \succ 0\)</span> that satisfies the Lyapunov equation <a href="app-lti-system-theory.html#eq:lyapunov-equation">(A.3)</a>. Define a scalar function
+<p><span id="unlabeled-div-14" class="proof"><em>Proof</em>. </span>(a): <span class="math inline">\(2 \Rightarrow 1\)</span>. Suppose we are given two positive definite matrices <span class="math inline">\(P, Q \succ 0\)</span> that satisfies the Lyapunov equation <a href="app-lti-system-theory.html#eq:lyapunov-equation">(A.3)</a>. Define a scalar function
 <span class="math display">\[
 V(x) = x^T P x.
 \]</span>
@@ -416,7 +420,7 @@ As a result, <span class="math inline">\(\Vert x \Vert^2\)</span> converges to z
 </div>
 <div class="proofbox">
 <div class="proof">
-<p><span id="unlabeled-div-14" class="proof"><em>Proof</em>. </span>let us denote <span class="math inline">\(P_0\)</span> as the solution to the Lyapunov equation with <span class="math inline">\(Q = I\)</span>
+<p><span id="unlabeled-div-15" class="proof"><em>Proof</em>. </span>let us denote <span class="math inline">\(P_0\)</span> as the solution to the Lyapunov equation with <span class="math inline">\(Q = I\)</span>
 <span class="math display">\[
 A^T P_0 + P_0 A = - I.
 \]</span>
@@ -493,7 +497,7 @@ Then
 </div>
 <div class="proofbox">
 <div class="proof">
-<p><span id="unlabeled-div-15" class="proof"><em>Proof</em>. </span>Define the <a href="https://en.wikipedia.org/wiki/Adjugate_matrix">adjugate</a> of <span class="math inline">\(\lambda I - A\)</span> as
+<p><span id="unlabeled-div-16" class="proof"><em>Proof</em>. </span>Define the <a href="https://en.wikipedia.org/wiki/Adjugate_matrix">adjugate</a> of <span class="math inline">\(\lambda I - A\)</span> as
 <span class="math display">\[
    B = \text{adj}(\lambda I - A)
 \]</span>
@@ -549,7 +553,7 @@ concluding the proof.</p>
 </div>
 <div class="proofbox">
 <div class="proof">
-<p><span id="unlabeled-div-16" class="proof"><em>Proof</em>. </span>Directly from Cayley Hamilton Theorem, <span class="math inline">\(A^n\)</span> can be expressed as a linear combination of <span class="math inline">\(I, A, A^2, \dots, A^{n-1}\)</span>. By recursion, it is easy to show that for all <span class="math inline">\(m &gt; n\)</span>, <span class="math inline">\(A^m\)</span> is also a linear combination of <span class="math inline">\(I, A, A^2, \dots, A^{n-1}\)</span>. Post-multiply both sides with <span class="math inline">\(B\)</span>, we get what we want.</p>
+<p><span id="unlabeled-div-17" class="proof"><em>Proof</em>. </span>Directly from Cayley Hamilton Theorem, <span class="math inline">\(A^n\)</span> can be expressed as a linear combination of <span class="math inline">\(I, A, A^2, \dots, A^{n-1}\)</span>. By recursion, it is easy to show that for all <span class="math inline">\(m &gt; n\)</span>, <span class="math inline">\(A^m\)</span> is also a linear combination of <span class="math inline">\(I, A, A^2, \dots, A^{n-1}\)</span>. Post-multiply both sides with <span class="math inline">\(B\)</span>, we get what we want.</p>
 </div>
 </div>
 <div class="theorembox">
@@ -563,7 +567,7 @@ concluding the proof.</p>
 </div>
 <div class="proofbox">
 <div class="proof">
-<p><span id="unlabeled-div-17" class="proof"><em>Proof</em>. </span>First prove LHS <span class="math inline">\(\le\)</span> RHS. <span class="math inline">\(\forall v \in \mathbb{C}^n\)</span> such that
+<p><span id="unlabeled-div-18" class="proof"><em>Proof</em>. </span>First prove LHS <span class="math inline">\(\le\)</span> RHS. <span class="math inline">\(\forall v \in \mathbb{C}^n\)</span> such that
 <span class="math display">\[
    v^* \begin{bmatrix} B &amp; AB &amp; \dots &amp; A^{k-1} B \end{bmatrix} = v^* \begin{bmatrix} B &amp; AB &amp; \dots &amp; A^{n-1}B &amp; \dots A^{k-1}B \end{bmatrix} = 0
 \]</span>
@@ -601,7 +605,7 @@ has full row rank.</p>
 </div>
 <div class="proofbox">
 <div class="proof">
-<p><span id="unlabeled-div-18" class="proof"><em>Proof</em>. </span>Since <span class="math inline">\(\mathcal{C}\)</span> is not full row rank, we pick <span class="math inline">\(k_1\)</span> linearly independent columns from <span class="math inline">\(\mathcal{C}\)</span>. Denote them as <span class="math inline">\(q_1\dots q_{k_1}\)</span>, <span class="math inline">\(q_i \in \mathbb{C}^n\)</span>. Then, we arbitrarily set other <span class="math inline">\(n-k_1\)</span> vectors <span class="math inline">\(q_{k_1+1} \dots q_{n}\)</span> as long as
+<p><span id="unlabeled-div-19" class="proof"><em>Proof</em>. </span>Since <span class="math inline">\(\mathcal{C}\)</span> is not full row rank, we pick <span class="math inline">\(k_1\)</span> linearly independent columns from <span class="math inline">\(\mathcal{C}\)</span>. Denote them as <span class="math inline">\(q_1\dots q_{k_1}\)</span>, <span class="math inline">\(q_i \in \mathbb{C}^n\)</span>. Then, we arbitrarily set other <span class="math inline">\(n-k_1\)</span> vectors <span class="math inline">\(q_{k_1+1} \dots q_{n}\)</span> as long as
 <span class="math display">\[
 Q = \begin{bmatrix}
    q_1 &amp; \dots &amp; q_{k_1} &amp; q_{k_1+1} &amp; \dots &amp; q_{n}
@@ -681,7 +685,7 @@ where <span class="math inline">\(a_1, \dots, a_n\)</span> are the coefficients 
 </div>
 <div class="proofbox">
 <div class="proof">
-<p><span id="unlabeled-div-19" class="proof"><em>Proof</em>. </span>Since <span class="math inline">\(\mathcal{C}\)</span> is invertible, define its inverse
+<p><span id="unlabeled-div-20" class="proof"><em>Proof</em>. </span>Since <span class="math inline">\(\mathcal{C}\)</span> is invertible, define its inverse
 <span class="math display">\[\begin{equation*}
    \mathcal{C}^{-1} = \begin{bmatrix}
       M_1 \\ M_2 \\ \dots \\ M_n
@@ -783,7 +787,7 @@ W_c = \int_{0}^{\infty} e^{A \tau} B B^* e^{A^* \tau} d\tau
 </div>
 <div class="proofbox">
 <div class="proof">
-<p><span id="unlabeled-div-20" class="proof"><em>Proof</em>. </span>(<span class="math inline">\(1. \Rightarrow 2.\)</span>) Prove by contradiction. Assume that <span class="math inline">\((A, B)\)</span> is controllable but <span class="math inline">\(W_c(t_1)\)</span> is singular for some <span class="math inline">\(t_1 &gt; 0\)</span>. This implies there exists a real vector <span class="math inline">\(v \ne 0 \in \mathbb{R}^n\)</span>, s.t.
+<p><span id="unlabeled-div-21" class="proof"><em>Proof</em>. </span>(<span class="math inline">\(1. \Rightarrow 2.\)</span>) Prove by contradiction. Assume that <span class="math inline">\((A, B)\)</span> is controllable but <span class="math inline">\(W_c(t_1)\)</span> is singular for some <span class="math inline">\(t_1 &gt; 0\)</span>. This implies there exists a real vector <span class="math inline">\(v \ne 0 \in \mathbb{R}^n\)</span>, s.t.
 <span class="math display">\[
    v^* W_c(t_1) v = v^* (\int_{0}^{t_1} e^{At} B B^* e^{A^*t} dt) v = \int_{0}^{t_1} v^* (e^{At} B B^* e^{A^*t}) v \ dt = 0
 \]</span>
@@ -979,7 +983,7 @@ Now consider <span class="math inline">\(F(z) = v^* e^{Az} B, z\in \mathcal{C}\)
 </div>
 <div class="proofbox">
 <div class="proof">
-<p><span id="unlabeled-div-21" class="proof"><em>Proof</em>. </span></p>
+<p><span id="unlabeled-div-22" class="proof"><em>Proof</em>. </span></p>
 <ol style="list-style-type: decimal">
 <li>We first show that <span class="math inline">\((C,A)\)</span> is observable if and only if the <span class="math inline">\(n \times n\)</span> matrix <span class="math inline">\(W_o(t) = \int_{0}^{t} e^{A^*\tau} C^*C e^{A\tau}\)</span> is positive definite (nonsingular) for any <span class="math inline">\(t&gt;0\)</span>:</li>
 </ol>
@@ -1100,7 +1104,7 @@ W_o = \int_{0}^{\infty} e^{A^*\tau} C^* C e^{A\tau} d\tau
 </div>
 <div class="proofbox">
 <div class="proof">
-<p><span id="unlabeled-div-22" class="proof"><em>Proof</em>. </span>(<span class="math inline">\(1. \Leftrightarrow 2.\)</span>) Directly from stabilizability’s definition.</p>
+<p><span id="unlabeled-div-23" class="proof"><em>Proof</em>. </span>(<span class="math inline">\(1. \Leftrightarrow 2.\)</span>) Directly from stabilizability’s definition.</p>
 <p>(<span class="math inline">\(2. \Leftrightarrow 3.\)</span>) If 2. holds but 3. not hold, then there exists <span class="math inline">\(v \ne 0 \in \mathbb{C}^n\)</span>, s.t.
 <span class="math display">\[\begin{equation*}
    v^* [A-\lambda I, B] = 0 \Leftrightarrow v^* A = \lambda v^*, v^* B = 0, \text{Re} \lambda \ge 0
@@ -1272,8 +1276,8 @@ Zhou, Kemin, JC Doyle, and Keither Glover. 1996. <span>“Robust and Optimal Con
 </div>
 <div class="footnotes">
 <hr />
-<ol start="13">
-<li id="fn13"><p>when <span class="math inline">\(A\)</span> is not diagonalizable, similar results can be derived via Jordan decomposition.<a href="app-lti-system-theory.html#fnref13" class="footnote-back">↩︎</a></p></li>
+<ol start="14">
+<li id="fn14"><p>when <span class="math inline">\(A\)</span> is not diagonalizable, similar results can be derived via Jordan decomposition.<a href="app-lti-system-theory.html#fnref14" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
             </section>

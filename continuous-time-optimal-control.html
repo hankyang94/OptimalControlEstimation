@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-08-08" />
+<meta name="date" content="2023-08-15" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -129,7 +129,11 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="4" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html"><i class="fa fa-check"></i><b>4</b> Continuous-time Optimal Control</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#linear-quadratic-regulator"><i class="fa fa-check"></i><b>4.1</b> Linear Quadratic Regulator</a></li>
+<li class="chapter" data-level="4.1" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#the-basic-problem-1"><i class="fa fa-check"></i><b>4.1</b> The Basic Problem</a></li>
+<li class="chapter" data-level="4.2" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#the-hamilton-jacobi-bellman-equation"><i class="fa fa-check"></i><b>4.2</b> The Hamilton-Jacobi-Bellman Equation</a></li>
+<li class="chapter" data-level="4.3" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#linear-quadratic-regulator"><i class="fa fa-check"></i><b>4.3</b> Linear Quadratic Regulator</a></li>
+<li class="chapter" data-level="4.4" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#the-pontryagin-minimum-principle"><i class="fa fa-check"></i><b>4.4</b> The Pontryagin Minimum Principle</a></li>
+<li class="chapter" data-level="4.5" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#infinite-horizon-problems"><i class="fa fa-check"></i><b>4.5</b> Infinite-Horizon Problems</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="stability.html"><a href="stability.html"><i class="fa fa-check"></i><b>5</b> Stability Analysis</a>
 <ul>
@@ -226,10 +230,135 @@ div.csl-indent {
             <section class="normal" id="section-">
 <div id="continuous-time-optimal-control" class="section level1 hasAnchor" number="4">
 <h1><span class="header-section-number">Chapter 4</span> Continuous-time Optimal Control<a href="continuous-time-optimal-control.html#continuous-time-optimal-control" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<div id="linear-quadratic-regulator" class="section level2 hasAnchor" number="4.1">
-<h2><span class="header-section-number">4.1</span> Linear Quadratic Regulator<a href="continuous-time-optimal-control.html#linear-quadratic-regulator" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>So far we have been focusing on stochastic and discrete-time optimal control problems. In this Chapter, we will switch gear to deterministic and continuous-time optimal control (still with continuous state and action space).</p>
+<p>The goal of a continuous-time introduction is threefold. (1) Real-world systems are natively continuous-time. (2) We will see the continuous-time analog of the Bellman principle of optimality in discrete-time (cf. Theorem <a href="formulation.html#thm:bellmanoptimality">1.1</a>). (3) The continuous-time setup is more natural and popular for stability analysis to be introduced in Chapter <a href="stability.html#stability">5</a>.</p>
+<div id="the-basic-problem-1" class="section level2 hasAnchor" number="4.1">
+<h2><span class="header-section-number">4.1</span> The Basic Problem<a href="continuous-time-optimal-control.html#the-basic-problem-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Consider a continuous-time dynamical system
+<span class="math display" id="eq:ct-optimal-control-system">\[\begin{equation}
+\dot{x}(t) = f(x(t),u(t)),\ t \in [0,T], \quad x(0) = x_0,
+\tag{4.1}
+\end{equation}\]</span>
+where</p>
+<ul>
+<li><p><span class="math inline">\(x(t) \in \mathbb{R}^n\)</span> is the state of the system,</p></li>
+<li><p><span class="math inline">\(u(t) \in \mathbb{U} \subseteq \mathbb{R}^m\)</span> is the control we wish to design,</p></li>
+<li><p><span class="math inline">\(f: \mathbb{R}^{n} \times \mathbb{R}^m \rightarrow \mathbb{R}^n\)</span> models the system dynamics, and</p></li>
+<li><p><span class="math inline">\(x_0 \in \mathbb{R}^n\)</span> is the initial state of the system.</p></li>
+</ul>
+<p>We assume the admissible control functions <span class="math inline">\(\{u(t) \mid u(t) \in \mathbb{U}, t\in [0,T] \}\)</span>, also called control trajectories, must be <em>piecewise continuous</em>.<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a> For any control trajectory, we assume the system <a href="continuous-time-optimal-control.html#eq:ct-optimal-control-system">(4.1)</a> has a unique solution <span class="math inline">\(\{x(t)\mid t \in [0,T] \}\)</span>, called the state trajectory.</p>
+<p>We now state the continuous-time optimal control problem.</p>
+<div class="definitionbox">
+<div class="definition">
+<p><span id="def:continuoustimeoptimalcontrol" class="definition"><strong>Definition 4.1  (Continuous-time, Finite-horizon Optimal Control) </strong></span>Find the best admissible control trajectory <span class="math inline">\(\{u(t) \mid t \in [0,T] \}\)</span> that minimizes the cost function
+<span class="math display" id="eq:ct-optimal-control-definition">\[\begin{equation}
+J(0,x_0) = \min_{u(t) \in \mathbb{U}} h(x(T)) + \int_0^T g(x(t),u(t)) dt,
+\tag{4.2}
+\end{equation}\]</span>
+subject to <a href="continuous-time-optimal-control.html#eq:ct-optimal-control-system">(4.1)</a>, where the functions <span class="math inline">\(g\)</span> and <span class="math inline">\(h\)</span> are continuously differentiable with respect to <span class="math inline">\(x\)</span>, and <span class="math inline">\(g\)</span> is continuous with respect to <span class="math inline">\(u\)</span>.</p>
+</div>
+</div>
+<p>The function <span class="math inline">\(J\)</span> in <a href="continuous-time-optimal-control.html#eq:ct-optimal-control-definition">(4.2)</a> is called the <em>optimal cost-to-go</em>, or the <em>optimal value function</em>. Notice that the optimal cost-to-go is a function of both the state <span class="math inline">\(x\)</span> and the time <span class="math inline">\(t\)</span>, just as in the discrete-time case we used <span class="math inline">\(J_k\)</span> with a subscript <span class="math inline">\(k\)</span> to denote the optimal cost-to-go for the tail problem starting at timestep <span class="math inline">\(k\)</span> (cf. Theorem <a href="formulation.html#thm:dynamicprogramming">1.2</a>). Specifically, we should interpret
+<span class="math display">\[
+J(t,x_0) = \min_{u(t) \in \mathbb{U}} h(x(T)) + \int_t^T g(x(\tau),u(\tau)) d\tau, \quad x(t) = x_0,
+\]</span>
+as the optimal cost-to-go of the system starting from <span class="math inline">\(x_0\)</span> at time <span class="math inline">\(t\)</span> (i.e., the tail problem).
+We assume <span class="math inline">\(J(0,x_0)\)</span> is finite when <span class="math inline">\(x_0\)</span> is in some set <span class="math inline">\(\mathcal{X}_0\)</span>.</p>
+</div>
+<div id="the-hamilton-jacobi-bellman-equation" class="section level2 hasAnchor" number="4.2">
+<h2><span class="header-section-number">4.2</span> The Hamilton-Jacobi-Bellman Equation<a href="continuous-time-optimal-control.html#the-hamilton-jacobi-bellman-equation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Recall that in discrete-time, the dynamic programming (DP) algorithm in Theorem <a href="formulation.html#thm:dynamicprogramming">1.2</a> states that the optimal cost-to-go has to satisfy a recursive equation <a href="formulation.html#eq:dpbackwardrecursion">(1.5)</a>, i.e., the optimal cost-to-go at time <span class="math inline">\(k\)</span> can be calculated by choosing the best action that minimizes the stage cost at time <span class="math inline">\(k\)</span> plus the optimal cost-to-go at time <span class="math inline">\(k+1\)</span>. In the next, we will show a result of similar flavor to <a href="formulation.html#eq:dpbackwardrecursion">(1.5)</a>, but in the form of a partial differential equation (PDE), known as the Hamilton-Jacobi-Bellman (HJB) equation.</p>
+<p>Let us informally derive the HJB equation by applying the DP algorithm to a discrete-time approximation of the continuous-time optimal control problem. We divide the time horizon <span class="math inline">\([0,T]\)</span> into <span class="math inline">\(N\)</span> pieces of equal length <span class="math inline">\(\delta = T/N\)</span>, and denote
+<span class="math display">\[
+x_k = x(k\delta), \quad u_k = u(k \delta), \quad k = 0,1,\dots,N.
+\]</span>
+We then approximate the continuous-time dynamics <a href="continuous-time-optimal-control.html#eq:ct-optimal-control-system">(4.1)</a> as
+<span class="math display">\[
+x_{k+1} = x_k + \dot{x}_k \cdot \delta = x_k + f(x_k,u_k) \cdot \delta,
+\]</span>
+and the cost function in <a href="continuous-time-optimal-control.html#eq:ct-optimal-control-definition">(4.2)</a> as
+<span class="math display">\[
+h(x_N) + \sum_{k=0}^{N-1} g(x_k, u_k)\cdot \delta.
+\]</span>
+This problem now is in the form of a discrete-time, finite-horizon optimal control <a href="formulation.html#def:basicproblem">1.1</a>, for which we can apply dynamic programming.</p>
+<p>Let us use <span class="math inline">\(\tilde{J}(t,x)\)</span> (as opposed to <span class="math inline">\(J(t,x)\)</span>) to denote the optimal cost-to-go at time <span class="math inline">\(t\)</span> and state <span class="math inline">\(x\)</span> for the discrete-time approximation. According to <a href="formulation.html#eq:dpbackwardrecursion">(1.5)</a>, the DP backward recursion is
+<span class="math display" id="eq:ct-optimal-control-discrete-approx-dp">\[\begin{align}
+\tilde{J}(N\delta,x) = h(x), \\
+\tilde{J}(k\delta,x) = \min_{u \in \mathbb{U}} \left[ g(x,u)\cdot \delta + \tilde{J}((k+1)\delta,x + f(x,u)\cdot \delta)  \right], \quad k = N-1,\dots,0.
+\tag{4.3}
+\end{align}\]</span>
+Suppose <span class="math inline">\(\tilde{J}(t,x)\)</span> is differentiable, we can perform a Taylor-series expansion of <span class="math inline">\(\tilde{J}((k+1)\delta,x+f(x,u)\delta)\)</span> in <a href="continuous-time-optimal-control.html#eq:ct-optimal-control-discrete-approx-dp">(4.3)</a> as follows
+<span class="math display">\[
+\tilde{J}((k+1)\delta,x+f(x,u)\delta) = \tilde{J}(k\delta,x) + \nabla_t \tilde{J} (k\delta,x) \cdot \delta + \nabla_x \tilde{J}(k\delta,x) f(x,u) \cdot \delta + o(\delta),
+\]</span>
+where <span class="math inline">\(o(\delta)\)</span> includes high-order terms that approach zero when <span class="math inline">\(\delta\)</span> tends to zero, <span class="math inline">\(\nabla_t \tilde{J}\)</span> and <span class="math inline">\(\nabla_x \tilde{J}\)</span> (a row vector) denote the partial derivates of <span class="math inline">\(\tilde{J}\)</span> with respect to <span class="math inline">\(t\)</span> and <span class="math inline">\(x\)</span>, respectively. Plugging the first-order Taylor expansion into the DP recursion <a href="continuous-time-optimal-control.html#eq:ct-optimal-control-discrete-approx-dp">(4.3)</a>, we obtain
+<span class="math display" id="eq:ct-optimal-control-discrete-approx-taylor">\[\begin{equation}
+\tilde{J}(k\delta,x) = \min_{u \in \mathbb{U}} \left[ g(x,u) \cdot \delta + \tilde{J}(k \delta,x) + \nabla_t \tilde{J}(k \delta,x) \delta + \nabla_x \tilde{J}(k\delta,x)f(x,u) \delta + o(\delta)  \right].
+\tag{4.4}
+\end{equation}\]</span>
+Cancelling <span class="math inline">\(\tilde{J}(k \delta,x)\)</span> from both sides, dividing both sides by <span class="math inline">\(\delta\)</span>, and assuming <span class="math inline">\(\tilde{J}\)</span> converges to <span class="math inline">\(J\)</span> uniformly in time and state, i.e.,
+<span class="math display">\[
+\lim_{\delta \rightarrow 0, k\delta = t} \tilde{J}(k\delta,x) = J(t,x), \quad \forall t,x,
+\]</span>
+we obtain from <a href="continuous-time-optimal-control.html#eq:ct-optimal-control-discrete-approx-taylor">(4.4)</a> the following partial differential equation
+<span class="math display" id="eq:hjb-informal">\[\begin{equation}
+0 = \min_{u \in \mathbb{U}} \left[ g(x,u) + \nabla_t J(t,x) + \nabla_x J(t,x) f(x,u)  \right], \quad \forall t, x,
+\tag{4.5}
+\end{equation}\]</span>
+with the boundary condition <span class="math inline">\(J(T,x) = h(x)\)</span>. Equation <a href="continuous-time-optimal-control.html#eq:hjb-informal">(4.5)</a> is called the Hamilton-Jacobi-Bellman equation.</p>
+<p>Our derivation above is informal, let us formally state the HJB equation.</p>
+<div class="theorembox">
+<div class="theorem">
+<p><span id="thm:hjbsufficient" class="theorem"><strong>Theorem 4.1  (Hamilton-Jacobi-Bellman Equation as A Sufficient Condition for Optimality) </strong></span>Consider the optimal control problem <a href="continuous-time-optimal-control.html#def:continuoustimeoptimalcontrol">4.1</a> for system <a href="continuous-time-optimal-control.html#eq:ct-optimal-control-system">(4.1)</a>. Suppose <span class="math inline">\(V(t,x)\)</span> is a solution to the Hamilton-Jacobi-Bellman equation, i.e., <span class="math inline">\(V(t,x)\)</span> is continuously differentiable and satisfies
+<span class="math display" id="eq:hjb-eqution-formal-1">\[\begin{align}
+\tag{4.6}
+0 = \min_{u \in \mathbb{U}} \left[ g(x,u) + \nabla_t V(t,x) + \nabla_x V(t,x) f(x,u)\right], \quad \forall t,x, \\
+V(T,x) = h(x), \quad \forall x.
+\end{align}\]</span>
+Suppose <span class="math inline">\(\mu^\star(t,x)\)</span> attains the minimum in <a href="continuous-time-optimal-control.html#eq:hjb-eqution-formal-1">(4.6)</a> for all <span class="math inline">\(t\)</span> and <span class="math inline">\(x\)</span>. Let <span class="math inline">\(\{x^\star(t) \mid t \in [0,T] \}\)</span> be the state trajectory obtained from the given initial condition <span class="math inline">\(x(0)\)</span> when the control trajectory <span class="math inline">\(u^\star(t) = \mu^\star(t,x^\star(t))\)</span> is applied, i.e., <span class="math inline">\(x^\star(0) = x(0)\)</span> and for any <span class="math inline">\(t \in [0,T]\)</span>, <span class="math inline">\(\dot{x}^\star(t) = f(x^\star(t), \mu^\star(t,x^\star(t)))\)</span> and we assume this differential equation has a unique solution starting at any <span class="math inline">\((t,x)\)</span> and that the control trajectory <span class="math inline">\(\{ \mu^\star(t,x^\star(t)) \mid t \in [0,T] \}\)</span> is piecewise continuous as a function of <span class="math inline">\(t\)</span>.
+Then <span class="math inline">\(V(t,x)\)</span> is equal to the optimal cost-to-go <span class="math inline">\(J(t,x)\)</span> for all <span class="math inline">\(t\)</span> and <span class="math inline">\(x\)</span>. Moreover, the control trajectory <span class="math inline">\(u^\star(t)\)</span> is optimal.</p>
+</div>
+</div>
+<div class="proofbox">
+<div class="proof">
+<p><span id="unlabeled-div-5" class="proof"><em>Proof</em>. </span>Let <span class="math inline">\(\{\hat{u}(t) \mid t \in [0,T] \}\)</span> be any admissible control trajectory and let <span class="math inline">\(\hat{x}(t)\)</span> be the resulting state trajectory. From the “<span class="math inline">\(\min\)</span>” in <a href="continuous-time-optimal-control.html#eq:hjb-eqution-formal-1">(4.6)</a>, we know
+<span class="math display">\[
+0 \leq g(\hat{x},\hat{u}) + \nabla_t V(t,\hat{x}) + \nabla_x V(t,\hat{x}) f(\hat{x},\hat{u}) = g(\hat{x},\hat{u}) + \frac{d}{dt} V(t,\hat{x}).
+\]</span>
+Integrating the above inequality over <span class="math inline">\(t \in [0,T]\)</span>, we obtain
+<span class="math display">\[
+0 \leq \left( \int_{0}^T g(\hat{x}(t),\hat{u}(t))dt \right) + V(T,\hat{x}(T)) - V(0,\hat{x}(0)).
+\]</span>
+Using the terminal constraint <span class="math inline">\(V(T,x) = h(x)\)</span> for any <span class="math inline">\(x\)</span> and the initial condition <span class="math inline">\(\hat{x}(0) = x(0)\)</span>, we have
+<span class="math display">\[
+V(0,x(0)) \leq h(\hat{x}(T)) + \int_{0}^T g(\hat{x}(t),\hat{u}(t)) dt.
+\]</span>
+This shows that <span class="math inline">\(V(0,x(0))\)</span> is a lower bound to the optimal cost-to-go, because any admissible control trajectory <span class="math inline">\(\hat{u}(t)\)</span> leads to a cost no smaller than <span class="math inline">\(V(0,x(0))\)</span>.</p>
+<p>It remains to show that <span class="math inline">\(V(0,x(0))\)</span> is attainable. This is done by plugging the optimal control trajectory <span class="math inline">\(u^\star(t)\)</span> and state trajectory <span class="math inline">\(x^\star(t)\)</span> to the derivation above, leading to
+<span class="math display">\[
+V(0,x(0)) = h(x^\star(T)) + \int_0^T g(x^\star(t),u^\star(t)) dt.
+\]</span>
+This shows that <span class="math inline">\(V(0,x(0)) = J(0,x(0))\)</span>.</p>
+<p>The argument above is generic and holds for any initial time <span class="math inline">\(t \in [0,T]\)</span> and initial state <span class="math inline">\(x\)</span>. Therefore, <span class="math inline">\(V(t,x) = J(t,x)\)</span> is the optimal cost-to-go.</p>
+</div>
+</div>
+</div>
+<div id="linear-quadratic-regulator" class="section level2 hasAnchor" number="4.3">
+<h2><span class="header-section-number">4.3</span> Linear Quadratic Regulator<a href="continuous-time-optimal-control.html#linear-quadratic-regulator" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+</div>
+<div id="the-pontryagin-minimum-principle" class="section level2 hasAnchor" number="4.4">
+<h2><span class="header-section-number">4.4</span> The Pontryagin Minimum Principle<a href="continuous-time-optimal-control.html#the-pontryagin-minimum-principle" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+</div>
+<div id="infinite-horizon-problems" class="section level2 hasAnchor" number="4.5">
+<h2><span class="header-section-number">4.5</span> Infinite-Horizon Problems<a href="continuous-time-optimal-control.html#infinite-horizon-problems" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 
 </div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="3">
+<li id="fn3"><p>Even though we write <span class="math inline">\(dx_i(t)/dt\)</span> in the system <a href="continuous-time-optimal-control.html#eq:ct-optimal-control-system">(4.1)</a>, we allow <span class="math inline">\(x(t)\)</span> to be only directionally differentiable at a finite number of points to account for the possible discontinuity of <span class="math inline">\(u(t)\)</span>.<a href="continuous-time-optimal-control.html#fnref3" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
             </section>
 

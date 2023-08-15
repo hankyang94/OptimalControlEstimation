@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-08-08" />
+<meta name="date" content="2023-08-15" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -129,7 +129,11 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="4" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html"><i class="fa fa-check"></i><b>4</b> Continuous-time Optimal Control</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#linear-quadratic-regulator"><i class="fa fa-check"></i><b>4.1</b> Linear Quadratic Regulator</a></li>
+<li class="chapter" data-level="4.1" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#the-basic-problem-1"><i class="fa fa-check"></i><b>4.1</b> The Basic Problem</a></li>
+<li class="chapter" data-level="4.2" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#the-hamilton-jacobi-bellman-equation"><i class="fa fa-check"></i><b>4.2</b> The Hamilton-Jacobi-Bellman Equation</a></li>
+<li class="chapter" data-level="4.3" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#linear-quadratic-regulator"><i class="fa fa-check"></i><b>4.3</b> Linear Quadratic Regulator</a></li>
+<li class="chapter" data-level="4.4" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#the-pontryagin-minimum-principle"><i class="fa fa-check"></i><b>4.4</b> The Pontryagin Minimum Principle</a></li>
+<li class="chapter" data-level="4.5" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#infinite-horizon-problems"><i class="fa fa-check"></i><b>4.5</b> Infinite-Horizon Problems</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="stability.html"><a href="stability.html"><i class="fa fa-check"></i><b>5</b> Stability Analysis</a>
 <ul>
@@ -267,6 +271,7 @@ J_\pi (x_0) = \mathbb{E} \left\{ g_N(x_N) + \sum_{k=0}^{N-1} g_k (x_k, \mu_k(x_k
 \tag{1.4}
 \end{equation}\]</span>
 where the expectation is taken over the randomness of <span class="math inline">\(w_k\)</span>.</p>
+<div class="definitionbox">
 <div class="definition">
 <p><span id="def:basicproblem" class="definition"><strong>Definition 1.1  (Discrete-time, Finite-horizon Optimal Control) </strong></span>Find the best admissible controller that minimizes the expected cost in <a href="formulation.html#eq:expected-cost">(1.4)</a>
 <span class="math display">\[\begin{equation}
@@ -274,6 +279,7 @@ where the expectation is taken over the randomness of <span class="math inline">
 \end{equation}\]</span>
 where <span class="math inline">\(\Pi\)</span> is the set of all admissible controllers.
 The cost attained by the optimal controller, i.e., <span class="math inline">\(J^\star = J_{\pi^\star}(x_0)\)</span> is called the optimal <em>cost-to-go</em>, or the optimal <em>value function</em>.</p>
+</div>
 </div>
 <div class="remark">
 <p><span id="unlabeled-div-2" class="remark"><em>Remark</em> (Open-loop v.s. Closed-loop). </span>An important feature of the basic problem in Definition <a href="formulation.html#def:basicproblem">1.1</a> is that the problem seeks <em>feedback policies</em>, instead of numerical values of the controls, i.e., <span class="math inline">\(u_k = \mu_k(x_k)\)</span> is in general a function of the state <span class="math inline">\(x_k\)</span>. In other words, the controls are executed sequentially, one at a time after observing the state at each time. This is called closed-loop control, and is in general better than open-loop control
@@ -287,7 +293,7 @@ where all the controls are planned at <span class="math inline">\(k=0\)</span>. 
 <div id="dynamic-programming-and-principle-of-optimality" class="section level2 hasAnchor" number="1.2">
 <h2><span class="header-section-number">1.2</span> Dynamic Programming and Principle of Optimality<a href="formulation.html#dynamic-programming-and-principle-of-optimality" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>We now introduce a general and powerful algorithm, namely <em>dynamic programming</em> (DP), for solving the optimal control problem <a href="formulation.html#def:basicproblem">1.1</a>. The DP algorithm builds upon a quite simple intuition called the <em>Bellman principle of optimality</em>.</p>
-<div class="{.}">
+<div class="theorembox">
 <div class="theorem">
 <p><span id="thm:bellmanoptimality" class="theorem"><strong>Theorem 1.1  (Bellman Principle of Optimality) </strong></span>Let <span class="math inline">\(\pi^\star = \{ \mu_0^\star,\mu_1^\star,\dots,\mu_{N-1}^\star \}\)</span> be an optimal policy for the optimal control problem <a href="formulation.html#def:basicproblem">1.1</a>. Assume that when using <span class="math inline">\(\pi^\star\)</span>, a given state <span class="math inline">\(x_i\)</span> occurs at timestep <span class="math inline">\(i\)</span> with positive probability (i.e., <span class="math inline">\(x_i\)</span> is reachable at time <span class="math inline">\(i\)</span>).</p>
 <p>Now consider the following subproblem where we are at <span class="math inline">\(x_i\)</span> at time <span class="math inline">\(i\)</span> and wish to minimize the cost-to-go from time <span class="math inline">\(i\)</span> to time <span class="math inline">\(N\)</span>
