@@ -24,55 +24,56 @@
 \contentsline {chapter}{\numberline {4}Continuous-time Optimal Control}{33}{chapter.4}%
 \contentsline {section}{\numberline {4.1}The Basic Problem}{33}{section.4.1}%
 \contentsline {section}{\numberline {4.2}The Hamilton-Jacobi-Bellman Equation}{34}{section.4.2}%
-\contentsline {section}{\numberline {4.3}Linear Quadratic Regulator}{36}{section.4.3}%
-\contentsline {section}{\numberline {4.4}The Pontryagin Minimum Principle}{36}{section.4.4}%
-\contentsline {section}{\numberline {4.5}Infinite-Horizon Problems}{36}{section.4.5}%
-\contentsline {chapter}{\numberline {5}Stability Analysis}{37}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Autonomous Systems}{38}{section.5.1}%
-\contentsline {subsection}{\numberline {5.1.1}Concepts of Stability}{38}{subsection.5.1.1}%
-\contentsline {subsection}{\numberline {5.1.2}Stability by Linearization}{42}{subsection.5.1.2}%
-\contentsline {subsection}{\numberline {5.1.3}Lyapunov Analysis}{43}{subsection.5.1.3}%
-\contentsline {subsection}{\numberline {5.1.4}Invariant Set Theorem}{46}{subsection.5.1.4}%
-\contentsline {subsection}{\numberline {5.1.5}Computing Lyapunov Certificates}{48}{subsection.5.1.5}%
-\contentsline {section}{\numberline {5.2}Controlled Systems}{56}{section.5.2}%
-\contentsline {section}{\numberline {5.3}Non-autonomous Systems}{56}{section.5.3}%
-\contentsline {chapter}{\numberline {6}Output Feedback}{59}{chapter.6}%
-\contentsline {section}{\numberline {6.1}State Observer}{59}{section.6.1}%
-\contentsline {subsection}{\numberline {6.1.1}General Design Strategy}{61}{subsection.6.1.1}%
-\contentsline {subsection}{\numberline {6.1.2}Luenberger Template}{64}{subsection.6.1.2}%
-\contentsline {subsection}{\numberline {6.1.3}State-affine Template}{67}{subsection.6.1.3}%
-\contentsline {subsection}{\numberline {6.1.4}Kazantzis-Kravaris-Luenberger (KKL) Template}{71}{subsection.6.1.4}%
-\contentsline {subsubsection}{\numberline {6.1.4.1}Autonomous Systems}{73}{subsubsection.6.1.4.1}%
-\contentsline {subsubsection}{\numberline {6.1.4.2}Controlled Systems}{75}{subsubsection.6.1.4.2}%
-\contentsline {subsection}{\numberline {6.1.5}Triangular Template}{75}{subsection.6.1.5}%
-\contentsline {subsection}{\numberline {6.1.6}Design with Convex Optimization}{75}{subsection.6.1.6}%
-\contentsline {section}{\numberline {6.2}Observer Feedback}{78}{section.6.2}%
-\contentsline {chapter}{\numberline {7}Adaptive Control}{79}{chapter.7}%
-\contentsline {section}{\numberline {7.1}Model-Reference Adaptive Control}{79}{section.7.1}%
-\contentsline {subsection}{\numberline {7.1.1}First-Order Systems}{80}{subsection.7.1.1}%
-\contentsline {subsection}{\numberline {7.1.2}High-Order Systems}{83}{subsection.7.1.2}%
-\contentsline {subsection}{\numberline {7.1.3}Robotic Manipulator}{85}{subsection.7.1.3}%
-\contentsline {section}{\numberline {7.2}Certainty-Equivalent Adaptive Control}{89}{section.7.2}%
-\contentsline {chapter}{\numberline {8}Problem Sets}{91}{chapter.8}%
-\contentsline {chapter}{\numberline {A}Linear System Theory}{93}{appendix.A}%
-\contentsline {section}{\numberline {A.1}Stability}{93}{section.A.1}%
-\contentsline {subsection}{\numberline {A.1.1}Continuous-Time Stability}{93}{subsection.A.1.1}%
-\contentsline {subsection}{\numberline {A.1.2}Discrete-Time Stability}{94}{subsection.A.1.2}%
-\contentsline {subsection}{\numberline {A.1.3}Lyapunov Analysis}{95}{subsection.A.1.3}%
-\contentsline {section}{\numberline {A.2}Controllability and Observability}{97}{section.A.2}%
-\contentsline {subsection}{\numberline {A.2.1}Cayley-Hamilton Theorem}{98}{subsection.A.2.1}%
-\contentsline {subsection}{\numberline {A.2.2}Equivalent Statements for Controllability}{102}{subsection.A.2.2}%
-\contentsline {subsection}{\numberline {A.2.3}Duality}{106}{subsection.A.2.3}%
-\contentsline {subsection}{\numberline {A.2.4}Equivalent Statements for Observability}{108}{subsection.A.2.4}%
-\contentsline {section}{\numberline {A.3}Stabilizability And Detectability}{108}{section.A.3}%
-\contentsline {subsection}{\numberline {A.3.1}Equivalent Statements for Stabilizability}{109}{subsection.A.3.1}%
-\contentsline {subsection}{\numberline {A.3.2}Equivalent Statements for Detectability}{111}{subsection.A.3.2}%
-\contentsline {chapter}{\numberline {B}Convex Analysis and Optimization}{113}{appendix.B}%
-\contentsline {section}{\numberline {B.1}Theory}{113}{section.B.1}%
-\contentsline {subsection}{\numberline {B.1.1}Sets}{113}{subsection.B.1.1}%
-\contentsline {subsection}{\numberline {B.1.2}Convex function}{115}{subsection.B.1.2}%
-\contentsline {subsection}{\numberline {B.1.3}Lagrange dual}{116}{subsection.B.1.3}%
-\contentsline {subsection}{\numberline {B.1.4}KKT condition}{118}{subsection.B.1.4}%
-\contentsline {chapter}{\numberline {C}The Kalman-Yakubovich Lemma}{119}{appendix.C}%
-\contentsline {chapter}{\numberline {D}Feedback Linearization}{121}{appendix.D}%
-\contentsline {chapter}{\numberline {E}Sliding Control}{123}{appendix.E}%
+\contentsline {section}{\numberline {4.3}Linear Quadratic Regulator}{38}{section.4.3}%
+\contentsline {section}{\numberline {4.4}The Pontryagin Minimum Principle}{38}{section.4.4}%
+\contentsline {section}{\numberline {4.5}Infinite-Horizon Problems}{43}{section.4.5}%
+\contentsline {section}{\numberline {4.6}Viscosity Solution}{43}{section.4.6}%
+\contentsline {chapter}{\numberline {5}Stability Analysis}{45}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Autonomous Systems}{46}{section.5.1}%
+\contentsline {subsection}{\numberline {5.1.1}Concepts of Stability}{46}{subsection.5.1.1}%
+\contentsline {subsection}{\numberline {5.1.2}Stability by Linearization}{50}{subsection.5.1.2}%
+\contentsline {subsection}{\numberline {5.1.3}Lyapunov Analysis}{51}{subsection.5.1.3}%
+\contentsline {subsection}{\numberline {5.1.4}Invariant Set Theorem}{54}{subsection.5.1.4}%
+\contentsline {subsection}{\numberline {5.1.5}Computing Lyapunov Certificates}{56}{subsection.5.1.5}%
+\contentsline {section}{\numberline {5.2}Controlled Systems}{64}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Non-autonomous Systems}{64}{section.5.3}%
+\contentsline {chapter}{\numberline {6}Output Feedback}{67}{chapter.6}%
+\contentsline {section}{\numberline {6.1}State Observer}{67}{section.6.1}%
+\contentsline {subsection}{\numberline {6.1.1}General Design Strategy}{69}{subsection.6.1.1}%
+\contentsline {subsection}{\numberline {6.1.2}Luenberger Template}{72}{subsection.6.1.2}%
+\contentsline {subsection}{\numberline {6.1.3}State-affine Template}{75}{subsection.6.1.3}%
+\contentsline {subsection}{\numberline {6.1.4}Kazantzis-Kravaris-Luenberger (KKL) Template}{79}{subsection.6.1.4}%
+\contentsline {subsubsection}{\numberline {6.1.4.1}Autonomous Systems}{81}{subsubsection.6.1.4.1}%
+\contentsline {subsubsection}{\numberline {6.1.4.2}Controlled Systems}{83}{subsubsection.6.1.4.2}%
+\contentsline {subsection}{\numberline {6.1.5}Triangular Template}{83}{subsection.6.1.5}%
+\contentsline {subsection}{\numberline {6.1.6}Design with Convex Optimization}{83}{subsection.6.1.6}%
+\contentsline {section}{\numberline {6.2}Observer Feedback}{86}{section.6.2}%
+\contentsline {chapter}{\numberline {7}Adaptive Control}{87}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Model-Reference Adaptive Control}{87}{section.7.1}%
+\contentsline {subsection}{\numberline {7.1.1}First-Order Systems}{88}{subsection.7.1.1}%
+\contentsline {subsection}{\numberline {7.1.2}High-Order Systems}{91}{subsection.7.1.2}%
+\contentsline {subsection}{\numberline {7.1.3}Robotic Manipulator}{93}{subsection.7.1.3}%
+\contentsline {section}{\numberline {7.2}Certainty-Equivalent Adaptive Control}{97}{section.7.2}%
+\contentsline {chapter}{\numberline {8}Problem Sets}{99}{chapter.8}%
+\contentsline {chapter}{\numberline {A}Linear System Theory}{101}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Stability}{101}{section.A.1}%
+\contentsline {subsection}{\numberline {A.1.1}Continuous-Time Stability}{101}{subsection.A.1.1}%
+\contentsline {subsection}{\numberline {A.1.2}Discrete-Time Stability}{102}{subsection.A.1.2}%
+\contentsline {subsection}{\numberline {A.1.3}Lyapunov Analysis}{103}{subsection.A.1.3}%
+\contentsline {section}{\numberline {A.2}Controllability and Observability}{105}{section.A.2}%
+\contentsline {subsection}{\numberline {A.2.1}Cayley-Hamilton Theorem}{106}{subsection.A.2.1}%
+\contentsline {subsection}{\numberline {A.2.2}Equivalent Statements for Controllability}{110}{subsection.A.2.2}%
+\contentsline {subsection}{\numberline {A.2.3}Duality}{114}{subsection.A.2.3}%
+\contentsline {subsection}{\numberline {A.2.4}Equivalent Statements for Observability}{116}{subsection.A.2.4}%
+\contentsline {section}{\numberline {A.3}Stabilizability And Detectability}{116}{section.A.3}%
+\contentsline {subsection}{\numberline {A.3.1}Equivalent Statements for Stabilizability}{117}{subsection.A.3.1}%
+\contentsline {subsection}{\numberline {A.3.2}Equivalent Statements for Detectability}{119}{subsection.A.3.2}%
+\contentsline {chapter}{\numberline {B}Convex Analysis and Optimization}{121}{appendix.B}%
+\contentsline {section}{\numberline {B.1}Theory}{121}{section.B.1}%
+\contentsline {subsection}{\numberline {B.1.1}Sets}{121}{subsection.B.1.1}%
+\contentsline {subsection}{\numberline {B.1.2}Convex function}{123}{subsection.B.1.2}%
+\contentsline {subsection}{\numberline {B.1.3}Lagrange dual}{124}{subsection.B.1.3}%
+\contentsline {subsection}{\numberline {B.1.4}KKT condition}{126}{subsection.B.1.4}%
+\contentsline {chapter}{\numberline {C}The Kalman-Yakubovich Lemma}{127}{appendix.C}%
+\contentsline {chapter}{\numberline {D}Feedback Linearization}{129}{appendix.D}%
+\contentsline {chapter}{\numberline {E}Sliding Control}{131}{appendix.E}%

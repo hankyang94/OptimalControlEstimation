@@ -1064,6 +1064,16 @@ INPUT ./images/drawme.png
 INPUT ./images/drawme.png
 INPUT images/drawme.png
 INPUT ./images/drawme.png
+INPUT ./images/scalar-system-optimal-J-t.png
+INPUT images/scalar-system-optimal-J-t.png
+INPUT ./images/scalar-system-optimal-J-t.png
+INPUT ./images/scalar-system-optimal-J-t.png
+INPUT ./images/scalar-system-optimal-J-x.png
+INPUT images/scalar-system-optimal-J-x.png
+INPUT ./images/scalar-system-optimal-J-x.png
+INPUT ./images/scalar-system-optimal-J-x.png
+INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/lm/ec-lmri7.tfm
+INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/lm/ec-lmri7.tfm
 INPUT ./images/vinograd.png
 INPUT images/vinograd.png
 INPUT ./images/vinograd.png
@@ -1097,8 +1107,6 @@ INPUT ./images/pendulum-simulation-sos-observer.png
 INPUT ./images/drawme.png
 INPUT images/drawme.png
 INPUT ./images/drawme.png
-INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/lm/ec-lmri7.tfm
-INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/lm/ec-lmri7.tfm
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/lm/ec-lmbx7.tfm
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/lm/ec-lmbx5.tfm
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/lm/ec-lmbxi10.tfm

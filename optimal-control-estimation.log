@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.8.4)  15 AUG 2023 19:20
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.8.4)  16 AUG 2023 18:29
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -774,13 +774,13 @@ LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 49
 (/usr/local/texlive/2023/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-<images/pendulum-drawing.png, id=306, 383.4325pt x 389.455pt>
+<images/pendulum-drawing.png, id=308, 383.4325pt x 389.455pt>
 File: images/pendulum-drawing.png Graphic file (type png)
 <use images/pendulum-drawing.png>
 Package pdftex.def Info: images/pendulum-drawing.png  used on input line 517.
 (pdftex.def)             Requested size: 138.00049pt x 140.16803pt.
  [17]
-<images/pendulum-stabilization-lqr.png, id=321, 1088.065pt x 961.5925pt>
+<images/pendulum-stabilization-lqr.png, id=323, 1088.065pt x 961.5925pt>
 File: images/pendulum-stabilization-lqr.png Graphic file (type png)
 <use images/pendulum-stabilization-lqr.png>
 Package pdftex.def Info: images/pendulum-stabilization-lqr.png  used on input line 564.
@@ -790,7 +790,7 @@ Package pdftex.def Info: images/pendulum-stabilization-lqr.png  used on input li
 ]
 Chapter 3.
 [21] [22] [23]
-<images/drawme.png, id=378, 670.505pt x 310.15875pt>
+<images/drawme.png, id=380, 670.505pt x 310.15875pt>
 File: images/drawme.png Graphic file (type png)
 <use images/drawme.png>
 Package pdftex.def Info: images/drawme.png  used on input line 678.
@@ -815,272 +815,296 @@ Chapter 4.
 [33
 
 ] [34]
-Overfull \hbox (8.12346pt too wide) detected at line 1021
+Overfull \hbox (14.42311pt too wide) detected at line 1021
 [][][][]\OT1/lmr/m/n/10 (\OML/lmm/m/it/10 k^^N; x\OT1/lmr/m/n/10 ) = [] [] \OML/lmm/m/it/10 :
  []
 
 [35] [36]
-Chapter 5.
-[37
+<images/scalar-system-optimal-J-t.png, id=550, 737.75626pt x 409.53pt>
+File: images/scalar-system-optimal-J-t.png Graphic file (type png)
+<use images/scalar-system-optimal-J-t.png>
+Package pdftex.def Info: images/scalar-system-optimal-J-t.png  used on input line 1122.
+(pdftex.def)             Requested size: 172.49467pt x 95.75214pt.
+<images/scalar-system-optimal-J-x.png, id=552, 1144.275pt x 363.3575pt>
+File: images/scalar-system-optimal-J-x.png Graphic file (type png)
+<use images/scalar-system-optimal-J-x.png>
+Package pdftex.def Info: images/scalar-system-optimal-J-x.png  used on input line 1137.
+(pdftex.def)             Requested size: 206.99075pt x 65.72864pt.
+ [37]
 
-] [38] [39]
+Package natbib Warning: Citation `bertsekas12book-dpocI' on page 38 undefined on input line 1168.
 
-Package natbib Warning: Citation `vinograd57-inapplicability' on page 40 undefined on input line 1207.
+[38 <./images/scalar-system-optimal-J-t.png> <./images/scalar-system-optimal-J-x.png>]
 
-<images/vinograd.png, id=582, 539.01375pt x 346.29375pt>
-File: images/vinograd.png Graphic file (type png)
-<use images/vinograd.png>
-Package pdftex.def Info: images/vinograd.png  used on input line 1220.
-(pdftex.def)             Requested size: 206.99866pt x 132.98796pt.
-[40]
-Overfull \hbox (58.03809pt too wide) detected at line 1250
-\OMS/lmsy/m/n/10 8\OML/lmm/m/it/10 x \OMS/lmsy/m/n/10 2 \U/msb/m/n/10 X\OML/lmm/m/it/10 ;  x\OT1/lmr/m/n/10 (0) = \OML/lmm/m/it/10 x \OT1/lmr/m/n/10 =[]\OMS/lmsy/m/n/10 ) []
- []
+Package natbib Warning: Citation `bertsekas12book-dpocI' on page 39 undefined on input line 1199.
 
-[41 <./images/vinograd.png>] [42] [43] [44] [45] [46]
-Overfull \hbox (15.01071pt too wide) detected at line 1494
+
+Overfull \hbox (4.59879pt too wide) detected at line 1212
 []
  []
 
-[47]
+[39] [40] [41] [42] [43] [44
 
-Package natbib Warning: Citation `dawson23tro-safe' on page 48 undefined on input line 1537.
+]
+Chapter 5.
+[45] [46] [47]
 
-[48] [49] [50] [51]
+Package natbib Warning: Citation `vinograd57-inapplicability' on page 48 undefined on input line 1464.
 
-Package natbib Warning: Citation `blekherman12book-semidefinite' on page 52 undefined on input line 1702.
+<images/vinograd.png, id=687, 539.01375pt x 346.29375pt>
+File: images/vinograd.png Graphic file (type png)
+<use images/vinograd.png>
+Package pdftex.def Info: images/vinograd.png  used on input line 1477.
+(pdftex.def)             Requested size: 206.99866pt x 132.98796pt.
+[48]
+Overfull \hbox (58.03809pt too wide) detected at line 1507
+\OMS/lmsy/m/n/10 8\OML/lmm/m/it/10 x \OMS/lmsy/m/n/10 2 \U/msb/m/n/10 X\OML/lmm/m/it/10 ;  x\OT1/lmr/m/n/10 (0) = \OML/lmm/m/it/10 x \OT1/lmr/m/n/10 =[]\OMS/lmsy/m/n/10 ) []
+ []
 
-[52]
+[49 <./images/vinograd.png>] [50] [51] [52] [53] [54]
+Overfull \hbox (15.01071pt too wide) detected at line 1751
+[]
+ []
 
-Package natbib Warning: Citation `lasserre01siopt-global' on page 53 undefined on input line 1725.
+[55]
 
+Package natbib Warning: Citation `dawson23tro-safe' on page 56 undefined on input line 1794.
 
-Package natbib Warning: Citation `yang22pami-certifiably' on page 53 undefined on input line 1725.
+[56] [57] [58] [59]
 
+Package natbib Warning: Citation `blekherman12book-semidefinite' on page 60 undefined on input line 1959.
 
-Package natbib Warning: Citation `lasserre09book-moments' on page 53 undefined on input line 1725.
+[60]
 
-
-Package natbib Warning: Citation `yang22mp-inexact' on page 53 undefined on input line 1727.
-
-[53]
-
-Package natbib Warning: Citation `wang22-nonnegative' on page 54 undefined on input line 1729.
-
-
-Package natbib Warning: Citation `murray21mpc-signomial' on page 54 undefined on input line 1729.
+Package natbib Warning: Citation `lasserre01siopt-global' on page 61 undefined on input line 1982.
 
 
-Package natbib Warning: Citation `magron23book-sparse' on page 54 undefined on input line 1732.
+Package natbib Warning: Citation `yang22pami-certifiably' on page 61 undefined on input line 1982.
 
 
-Package natbib Warning: Citation `nie23book-moment' on page 54 undefined on input line 1732.
+Package natbib Warning: Citation `lasserre09book-moments' on page 61 undefined on input line 1982.
 
-[54]
-LaTeX Font Info:    Trying to load font information for U+euf on input line 1748.
+
+Package natbib Warning: Citation `yang22mp-inexact' on page 61 undefined on input line 1984.
+
+[61]
+
+Package natbib Warning: Citation `wang22-nonnegative' on page 62 undefined on input line 1986.
+
+
+Package natbib Warning: Citation `murray21mpc-signomial' on page 62 undefined on input line 1986.
+
+
+Package natbib Warning: Citation `magron23book-sparse' on page 62 undefined on input line 1989.
+
+
+Package natbib Warning: Citation `nie23book-moment' on page 62 undefined on input line 1989.
+
+[62]
+LaTeX Font Info:    Trying to load font information for U+euf on input line 2005.
  (/usr/local/texlive/2023/texmf-dist/tex/latex/amsfonts/ueuf.fd
 File: ueuf.fd 2013/01/14 v3.01 Euler Fraktur
 ) (/usr/local/texlive/2023/texmf-dist/tex/latex/microtype/mt-euf.cfg
 File: mt-euf.cfg 2006/07/03 v1.1 microtype config. file: AMS Euler Fraktur (RS)
 )
-<images/pendulum-local-lyapunov-certificate-V.png, id=829, 1278.7775pt x 1168.365pt>
+<images/pendulum-local-lyapunov-certificate-V.png, id=935, 1278.7775pt x 1168.365pt>
 File: images/pendulum-local-lyapunov-certificate-V.png Graphic file (type png)
 <use images/pendulum-local-lyapunov-certificate-V.png>
-Package pdftex.def Info: images/pendulum-local-lyapunov-certificate-V.png  used on input line 1797.
+Package pdftex.def Info: images/pendulum-local-lyapunov-certificate-V.png  used on input line 2054.
 (pdftex.def)             Requested size: 206.9891pt x 189.1172pt.
- [55]
-<images/pendulum-local-lyapunov-certificate-Vdot.png, id=847, 1330.9725pt x 1126.2075pt>
+ [63]
+<images/pendulum-local-lyapunov-certificate-Vdot.png, id=952, 1330.9725pt x 1126.2075pt>
 File: images/pendulum-local-lyapunov-certificate-Vdot.png Graphic file (type png)
 <use images/pendulum-local-lyapunov-certificate-Vdot.png>
-Package pdftex.def Info: images/pendulum-local-lyapunov-certificate-Vdot.png  used on input line 1810.
+Package pdftex.def Info: images/pendulum-local-lyapunov-certificate-Vdot.png  used on input line 2067.
 (pdftex.def)             Requested size: 206.9891pt x 175.14464pt.
- [56 <./images/pendulum-local-lyapunov-certificate-V.png (PNG copy)>] [57 <./images/pendulum-local-lyapunov-certificate-Vdot.png (PNG copy)>] [58
+ [64 <./images/pendulum-local-lyapunov-certificate-V.png (PNG copy)>] [65 <./images/pendulum-local-lyapunov-certificate-Vdot.png (PNG copy)>] [66
 
 ]
 Chapter 6.
 
-Package natbib Warning: Citation `bernard19book-observer' on page 59 undefined on input line 1894.
+Package natbib Warning: Citation `bernard19book-observer' on page 67 undefined on input line 2151.
 
 
-Package natbib Warning: Citation `bernard22arc-observer' on page 59 undefined on input line 1894.
+Package natbib Warning: Citation `bernard22arc-observer' on page 67 undefined on input line 2151.
 
-[59]
+[67]
 
-Package natbib Warning: Citation `karagiannis05cdc-nonlinear' on page 60 undefined on input line 1927.
+Package natbib Warning: Citation `karagiannis05cdc-nonlinear' on page 68 undefined on input line 2184.
 
 
-Package natbib Warning: Citation `astolfi03tac-immersion' on page 60 undefined on input line 1927.
+Package natbib Warning: Citation `astolfi03tac-immersion' on page 68 undefined on input line 2184.
 
-[60] [61]
+[68] [69]
 
-Package natbib Warning: Citation `bernard19book-observer' on page 62 undefined on input line 1998.
+Package natbib Warning: Citation `bernard19book-observer' on page 70 undefined on input line 2255.
 
-[62]
-Underfull \hbox (badness 3884) in paragraph at lines 2086--2087
+[70]
+Underfull \hbox (badness 3884) in paragraph at lines 2343--2344
 []\T1/lmr/bx/n/10 (+20) Backward $\OMS/lmsy/m/n/10 L$\T1/lmr/bx/n/10 (+20) -distinguishable on $\OMS/lmsy/m/n/10 X$ \T1/lmr/m/n/10 (+20) for some in-put $\OML/lmm/m/it/10 u\OT1/lmr/m/n/10 (+20) (\OML/lmm/m/it/10 t\OT1/lmr/m/n/10 (+20) )$\T1/lmr/m/n/10 (+20) , if
  []
 
-[63] [64] [65] [66]
+[71] [72] [73] [74]
 
-Package natbib Warning: Citation `kalman61-new' on page 67 undefined on input line 2311.
-
-
-Package natbib Warning: Citation `besanccon96ejc-observer' on page 67 undefined on input line 2311.
+Package natbib Warning: Citation `kalman61-new' on page 75 undefined on input line 2568.
 
 
-Package natbib Warning: Citation `hammouri90cdc-observer' on page 67 undefined on input line 2311.
+Package natbib Warning: Citation `besanccon96ejc-observer' on page 75 undefined on input line 2568.
 
 
-Package natbib Warning: Citation `besanccon96ejc-observer' on page 67 undefined on input line 2311.
+Package natbib Warning: Citation `hammouri90cdc-observer' on page 75 undefined on input line 2568.
 
 
-Package natbib Warning: Citation `hammouri90cdc-observer' on page 67 undefined on input line 2311.
+Package natbib Warning: Citation `besanccon96ejc-observer' on page 75 undefined on input line 2568.
 
-[67] [68]
-Overfull \hbox (15.54147pt too wide) detected at line 2429
+
+Package natbib Warning: Citation `hammouri90cdc-observer' on page 75 undefined on input line 2568.
+
+[75] [76]
+Overfull \hbox (15.54147pt too wide) detected at line 2686
 \OMS/lmsy/m/n/10 k\OML/lmm/m/it/10 A\OT1/lmr/m/n/10 (\OML/lmm/m/it/10 u; y\OT1/lmr/m/n/10 )\OML/lmm/m/it/10 ^^X\OMS/lmsy/m/n/10 k \OT1/lmr/m/n/10 = \OMS/lmsy/m/n/10 k\OML/lmm/m/it/10 ^^X[]\OT1/lmr/m/n/10 (\U/euf/m/n/10 c \OMS/lmsy/m/n/10 ^^@ \U/euf/m/n/10 s \OMS/lmsy/m/n/10 ^^@ \OML/lmm/m/it/10 b=ml[]\OT1/lmr/m/n/10 )\OMS/lmsy/m/n/10 k ^^T j\OML/lmm/m/it/10 ^^X[]\OMS/lmsy/m/n/10 j[][] ^^T k\OML/lmm/m/it/10 ^^X\OMS/lmsy/m/n/10 k[]\OML/lmm/m/it/10 :
  []
 
 
-Overfull \hbox (7.82411pt too wide) detected at line 2440
+Overfull \hbox (7.82411pt too wide) detected at line 2697
 \OT1/lmr/m/n/10 ^^@[](\OML/lmm/m/it/10 t \OMS/lmsy/m/n/10 ^^@ []\OML/lmm/m/it/10 ; t\OT1/lmr/m/n/10 ) = [][] 	[](\OML/lmm/m/it/10 ^^\; t\OT1/lmr/m/n/10 )[]\OML/lmm/m/it/10 C[]C\OT1/lmr/m/n/10 	[](\OML/lmm/m/it/10 ^^\; t\OT1/lmr/m/n/10 )\OML/lmm/m/it/10 d^^\ \OT1/lmr/m/n/10 = [][] 	[](\OML/lmm/m/it/10 ^^\; t\OT1/lmr/m/n/10 )[] [] 	[](\OML/lmm/m/it/10 ^^\; t\OT1/lmr/m/n/10 )\OML/lmm/m/it/10 d^^\:
  []
 
-[69] [70]
+[77] [78]
 
-Package natbib Warning: Citation `luenberger64-observer' on page 71 undefined on input line 2525.
+Package natbib Warning: Citation `luenberger64-observer' on page 79 undefined on input line 2782.
 
-[71]
+[79]
 
-Package natbib Warning: Citation `kazantzis98scl-kkl' on page 72 undefined on input line 2559.
-
-
-Package natbib Warning: Citation `janny21cdc-deepkkl' on page 72 undefined on input line 2565.
+Package natbib Warning: Citation `kazantzis98scl-kkl' on page 80 undefined on input line 2816.
 
 
-Package natbib Warning: Citation `niazi23lacc-earning' on page 72 undefined on input line 2565.
+Package natbib Warning: Citation `janny21cdc-deepkkl' on page 80 undefined on input line 2822.
 
 
-Package natbib Warning: Citation `miao23ll4dc-earning' on page 72 undefined on input line 2565.
+Package natbib Warning: Citation `niazi23lacc-earning' on page 80 undefined on input line 2822.
 
-[72]
 
-Package natbib Warning: Citation `andrieu06sicopt-kkl' on page 73 undefined on input line 2577.
+Package natbib Warning: Citation `miao23ll4dc-earning' on page 80 undefined on input line 2822.
 
-[73]
+[80]
 
-Package natbib Warning: Citation `bernard19book-observer' on page 74 undefined on input line 2666.
+Package natbib Warning: Citation `andrieu06sicopt-kkl' on page 81 undefined on input line 2834.
 
-[74]
+[81]
 
-Package natbib Warning: Citation `bernard19book-observer' on page 75 undefined on input line 2674.
+Package natbib Warning: Citation `bernard19book-observer' on page 82 undefined on input line 2923.
 
-[75]
+[82]
 
-Package natbib Warning: Citation `ebenbauer05cdc-polynomial' on page 76 undefined on input line 2717.
+Package natbib Warning: Citation `bernard19book-observer' on page 83 undefined on input line 2931.
 
-[76]
-<images/pendulum-simulation-sos-observer.png, id=1165, 1023.825pt x 1324.95pt>
+[83]
+
+Package natbib Warning: Citation `ebenbauer05cdc-polynomial' on page 84 undefined on input line 2974.
+
+[84]
+<images/pendulum-simulation-sos-observer.png, id=1270, 1023.825pt x 1324.95pt>
 File: images/pendulum-simulation-sos-observer.png Graphic file (type png)
 <use images/pendulum-simulation-sos-observer.png>
-Package pdftex.def Info: images/pendulum-simulation-sos-observer.png  used on input line 2775.
+Package pdftex.def Info: images/pendulum-simulation-sos-observer.png  used on input line 3032.
 (pdftex.def)             Requested size: 275.99902pt x 357.1752pt.
- [77 <./images/pendulum-simulation-sos-observer.png>] [78]
+ [85 <./images/pendulum-simulation-sos-observer.png>] [86]
 Chapter 7.
-[79
+[87
 
-] [80] [81] [82] [83] [84]
+] [88] [89] [90] [91] [92]
 File: images/drawme.png Graphic file (type png)
 <use images/drawme.png>
-Package pdftex.def Info: images/drawme.png  used on input line 3114.
+Package pdftex.def Info: images/drawme.png  used on input line 3371.
 (pdftex.def)             Requested size: 206.995pt x 95.75067pt.
- [85] [86] [87]
+ [93] [94] [95]
 
-Package natbib Warning: Citation `slotine91book-applied' on page 88 undefined on input line 3196.
+Package natbib Warning: Citation `slotine91book-applied' on page 96 undefined on input line 3453.
 
-[88] [89] [90
+[96] [97] [98
 
 ]
 Chapter 8.
 
-Package natbib Warning: Citation `saccon13tac-lie' on page 91 undefined on input line 3240.
+Package natbib Warning: Citation `saccon13tac-lie' on page 99 undefined on input line 3497.
 
 
-Package natbib Warning: Citation `teng22cdc-lie' on page 91 undefined on input line 3240.
+Package natbib Warning: Citation `teng22cdc-lie' on page 99 undefined on input line 3497.
 
-[91] [92
+[99] [100
 
 ]
 Appendix A.
-[93] [94] [95] [96]
+[101] [102] [103] [104]
 
-Package natbib Warning: Citation `chen1984book-linear' on page 97 undefined on input line 3481.
+Package natbib Warning: Citation `chen1984book-linear' on page 105 undefined on input line 3738.
 
-[97] [98]
-Overfull \hbox (2.99213pt too wide) in paragraph at lines 3592--3593
+[105] [106]
+Overfull \hbox (2.99213pt too wide) in paragraph at lines 3849--3850
 []\T1/lmr/m/n/10 (-20) Second prove LHS $\OMS/lmsy/m/n/10 ^^U$ \T1/lmr/m/n/10 (-20) RHS. For any $\OML/lmm/m/it/10 v \OMS/lmsy/m/n/10 2 \U/msb/m/n/10 C[]$ \T1/lmr/m/n/10 (-20) such that $\OML/lmm/m/it/10 v[] [] \OT1/lmr/m/n/10 (-20) =
  []
 
-[99] [100]
-Overfull \hbox (17.79353pt too wide) detected at line 3719
+[107] [108]
+Overfull \hbox (17.79353pt too wide) detected at line 3976
 \OML/lmm/m/it/10 I \OT1/lmr/m/n/10 = \OMS/lmsy/m/n/10 C[]C \OT1/lmr/m/n/10 = [] =[]\OMS/lmsy/m/n/10 ) []
  []
 
-[101]
+[109]
 
-Package natbib Warning: Citation `chen1984book-linear' on page 102 undefined on input line 3775.
+Package natbib Warning: Citation `chen1984book-linear' on page 110 undefined on input line 4032.
 
 
-Package natbib Warning: Citation `zhou1996book-robust' on page 102 undefined on input line 3775.
+Package natbib Warning: Citation `zhou1996book-robust' on page 110 undefined on input line 4032.
 
-[102] [103] [104]
+[110] [111] [112]
 
-Package natbib Warning: Citation `davison1968tac-poleassign' on page 105 undefined on input line 3970.
+Package natbib Warning: Citation `davison1968tac-poleassign' on page 113 undefined on input line 4227.
 
-[105]
-Overfull \hbox (47.65298pt too wide) detected at line 3997
+[113]
+Overfull \hbox (47.65298pt too wide) detected at line 4254
 []
  []
 
 
-Package natbib Warning: Citation `chen1984book-linear' on page 106 undefined on input line 4014.
+Package natbib Warning: Citation `chen1984book-linear' on page 114 undefined on input line 4271.
 
-[106] [107]
+[114] [115]
 
-Package natbib Warning: Citation `chen1984book-linear' on page 108 undefined on input line 4079.
+Package natbib Warning: Citation `chen1984book-linear' on page 116 undefined on input line 4336.
 
 
-Package natbib Warning: Citation `zhou1996book-robust' on page 108 undefined on input line 4079.
+Package natbib Warning: Citation `zhou1996book-robust' on page 116 undefined on input line 4336.
 
-[108]
+[116]
 
-Package natbib Warning: Citation `zhou1996book-robust' on page 109 undefined on input line 4167.
+Package natbib Warning: Citation `zhou1996book-robust' on page 117 undefined on input line 4424.
 
-[109]
-Underfull \hbox (badness 10000) in paragraph at lines 4199--4201
+[117]
+Underfull \hbox (badness 10000) in paragraph at lines 4456--4458
 
  []
 
-[110]
+[118]
 
-LaTeX Warning: Reference `@' on page 111 undefined on input line 4257.
+LaTeX Warning: Reference `@' on page 119 undefined on input line 4514.
 
 
-Package natbib Warning: Citation `zhou1996book-robust' on page 111 undefined on input line 4285.
+Package natbib Warning: Citation `zhou1996book-robust' on page 119 undefined on input line 4542.
 
-[111] [112]
+[119] [120]
 Appendix B.
-[113
+[121
 
-] [114] [115] [116] [117] [118]
+] [122] [123] [124] [125] [126]
 Appendix C.
-[119
+[127
 
-] [120
+] [128
 
 ]
 Appendix D.
-[121] [122
+[129] [130
 
 ]
 Appendix E.
@@ -1088,24 +1112,24 @@ No file optimal-control-estimation.bbl.
 
 Package natbib Warning: There were undefined citations.
 
-[123] (./optimal-control-estimation.aux)
+[131] (./optimal-control-estimation.aux)
 
 LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 25098 strings out of 476025
- 461171 string characters out of 5790018
+ 25179 strings out of 476025
+ 463254 string characters out of 5790018
  1878388 words of memory out of 5000000
- 43844 multiletter control sequences out of 15000+600000
- 642404 words of font info for 309 fonts, out of 8000000 for 9000
+ 43885 multiletter control sequences out of 15000+600000
+ 642534 words of font info for 310 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  83i,29n,80p,1536b,657s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/euler/eufm10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/euler/eufm7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbxi10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmmi5.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr17.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr5.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr6.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmro10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmsy5.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmsy6.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm7.pfb>
-Output written on optimal-control-estimation.pdf (123 pages, 1902674 bytes).
+Output written on optimal-control-estimation.pdf (131 pages, 1989352 bytes).
 PDF statistics:
- 2179 PDF objects out of 2487 (max. 8388607)
- 1960 compressed objects within 20 object streams
- 824 named destinations out of 1000 (max. 500000)
- 65880 words of extra memory for PDF output out of 74296 (max. 10000000)
+ 2294 PDF objects out of 2487 (max. 8388607)
+ 2062 compressed objects within 21 object streams
+ 860 named destinations out of 1000 (max. 500000)
+ 65898 words of extra memory for PDF output out of 74296 (max. 10000000)
 

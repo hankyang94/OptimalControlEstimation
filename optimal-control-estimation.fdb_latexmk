@@ -1,15 +1,15 @@
 # Fdb version 4
-["bibtex optimal-control-estimation"] 1692141655 "optimal-control-estimation.aux" "optimal-control-estimation.bbl" "optimal-control-estimation" 1692141655 0
+["bibtex optimal-control-estimation"] 1692224955 "optimal-control-estimation.aux" "optimal-control-estimation.bbl" "optimal-control-estimation" 1692224955 0
   "/usr/local/texlive/2023/texmf-dist/bibtex/bib/jurabib/book.bib" 1136766823 3095 06d31a152c5b167d3c6afe2b7acb6527 ""
   "/usr/local/texlive/2023/texmf-dist/bibtex/bst/base/apalike.bst" 1292289607 24635 604dafcc79f521a11ea73e506e1fbd98 ""
-  "optimal-control-estimation.aux" 1692141654 57386 243cf04ff1063fd8b97e0b7d66e4e72e "pdflatex"
+  "optimal-control-estimation.aux" 1692224955 60275 064d836fd0d901a847e84c41389b76f0 "pdflatex"
   "packages.bib" 0 -1 0 ""
   (generated)
   "optimal-control-estimation.bbl"
   "optimal-control-estimation.blg"
   (rewritten before read)
-["pdflatex"] 1692141653 "/Users/hankyang/Documents/OptimalControlEstimation/_book/optimal-control-estimation.tex" "optimal-control-estimation.pdf" "optimal-control-estimation" 1692141655 0
-  "/Users/hankyang/Documents/OptimalControlEstimation/_book/optimal-control-estimation.tex" 1692141636 279378 e75dffa10c0a561cf52a4fd24019d8e1 ""
+["pdflatex"] 1692224953 "/Users/hankyang/Documents/OptimalControlEstimation/_book/optimal-control-estimation.tex" "optimal-control-estimation.pdf" "optimal-control-estimation" 1692224955 0
+  "/Users/hankyang/Documents/OptimalControlEstimation/_book/optimal-control-estimation.tex" 1692224935 295191 251099a15d1f3c2830ac12f1f6cd36ce ""
   "/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc" 1254269338 2375 baa924870cfb487815765f9094cf3728 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc" 1202520719 3486 c7eadf5dcc57b3b2d11736679f6636ba ""
   "/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc" 1202520719 2405 5dcf2c1b967ee25cc46c58cd52244aed ""
@@ -240,17 +240,19 @@
   "/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1691154585 4623355 b8cad38412faebe1ce5b780a45db67bd ""
   "/usr/local/texlive/2023/texmf-var/web2c/pdftex/pdflatex.fmt" 1691154522 7883463 cea25da57a93ff221135d569d26e25b6 ""
   "/usr/local/texlive/2023/texmf.cnf" 1678822455 577 1b2b1af17af2508fb20dd85783af4050 ""
-  "images/drawme.png" 1692141634 28419 42b71f4e823e1d68378c16fa12bcb64a ""
-  "images/pendulum-drawing.png" 1692141634 43897 1aa1c9bda6ec52e325a9c3212b3cd8d8 ""
-  "images/pendulum-local-lyapunov-certificate-V.png" 1692141634 454411 19a0ed3db0e6cf4a08d0b354229c8ced ""
-  "images/pendulum-local-lyapunov-certificate-Vdot.png" 1692141634 342389 5cbc7c4f66bc77849ff90c8d343cbeb0 ""
-  "images/pendulum-simulation-sos-observer.png" 1692141634 175355 4807f264029c86018b3850ee0b3eebd3 ""
-  "images/pendulum-stabilization-lqr.png" 1692141634 37617 b2a644868594278a859a1dae73fd819e ""
-  "images/vinograd.png" 1692141634 81016 1fdc2e1c60678d8a2bfa62e9add41b69 ""
-  "optimal-control-estimation.aux" 1692141654 57386 243cf04ff1063fd8b97e0b7d66e4e72e "pdflatex"
+  "images/drawme.png" 1692224933 28419 42b71f4e823e1d68378c16fa12bcb64a ""
+  "images/pendulum-drawing.png" 1692224933 43897 1aa1c9bda6ec52e325a9c3212b3cd8d8 ""
+  "images/pendulum-local-lyapunov-certificate-V.png" 1692224933 454411 19a0ed3db0e6cf4a08d0b354229c8ced ""
+  "images/pendulum-local-lyapunov-certificate-Vdot.png" 1692224933 342389 5cbc7c4f66bc77849ff90c8d343cbeb0 ""
+  "images/pendulum-simulation-sos-observer.png" 1692224933 175355 4807f264029c86018b3850ee0b3eebd3 ""
+  "images/pendulum-stabilization-lqr.png" 1692224933 37617 b2a644868594278a859a1dae73fd819e ""
+  "images/scalar-system-optimal-J-t.png" 1692224933 57972 69d8372ea088a86521cbbe492ff3f922 ""
+  "images/scalar-system-optimal-J-x.png" 1692224933 85074 d0354f2a260c388fe4a9d0879889f2f8 ""
+  "images/vinograd.png" 1692224933 81016 1fdc2e1c60678d8a2bfa62e9add41b69 ""
+  "optimal-control-estimation.aux" 1692224955 60275 064d836fd0d901a847e84c41389b76f0 "pdflatex"
   "optimal-control-estimation.bbl" 0 -1 0 "bibtex optimal-control-estimation"
-  "optimal-control-estimation.tex" 1692141636 279378 e75dffa10c0a561cf52a4fd24019d8e1 ""
-  "optimal-control-estimation.toc" 1692141654 6913 9a30352dc086abec05b6e8c38f187142 "pdflatex"
+  "optimal-control-estimation.tex" 1692224935 295191 251099a15d1f3c2830ac12f1f6cd36ce ""
+  "optimal-control-estimation.toc" 1692224955 6999 8bfa5f62fd23e27e94734d485993def1 "pdflatex"
   (generated)
   "optimal-control-estimation.aux"
   "optimal-control-estimation.log"
