@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.8.4)  16 AUG 2023 18:39
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.8.4)  16 AUG 2023 18:40
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -689,43 +689,27 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 
 {/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}] [2
 
-]
-No file optimal-control-estimation.toc.
+] (./optimal-control-estimation.toc
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10> on input line 5.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <7> on input line 5.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <5> on input line 5.
+ [3])
 \tf@toc=\write4
 \openout4 = `optimal-control-estimation.toc'.
 
-[3] [4
+ [4] [5
 
-] [5] [6
+] [6
 
 ]
 Chapter 1.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 174.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 174.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 174.
 LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 182.
 (/usr/local/texlive/2023/texmf-dist/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
-
-LaTeX Warning: Reference `eq:discrete-time-dynamics' on page 7 undefined on input line 196.
-
-[7{/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}]
-
-LaTeX Warning: Reference `eq:closed-loop-state-trajectory' on page 8 undefined on input line 217.
-
-
-LaTeX Warning: Reference `eq:additive-cost' on page 8 undefined on input line 217.
-
-
-LaTeX Warning: Reference `eq:expected-cost' on page 8 undefined on input line 225.
-
-
-LaTeX Warning: Reference `def:basicproblem' on page 8 undefined on input line 234.
-
+) [7{/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}]
 
 Package natbib Warning: Citation `bertsekas12book-dpocI' on page 8 undefined on input line 238.
 
@@ -733,31 +717,11 @@ Package natbib Warning: Citation `bertsekas12book-dpocI' on page 8 undefined on 
 Package natbib Warning: Citation `bertsekas12book-dpocI' on page 8 undefined on input line 240.
 
 [8{/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}]
-
-LaTeX Warning: Reference `def:basicproblem' on page 9 undefined on input line 246.
-
-
-LaTeX Warning: Reference `def:basicproblem' on page 9 undefined on input line 249.
-
-
-LaTeX Warning: Reference `thm:bellmanoptimality' on page 9 undefined on input line 258.
-
-
-LaTeX Warning: Reference `def:basicproblem' on page 9 undefined on input line 258.
-
-
-LaTeX Warning: Reference `def:basicproblem' on page 9 undefined on input line 263.
-
-
 Overfull \hbox (40.36504pt too wide) detected at line 268
 []
  []
 
 [9]
-
-LaTeX Warning: Reference `eq:dpbackwardrecursion' on page 10 undefined on input line 269.
-
-
 Underfull \hbox (badness 1902) in paragraph at lines 273--274
 []\T1/lmr/m/n/10 (+20) For any ad-mis-si-ble pol-icy $\OML/lmm/m/it/10 ^^Y \OT1/lmr/m/n/10 (+20) = \OMS/lmsy/m/n/10 f\OML/lmm/m/it/10 ^^V[]; [] ; ^^V[]\OMS/lmsy/m/n/10 g$\T1/lmr/m/n/10 (+20) , de-note $\OML/lmm/m/it/10 ^^Y[] \OT1/lmr/m/n/10 (+20) =
  []
@@ -773,9 +737,6 @@ Overfull \hbox (0.75839pt too wide) detected at line 277
  []
 
 
-LaTeX Warning: Reference `eq:dpbackwardrecursion' on page 10 undefined on input line 280.
-
-
 Overfull \hbox (30.06778pt too wide) detected at line 295
 []
  []
@@ -784,200 +745,27 @@ Overfull \hbox (30.06778pt too wide) detected at line 295
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [10]
-
-LaTeX Warning: Reference `eq:dpproof-1' on page 11 undefined on input line 296.
-
-
-LaTeX Warning: Reference `eq:dptheoremdefineJkstar' on page 11 undefined on input line 296.
-
-
-LaTeX Warning: Reference `eq:dpproof-2' on page 11 undefined on input line 296.
-
-
-LaTeX Warning: Reference `eq:dpproof-3' on page 11 undefined on input line 296.
-
-
-LaTeX Warning: Reference `eq:dpproof-4' on page 11 undefined on input line 296.
-
-
-LaTeX Warning: Reference `eq:dpproof-5' on page 11 undefined on input line 296.
-
-
-LaTeX Warning: Reference `eq:dptheoremdefineJkstar' on page 11 undefined on input line 296.
-
-
-LaTeX Warning: Reference `eq:dpproof-6' on page 11 undefined on input line 296.
-
-
-LaTeX Warning: Reference `eq:dpproof-7' on page 11 undefined on input line 296.
-
-
-LaTeX Warning: Reference `eq:dpproof-8' on page 11 undefined on input line 296.
-
-
-LaTeX Warning: Reference `eq:dpbackwardrecursion' on page 11 undefined on input line 296.
-
-
-LaTeX Warning: Reference `eq:dpbackwardrecursion' on page 11 undefined on input line 301.
-
-
 Overfull \hbox (25.87103pt too wide) detected at line 305
 [][][]\OML/lmm/m/it/10 J[]\OT1/lmr/m/n/10 (\OML/lmm/m/it/10 x[]\OT1/lmr/m/n/10 ) = [] \U/msb/m/n/10 E[] [] \OML/lmm/m/it/10 :
  []
 
-
-LaTeX Warning: Reference `appconvex' on page 11 undefined on input line 311.
-
-
-LaTeX Warning: Reference `eq:dptryN-1' on page 11 undefined on input line 311.
-
-[11]
-
-LaTeX Warning: Reference `eq:dptryN-1' on page 12 undefined on input line 313.
-
-
-LaTeX Warning: Reference `eq:dptryN-1' on page 12 undefined on input line 313.
-
-
-LaTeX Warning: Reference `exactdp' on page 12 undefined on input line 316.
-
-
-LaTeX Warning: Reference `eq:dpbackwardrecursion' on page 12 undefined on input line 318.
-
-
-LaTeX Warning: Reference `approximatedp' on page 12 undefined on input line 318.
-
-[12]
+[11] [12]
 Chapter 2.
-
-LaTeX Warning: Reference `formulation' on page 13 undefined on input line 323.
-
-
-LaTeX Warning: Reference `eq:lqr-formulation' on page 13 undefined on input line 342.
-
-
-LaTeX Warning: Reference `eq:lqr-formulation' on page 13 undefined on input line 342.
-
 [13
 
 ]
-
-LaTeX Warning: Reference `thm:dynamicprogramming' on page 14 undefined on input line 344.
-
-
-LaTeX Warning: Reference `eq:lqr-cost-N-1' on page 14 undefined on input line 360.
-
-
-LaTeX Warning: Reference `eq:lqr-cost-N-1' on page 14 undefined on input line 373.
-
-
 Overfull \hbox (28.66585pt too wide) detected at line 381
 \OML/lmm/m/it/10 S[] \OT1/lmr/m/n/10 = \OML/lmm/m/it/10 Q[] \OT1/lmr/m/n/10 + \OML/lmm/m/it/10 A[] [] A[]:
  []
 
-
-LaTeX Warning: Reference `eq:optimal-u-N-1' on page 14 undefined on input line 389.
-
-
-LaTeX Warning: Reference `eq:optimal-cost-N-1' on page 14 undefined on input line 391.
-
 [14]
-
-LaTeX Warning: Reference `eq:lqr-formulation' on page 15 undefined on input line 400.
-
-
-LaTeX Warning: Reference `eq:lqr-formulation' on page 15 undefined on input line 403.
-
-
 Overfull \hbox (24.42657pt too wide) detected at line 420
 []
  []
 
-
-LaTeX Warning: Reference `eq:finite-discrete-lqr-riccati' on page 15 undefined on input line 425.
-
-
-LaTeX Warning: Reference `prp:discretetimefinitehorizonlqrsolution' on page 15 undefined on input line 428.
-
-
-LaTeX Warning: Reference `eq:lqr-solution-control' on page 15 undefined on input line 428.
-
-
-LaTeX Warning: Reference `eq:finite-discrete-lqr-riccati' on page 15 undefined on input line 428.
-
-
-LaTeX Warning: Reference `eq:finite-discrete-lqr-riccati' on page 15 undefined on input line 428.
-
-
-LaTeX Warning: Reference `eq:infinite-horizon-lqr-cost' on page 15 undefined on input line 438.
-
-
-LaTeX Warning: Reference `eq:lqr-formulation' on page 15 undefined on input line 440.
-
-[15]
-
-LaTeX Warning: Reference `eq:infinite-horizon-lqr-cost' on page 16 undefined on input line 445.
-
-
-LaTeX Warning: Reference `eq:infinite-horizon-lqr-invoke-dp' on page 16 undefined on input line 450.
-
-
-LaTeX Warning: Reference `eq:infinite-horizon-lqr-invoke-dp' on page 16 undefined on input line 455.
-
-
-LaTeX Warning: Reference `eq:algebraic-riccati' on page 16 undefined on input line 460.
-
-
-LaTeX Warning: Reference `eq:infinite-horizon-lqr-optimal-cost' on page 16 undefined on input line 462.
-
-
-LaTeX Warning: Reference `eq:infinite-horizon-lqr-invoke-dp' on page 16 undefined on input line 462.
-
-
-LaTeX Warning: Reference `eq:algebraic-riccati' on page 16 undefined on input line 462.
-
-
-LaTeX Warning: Reference `eq:algebraic-riccati' on page 16 undefined on input line 462.
-
-
-LaTeX Warning: Reference `eq:infinite-horizon-lqr-control' on page 16 undefined on input line 462.
-
-
-LaTeX Warning: Reference `app-lti-controllable-observable' on page 16 undefined on input line 471.
-
-
-LaTeX Warning: Reference `eq:infinite-horizon-lqr-cost' on page 16 undefined on input line 471.
-
-
-LaTeX Warning: Reference `eq:infinite-horizon-lqr-cost' on page 16 undefined on input line 473.
-
-[16]
-
-LaTeX Warning: Reference `app-lti-stability-dt' on page 17 undefined on input line 490.
-
-
-LaTeX Warning: Reference `prp:infinitehorizonlqrsolution' on page 17 undefined on input line 493.
-
+[15] [16]
 
 Package natbib Warning: Citation `bertsekas12book-dpocI' on page 17 undefined on input line 493.
-
-
-LaTeX Warning: Reference `eq:finite-discrete-lqr-riccati' on page 17 undefined on input line 493.
-
-
-LaTeX Warning: Reference `eq:algebraic-riccati' on page 17 undefined on input line 493.
-
-
-LaTeX Warning: Reference `eq:finite-discrete-lqr-riccati' on page 17 undefined on input line 493.
-
-
-LaTeX Warning: Reference `app-lti-system-theory' on page 17 undefined on input line 493.
-
-
-LaTeX Warning: Reference `eq:finite-discrete-lqr-riccati' on page 17 undefined on input line 495.
-
-
-LaTeX Warning: Reference `eq:finite-discrete-lqr-riccati' on page 17 undefined on input line 495.
 
 
 Package natbib Warning: Citation `arnold84ieee-generalized' on page 17 undefined on input line 495.
@@ -986,71 +774,33 @@ LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 49
 (/usr/local/texlive/2023/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-
-LaTeX Warning: Reference `fig:pendulum-drawing' on page 17 undefined on input line 502.
-
-<images/pendulum-drawing.png, id=169, 383.4325pt x 389.455pt>
+<images/pendulum-drawing.png, id=308, 383.4325pt x 389.455pt>
 File: images/pendulum-drawing.png Graphic file (type png)
 <use images/pendulum-drawing.png>
 Package pdftex.def Info: images/pendulum-drawing.png  used on input line 517.
 (pdftex.def)             Requested size: 138.00049pt x 140.16803pt.
-[17]
-
-LaTeX Warning: Reference `eq:infinite-horizon-lqr-cost' on page 18 undefined on input line 556.
-
-
-LaTeX Warning: Reference `fig:pendulum-stabilization-sim' on page 18 undefined on input line 558.
-
-<images/pendulum-stabilization-lqr.png, id=180, 1088.065pt x 961.5925pt>
+ [17]
+<images/pendulum-stabilization-lqr.png, id=323, 1088.065pt x 961.5925pt>
 File: images/pendulum-stabilization-lqr.png Graphic file (type png)
 <use images/pendulum-stabilization-lqr.png>
 Package pdftex.def Info: images/pendulum-stabilization-lqr.png  used on input line 564.
 (pdftex.def)             Requested size: 207.00014pt x 182.93922pt.
-[18 <./images/pendulum-drawing.png>] [19 <./images/pendulum-stabilization-lqr.png (PNG copy)>] [20
+ [18 <./images/pendulum-drawing.png>] [19 <./images/pendulum-stabilization-lqr.png (PNG copy)>] [20
 
 ]
 Chapter 3.
-
-LaTeX Warning: Reference `formulation' on page 21 undefined on input line 581.
-
-
-LaTeX Warning: Reference `thm:dynamicprogramming' on page 21 undefined on input line 589.
-
-[21]
-
-LaTeX Warning: Reference `eq:apprinv-dp' on page 22 undefined on input line 602.
-
-
-LaTeX Warning: Reference `eq:apprinv-dp' on page 22 undefined on input line 619.
-
-
-LaTeX Warning: Reference `eq:apprinv-dp' on page 22 undefined on input line 621.
-
-[22] [23]
-
-LaTeX Warning: Reference `eq:apprinv-fvi-1' on page 24 undefined on input line 669.
-
-
-LaTeX Warning: Reference `eq:apprinv-fvi-2' on page 24 undefined on input line 669.
-
-<images/drawme.png, id=234, 670.505pt x 310.15875pt>
+[21] [22] [23]
+<images/drawme.png, id=380, 670.505pt x 310.15875pt>
 File: images/drawme.png Graphic file (type png)
 <use images/drawme.png>
 Package pdftex.def Info: images/drawme.png  used on input line 678.
 (pdftex.def)             Requested size: 206.995pt x 95.75067pt.
-[24]
-
-LaTeX Warning: Reference `eq:apprinv-dp' on page 25 undefined on input line 700.
-
+ [24]
 File: images/drawme.png Graphic file (type png)
 <use images/drawme.png>
 Package pdftex.def Info: images/drawme.png  used on input line 709.
 (pdftex.def)             Requested size: 206.995pt x 95.75067pt.
-[25 <./images/drawme.png>] [26]
-
-LaTeX Warning: Reference `eq:apprinv-cost-improvement' on page 27 undefined on input line 798.
-
-[27]
+ [25 <./images/drawme.png>] [26] [27]
 File: images/drawme.png Graphic file (type png)
 <use images/drawme.png>
 Package pdftex.def Info: images/drawme.png  used on input line 822.
@@ -1060,553 +810,73 @@ Overfull \hbox (10.81474pt too wide) detected at line 884
 [][][][] []
  []
 
-[30]
-
-LaTeX Warning: Reference `eq:apprinv-dp' on page 31 undefined on input line 911.
-
-[31] [32]
+[30] [31] [32]
 Chapter 4.
-
-LaTeX Warning: Reference `thm:bellmanoptimality' on page 33 undefined on input line 945.
-
-
-LaTeX Warning: Reference `stability' on page 33 undefined on input line 945.
-
-
-LaTeX Warning: Reference `eq:ct-optimal-control-system' on page 33 undefined on input line 968.
-
-
-LaTeX Warning: Reference `eq:ct-optimal-control-system' on page 33 undefined on input line 968.
-
 [33
 
-]
-
-LaTeX Warning: Reference `eq:ct-optimal-control-system' on page 34 undefined on input line 978.
-
-
-LaTeX Warning: Reference `eq:ct-optimal-control-definition' on page 34 undefined on input line 981.
-
-
-LaTeX Warning: Reference `thm:dynamicprogramming' on page 34 undefined on input line 981.
-
-
-LaTeX Warning: Reference `thm:dynamicprogramming' on page 34 undefined on input line 991.
-
-
-LaTeX Warning: Reference `eq:dpbackwardrecursion' on page 34 undefined on input line 991.
-
-
-LaTeX Warning: Reference `eq:dpbackwardrecursion' on page 34 undefined on input line 991.
-
-
-LaTeX Warning: Reference `eq:ct-optimal-control-system' on page 34 undefined on input line 997.
-
-
-LaTeX Warning: Reference `eq:ct-optimal-control-definition' on page 34 undefined on input line 1001.
-
-
-LaTeX Warning: Reference `def:basicproblem' on page 34 undefined on input line 1005.
-
-[34]
-
-LaTeX Warning: Reference `eq:dpbackwardrecursion' on page 35 undefined on input line 1007.
-
-
-LaTeX Warning: Reference `eq:ct-optimal-control-discrete-approx-dp' on page 35 undefined on input line 1013.
-
-
-LaTeX Warning: Reference `eq:ct-optimal-control-discrete-approx-dp' on page 35 undefined on input line 1017.
-
-
+] [34]
 Overfull \hbox (14.42311pt too wide) detected at line 1021
 [][][][]\OT1/lmr/m/n/10 (\OML/lmm/m/it/10 k^^N; x\OT1/lmr/m/n/10 ) = [] [] \OML/lmm/m/it/10 :
  []
 
-
-LaTeX Warning: Reference `eq:ct-optimal-control-discrete-approx-taylor' on page 35 undefined on input line 1026.
-
-
-LaTeX Warning: Reference `eq:hjb-informal' on page 35 undefined on input line 1031.
-
-
-LaTeX Warning: Reference `def:continuoustimeoptimalcontrol' on page 35 undefined on input line 1036.
-
-
-LaTeX Warning: Reference `eq:ct-optimal-control-system' on page 35 undefined on input line 1036.
-
-
-LaTeX Warning: Reference `eq:hjb-eqution-formal-1' on page 35 undefined on input line 1042.
-
-[35]
-
-LaTeX Warning: Reference `eq:hjb-eqution-formal-1' on page 36 undefined on input line 1047.
-
-
-LaTeX Warning: Reference `thm:hjbsufficient' on page 36 undefined on input line 1070.
-
-
-LaTeX Warning: Reference `eq:ct-optimal-control-definition' on page 36 undefined on input line 1070.
-
-
-LaTeX Warning: Reference `eq:hjb-eqution-formal-1' on page 36 undefined on input line 1070.
-
-[36]
-
-LaTeX Warning: Reference `eq:scalar-system-optimal-value' on page 37 undefined on input line 1114.
-
-
-LaTeX Warning: Reference `fig:scalar-system-optimal-J-t' on page 37 undefined on input line 1114.
-
-<images/scalar-system-optimal-J-t.png, id=378, 737.75626pt x 409.53pt>
+[35] [36]
+<images/scalar-system-optimal-J-t.png, id=550, 737.75626pt x 409.53pt>
 File: images/scalar-system-optimal-J-t.png Graphic file (type png)
 <use images/scalar-system-optimal-J-t.png>
 Package pdftex.def Info: images/scalar-system-optimal-J-t.png  used on input line 1122.
 (pdftex.def)             Requested size: 172.49467pt x 95.75214pt.
-
-LaTeX Warning: Reference `fig:scalar-system-optimal-J-x' on page 37 undefined on input line 1129.
-
-<images/scalar-system-optimal-J-x.png, id=379, 1144.275pt x 363.3575pt>
+<images/scalar-system-optimal-J-x.png, id=552, 1144.275pt x 363.3575pt>
 File: images/scalar-system-optimal-J-x.png Graphic file (type png)
 <use images/scalar-system-optimal-J-x.png>
 Package pdftex.def Info: images/scalar-system-optimal-J-x.png  used on input line 1137.
 (pdftex.def)             Requested size: 206.99075pt x 65.72864pt.
-
-LaTeX Warning: Reference `eq:scalar-system-partial-J-partial-t' on page 37 undefined on input line 1144.
-
-
-LaTeX Warning: Reference `eq:scalar-system-partial-J-partial-x' on page 37 undefined on input line 1144.
-
-
-LaTeX Warning: Reference `eq:hjb-eqution-formal-1' on page 37 undefined on input line 1144.
-
-[37]
-
-LaTeX Warning: Reference `eq:scalar-system-hjb' on page 38 undefined on input line 1155.
-
-
-LaTeX Warning: Reference `thm:hjbsufficient' on page 38 undefined on input line 1164.
-
+ [37]
 
 Package natbib Warning: Citation `bertsekas12book-dpocI' on page 38 undefined on input line 1168.
 
-
-LaTeX Warning: Reference `thm:hjbsufficient' on page 38 undefined on input line 1170.
-
 [38 <./images/scalar-system-optimal-J-t.png> <./images/scalar-system-optimal-J-x.png>]
 
-LaTeX Warning: Reference `eq:hjb-eqution-formal-1' on page 39 undefined on input line 1194.
-
-
 Package natbib Warning: Citation `bertsekas12book-dpocI' on page 39 undefined on input line 1199.
-
-
-LaTeX Warning: Reference `eq:hjb-equation-restate-for-pmp' on page 39 undefined on input line 1201.
-
-
-LaTeX Warning: Reference `lem:gradientofminimumfunctions' on page 39 undefined on input line 1205.
 
 
 Overfull \hbox (4.59879pt too wide) detected at line 1212
 []
  []
 
-[39]
-
-LaTeX Warning: Reference `eq:hjb-equation-restate-for-pmp' on page 40 undefined on input line 1213.
-
-
-LaTeX Warning: Reference `eq:hjb-equation-restate-for-pmp' on page 40 undefined on input line 1213.
-
-
-LaTeX Warning: Reference `eq:hjb-equation-differentiation-x' on page 40 undefined on input line 1213.
-
-
-LaTeX Warning: Reference `eq:hjb-equation-differentiation-x' on page 40 undefined on input line 1222.
-
-
-LaTeX Warning: Reference `eq:hjb-equation-differentiation-t' on page 40 undefined on input line 1222.
-
-
-LaTeX Warning: Reference `eq:hjb-equation-differentiation-x' on page 40 undefined on input line 1224.
-
-
-LaTeX Warning: Reference `eq:hjb-equation-differentiation-t' on page 40 undefined on input line 1224.
-
-
-LaTeX Warning: Reference `eq:hjb-equation-differentiation-x' on page 40 undefined on input line 1233.
-
-
-LaTeX Warning: Reference `eq:hjb-equation-differentiation-t' on page 40 undefined on input line 1237.
-
-
-LaTeX Warning: Reference `eq:hjb-equation-differentiation-x' on page 40 undefined on input line 1237.
-
-
-LaTeX Warning: Reference `eq:hjb-equation-differentiation-t' on page 40 undefined on input line 1237.
-
-
-LaTeX Warning: Reference `eq:hjb-equation-differentiation-along-optimal-x' on page 40 undefined on input line 1248.
-
-
-LaTeX Warning: Reference `eq:hjb-equation-differentiation-along-optimal-t' on page 40 undefined on input line 1248.
-
-[40]
-
-LaTeX Warning: Reference `eq:adjoint-equation-p' on page 41 undefined on input line 1255.
-
-
-LaTeX Warning: Reference `eq:adjoint-equation-p' on page 41 undefined on input line 1255.
-
-
-LaTeX Warning: Reference `eq:pmp-optimal-system-dynamics' on page 41 undefined on input line 1270.
-
-
-LaTeX Warning: Reference `eq:adjoint-equation-p' on page 41 undefined on input line 1274.
-
-[41]
-
-LaTeX Warning: Reference `eq:hjb-equation-restate-for-pmp' on page 42 undefined on input line 1303.
-
-
-LaTeX Warning: Reference `eq:adjoint-equation-p0' on page 42 undefined on input line 1308.
-
-
-LaTeX Warning: Reference `thm:pontryaginminimum' on page 42 undefined on input line 1310.
-
-
-LaTeX Warning: Reference `eq:pmp-solve-u-from-H' on page 42 undefined on input line 1317.
-
-
-LaTeX Warning: Reference `appconvex-theory-kkt' on page 42 undefined on input line 1317.
-
-
-LaTeX Warning: Reference `eq:pmp-optimal-system-dynamics' on page 42 undefined on input line 1317.
-
-
-LaTeX Warning: Reference `eq:adjoint-equation-p' on page 42 undefined on input line 1317.
-
-[42] [43] [44
+[39] [40] [41] [42] [43] [44
 
 ]
 Chapter 5.
-
-LaTeX Warning: Reference `eq:pendulum-swingup-stability-test-1' on page 45 undefined on input line 1346.
-
-
-LaTeX Warning: Reference `eq:pendulum-swingup-stability-test' on page 45 undefined on input line 1353.
-
-
-LaTeX Warning: Reference `eq:pendulum-swingup-stability-test' on page 45 undefined on input line 1353.
-
-
-LaTeX Warning: Reference `eq:pendulum-swingup-stability-test' on page 45 undefined on input line 1355.
-
-
-LaTeX Warning: Reference `appconvex' on page 45 undefined on input line 1357.
-
-[45]
-
-LaTeX Warning: Reference `eq:autonomous-system' on page 46 undefined on input line 1377.
-
-
-LaTeX Warning: Reference `eq:autonomous-system' on page 46 undefined on input line 1386.
-
-
-LaTeX Warning: Reference `eq:shifted-system-by-equilibrium' on page 46 undefined on input line 1395.
-
-[46]
-
-LaTeX Warning: Reference `eq:pendulum-dynamics-for-equilibrium-point' on page 47 undefined on input line 1411.
-
-
-LaTeX Warning: Reference `eq:autonomous-system' on page 47 undefined on input line 1426.
-
-[47]
+[45] [46] [47]
 
 Package natbib Warning: Citation `vinograd57-inapplicability' on page 48 undefined on input line 1464.
 
-<images/vinograd.png, id=478, 539.01375pt x 346.29375pt>
+<images/vinograd.png, id=689, 539.01375pt x 346.29375pt>
 File: images/vinograd.png Graphic file (type png)
 <use images/vinograd.png>
 Package pdftex.def Info: images/vinograd.png  used on input line 1477.
 (pdftex.def)             Requested size: 206.99866pt x 132.98796pt.
 [48]
-
-LaTeX Warning: Reference `state-observer' on page 49 undefined on input line 1496.
-
-
 Overfull \hbox (58.03809pt too wide) detected at line 1507
 \OMS/lmsy/m/n/10 8\OML/lmm/m/it/10 x \OMS/lmsy/m/n/10 2 \U/msb/m/n/10 X\OML/lmm/m/it/10 ;  x\OT1/lmr/m/n/10 (0) = \OML/lmm/m/it/10 x \OT1/lmr/m/n/10 =[]\OMS/lmsy/m/n/10 ) []
  []
 
-
-LaTeX Warning: Reference `def:lyapunovstability' on page 49 undefined on input line 1510.
-
-
-LaTeX Warning: Reference `def:globalstability' on page 49 undefined on input line 1510.
-
-
-LaTeX Warning: Reference `app-lti-stability' on page 49 undefined on input line 1510.
-
-[49 <./images/vinograd.png>]
-
-LaTeX Warning: Reference `eq:autonomous-system' on page 50 undefined on input line 1512.
-
-
-LaTeX Warning: Reference `eq:autonomous-system' on page 50 undefined on input line 1517.
-
-
-LaTeX Warning: Reference `eq:autonomous-system' on page 50 undefined on input line 1522.
-
-
-LaTeX Warning: Reference `eq:autonomous-system' on page 50 undefined on input line 1527.
-
-
-LaTeX Warning: Reference `eq:linearized-system' on page 50 undefined on input line 1527.
-
-
-LaTeX Warning: Reference `eq:linearized-system' on page 50 undefined on input line 1531.
-
-
-LaTeX Warning: Reference `eq:autonomous-system' on page 50 undefined on input line 1531.
-
-
-LaTeX Warning: Reference `eq:linearized-system' on page 50 undefined on input line 1533.
-
-
-LaTeX Warning: Reference `eq:autonomous-system' on page 50 undefined on input line 1533.
-
-
-LaTeX Warning: Reference `eq:linearized-system' on page 50 undefined on input line 1535.
-
-
-LaTeX Warning: Reference `eq:autonomous-system' on page 50 undefined on input line 1535.
-
-
-LaTeX Warning: Reference `thm:stabilitybylinearization' on page 50 undefined on input line 1540.
-
-
-LaTeX Warning: Reference `eq:pendulum-dynamics-for-equilibrium-point' on page 50 undefined on input line 1543.
-
-
-LaTeX Warning: Reference `exm:pendulumequilibriumpoint' on page 50 undefined on input line 1543.
-
-[50] [51]
-
-LaTeX Warning: Reference `eq:autonomous-system' on page 52 undefined on input line 1599.
-
-
-LaTeX Warning: Reference `eq:autonomous-system' on page 52 undefined on input line 1607.
-
-
-LaTeX Warning: Reference `def:lyapunovstability' on page 52 undefined on input line 1616.
-
-
-LaTeX Warning: Reference `def:asymptoticstability' on page 52 undefined on input line 1622.
-
-
-LaTeX Warning: Reference `def:exponentialstability' on page 52 undefined on input line 1624.
-
-
-LaTeX Warning: Reference `thm:lyapunovlocalstability' on page 52 undefined on input line 1629.
-
-
-LaTeX Warning: Reference `eq:pendulum-dynamics-for-equilibrium-point' on page 52 undefined on input line 1632.
-
-[52]
-
-LaTeX Warning: Reference `thm:lyapunovlocalstability' on page 53 undefined on input line 1643.
-
-
-LaTeX Warning: Reference `eq:pendulum-lyapunov-1' on page 53 undefined on input line 1645.
-
-
-LaTeX Warning: Reference `thm:lyapunovlocalstability' on page 53 undefined on input line 1666.
-
-
-LaTeX Warning: Reference `invariant-set-theorem' on page 53 undefined on input line 1668.
-
-[53]
-
-LaTeX Warning: Reference `eq:autonomous-system' on page 54 undefined on input line 1676.
-
-
-LaTeX Warning: Reference `def:globalstability' on page 54 undefined on input line 1687.
-
-
-LaTeX Warning: Reference `thm:lyapunovlocalstability' on page 54 undefined on input line 1702.
-
-
-LaTeX Warning: Reference `thm:lyapunovglobalstability' on page 54 undefined on input line 1702.
-
-
-LaTeX Warning: Reference `exm:lyapunovlocalstabilitypendulum' on page 54 undefined on input line 1702.
-
-
-LaTeX Warning: Reference `exm:lyapunovlocalstabilitypendulum' on page 54 undefined on input line 1702.
-
-
-LaTeX Warning: Reference `eq:autonomous-system' on page 54 undefined on input line 1709.
-
-
-LaTeX Warning: Reference `def:asymptoticstability' on page 54 undefined on input line 1715.
-
-
-LaTeX Warning: Reference `eq:autonomous-system' on page 54 undefined on input line 1720.
-
-[54]
-
-LaTeX Warning: Reference `exm:lyapunovlocalstabilitypendulum' on page 55 undefined on input line 1732.
-
-
-LaTeX Warning: Reference `exm:lyapunovlocalstabilitypendulum' on page 55 undefined on input line 1735.
-
-
-LaTeX Warning: Reference `thm:localinvariantsettheorm' on page 55 undefined on input line 1745.
-
-
+[49 <./images/vinograd.png>] [50] [51] [52] [53] [54]
 Overfull \hbox (15.01071pt too wide) detected at line 1751
 []
  []
 
-
-LaTeX Warning: Reference `thm:localinvariantsettheorm' on page 55 undefined on input line 1763.
-
 [55]
-
-LaTeX Warning: Reference `eq:autonomous-system' on page 56 undefined on input line 1771.
-
-
-LaTeX Warning: Reference `thm:lyapunovlocalstability' on page 56 undefined on input line 1786.
-
-
-LaTeX Warning: Reference `thm:lyapunovglobalstability' on page 56 undefined on input line 1786.
-
-
-LaTeX Warning: Reference `thm:localinvariantsettheorm' on page 56 undefined on input line 1786.
-
-
-LaTeX Warning: Reference `thm:globalinvariantsettheorem' on page 56 undefined on input line 1786.
-
-
-LaTeX Warning: Reference `exm:lyapunovlocalstabilitypendulum' on page 56 undefined on input line 1790.
-
-
-LaTeX Warning: Reference `eq:pendulum-lyapunov-1' on page 56 undefined on input line 1790.
-
-
-LaTeX Warning: Reference `eq:pendulum-lyapunov-2' on page 56 undefined on input line 1790.
-
-
-LaTeX Warning: Reference `thm:lyapunovlocalstability' on page 56 undefined on input line 1794.
-
-
-LaTeX Warning: Reference `thm:lyapunovglobalstability' on page 56 undefined on input line 1794.
-
-
-LaTeX Warning: Reference `thm:localinvariantsettheorm' on page 56 undefined on input line 1794.
-
-
-LaTeX Warning: Reference `thm:globalinvariantsettheorem' on page 56 undefined on input line 1794.
-
 
 Package natbib Warning: Citation `dawson23tro-safe' on page 56 undefined on input line 1794.
 
-
-LaTeX Warning: Reference `eq:autonomous-system' on page 56 undefined on input line 1794.
-
-
-LaTeX Warning: Reference `app-lti-stability' on page 56 undefined on input line 1794.
-
-[56]
-
-LaTeX Warning: Reference `eq:sos-simple-intuition-multiplier' on page 57 undefined on input line 1842.
-
-
-LaTeX Warning: Reference `eq:sos-simple-intuition-multiplier' on page 57 undefined on input line 1842.
-
-[57]
-
-LaTeX Warning: Reference `exm:simpleexamplesos' on page 58 undefined on input line 1858.
-
-
-LaTeX Warning: Reference `exm:simpleexamplesos' on page 58 undefined on input line 1863.
-
-
-LaTeX Warning: Reference `eq:basic-semialgebraic-set' on page 58 undefined on input line 1877.
-
-
-LaTeX Warning: Reference `eq:basic-semialgebraic-set' on page 58 undefined on input line 1879.
-
-[58]
-
-LaTeX Warning: Reference `exm:simpleexamplesos' on page 59 undefined on input line 1894.
-
-
-LaTeX Warning: Reference `eq:p-satz-putinar' on page 59 undefined on input line 1917.
-
-
-LaTeX Warning: Reference `eq:sos-tutorial-search-certificate' on page 59 undefined on input line 1931.
-
-[59]
-
-LaTeX Warning: Reference `eq:sos-tutorial-search-certificate' on page 60 undefined on input line 1935.
-
-
-LaTeX Warning: Reference `eq:sos-tutorial-search-certificate' on page 60 undefined on input line 1937.
-
-
-LaTeX Warning: Reference `lem:psdrepresentationsospolynomial' on page 60 undefined on input line 1948.
-
-
-LaTeX Warning: Reference `eq:sos-tutorial-search-certificate' on page 60 undefined on input line 1950.
-
-
-LaTeX Warning: Reference `eq:sos-tutorial-search-certificate' on page 60 undefined on input line 1953.
-
-
-LaTeX Warning: Reference `eq:sos-tutorial-search-certificate' on page 60 undefined on input line 1953.
-
-
-LaTeX Warning: Reference `eq:sos-tutorial-search-certificate' on page 60 undefined on input line 1959.
-
-
-LaTeX Warning: Reference `eq:sos-tutorial-search-certificate' on page 60 undefined on input line 1959.
-
-
-LaTeX Warning: Reference `eq:sos-tutorial-search-certificate' on page 60 undefined on input line 1959.
-
+[56] [57] [58] [59]
 
 Package natbib Warning: Citation `blekherman12book-semidefinite' on page 60 undefined on input line 1959.
 
 [60]
 
-LaTeX Warning: Reference `eq:polynomial-optimization-dual' on page 61 undefined on input line 1974.
-
-
-LaTeX Warning: Reference `eq:sos-tutorial-search-certificate' on page 61 undefined on input line 1982.
-
-
-LaTeX Warning: Reference `eq:polynomial-optimization-dual' on page 61 undefined on input line 1982.
-
-
-LaTeX Warning: Reference `eq:polynomial-optimization-dual-sos' on page 61 undefined on input line 1982.
-
-
-LaTeX Warning: Reference `eq:polynomial-optimization-dual' on page 61 undefined on input line 1982.
-
-
 Package natbib Warning: Citation `lasserre01siopt-global' on page 61 undefined on input line 1982.
-
-
-LaTeX Warning: Reference `eq:polynomial-optimization-dual-sos' on page 61 undefined on input line 1982.
-
-
-LaTeX Warning: Reference `eq:polynomial-optimization-dual-sos' on page 61 undefined on input line 1982.
-
-
-LaTeX Warning: Reference `eq:polynomial-optimization-dual' on page 61 undefined on input line 1982.
 
 
 Package natbib Warning: Citation `yang22pami-certifiably' on page 61 undefined on input line 1982.
@@ -1615,18 +885,9 @@ Package natbib Warning: Citation `yang22pami-certifiably' on page 61 undefined o
 Package natbib Warning: Citation `lasserre09book-moments' on page 61 undefined on input line 1982.
 
 
-LaTeX Warning: Reference `eq:sos-tutorial-search-certificate' on page 61 undefined on input line 1984.
-
-
-LaTeX Warning: Reference `eq:polynomial-optimization-dual-sos' on page 61 undefined on input line 1984.
-
-
 Package natbib Warning: Citation `yang22mp-inexact' on page 61 undefined on input line 1984.
 
 [61]
-
-LaTeX Warning: Reference `eq:p-satz-putinar' on page 62 undefined on input line 1986.
-
 
 Package natbib Warning: Citation `wang22-nonnegative' on page 62 undefined on input line 1986.
 
@@ -1639,12 +900,6 @@ Package natbib Warning: Citation `magron23book-sparse' on page 62 undefined on i
 
 Package natbib Warning: Citation `nie23book-moment' on page 62 undefined on input line 1989.
 
-
-LaTeX Warning: Reference `thm:lyapunovlocalstability' on page 62 undefined on input line 1993.
-
-
-LaTeX Warning: Reference `eq:sos-tutorial-search-certificate' on page 62 undefined on input line 2000.
-
 [62]
 LaTeX Font Info:    Trying to load font information for U+euf on input line 2005.
  (/usr/local/texlive/2023/texmf-dist/tex/latex/amsfonts/ueuf.fd
@@ -1652,46 +907,21 @@ File: ueuf.fd 2013/01/14 v3.01 Euler Fraktur
 ) (/usr/local/texlive/2023/texmf-dist/tex/latex/microtype/mt-euf.cfg
 File: mt-euf.cfg 2006/07/03 v1.1 microtype config. file: AMS Euler Fraktur (RS)
 )
-
-LaTeX Warning: Reference `eq:lyapunovlocalstabilitypendulumsos-1' on page 63 undefined on input line 2032.
-
-
-LaTeX Warning: Reference `eq:lyapunovlocalstabilitypendulumsos-2' on page 63 undefined on input line 2032.
-
-
-LaTeX Warning: Reference `eq:lyapunovlocalstabilitypendulumsos-3' on page 63 undefined on input line 2032.
-
-
-LaTeX Warning: Reference `eq:lyapunovlocalstabilitypendulumsos-constraintset' on page 63 undefined on input line 2050.
-
-<images/pendulum-local-lyapunov-certificate-V.png, id=634, 1278.7775pt x 1168.365pt>
+<images/pendulum-local-lyapunov-certificate-V.png, id=937, 1278.7775pt x 1168.365pt>
 File: images/pendulum-local-lyapunov-certificate-V.png Graphic file (type png)
 <use images/pendulum-local-lyapunov-certificate-V.png>
 Package pdftex.def Info: images/pendulum-local-lyapunov-certificate-V.png  used on input line 2054.
 (pdftex.def)             Requested size: 206.9891pt x 189.1172pt.
-[63]
-
-LaTeX Warning: Reference `eq:lyapunovlocalstabilitypendulumsos-constraintset' on page 64 undefined on input line 2063.
-
-<images/pendulum-local-lyapunov-certificate-Vdot.png, id=649, 1330.9725pt x 1126.2075pt>
+ [63]
+<images/pendulum-local-lyapunov-certificate-Vdot.png, id=954, 1330.9725pt x 1126.2075pt>
 File: images/pendulum-local-lyapunov-certificate-Vdot.png Graphic file (type png)
 <use images/pendulum-local-lyapunov-certificate-Vdot.png>
 Package pdftex.def Info: images/pendulum-local-lyapunov-certificate-Vdot.png  used on input line 2067.
 (pdftex.def)             Requested size: 206.9891pt x 175.14464pt.
-[64 <./images/pendulum-local-lyapunov-certificate-V.png (PNG copy)>]
-
-LaTeX Warning: Reference `lem:Barbalat' on page 65 undefined on input line 2117.
-
-[65 <./images/pendulum-local-lyapunov-certificate-Vdot.png (PNG copy)>] [66
+ [64 <./images/pendulum-local-lyapunov-certificate-V.png (PNG copy)>] [65 <./images/pendulum-local-lyapunov-certificate-Vdot.png (PNG copy)>] [66
 
 ]
 Chapter 6.
-
-LaTeX Warning: Reference `eq:output-feedback-system' on page 67 undefined on input line 2136.
-
-
-LaTeX Warning: Reference `eq:output-feedback-system' on page 67 undefined on input line 2149.
-
 
 Package natbib Warning: Citation `bernard19book-observer' on page 67 undefined on input line 2151.
 
@@ -1700,179 +930,21 @@ Package natbib Warning: Citation `bernard22arc-observer' on page 67 undefined on
 
 [67]
 
-LaTeX Warning: Reference `eq:output-feedback-system' on page 68 undefined on input line 2154.
-
-
-LaTeX Warning: Reference `eq:observer-definition-1' on page 68 undefined on input line 2166.
-
-
-LaTeX Warning: Reference `eq:observer-definition-1' on page 68 undefined on input line 2181.
-
-
-LaTeX Warning: Reference `eq:observer-definition-3' on page 68 undefined on input line 2181.
-
-
 Package natbib Warning: Citation `karagiannis05cdc-nonlinear' on page 68 undefined on input line 2184.
 
 
 Package natbib Warning: Citation `astolfi03tac-immersion' on page 68 undefined on input line 2184.
 
-
-LaTeX Warning: Reference `eq:observer-definition-1' on page 68 undefined on input line 2184.
-
-
-LaTeX Warning: Reference `eq:observer-definition-3' on page 68 undefined on input line 2184.
-
-
-LaTeX Warning: Reference `eq:observer-definition-simple' on page 68 undefined on input line 2193.
-
-[68]
-
-LaTeX Warning: Reference `eq:meta-observer-zeta-hat' on page 69 undefined on input line 2210.
-
-
-LaTeX Warning: Reference `eq:meta-observer-zeta' on page 69 undefined on input line 2211.
-
-
-LaTeX Warning: Reference `eq:meta-observer-zeta-hat' on page 69 undefined on input line 2216.
-
-
-LaTeX Warning: Reference `eq:meta-observer-zeta' on page 69 undefined on input line 2216.
-
-
-LaTeX Warning: Reference `eq:output-feedback-system' on page 69 undefined on input line 2231.
-
-
-LaTeX Warning: Reference `eq:meta-observer-zeta' on page 69 undefined on input line 2231.
-
-[69]
-
-LaTeX Warning: Reference `eq:output-feedback-system' on page 70 undefined on input line 2251.
-
+[68] [69]
 
 Package natbib Warning: Citation `bernard19book-observer' on page 70 undefined on input line 2255.
 
-
-LaTeX Warning: Reference `thm:observerdesignmeta' on page 70 undefined on input line 2258.
-
-
-LaTeX Warning: Reference `eq:meta-observer-zeta-hat' on page 70 undefined on input line 2261.
-
-
-LaTeX Warning: Reference `eq:meta-observer-zeta' on page 70 undefined on input line 2261.
-
-
-LaTeX Warning: Reference `eq:output-feedback-system' on page 70 undefined on input line 2272.
-
-
-LaTeX Warning: Reference `eq:meta-observer-zeta' on page 70 undefined on input line 2272.
-
-
-LaTeX Warning: Reference `eq:output-feedback-system' on page 70 undefined on input line 2286.
-
-
-LaTeX Warning: Reference `thm:observerdesignmeta' on page 70 undefined on input line 2289.
-
-
-LaTeX Warning: Reference `cor:observerdesignmetafixedT' on page 70 undefined on input line 2289.
-
-
-LaTeX Warning: Reference `eq:output-feedback-system' on page 70 undefined on input line 2294.
-
-
-LaTeX Warning: Reference `eq:meta-observer-zeta' on page 70 undefined on input line 2294.
-
-
-LaTeX Warning: Reference `eq:meta-observer-zeta-hat' on page 70 undefined on input line 2296.
-
-
-LaTeX Warning: Reference `eq:meta-observer-zeta' on page 70 undefined on input line 2301.
-
 [70]
-
-LaTeX Warning: Reference `eq:output-feedback-system' on page 71 undefined on input line 2319.
-
-
-LaTeX Warning: Reference `eq:output-feedback-system' on page 71 undefined on input line 2319.
-
-
-LaTeX Warning: Reference `eq:output-feedback-system' on page 71 undefined on input line 2338.
-
-
 Underfull \hbox (badness 3884) in paragraph at lines 2343--2344
 []\T1/lmr/bx/n/10 (+20) Backward $\OMS/lmsy/m/n/10 L$\T1/lmr/bx/n/10 (+20) -distinguishable on $\OMS/lmsy/m/n/10 X$ \T1/lmr/m/n/10 (+20) for some in-put $\OML/lmm/m/it/10 u\OT1/lmr/m/n/10 (+20) (\OML/lmm/m/it/10 t\OT1/lmr/m/n/10 (+20) )$\T1/lmr/m/n/10 (+20) , if
  []
 
-
-LaTeX Warning: Reference `eq:meta-observer-zeta' on page 71 undefined on input line 2354.
-
-[71]
-
-LaTeX Warning: Reference `thm:ltidetectable' on page 72 undefined on input line 2364.
-
-
-LaTeX Warning: Reference `eq:Luenberger-linear-template' on page 72 undefined on input line 2369.
-
-
-LaTeX Warning: Reference `eq:Luenberger-error' on page 72 undefined on input line 2379.
-
-
-LaTeX Warning: Reference `thm:ltidetectable' on page 72 undefined on input line 2385.
-
-
-LaTeX Warning: Reference `cor:bestconvergencerate' on page 72 undefined on input line 2387.
-
-
-LaTeX Warning: Reference `eq:Luenberger-Linear' on page 72 undefined on input line 2394.
-
-[72]
-
-LaTeX Warning: Reference `eq:kbobserver-pendulum' on page 73 undefined on input line 2416.
-
-
-LaTeX Warning: Reference `eq:kbobserver-pendulum' on page 73 undefined on input line 2418.
-
-
-LaTeX Warning: Reference `eq:Luenberger-linear-template' on page 73 undefined on input line 2418.
-
-
-LaTeX Warning: Reference `thm:ltidetectable' on page 73 undefined on input line 2455.
-
-
-LaTeX Warning: Reference `thm:ltiobservable' on page 73 undefined on input line 2455.
-
-
-LaTeX Warning: Reference `thm:LuenbergerLinear' on page 73 undefined on input line 2466.
-
-[73]
-
-LaTeX Warning: Reference `tab:pendulumLuenbergerRate' on page 74 undefined on input line 2472.
-
-
-LaTeX Warning: Reference `eq:pendulumLuenbergerMaxgammaNonCVX' on page 74 undefined on input line 2537.
-
-
-LaTeX Warning: Reference `eq:pendulumLuenbergerMaxgammaCVX' on page 74 undefined on input line 2546.
-
-
-LaTeX Warning: Reference `eq:pendulumLuenbergerMaxgammaCVX' on page 74 undefined on input line 2546.
-
-
-LaTeX Warning: Reference `eq:pendulumLuenbergerMaxgammaCVX' on page 74 undefined on input line 2548.
-
-
-LaTeX Warning: Reference `eq:pendulumLuenbergerMaxgammaCVX' on page 74 undefined on input line 2548.
-
-[74]
-
-LaTeX Warning: Reference `eq:meta-observer-zeta' on page 75 undefined on input line 2561.
-
-
-LaTeX Warning: Reference `eq:state-affine-template' on page 75 undefined on input line 2566.
-
-
-LaTeX Warning: Reference `eq:Luenberger-linear-template' on page 75 undefined on input line 2566.
-
+[71] [72] [73] [74]
 
 Package natbib Warning: Citation `kalman61-new' on page 75 undefined on input line 2568.
 
@@ -1888,95 +960,23 @@ Package natbib Warning: Citation `besanccon96ejc-observer' on page 75 undefined 
 
 Package natbib Warning: Citation `hammouri90cdc-observer' on page 75 undefined on input line 2568.
 
-
-LaTeX Warning: Reference `eq:linear-time-varying' on page 75 undefined on input line 2588.
-
-
-LaTeX Warning: Reference `eq:state-affine-template' on page 75 undefined on input line 2606.
-
-
-LaTeX Warning: Reference `eq:state-affine-template' on page 75 undefined on input line 2609.
-
-[75]
-
-LaTeX Warning: Reference `eq:kbobserver-auxilarydynamics' on page 76 undefined on input line 2624.
-
-
-LaTeX Warning: Reference `eq:state-affine-template' on page 76 undefined on input line 2646.
-
-
-LaTeX Warning: Reference `eq:kbobserver-pendulum' on page 76 undefined on input line 2654.
-
-
-LaTeX Warning: Reference `eq:state-affine-template' on page 76 undefined on input line 2656.
-
-[76]
-
-LaTeX Warning: Reference `eq:state-affine-template' on page 77 undefined on input line 2679.
-
-
-LaTeX Warning: Reference `thm:kalmanbucystateaffine' on page 77 undefined on input line 2681.
-
-
-LaTeX Warning: Reference `eq:kbobserver-auxilarydynamics' on page 77 undefined on input line 2681.
-
-
+[75] [76]
 Overfull \hbox (15.54147pt too wide) detected at line 2686
 \OMS/lmsy/m/n/10 k\OML/lmm/m/it/10 A\OT1/lmr/m/n/10 (\OML/lmm/m/it/10 u; y\OT1/lmr/m/n/10 )\OML/lmm/m/it/10 ^^X\OMS/lmsy/m/n/10 k \OT1/lmr/m/n/10 = \OMS/lmsy/m/n/10 k\OML/lmm/m/it/10 ^^X[]\OT1/lmr/m/n/10 (\U/euf/m/n/10 c \OMS/lmsy/m/n/10 ^^@ \U/euf/m/n/10 s \OMS/lmsy/m/n/10 ^^@ \OML/lmm/m/it/10 b=ml[]\OT1/lmr/m/n/10 )\OMS/lmsy/m/n/10 k ^^T j\OML/lmm/m/it/10 ^^X[]\OMS/lmsy/m/n/10 j[][] ^^T k\OML/lmm/m/it/10 ^^X\OMS/lmsy/m/n/10 k[]\OML/lmm/m/it/10 :
  []
-
-
-LaTeX Warning: Reference `eq:kbobserver-auxilarydynamics' on page 77 undefined on input line 2689.
 
 
 Overfull \hbox (7.82411pt too wide) detected at line 2697
 \OT1/lmr/m/n/10 ^^@[](\OML/lmm/m/it/10 t \OMS/lmsy/m/n/10 ^^@ []\OML/lmm/m/it/10 ; t\OT1/lmr/m/n/10 ) = [][] 	[](\OML/lmm/m/it/10 ^^\; t\OT1/lmr/m/n/10 )[]\OML/lmm/m/it/10 C[]C\OT1/lmr/m/n/10 	[](\OML/lmm/m/it/10 ^^\; t\OT1/lmr/m/n/10 )\OML/lmm/m/it/10 d^^\ \OT1/lmr/m/n/10 = [][] 	[](\OML/lmm/m/it/10 ^^\; t\OT1/lmr/m/n/10 )[] [] 	[](\OML/lmm/m/it/10 ^^\; t\OT1/lmr/m/n/10 )\OML/lmm/m/it/10 d^^\:
  []
 
-
-LaTeX Warning: Reference `eq:pendulm-regular-persistence-1' on page 77 undefined on input line 2714.
-
-[77]
-
-LaTeX Warning: Reference `eq:pendulum-state-affine' on page 78 undefined on input line 2744.
-
-
-LaTeX Warning: Reference `eq:pendulm-state-affine-auxiliarysystem' on page 78 undefined on input line 2752.
-
-[78]
-
-LaTeX Warning: Reference `eq:pendulm-state-affine-auxiliarysystem' on page 79 undefined on input line 2754.
-
-
-LaTeX Warning: Reference `eq:pendulm-state-affine-auxiliarysystem' on page 79 undefined on input line 2759.
-
+[77] [78]
 
 Package natbib Warning: Citation `luenberger64-observer' on page 79 undefined on input line 2782.
 
 [79]
 
-LaTeX Warning: Reference `eq:kkl-history-dynamics' on page 80 undefined on input line 2795.
-
-
-LaTeX Warning: Reference `eq:output-feedback-system' on page 80 undefined on input line 2806.
-
-
-LaTeX Warning: Reference `thm:LuenbergerLinear' on page 80 undefined on input line 2811.
-
-
-LaTeX Warning: Reference `eq:kkl-template' on page 80 undefined on input line 2811.
-
-
 Package natbib Warning: Citation `kazantzis98scl-kkl' on page 80 undefined on input line 2816.
-
-
-LaTeX Warning: Reference `eq:kkl-observer' on page 80 undefined on input line 2818.
-
-
-LaTeX Warning: Reference `thm:kalmanbucystateaffine' on page 80 undefined on input line 2818.
-
-
-LaTeX Warning: Reference `eq:kkl-template' on page 80 undefined on input line 2820.
 
 
 Package natbib Warning: Citation `janny21cdc-deepkkl' on page 80 undefined on input line 2822.
@@ -1987,32 +987,11 @@ Package natbib Warning: Citation `niazi23lacc-earning' on page 80 undefined on i
 
 Package natbib Warning: Citation `miao23ll4dc-earning' on page 80 undefined on input line 2822.
 
-
-LaTeX Warning: Reference `eq:output-feedback-system' on page 80 undefined on input line 2827.
-
 [80]
 
 Package natbib Warning: Citation `andrieu06sicopt-kkl' on page 81 undefined on input line 2834.
 
-
-LaTeX Warning: Reference `eq:kkl-autonomous-system' on page 81 undefined on input line 2837.
-
-
-LaTeX Warning: Reference `def:observability' on page 81 undefined on input line 2837.
-
-
-LaTeX Warning: Reference `thm:kklautonomous' on page 81 undefined on input line 2859.
-
-
-LaTeX Warning: Reference `thm:kklautonomous' on page 81 undefined on input line 2874.
-
-
-LaTeX Warning: Reference `eq:kkl-autonomous-system' on page 81 undefined on input line 2874.
-
 [81]
-
-LaTeX Warning: Reference `eq:kkl-autonomous-T' on page 82 undefined on input line 2884.
-
 
 Package natbib Warning: Citation `bernard19book-observer' on page 82 undefined on input line 2923.
 
@@ -2020,279 +999,28 @@ Package natbib Warning: Citation `bernard19book-observer' on page 82 undefined o
 
 Package natbib Warning: Citation `bernard19book-observer' on page 83 undefined on input line 2931.
 
-
-LaTeX Warning: Reference `eq:observerdesignconvex' on page 83 undefined on input line 2948.
-
-
-LaTeX Warning: Reference `eq:output-feedback-system' on page 83 undefined on input line 2948.
-
-
-LaTeX Warning: Reference `eq:observerdesignconvex' on page 83 undefined on input line 2950.
-
-
-LaTeX Warning: Reference `eq:Luenberger-Linear' on page 83 undefined on input line 2955.
-
-
-LaTeX Warning: Reference `eq:sos-observer' on page 83 undefined on input line 2957.
-
-
-LaTeX Warning: Reference `thm:lyapunovglobalstability' on page 83 undefined on input line 2962.
-
 [83]
-
-LaTeX Warning: Reference `eq:sos-observer-nonconvex' on page 84 undefined on input line 2974.
-
 
 Package natbib Warning: Citation `ebenbauer05cdc-polynomial' on page 84 undefined on input line 2974.
 
-
-LaTeX Warning: Reference `eq:sos-observer-nonconvex' on page 84 undefined on input line 2974.
-
-
-LaTeX Warning: Reference `eq:sos-observer-convex-formulation' on page 84 undefined on input line 2985.
-
-
-LaTeX Warning: Reference `eq:sos-observer-nonconvex' on page 84 undefined on input line 2989.
-
-
-LaTeX Warning: Reference `eq:sos-observer-convex-formulation' on page 84 undefined on input line 3008.
-
 [84]
-
-LaTeX Warning: Reference `fig:sos-observer-pendulum-simulation' on page 85 undefined on input line 3026.
-
-
-LaTeX Warning: Reference `eq:sos-observer-convex-formulation' on page 85 undefined on input line 3028.
-
-<images/pendulum-simulation-sos-observer.png, id=871, 1023.825pt x 1324.95pt>
+<images/pendulum-simulation-sos-observer.png, id=1272, 1023.825pt x 1324.95pt>
 File: images/pendulum-simulation-sos-observer.png Graphic file (type png)
 <use images/pendulum-simulation-sos-observer.png>
 Package pdftex.def Info: images/pendulum-simulation-sos-observer.png  used on input line 3032.
 (pdftex.def)             Requested size: 275.99902pt x 357.1752pt.
-[85 <./images/pendulum-simulation-sos-observer.png>]
-
-LaTeX Warning: Reference `exm:pendulumLuenberger' on page 86 undefined on input line 3049.
-
-[86]
+ [85 <./images/pendulum-simulation-sos-observer.png>] [86]
 Chapter 7.
-
-LaTeX Warning: Reference `feedbacklinearization' on page 87 undefined on input line 3111.
-
-
-LaTeX Warning: Reference `slidingcontrol' on page 87 undefined on input line 3111.
-
-
-LaTeX Warning: Reference `lem:adaptivecontrolbasic' on page 87 undefined on input line 3113.
-
-
-LaTeX Warning: Reference `stability' on page 87 undefined on input line 3115.
-
 [87
 
-]
-
-LaTeX Warning: Reference `eq:acbasiclemmaephi' on page 88 undefined on input line 3137.
-
-
-LaTeX Warning: Reference `lem:KalmanYakubovich' on page 88 undefined on input line 3142.
-
-
-LaTeX Warning: Reference `eq:acbasiclemmastatespace' on page 88 undefined on input line 3150.
-
-
-LaTeX Warning: Reference `eq:acbasiclemmaphilaw' on page 88 undefined on input line 3150.
-
-
-LaTeX Warning: Reference `eq:acbasiclemmastatespace' on page 88 undefined on input line 3159.
-
-
-LaTeX Warning: Reference `thm:BarbalatStability' on page 88 undefined on input line 3159.
-
-[88]
-
-LaTeX Warning: Reference `eq:ac-first-linear' on page 89 undefined on input line 3190.
-
-
-LaTeX Warning: Reference `eq:ac-first-linear-control' on page 89 undefined on input line 3190.
-
-
-LaTeX Warning: Reference `eq:ac-first-linear-control' on page 89 undefined on input line 3195.
-
-
-LaTeX Warning: Reference `eq:ac-first-linear-desired' on page 89 undefined on input line 3200.
-
-
-LaTeX Warning: Reference `eq:ac-first-linear-optimal-gain' on page 89 undefined on input line 3211.
-
-
-LaTeX Warning: Reference `eq:ac-first-linear-error-dynamics' on page 89 undefined on input line 3211.
-
-
-LaTeX Warning: Reference `eq:acbasiclemmaephi' on page 89 undefined on input line 3219.
-
-
-LaTeX Warning: Reference `eq:ac-first-linear-control' on page 89 undefined on input line 3225.
-
-
-LaTeX Warning: Reference `eq:ac-first-linear-adaptation-law' on page 89 undefined on input line 3225.
-
-
-LaTeX Warning: Reference `lem:adaptivecontrolbasic' on page 89 undefined on input line 3225.
-
-[89]
-
-LaTeX Warning: Reference `eq:ac-first-linear-desired' on page 90 undefined on input line 3234.
-
-
-LaTeX Warning: Reference `eq:ac-first-linear-error-dynamics' on page 90 undefined on input line 3234.
-
-
-LaTeX Warning: Reference `thm:BarbalatStability' on page 90 undefined on input line 3234.
-
-
-LaTeX Warning: Reference `eq:ac-first-linear-adaptation-law' on page 90 undefined on input line 3236.
-
-
-LaTeX Warning: Reference `eq:ac-first-linear-control' on page 90 undefined on input line 3238.
-
-
-LaTeX Warning: Reference `eq:ac-first-linear-adaptation-law' on page 90 undefined on input line 3238.
-
-
-LaTeX Warning: Reference `eq:ac-first-linear-control' on page 90 undefined on input line 3238.
-
-
-LaTeX Warning: Reference `eq:ac-first-linear-optimal-gain' on page 90 undefined on input line 3238.
-
-
-LaTeX Warning: Reference `eq:ac-first-linear-error-dynamics-transfer' on page 90 undefined on input line 3240.
-
-
-LaTeX Warning: Reference `eq:ac-first-linear-adaptation-law' on page 90 undefined on input line 3240.
-
-
-LaTeX Warning: Reference `eq:ac-first-linear-desired' on page 90 undefined on input line 3249.
-
-
-LaTeX Warning: Reference `eq:ac-first-linear-parameter-equation' on page 90 undefined on input line 3249.
-
-
-LaTeX Warning: Reference `eq:ac-first-linear-parameter-equation' on page 90 undefined on input line 3260.
-
-[90]
-
-LaTeX Warning: Reference `eq:ac-first-linear-persistent-excitation' on page 91 undefined on input line 3264.
-
-
-LaTeX Warning: Reference `eq:ac-singleinput-nonlinear' on page 91 undefined on input line 3287.
-
-
-LaTeX Warning: Reference `eq:ac-singleinput-nonlinear' on page 91 undefined on input line 3289.
-
-
-LaTeX Warning: Reference `slidingcontrol' on page 91 undefined on input line 3296.
-
-[91]
-
-LaTeX Warning: Reference `eq:ac-singleinput-nonlinear-equivalent' on page 92 undefined on input line 3319.
-
-
-LaTeX Warning: Reference `eq:ac-singleinput-nonlinear-control-law-knownparam' on page 92 undefined on input line 3327.
-
-
-LaTeX Warning: Reference `eq:ac-singleinput-nonlinear-control-law-unknownparam' on page 92 undefined on input line 3335.
-
-
-LaTeX Warning: Reference `eq:ac-singleinput-nonlinear-equivalent' on page 92 undefined on input line 3335.
-
-[92]
-
-LaTeX Warning: Reference `eq:ac-singleinput-nonlinear-error-dynamics' on page 93 undefined on input line 3344.
-
-
-LaTeX Warning: Reference `eq:acbasiclemmaephi' on page 93 undefined on input line 3344.
-
+] [88] [89] [90] [91] [92]
 File: images/drawme.png Graphic file (type png)
 <use images/drawme.png>
 Package pdftex.def Info: images/drawme.png  used on input line 3371.
 (pdftex.def)             Requested size: 206.995pt x 95.75067pt.
-
-LaTeX Warning: Reference `fig:planar-two-link' on page 93 undefined on input line 3379.
-
-[93]
-
-LaTeX Warning: Reference `feedbacklinearization' on page 94 undefined on input line 3414.
-
-[94]
-
-LaTeX Warning: Reference `eq:ac-mrac-manipulator-controller-knownparam' on page 95 undefined on input line 3425.
-
-
-LaTeX Warning: Reference `eq:ac-mrac-manipulator-controller-knownparam' on page 95 undefined on input line 3436.
-
-
-LaTeX Warning: Reference `eq:ac-mrac-manipulator-controller-unknownparam' on page 95 undefined on input line 3436.
-
-
-LaTeX Warning: Reference `eq:ac-mrac-manipulator-controller-knownparam' on page 95 undefined on input line 3436.
-
-
-LaTeX Warning: Reference `eq:ac-first-linear-lyapunov' on page 95 undefined on input line 3439.
-
-
-LaTeX Warning: Reference `eq:ac-singleinput-nonlinear-lyapunov' on page 95 undefined on input line 3439.
-
-[95]
-
-LaTeX Warning: Reference `eq:ac-mrac-manipulator-dynamics' on page 96 undefined on input line 3449.
-
+ [93] [94] [95]
 
 Package natbib Warning: Citation `slotine91book-applied' on page 96 undefined on input line 3453.
-
-
-LaTeX Warning: Reference `exm:planartwolinkmanipulator' on page 96 undefined on input line 3453.
-
-
-LaTeX Warning: Reference `lem:skewsymmetricmanipulator' on page 96 undefined on input line 3456.
-
-
-LaTeX Warning: Reference `eq:ac-mrac-manipulator-controller-unknownparam-lyapunov' on page 96 undefined on input line 3456.
-
-
-LaTeX Warning: Reference `eq:ac-mrac-manipulator-dynamics' on page 96 undefined on input line 3468.
-
-
-LaTeX Warning: Reference `eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative-1' on page 96 undefined on input line 3468.
-
-
-LaTeX Warning: Reference `eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative-2' on page 96 undefined on input line 3468.
-
-
-LaTeX Warning: Reference `eq:ac-mrac-manipulator-controller-unknownparam' on page 96 undefined on input line 3468.
-
-
-LaTeX Warning: Reference `eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative-3' on page 96 undefined on input line 3468.
-
-
-LaTeX Warning: Reference `eq:ac-mrac-manipulator-controller-unknownparam' on page 96 undefined on input line 3468.
-
-
-LaTeX Warning: Reference `eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative-2' on page 96 undefined on input line 3468.
-
-
-LaTeX Warning: Reference `eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative' on page 96 undefined on input line 3470.
-
-
-LaTeX Warning: Reference `thm:BarbalatStability' on page 96 undefined on input line 3480.
-
-
-LaTeX Warning: Reference `eq:ac-mrac-manipulator-controller-unknownparam-lyapunov' on page 96 undefined on input line 3484.
-
-
-LaTeX Warning: Reference `eq:ac-mrac-manipulator-controller-unknownparam' on page 96 undefined on input line 3484.
-
-
-LaTeX Warning: Reference `eq:ac-mrac-manipulator-dynamics' on page 96 undefined on input line 3484.
 
 [96] [97] [98
 
@@ -2308,70 +1036,16 @@ Package natbib Warning: Citation `teng22cdc-lie' on page 99 undefined on input l
 
 ]
 Appendix A.
-
-LaTeX Warning: Reference `eq:app-stability-ct-linear-system' on page 101 undefined on input line 3525.
-
-
-LaTeX Warning: Reference `eq:app-stability-ct-linear-system' on page 101 undefined on input line 3546.
-
-[101]
-
-LaTeX Warning: Reference `eq:app-stability-dt-linear-system' on page 102 undefined on input line 3584.
-
-[102]
-
-LaTeX Warning: Reference `eq:lyapunov-equation' on page 103 undefined on input line 3636.
-
-
-LaTeX Warning: Reference `thm:lyapunovglobalstability' on page 103 undefined on input line 3648.
-
-
-LaTeX Warning: Reference `eq:lyapunov-equation' on page 103 undefined on input line 3650.
-
-[103]
-
-LaTeX Warning: Reference `thm:lyapunovequation' on page 104 undefined on input line 3672.
-
-
-LaTeX Warning: Reference `thm:lyapunovequation' on page 104 undefined on input line 3674.
-
-
-LaTeX Warning: Reference `eq:lyapunov-equation' on page 104 undefined on input line 3674.
-
-[104]
+[101] [102] [103] [104]
 
 Package natbib Warning: Citation `chen1984book-linear' on page 105 undefined on input line 3738.
 
-
-LaTeX Warning: Reference `eq:app-linear-system' on page 105 undefined on input line 3741.
-
-
-LaTeX Warning: Reference `eq:app-linear-system' on page 105 undefined on input line 3745.
-
-
-LaTeX Warning: Reference `eq:app-linear-system' on page 105 undefined on input line 3748.
-
-[105]
-
-LaTeX Warning: Reference `eq:adjugate-1' on page 106 undefined on input line 3797.
-
-
-LaTeX Warning: Reference `eq:adjugate-2' on page 106 undefined on input line 3797.
-
-[106]
-
-LaTeX Warning: Reference `cor:cayham-1' on page 107 undefined on input line 3849.
-
-
+[105] [106]
 Overfull \hbox (2.99213pt too wide) in paragraph at lines 3849--3850
 []\T1/lmr/m/n/10 (-20) Second prove LHS $\OMS/lmsy/m/n/10 ^^U$ \T1/lmr/m/n/10 (-20) RHS. For any $\OML/lmm/m/it/10 v \OMS/lmsy/m/n/10 2 \U/msb/m/n/10 C[]$ \T1/lmr/m/n/10 (-20) such that $\OML/lmm/m/it/10 v[] [] \OT1/lmr/m/n/10 (-20) =
  []
 
 [107] [108]
-
-LaTeX Warning: Reference `cor:cayham-2' on page 109 undefined on input line 3927.
-
-
 Overfull \hbox (17.79353pt too wide) detected at line 3976
 \OML/lmm/m/it/10 I \OT1/lmr/m/n/10 = \OMS/lmsy/m/n/10 C[]C \OT1/lmr/m/n/10 = [] =[]\OMS/lmsy/m/n/10 ) []
  []
@@ -2383,29 +1057,9 @@ Package natbib Warning: Citation `chen1984book-linear' on page 110 undefined on 
 
 Package natbib Warning: Citation `zhou1996book-robust' on page 110 undefined on input line 4032.
 
-[110]
-
-LaTeX Warning: Reference `eq:app-lti-xy' on page 111 undefined on input line 4083.
-
-
-LaTeX Warning: Reference `eq:app-lti-xy' on page 111 undefined on input line 4097.
-
-[111]
-
-LaTeX Warning: Reference `cor:cayham-1' on page 112 undefined on input line 4111.
-
-
-LaTeX Warning: Reference `cor:cayham-3' on page 112 undefined on input line 4139.
-
-[112]
-
-LaTeX Warning: Reference `cor:cayham-3' on page 113 undefined on input line 4170.
-
+[110] [111] [112]
 
 Package natbib Warning: Citation `davison1968tac-poleassign' on page 113 undefined on input line 4227.
-
-
-LaTeX Warning: Reference `cor:cayham-4' on page 113 undefined on input line 4227.
 
 [113]
 Overfull \hbox (47.65298pt too wide) detected at line 4254
@@ -2413,47 +1067,16 @@ Overfull \hbox (47.65298pt too wide) detected at line 4254
  []
 
 
-LaTeX Warning: Reference `thm:lyapunovequation' on page 114 undefined on input line 4265.
-
-
-LaTeX Warning: Reference `def:lticontrollable' on page 114 undefined on input line 4271.
-
-
-LaTeX Warning: Reference `def:ltiobservable' on page 114 undefined on input line 4271.
-
-
 Package natbib Warning: Citation `chen1984book-linear' on page 114 undefined on input line 4271.
 
-[114]
-
-LaTeX Warning: Reference `eq:app-lti-xy' on page 115 undefined on input line 4287.
-
-
-LaTeX Warning: Reference `thm:lticontrollable' on page 115 undefined on input line 4309.
-
-
-LaTeX Warning: Reference `thm:lti-dual-conobs' on page 115 undefined on input line 4331.
-
-[115]
+[114] [115]
 
 Package natbib Warning: Citation `chen1984book-linear' on page 116 undefined on input line 4336.
 
 
 Package natbib Warning: Citation `zhou1996book-robust' on page 116 undefined on input line 4336.
 
-
-LaTeX Warning: Reference `thm:lticontrollable' on page 116 undefined on input line 4382.
-
-
-LaTeX Warning: Reference `thm:ltiobservable' on page 116 undefined on input line 4382.
-
 [116]
-
-LaTeX Warning: Reference `thm:lticontrollable' on page 117 undefined on input line 4400.
-
-
-LaTeX Warning: Reference `thm:ltiobservable' on page 117 undefined on input line 4400.
-
 
 Package natbib Warning: Citation `zhou1996book-robust' on page 117 undefined on input line 4424.
 
@@ -2465,12 +1088,6 @@ Underfull \hbox (badness 10000) in paragraph at lines 4456--4458
 [118]
 
 LaTeX Warning: Reference `@' on page 119 undefined on input line 4514.
-
-
-LaTeX Warning: Reference `cor:cayham-3' on page 119 undefined on input line 4516.
-
-
-LaTeX Warning: Reference `thm:lticontrollable' on page 119 undefined on input line 4516.
 
 
 Package natbib Warning: Citation `zhou1996book-robust' on page 119 undefined on input line 4542.
@@ -2499,16 +1116,20 @@ Package natbib Warning: There were undefined citations.
 
 LaTeX Warning: There were undefined references.
 
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
  ) 
 Here is how much of TeX's memory you used:
- 25180 strings out of 476025
- 463218 string characters out of 5790018
- 1878388 words of memory out of 5000000
- 43884 multiletter control sequences out of 15000+600000
- 642662 words of font info for 312 fonts, out of 8000000 for 9000
+ 25179 strings out of 476025
+ 463254 string characters out of 5790018
+ 1879388 words of memory out of 5000000
+ 43885 multiletter control sequences out of 15000+600000
+ 642534 words of font info for 310 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  83i,29n,80p,1536b,657s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/euler/eufm10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/euler/eufm7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbxi10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmmi5.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr17.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr5.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr6.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmro10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/l
+</usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/euler/eufm10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/euler/eufm7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbxi10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmmi5.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr17.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr5.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr6.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmro10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmsy5.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmsy6.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm7.pfb>
+Output written on optimal-control-estimation.pdf (131 pages, 1988784 bytes).
+PDF statistics:
+ 2295 PDF objects out of 2487 (max. 8388607)
+ 2063 compressed objects within 21 object streams
+ 860 named destinations out of 1000 (max. 500000)
+ 65898 words of extra memory for PDF output out of 74296 (max. 10000000)
+
