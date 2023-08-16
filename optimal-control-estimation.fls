@@ -1001,10 +1001,12 @@ INPUT /usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/lm/ec-lmro10.tfm
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/lm/ec-lmr17.tfm
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/lm/ec-lmbx12.tfm
-INPUT ./optimal-control-estimation.toc
-INPUT optimal-control-estimation.toc
-INPUT optimal-control-estimation.toc
+OUTPUT optimal-control-estimation.toc
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/lm/ec-lmbx10.tfm
+INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/lm/ec-lmr17.tfm
+INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/lm/ec-lmbx12.tfm
+INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/lm/ec-lmr12.tfm
+INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/lm/ec-lmbx12.tfm
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/lm/rm-lmr10.tfm
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/lm/rm-lmr7.tfm
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/lm/rm-lmr5.tfm
@@ -1020,11 +1022,6 @@ INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/amsfonts/symbols/msam5
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm7.tfm
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm5.tfm
-OUTPUT optimal-control-estimation.toc
-INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/lm/ec-lmr17.tfm
-INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/lm/ec-lmbx12.tfm
-INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/lm/ec-lmr12.tfm
-INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/lm/ec-lmbx12.tfm
 INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/lm/ts1lmr.fd
 INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/lm/ts1lmr.fd
 INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/lm/ts1lmr.fd
@@ -1039,6 +1036,7 @@ INPUT /usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/lm/ec-lmr7.tfm
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/lm/ec-lmr8.tfm
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/lm/ec-lmr6.tfm
+INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/lm/ec-lmbx8.tfm
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/lm/ec-lmbx12.tfm
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/lm/ec-lmr5.tfm
 INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/lm/t1lmtt.fd
@@ -1078,7 +1076,6 @@ INPUT ./images/vinograd.png
 INPUT images/vinograd.png
 INPUT ./images/vinograd.png
 INPUT ./images/vinograd.png
-INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/lm/ec-lmbx8.tfm
 INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/amsfonts/ueuf.fd
 INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/amsfonts/ueuf.fd
 INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/amsfonts/ueuf.fd

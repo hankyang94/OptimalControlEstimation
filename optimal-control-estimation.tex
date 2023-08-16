@@ -1314,7 +1314,7 @@ From \eqref{eq:adjoint-equation-p0}, we know \(p_0(t)\) is a constant.
 u^\star = \arg\min_{u \in \mathbb{U}} H(x^\star,u,p) = \arg\min_{u \in \mathbb{U}} g(x^\star,u) + p^T f(x^\star,u)
 \label{eq:pmp-solve-u-from-H}
 \end{equation}
-can be solved analytically so that \(u^\star\) becomes a function of \(x^\star\) and \(p\). For example, this is possible when problem \eqref{eq:pmp-solve-u-from-H} is a convex problem, for which one can invoke the KKT optimality conditions (cf.~Appendix @ref(appconvex-theory-kkt\})). Once \(u^\star(t)\) is expressed as a function of \(x^\star(t)\) and \(p(t)\), we can merge the system equation \eqref{eq:pmp-optimal-system-dynamics} and the adjoint equation \eqref{eq:adjoint-equation-p} together and arrive at
+can be solved analytically so that \(u^\star\) becomes a function of \(x^\star\) and \(p\). For example, this is possible when problem \eqref{eq:pmp-solve-u-from-H} is a convex problem, for which one can invoke the KKT optimality conditions (cf.~Appendix \ref{appconvex-theory-kkt}). Once \(u^\star(t)\) is expressed as a function of \(x^\star(t)\) and \(p(t)\), we can merge the system equation \eqref{eq:pmp-optimal-system-dynamics} and the adjoint equation \eqref{eq:adjoint-equation-p} together and arrive at
 \[
 \begin{cases}
 \dot{x}^\star(t) = f(x^\star(t), u^\star(t)) \\
