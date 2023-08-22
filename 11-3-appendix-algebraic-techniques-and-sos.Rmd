@@ -12,6 +12,7 @@
 :::
 :::
 
+
 ::: {.definitionbox}
 ::: {.definition #affinevariety name="Affine Variety"}
   Let $f_1,\cdots,f_s\in\mathbb{R}[x_1,\cdots,x_n]$, we set $$V(f_1,\cdots,f_s) = \{(a_1,\cdots,a_n)\in\mathbb{R}^n|f_i(a_1,\cdots a_n)=0 \quad \forall i\leq i\leq s\}$$ We call $V(f_1,\cdots,f_s)$ the **affine variety** defined bt $f_1,\cdots,f_s$
@@ -29,7 +30,7 @@
 
 ::: {.definitionbox}
 ::: {.definition #sosquadpreorder name="Sum of squares,Quadratic Module and Preordering"}
-
+	Sum of squares
 :::
 :::
 
