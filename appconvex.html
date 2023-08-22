@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-08-16" />
+<meta name="date" content="2023-08-22" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -54,6 +54,70 @@
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 
 
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
 
 <style type="text/css">
   
@@ -204,10 +268,27 @@ div.csl-indent {
 <li class="chapter" data-level="B.1.3" data-path="appconvex.html"><a href="appconvex.html#lagrange-dual"><i class="fa fa-check"></i><b>B.1.3</b> Lagrange dual</a></li>
 <li class="chapter" data-level="B.1.4" data-path="appconvex.html"><a href="appconvex.html#appconvex-theory-kkt"><i class="fa fa-check"></i><b>B.1.4</b> KKT condition</a></li>
 </ul></li>
+<li class="chapter" data-level="B.2" data-path="appconvex.html"><a href="appconvex.html#practice"><i class="fa fa-check"></i><b>B.2</b> Practice</a>
+<ul>
+<li class="chapter" data-level="B.2.1" data-path="appconvex.html"><a href="appconvex.html#cvxpy-introduction"><i class="fa fa-check"></i><b>B.2.1</b> CVXPY Introduction</a></li>
+<li class="chapter" data-level="B.2.2" data-path="appconvex.html"><a href="appconvex.html#linear-programming-lp"><i class="fa fa-check"></i><b>B.2.2</b> Linear Programming (LP)</a></li>
+<li class="chapter" data-level="B.2.3" data-path="appconvex.html"><a href="appconvex.html#quadratic-programming-qp"><i class="fa fa-check"></i><b>B.2.3</b> Quadratic Programming (QP)</a></li>
+<li class="chapter" data-level="B.2.4" data-path="appconvex.html"><a href="appconvex.html#quadratically-constrained-quadratic-programming-qcqp"><i class="fa fa-check"></i><b>B.2.4</b> Quadratically Constrained Quadratic Programming (QCQP)</a></li>
+<li class="chapter" data-level="B.2.5" data-path="appconvex.html"><a href="appconvex.html#second-order-cone-programming-socp"><i class="fa fa-check"></i><b>B.2.5</b> Second-Order Cone Programming (SOCP)</a></li>
+<li class="chapter" data-level="B.2.6" data-path="appconvex.html"><a href="appconvex.html#semidefinite-programming-sdp"><i class="fa fa-check"></i><b>B.2.6</b> Semidefinite Programming (SDP)</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="C" data-path="the-kalman-yakubovich-lemma.html"><a href="the-kalman-yakubovich-lemma.html"><i class="fa fa-check"></i><b>C</b> The Kalman-Yakubovich Lemma</a></li>
 <li class="chapter" data-level="D" data-path="feedbacklinearization.html"><a href="feedbacklinearization.html"><i class="fa fa-check"></i><b>D</b> Feedback Linearization</a></li>
 <li class="chapter" data-level="E" data-path="slidingcontrol.html"><a href="slidingcontrol.html"><i class="fa fa-check"></i><b>E</b> Sliding Control</a></li>
+<li class="chapter" data-level="F" data-path="algebraic-techniques-and-sum-of-squares.html"><a href="algebraic-techniques-and-sum-of-squares.html"><i class="fa fa-check"></i><b>F</b> Algebraic Techniques and Sum-of-Squares</a>
+<ul>
+<li class="chapter" data-level="F.1" data-path="algebraic-techniques-and-sum-of-squares.html"><a href="algebraic-techniques-and-sum-of-squares.html#algebra"><i class="fa fa-check"></i><b>F.1</b> Algebra</a>
+<ul>
+<li class="chapter" data-level="F.1.1" data-path="algebraic-techniques-and-sum-of-squares.html"><a href="algebraic-techniques-and-sum-of-squares.html#polynomials"><i class="fa fa-check"></i><b>F.1.1</b> Polynomials</a></li>
+<li class="chapter" data-level="F.1.2" data-path="algebraic-techniques-and-sum-of-squares.html"><a href="algebraic-techniques-and-sum-of-squares.html#representation-of-nonnegative-polynomial-univariate-case"><i class="fa fa-check"></i><b>F.1.2</b> Representation of nonnegative polynomial: Univariate case</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -406,7 +487,7 @@ This is a convex optimization problem.</p>
   \textrm{s.t.} \quad &amp; f_i(x)\leq 0\quad i=1...,m\\
     &amp; Ax=b   \\
   \end{aligned}
-  \end{equation}\]</span>
+\end{equation}\]</span>
 if it is strictly feasible, i.e.
 <span class="math display">\[\exists x\in\textbf{relint}\mathcal{D}:\quad f_i(x)&lt;0,\quad i=1...m,\quad Ax=b\]</span>
 And the linear inequalities do not need to hold with strict inequality.</p>
@@ -415,7 +496,462 @@ And the linear inequalities do not need to hold with strict inequality.</p>
 </div>
 <div id="appconvex-theory-kkt" class="section level3 hasAnchor" number="10.1.4">
 <h3><span class="header-section-number">B.1.4</span> KKT condition<a href="appconvex.html#appconvex-theory-kkt" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>KKT conditions.</p>
+<p>Note that if strong duality holds, denote <span class="math inline">\(x^*\)</span> to be primal optimal, and <span class="math inline">\((\lambda^*,\nu^*)\)</span> to be dual optimal. Then:</p>
+<p><span class="math display">\[\begin{equation}
+  \begin{aligned}
+  f_0(x^*) = g(\lambda^*,\nu^*) = &amp; \inf_x(f_0(x)+\sum_{i=1}^m\lambda_i^*f_i(x)+\sum_{i=1}^p\nu_i^*h_i(x))\\
+\leq &amp; f_0(x^*)+\sum_{i=1}^m\lambda_i^*f_i(x)+\sum_{i=1}^p\nu_i^*h_i(x)\\
+\leq &amp; f_0(x^*)\\
+  \end{aligned}
+  \end{equation}\]</span></p>
+<p>from this, combining <span class="math inline">\(\lambda^*\geq 0\)</span> and <span class="math inline">\(f_i(x^*)\leq 0\)</span>, we can know that: <span class="math inline">\(\lambda_i^*f_i(x^*)=0\quad i=1\cdots m\)</span>. This means for <span class="math inline">\(\lambda_i^*\)</span> and <span class="math inline">\(f_i(x^*)\)</span>, one of them must be zero, which is known as complementary slackness).</p>
+<p>Thus we arrived at the following four conditions, which are called KKT conditions.</p>
+<div class="theorembox">
+<div class="theorem">
+<p><span id="thm:KKT" class="theorem"><strong>Theorem B.2  (Karush-Kuhn-Tucker(KKT) Conditions) </strong></span>The following four conditions are called KKT conditions (for a problem with differentiable <span class="math inline">\(f_i,h_i\)</span>)</p>
+<ol style="list-style-type: decimal">
+<li>Primal feasible: <span class="math inline">\(f_i(x) \leq 0,i,\cdots ,m,\ h_i(x) = 0,i=1,\cdots ,p\)</span></li>
+<li>Dual feasible: <span class="math inline">\(\lambda\succeq0\)</span></li>
+<li>Complementary slackness: <span class="math inline">\(\lambda_if_i(x)=0,i=1,\cdots,m\)</span></li>
+<li>Gradient of Lagrangian with respect to <span class="math inline">\(x\)</span> vanishes:<span class="math inline">\(\nabla f_0(x)+\sum_{i=1}^m\lambda_i\nabla f_i(x)+\sum_{i=1}^p\nu_i\nabla h_i(x) = 0\)</span></li>
+</ol>
+</div>
+</div>
+<p>From the discussion above, we know that if strong duality holds and <span class="math inline">\(x,\lambda,\nu\)</span> are optimal, then they must satisfy the KKT conditions.</p>
+<p>Also if <span class="math inline">\(x,\lambda,\nu\)</span> satisfy KKT for a convex problem, then they are optimal. However, the converse is not generally true, since KKT condition implies strong duality. If Slater’s condition is satisfied, then <span class="math inline">\(x\)</span> is optimal if and only if there exist <span class="math inline">\(\lambda,\nu\)</span> that satisfy KKT conditions. Sometimes, by solving the KKT system, we can derive the closed-form solution of a optimization directly. Also, sometimes we will use the residual of the KKT system as the termination condition.</p>
+<p>In general, <span class="math inline">\(f_i,h_i\)</span> may not be differentiable. There are also KKT conditions for them, which will include knowledge of subdifferential and will not be included here.</p>
+</div>
+</div>
+<div id="practice" class="section level2 hasAnchor" number="10.2">
+<h2><span class="header-section-number">B.2</span> Practice<a href="appconvex.html#practice" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="cvxpy-introduction" class="section level3 hasAnchor" number="10.2.1">
+<h3><span class="header-section-number">B.2.1</span> CVXPY Introduction<a href="appconvex.html#cvxpy-introduction" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>In the last section, we have learned basic concepts and theorems in convex optimization. In this section, on the other hand, we will introduce you how to model basic convex optimization problems with CVXPY, an easy-to-use Python package. To install CVXPY, please refer to this <a href="https://www.cvxpy.org/install/index.html">page</a>. To define and solve a convex optimization problem in CVXPY, there are three steps (apart from importing necessary packages):</p>
+<ul>
+<li><p>Step 1: Define parameters and variables in a certain type of convex problem. Here variables are what you are trying to optimize or “learn”. Parameters are the “coefficients” of variables in the objective and constraints.</p></li>
+<li><p>Step 2: Define the objective function and constraints.</p></li>
+<li><p>Step 3: Solve the problem and get the results.</p></li>
+</ul>
+<p>Throughout this section, we will study five types of convex optimization problems: linear programming (LP), quadratic programming (QP), (convex) quadratically constrained quadratic programming (QCQP), second-order cone programming (SOCP), and semidefinite programming (SDP). Given two types of optimization problems <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>, we say <span class="math inline">\(A &lt; B\)</span> if <span class="math inline">\(A\)</span> can always be converted to <span class="math inline">\(B\)</span> while the inverse is not true. Under this notation, we have
+<span class="math display">\[\begin{equation*}
+   \text{LP} &lt; \text{QP} &lt; \text{QCQP} &lt; \text{SOCP} &lt; \text{SDP}
+\end{equation*}\]</span></p>
+</div>
+<div id="linear-programming-lp" class="section level3 hasAnchor" number="10.2.2">
+<h3><span class="header-section-number">B.2.2</span> Linear Programming (LP)<a href="appconvex.html#linear-programming-lp" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><strong>Definition.</strong> An LP has the following form:
+<span class="math display" id="eq:app-lpdef">\[\begin{equation}
+   \tag{B.1}
+   \begin{aligned}
+      \min_{x \in \mathbb{R}^n} &amp; \ c^T x \\
+      \text{subject to } &amp; A x \le b  
+   \end{aligned}
+\end{equation}\]</span>
+where <span class="math inline">\(x\)</span> is the variable, <span class="math inline">\(A \in \mathbb{R}^{m\times n}, b \in \mathbb{R}^m\)</span>, and <span class="math inline">\(c \in \mathbb{R}^n\)</span> are the parameters. Note that the constraint <span class="math inline">\(A x \le b\)</span> already incorporates linear equality constraints. To see this, consider the constraint <span class="math inline">\(A&#39; x = b&#39;\)</span>, we can reformulate it as <span class="math inline">\(A x \le b\)</span> by
+<span class="math display">\[\begin{equation*}
+   \begin{bmatrix}
+      A&#39; \\ -A&#39;
+   \end{bmatrix} x \le \begin{bmatrix}
+      b&#39; \\ -b&#39;
+   \end{bmatrix}
+\end{equation*}\]</span></p>
+<p><strong>Example.</strong> Consider the problem of minimizing a linear function <span class="math inline">\(c_1 x_1 + c_2 x_2\)</span> over a rectangle <span class="math inline">\([-l_1, l_1] \times [-l_2, l_2]\)</span>. We can convert it to the standard LP form in <a href="appconvex.html#eq:app-lpdef">(B.1)</a> by simply setting <span class="math inline">\(c\)</span> as <span class="math inline">\([c_1, \ c_2]^T\)</span> and the linear inequality constraint as
+<span class="math display">\[\begin{equation*}
+   \begin{bmatrix}
+      1 &amp; 0 \\ -1 &amp; 0 \\ 0 &amp; 1 \\ 0 &amp; -1
+   \end{bmatrix} \begin{bmatrix}
+      x_1 \\ x_2
+   \end{bmatrix} \le \begin{bmatrix}
+      l_1 \\ l_1 \\ l_2 \\ l_2
+   \end{bmatrix}
+\end{equation*}\]</span></p>
+<p>Corresponding CVXPY codes are shown below:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="appconvex.html#cb1-1" tabindex="-1"></a><span class="im">import</span> cvxpy <span class="im">as</span> cp</span>
+<span id="cb1-2"><a href="appconvex.html#cb1-2" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="appconvex.html#cb1-3" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="appconvex.html#cb1-4" tabindex="-1"></a><span class="co">## Define the LP example setting</span></span>
+<span id="cb1-5"><a href="appconvex.html#cb1-5" tabindex="-1"></a>c1 <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb1-6"><a href="appconvex.html#cb1-6" tabindex="-1"></a>c2 <span class="op">=</span> <span class="op">-</span><span class="dv">5</span></span>
+<span id="cb1-7"><a href="appconvex.html#cb1-7" tabindex="-1"></a>l1 <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb1-8"><a href="appconvex.html#cb1-8" tabindex="-1"></a>l2 <span class="op">=</span> <span class="dv">7</span></span>
+<span id="cb1-9"><a href="appconvex.html#cb1-9" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="appconvex.html#cb1-10" tabindex="-1"></a><span class="co">## Step 1: define variables and parameters</span></span>
+<span id="cb1-11"><a href="appconvex.html#cb1-11" tabindex="-1"></a>x <span class="op">=</span> cp.Variable(<span class="dv">2</span>) <span class="co"># variable: x = [x1, x2]^T</span></span>
+<span id="cb1-12"><a href="appconvex.html#cb1-12" tabindex="-1"></a><span class="co"># parameters: c, A, b</span></span>
+<span id="cb1-13"><a href="appconvex.html#cb1-13" tabindex="-1"></a>c <span class="op">=</span> np.array([c1, c2]) </span>
+<span id="cb1-14"><a href="appconvex.html#cb1-14" tabindex="-1"></a>A <span class="op">=</span> np.array([[<span class="dv">1</span>, <span class="dv">0</span>], [<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">1</span>], [<span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span>]])</span>
+<span id="cb1-15"><a href="appconvex.html#cb1-15" tabindex="-1"></a>b <span class="op">=</span> np.array([l1, l1, l2, l2])</span>
+<span id="cb1-16"><a href="appconvex.html#cb1-16" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="appconvex.html#cb1-17" tabindex="-1"></a><span class="co">## Step 2: define objective and constraints</span></span>
+<span id="cb1-18"><a href="appconvex.html#cb1-18" tabindex="-1"></a>obj <span class="op">=</span> cp.Minimize(c.T <span class="op">@</span> x)</span>
+<span id="cb1-19"><a href="appconvex.html#cb1-19" tabindex="-1"></a>constraints <span class="op">=</span> [A <span class="op">@</span> x <span class="op">&lt;=</span> b]</span>
+<span id="cb1-20"><a href="appconvex.html#cb1-20" tabindex="-1"></a>prob <span class="op">=</span> cp.Problem(obj, constraints) <span class="co"># form the problem</span></span>
+<span id="cb1-21"><a href="appconvex.html#cb1-21" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="appconvex.html#cb1-22" tabindex="-1"></a><span class="co">## Step 3: solve problem and get results</span></span>
+<span id="cb1-23"><a href="appconvex.html#cb1-23" tabindex="-1"></a>prob.solve()  </span>
+<span id="cb1-24"><a href="appconvex.html#cb1-24" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;status: &quot;</span>, prob.status) <span class="co"># check whether the status is &quot;optimal&quot;</span></span>
+<span id="cb1-25"><a href="appconvex.html#cb1-25" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;optimal value: &quot;</span>, prob.value) <span class="co"># optimal objective</span></span>
+<span id="cb1-26"><a href="appconvex.html#cb1-26" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;optimal solution: &quot;</span>, x.value) <span class="co"># optimal x</span></span></code></pre></div>
+</div>
+<div id="quadratic-programming-qp" class="section level3 hasAnchor" number="10.2.3">
+<h3><span class="header-section-number">B.2.3</span> Quadratic Programming (QP)<a href="appconvex.html#quadratic-programming-qp" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><strong>Definition.</strong> A QP has the following form:
+<span class="math display" id="eq:app-qpdef">\[\begin{align}
+   \tag{B.2}
+   \min_{x \in \mathbb{R}^n} \ &amp; \frac{1}{2} x^T P x + q^T x \\
+   \text{subject to } &amp; Gx \le h \\
+   &amp; Ax = b
+\end{align}\]</span>
+where <span class="math inline">\(P \in \mathcal{S}_+^n, q\in \mathbb{R}^n, G \in \mathbb{R}^{m \times n}, h\in \mathbb{R}^m, A \in \mathbb{R}^{p \times n}, b \in \mathbb{R}^p\)</span>. Here <span class="math inline">\(\mathcal{S}_+^n\)</span> denotes the set of positive semidefinite matrices of size <span class="math inline">\(n\times n\)</span>. Obviously, if we set <span class="math inline">\(P\)</span> as zero, QP will degenerate to LP.</p>
+<p><strong>Example.</strong> Consider the problem of minimizing a quadratic function
+<span class="math display">\[\begin{equation*}
+   f(x_1, x_2) = p_1 x_1^2 + 2p_2 x_1 x_2 + p_3 x_2^2 + q_1 x_1 + q_2 x_2
+\end{equation*}\]</span>
+over a rectangle <span class="math inline">\([-l_1, l_1] \times [-l_2, l_2]\)</span>. Since <span class="math inline">\(P = 2 \begin{bmatrix}  p_1 &amp; p_2 \\ p_2 &amp; p_3 \end{bmatrix} \succeq 0\)</span>, the following two conditions must hold:
+<span class="math display">\[\begin{equation*}
+   \begin{cases}
+      p_1 \ge 0 \\
+      p_1 p_3 - 4 p_2^2 \ge 0
+   \end{cases}
+\end{equation*}\]</span>
+Same as in the LP example, <span class="math inline">\(G\)</span> and <span class="math inline">\(h\)</span> can be expressed as:
+<span class="math display">\[\begin{equation*}
+   \begin{bmatrix}
+      1 &amp; 0 \\ -1 &amp; 0 \\ 0 &amp; 1 \\ 0 &amp; -1
+   \end{bmatrix} \begin{bmatrix}
+      x_1 \\ x_2
+   \end{bmatrix} \le \begin{bmatrix}
+      l_1 \\ l_1 \\ l_2 \\ l_2
+   \end{bmatrix}
+\end{equation*}\]</span></p>
+<p>Corresponding CVXPY codes are shown below:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="appconvex.html#cb2-1" tabindex="-1"></a><span class="im">import</span> cvxpy <span class="im">as</span> cp</span>
+<span id="cb2-2"><a href="appconvex.html#cb2-2" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb2-3"><a href="appconvex.html#cb2-3" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="appconvex.html#cb2-4" tabindex="-1"></a><span class="co">## Define the LP example setting</span></span>
+<span id="cb2-5"><a href="appconvex.html#cb2-5" tabindex="-1"></a>p1 <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb2-6"><a href="appconvex.html#cb2-6" tabindex="-1"></a>p2 <span class="op">=</span> <span class="fl">0.5</span></span>
+<span id="cb2-7"><a href="appconvex.html#cb2-7" tabindex="-1"></a>p3 <span class="op">=</span> <span class="dv">4</span></span>
+<span id="cb2-8"><a href="appconvex.html#cb2-8" tabindex="-1"></a>q1 <span class="op">=</span> <span class="op">-</span><span class="dv">3</span></span>
+<span id="cb2-9"><a href="appconvex.html#cb2-9" tabindex="-1"></a>q2 <span class="op">=</span> <span class="op">-</span><span class="fl">6.5</span></span>
+<span id="cb2-10"><a href="appconvex.html#cb2-10" tabindex="-1"></a>l1 <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb2-11"><a href="appconvex.html#cb2-11" tabindex="-1"></a>l2 <span class="op">=</span> <span class="fl">2.5</span></span>
+<span id="cb2-12"><a href="appconvex.html#cb2-12" tabindex="-1"></a><span class="co"># check if the generated P is positive semidefinite</span></span>
+<span id="cb2-13"><a href="appconvex.html#cb2-13" tabindex="-1"></a>tmp1 <span class="op">=</span> (p1 <span class="op">&gt;=</span> <span class="dv">0</span>)</span>
+<span id="cb2-14"><a href="appconvex.html#cb2-14" tabindex="-1"></a>tmp2 <span class="op">=</span> (p1<span class="op">*</span>p3 <span class="op">-</span> <span class="dv">4</span><span class="op">*</span>p2<span class="op">**</span><span class="dv">2</span> <span class="op">&gt;=</span> <span class="dv">0</span>)</span>
+<span id="cb2-15"><a href="appconvex.html#cb2-15" tabindex="-1"></a><span class="cf">assert</span>(tmp1 <span class="kw">and</span> tmp2, <span class="st">&quot;P is not positve semidefinite!&quot;</span>)</span>
+<span id="cb2-16"><a href="appconvex.html#cb2-16" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="appconvex.html#cb2-17" tabindex="-1"></a><span class="co">## Step 1: define variables and parameters</span></span>
+<span id="cb2-18"><a href="appconvex.html#cb2-18" tabindex="-1"></a>x <span class="op">=</span> cp.Variable(<span class="dv">2</span>) <span class="co"># variable: x = [x1, x2]^T</span></span>
+<span id="cb2-19"><a href="appconvex.html#cb2-19" tabindex="-1"></a><span class="co"># parameters: P, q, G, h</span></span>
+<span id="cb2-20"><a href="appconvex.html#cb2-20" tabindex="-1"></a>P <span class="op">=</span> <span class="dv">2</span><span class="op">*</span>np.array([[p1, p2], [p2, p3]])</span>
+<span id="cb2-21"><a href="appconvex.html#cb2-21" tabindex="-1"></a>q <span class="op">=</span> np.array([q1, q2]) </span>
+<span id="cb2-22"><a href="appconvex.html#cb2-22" tabindex="-1"></a>G <span class="op">=</span> np.array([[<span class="dv">1</span>, <span class="dv">0</span>], [<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">1</span>], [<span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span>]])</span>
+<span id="cb2-23"><a href="appconvex.html#cb2-23" tabindex="-1"></a>h <span class="op">=</span> np.array([l1, l1, l2, l2])</span>
+<span id="cb2-24"><a href="appconvex.html#cb2-24" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="appconvex.html#cb2-25" tabindex="-1"></a><span class="co">## Step 2: define the objective and constraints</span></span>
+<span id="cb2-26"><a href="appconvex.html#cb2-26" tabindex="-1"></a>fx <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> cp.quad_form(x, P) <span class="op">+</span> q.T <span class="op">@</span> x</span>
+<span id="cb2-27"><a href="appconvex.html#cb2-27" tabindex="-1"></a>obj <span class="op">=</span> cp.Minimize(fx)</span>
+<span id="cb2-28"><a href="appconvex.html#cb2-28" tabindex="-1"></a>constraints <span class="op">=</span> [G <span class="op">@</span> x <span class="op">&lt;=</span> h]</span>
+<span id="cb2-29"><a href="appconvex.html#cb2-29" tabindex="-1"></a>prob <span class="op">=</span> cp.Problem(obj, constraints) <span class="co"># form the problem</span></span>
+<span id="cb2-30"><a href="appconvex.html#cb2-30" tabindex="-1"></a></span>
+<span id="cb2-31"><a href="appconvex.html#cb2-31" tabindex="-1"></a><span class="co">## Step 3: solve the problem and get results</span></span>
+<span id="cb2-32"><a href="appconvex.html#cb2-32" tabindex="-1"></a>prob.solve()  </span>
+<span id="cb2-33"><a href="appconvex.html#cb2-33" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;status: &quot;</span>, prob.status) <span class="co"># check whether the status is &quot;optimal&quot;</span></span>
+<span id="cb2-34"><a href="appconvex.html#cb2-34" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;optimal value: &quot;</span>, prob.value) <span class="co"># optimal objective</span></span>
+<span id="cb2-35"><a href="appconvex.html#cb2-35" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;optimal solution: &quot;</span>, x.value) <span class="co"># optimal x</span></span></code></pre></div>
+</div>
+<div id="quadratically-constrained-quadratic-programming-qcqp" class="section level3 hasAnchor" number="10.2.4">
+<h3><span class="header-section-number">B.2.4</span> Quadratically Constrained Quadratic Programming (QCQP)<a href="appconvex.html#quadratically-constrained-quadratic-programming-qcqp" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><strong>Definition.</strong> An (convex) QCQP has the following form:
+<span class="math display" id="eq:app-qcqpdef">\[\begin{align}
+   \tag{B.3}
+   \min_{x \in \mathbb{R}^n} \ &amp; \frac{1}{2} x^T P_0 x + q_0^T x \\
+   \text{subject to } &amp; \frac{1}{2} x^T P_i x + q_i^T x + r_i \le 0, \ i = 1 \dots m \\
+   &amp; Ax = b
+\end{align}\]</span>
+where <span class="math inline">\(P_i \in \mathcal{S}_+^n, i = 0 \dots m\)</span>, <span class="math inline">\(q_i \in \mathbb{R}^n, i = 0 \dots m\)</span>, <span class="math inline">\(A \in \mathbb{R}^{p \times n}\)</span>, and <span class="math inline">\(b \in \mathbb{R}^p\)</span>. Note that in other literature, you may find a more general form of QCQP: they don’t require <span class="math inline">\(P_i\)</span>’s to be positive semidefinite. Yet in this case, the problem is non-convex and beyond our scope.</p>
+<p><strong>Example.</strong> We study the problem of getting the minimum distance between two ellipses. By convention, when the ellipses overlap, we set the minimum distance as <span class="math inline">\(0\)</span>. This problem can be exactly solved by (convex) QCQP.
+Consider two ellipses of the following form:
+<span class="math display">\[\begin{equation*}
+   \begin{cases}
+      \frac{1}{2} \begin{bmatrix} y_1 \\ z_1 \end{bmatrix}^T K_1 \begin{bmatrix} y_1 \\ z_1 \end{bmatrix}
+      + k_1^T \begin{bmatrix} y_1 \\ z_1 \end{bmatrix} + c_1 \le 0 \\
+      \frac{1}{2} \begin{bmatrix} y_2 \\ z_2 \end{bmatrix}^T K_2 \begin{bmatrix} y_2 \\ z_2 \end{bmatrix}
+      + k_2^T \begin{bmatrix} y_2 \\ z_2 \end{bmatrix} + c_2 \le 0 \\
+   \end{cases}
+\end{equation*}\]</span>
+where <span class="math inline">\([y_1, z_1]^T\)</span> and <span class="math inline">\([y_2, z_2]^T\)</span> are arbitrary points inside the two ellipses respectively. Also, two ensure the ellipses are well defined, we should enforce the following properties in <span class="math inline">\((K_i, k_i, c_i), i = 1, 2\)</span>: (1) <span class="math inline">\(K_i \succ 0\)</span>; (2) Let <span class="math inline">\(K_i = L_i L_i^T\)</span> be the Cholesky decomposition of <span class="math inline">\(K_i\)</span>. Then, ellipse <span class="math inline">\(i\)</span> can be rewritten as:
+<span class="math display">\[\begin{equation*}
+   \frac{1}{2} \parallel L_i^T \begin{bmatrix} y_i \\ z_i \end{bmatrix} - L_i^{-1} k_i \parallel^2 \le
+   \frac{1}{2} \parallel L_i^{-1} k_i \parallel^2 - c_i
+\end{equation*}\]</span>
+Thus,
+<span class="math display">\[\begin{equation*}
+   \frac{1}{2} \parallel L_i^{-1} k_i \parallel^2 - c_i &gt; 0
+\end{equation*}\]</span>
+With these two assumptions, we want to minimize:
+<span class="math display">\[\begin{equation*}
+   \frac{1}{2} (y_1 - y_2)^2 + (z_1 - z_2)^2
+\end{equation*}\]</span></p>
+<p>Now, we construct <span class="math inline">\(P, q, r\)</span>’s in QCQP with the above parameters. Define the variable <span class="math inline">\(x\)</span> as <span class="math inline">\([y_1, z_1, y_2, z_2]\)</span>.</p>
+<ol style="list-style-type: decimal">
+<li><p><span class="math inline">\(P_0\)</span> can be obtained from:
+<span class="math display">\[\begin{equation*}
+   \frac{1}{2} (y_1 - y_2)^2 + (z_1 - z_2)^2 = \frac{1}{2} \begin{bmatrix}
+  y_1 \\ z_1 \\ y_2 \\ z_2
+   \end{bmatrix}^T \begin{bmatrix}
+  1 &amp; 0 &amp; -1 &amp; 0 \\ 0 &amp; 1 &amp; 0 &amp; -1 \\ -1 &amp; 0 &amp; 1 &amp; 0 \\ 0 &amp; -1 &amp; 0 &amp; 1
+   \end{bmatrix} \begin{bmatrix}
+  y_1 \\ z_1 \\ y_2 \\ z_2
+   \end{bmatrix}
+\end{equation*}\]</span></p></li>
+<li><p><span class="math inline">\(P_1, q_1, r_1\)</span> can be obtained from:
+<span class="math display">\[\begin{equation*}
+   \frac{1}{2} \begin{bmatrix} y_1 \\ z_1 \end{bmatrix}^T K_1 \begin{bmatrix} y_1 \\ z_1 \end{bmatrix}
+  + k_1^T \begin{bmatrix} y_1 \\ z_1 \end{bmatrix} + c_1
+   = \frac{1}{2} x^T \begin{bmatrix}
+  K_1 &amp; O \\ O &amp; O
+   \end{bmatrix} + \begin{bmatrix}
+  k_1 \\ O
+   \end{bmatrix}^T x + c_1 \le 0
+\end{equation*}\]</span></p></li>
+<li><p><span class="math inline">\(P_2, q_2, r_2\)</span> can be obtained from:
+<span class="math display">\[\begin{equation*}
+   \frac{1}{2} \begin{bmatrix} y_2 \\ z_2 \end{bmatrix}^T K_2 \begin{bmatrix} y_2 \\ z_2 \end{bmatrix}
+  + k_2^T \begin{bmatrix} y_2 \\ z_2 \end{bmatrix} + c_2
+   = \frac{1}{2} x^T \begin{bmatrix}
+  O &amp; O \\ O &amp; K_2
+   \end{bmatrix} + \begin{bmatrix}
+  O \\ k_2
+   \end{bmatrix}^T x + c_2 \le 0
+\end{equation*}\]</span></p></li>
+</ol>
+<p>The corresponding codes are shown below. In this example, we test the minimum distance between a circle <span class="math inline">\(y_1^2 + z_1^2 \le 1\)</span> and another circle <span class="math inline">\((y_2 - 2)^2 + (z_2 - 2)^2 \le 1\)</span>. You can check whether the result from QCQP aligns with your manual calculation.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="appconvex.html#cb3-1" tabindex="-1"></a><span class="im">import</span> cvxpy <span class="im">as</span> cp</span>
+<span id="cb3-2"><a href="appconvex.html#cb3-2" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb3-3"><a href="appconvex.html#cb3-3" tabindex="-1"></a><span class="im">from</span> numpy.linalg <span class="im">import</span> cholesky, inv, norm</span>
+<span id="cb3-4"><a href="appconvex.html#cb3-4" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="appconvex.html#cb3-5" tabindex="-1"></a><span class="co">## Define the QCQP example setting</span></span>
+<span id="cb3-6"><a href="appconvex.html#cb3-6" tabindex="-1"></a><span class="kw">def</span> if_ellipse(K, k, c):</span>
+<span id="cb3-7"><a href="appconvex.html#cb3-7" tabindex="-1"></a>    <span class="co"># examine whether 0.5*x^T K x + k^T x + c &lt;= 0 is a ellipse</span></span>
+<span id="cb3-8"><a href="appconvex.html#cb3-8" tabindex="-1"></a>    <span class="co"># if K is not positive semidefinite, Cholesky will raise an error</span></span>
+<span id="cb3-9"><a href="appconvex.html#cb3-9" tabindex="-1"></a>    L <span class="op">=</span> cholesky(K) </span>
+<span id="cb3-10"><a href="appconvex.html#cb3-10" tabindex="-1"></a>    radius_square <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> norm(inv(L) <span class="op">@</span> k)<span class="op">**</span><span class="dv">2</span> <span class="op">-</span> c</span>
+<span id="cb3-11"><a href="appconvex.html#cb3-11" tabindex="-1"></a>    <span class="cf">return</span> radius_square <span class="op">&gt;</span> <span class="dv">0</span></span>
+<span id="cb3-12"><a href="appconvex.html#cb3-12" tabindex="-1"></a>K1 <span class="op">=</span> np.eye(<span class="dv">2</span>)</span>
+<span id="cb3-13"><a href="appconvex.html#cb3-13" tabindex="-1"></a>k1 <span class="op">=</span> np.zeros(<span class="dv">2</span>)</span>
+<span id="cb3-14"><a href="appconvex.html#cb3-14" tabindex="-1"></a>c1 <span class="op">=</span> <span class="op">-</span><span class="fl">0.5</span></span>
+<span id="cb3-15"><a href="appconvex.html#cb3-15" tabindex="-1"></a>K2 <span class="op">=</span> np.array([[<span class="dv">1</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">1</span>]])</span>
+<span id="cb3-16"><a href="appconvex.html#cb3-16" tabindex="-1"></a>k2 <span class="op">=</span> np.array([<span class="dv">2</span>, <span class="dv">2</span>])</span>
+<span id="cb3-17"><a href="appconvex.html#cb3-17" tabindex="-1"></a>c2 <span class="op">=</span> <span class="fl">3.5</span></span>
+<span id="cb3-18"><a href="appconvex.html#cb3-18" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> (if_ellipse(K1, k1, c1) <span class="kw">and</span> if_ellipse(K2, k2, c2)):</span>
+<span id="cb3-19"><a href="appconvex.html#cb3-19" tabindex="-1"></a>    <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="st">&quot;The example setting is not correct&quot;</span>)</span>
+<span id="cb3-20"><a href="appconvex.html#cb3-20" tabindex="-1"></a></span>
+<span id="cb3-21"><a href="appconvex.html#cb3-21" tabindex="-1"></a><span class="co">## Step 1: define variables and parameters</span></span>
+<span id="cb3-22"><a href="appconvex.html#cb3-22" tabindex="-1"></a>P0 <span class="op">=</span> np.array([[<span class="dv">1</span>,<span class="dv">0</span>,<span class="op">-</span><span class="dv">1</span>,<span class="dv">0</span>], [<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="op">-</span><span class="dv">1</span>], [<span class="op">-</span><span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>], [<span class="dv">0</span>,<span class="op">-</span><span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>]])</span>
+<span id="cb3-23"><a href="appconvex.html#cb3-23" tabindex="-1"></a>P1 <span class="op">=</span> np.zeros((<span class="dv">4</span>,<span class="dv">4</span>))</span>
+<span id="cb3-24"><a href="appconvex.html#cb3-24" tabindex="-1"></a>P1[:<span class="dv">2</span>, :<span class="dv">2</span>] <span class="op">=</span> K1</span>
+<span id="cb3-25"><a href="appconvex.html#cb3-25" tabindex="-1"></a>P2 <span class="op">=</span> np.zeros((<span class="dv">4</span>,<span class="dv">4</span>))</span>
+<span id="cb3-26"><a href="appconvex.html#cb3-26" tabindex="-1"></a>P2[<span class="dv">2</span>:, <span class="dv">2</span>:] <span class="op">=</span> K2</span>
+<span id="cb3-27"><a href="appconvex.html#cb3-27" tabindex="-1"></a>q1 <span class="op">=</span> np.concatenate([k1, np.zeros(<span class="dv">2</span>)])</span>
+<span id="cb3-28"><a href="appconvex.html#cb3-28" tabindex="-1"></a>q2 <span class="op">=</span> np.concatenate([np.zeros(<span class="dv">2</span>), k2])</span>
+<span id="cb3-29"><a href="appconvex.html#cb3-29" tabindex="-1"></a>r1 <span class="op">=</span> c1</span>
+<span id="cb3-30"><a href="appconvex.html#cb3-30" tabindex="-1"></a>r2 <span class="op">=</span> c2</span>
+<span id="cb3-31"><a href="appconvex.html#cb3-31" tabindex="-1"></a></span>
+<span id="cb3-32"><a href="appconvex.html#cb3-32" tabindex="-1"></a><span class="co">## Step 2: define objective and constraints</span></span>
+<span id="cb3-33"><a href="appconvex.html#cb3-33" tabindex="-1"></a>x <span class="op">=</span> cp.Variable(<span class="dv">4</span>) <span class="co"># variable: x = [y1, z1, y2, z2]^T</span></span>
+<span id="cb3-34"><a href="appconvex.html#cb3-34" tabindex="-1"></a>fx <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> cp.quad_form(x, P0)</span>
+<span id="cb3-35"><a href="appconvex.html#cb3-35" tabindex="-1"></a>obj <span class="op">=</span> cp.Minimize(fx)</span>
+<span id="cb3-36"><a href="appconvex.html#cb3-36" tabindex="-1"></a>con1 <span class="op">=</span> (<span class="fl">0.5</span> <span class="op">*</span> cp.quad_form(x, P1) <span class="op">+</span> q1.T <span class="op">@</span> x <span class="op">+</span> r1 <span class="op">&lt;=</span> <span class="dv">0</span>) <span class="co"># ellipse 1</span></span>
+<span id="cb3-37"><a href="appconvex.html#cb3-37" tabindex="-1"></a>con2 <span class="op">=</span> (<span class="fl">0.5</span> <span class="op">*</span> cp.quad_form(x, P2) <span class="op">+</span> q2.T <span class="op">@</span> x <span class="op">+</span> r2 <span class="op">&lt;=</span> <span class="dv">0</span>) <span class="co"># ellipse 2</span></span>
+<span id="cb3-38"><a href="appconvex.html#cb3-38" tabindex="-1"></a>constraints <span class="op">=</span> [con1, con2]</span>
+<span id="cb3-39"><a href="appconvex.html#cb3-39" tabindex="-1"></a>prob <span class="op">=</span> cp.Problem(obj, constraints) <span class="co"># form the problem</span></span>
+<span id="cb3-40"><a href="appconvex.html#cb3-40" tabindex="-1"></a></span>
+<span id="cb3-41"><a href="appconvex.html#cb3-41" tabindex="-1"></a><span class="co">## Step 3: solve problem and get results</span></span>
+<span id="cb3-42"><a href="appconvex.html#cb3-42" tabindex="-1"></a>prob.solve()  </span>
+<span id="cb3-43"><a href="appconvex.html#cb3-43" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;status: &quot;</span>, prob.status) <span class="co"># check whether the status is &quot;optimal&quot;</span></span>
+<span id="cb3-44"><a href="appconvex.html#cb3-44" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;optimal value: &quot;</span>, prob.value) <span class="co"># optimal objective</span></span>
+<span id="cb3-45"><a href="appconvex.html#cb3-45" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;optimal solution: &quot;</span>, x.value) <span class="co"># optimal x</span></span></code></pre></div>
+</div>
+<div id="second-order-cone-programming-socp" class="section level3 hasAnchor" number="10.2.5">
+<h3><span class="header-section-number">B.2.5</span> Second-Order Cone Programming (SOCP)<a href="appconvex.html#second-order-cone-programming-socp" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><strong>Definition.</strong> An SOCP has the following form:
+<span class="math display" id="eq:app-socpdef">\[\begin{align}
+   \tag{B.4}
+   \min_{x \in \mathbb{R}^n} \ &amp; f^T x \\
+   \text{subject to } &amp; || A_i x + b_i ||_2 \le c_i^T x + d_i, \ i = 1 \dots m \\
+   &amp; Fx = g
+\end{align}\]</span>
+where <span class="math inline">\(f \in \mathbb{R}^n, A_i \in \mathbb{R}^{n_i \times n}, b_i \in \mathbb{R}^{n_i}, c_i \in \mathbb{R}^n, d_i \in \mathbb{R}, F \in \mathbb{R}^{p \times n}\)</span>, and <span class="math inline">\(g \in \mathbb{R}^p\)</span>.</p>
+<p><strong>Example.</strong> We consider the problem of stochastic linear programming:
+<span class="math display">\[\begin{align}
+   \min_x \ &amp; c^T x \\
+   \text{subject to } &amp; \mathbb{P}(a_i^T x \le b_i) \ge p, \ i = 1 \dots m \\
+   &amp; a_i \sim \mathcal{N}(\bar{a}_i, \Sigma_i), \ i = 1 \dots m
+\end{align}\]</span>
+Here <span class="math inline">\(p\)</span> should be more than <span class="math inline">\(0.5\)</span>. We show that this problem can be converted to a SOCP:</p>
+<p>Since <span class="math inline">\(a_i \sim \mathcal{N}(\bar{a}_i, \Sigma_i)\)</span>, then <span class="math inline">\((a_i^T x - b_i) \sim \mathcal{N}(\bar{a}_i^T x - b_i, x^T \Sigma_i x)\)</span>. Standardize it:
+<span class="math display">\[\begin{equation*}
+   t := ||\Sigma_i^{\frac{1}{2}} x||_2^{-1} \left\{ (a_i^T x - b_i) - (\bar{a}_i^T x - b_i) \right\} \sim \mathcal{N}(0, 1)
+\end{equation*}\]</span>
+Then,
+<span class="math display">\[\begin{align}
+   \mathbb{P}(a_i^T x \le b_i) &amp; = \mathbb{P}(a_i^T x - b_i \le 0) \\
+   &amp; = \mathbb{P}(t \le -||\Sigma_i^{\frac{1}{2}} x||_2^{-1}(\bar{a}_i^T x - b_i)) \\
+   &amp; = \Phi(-||\Sigma_i^{\frac{1}{2}} x||_2^{-1}(\bar{a}_i^T x - b_i))
+\end{align}\]</span>
+Here <span class="math inline">\(\Phi(\cdot)\)</span> is the cumulative distribution function of the standard normal distribution:
+<span class="math display">\[\begin{equation*}
+   \Phi(\xi) = \int_{-\infty}^{\xi} e^{-\frac{1}{2} t^2} \ dt
+\end{equation*}\]</span>
+Thus,
+<span class="math display">\[\begin{align}
+   &amp; \mathbb{P}(a_i^T x \le b_i) \ge p \\
+   \Longleftrightarrow &amp; \Phi(-||\Sigma_i^{\frac{1}{2}} x||_2^{-1}(\bar{a}_i^T x - b_i)) \ge p \\
+   \Longleftrightarrow &amp; -||\Sigma_i^{\frac{1}{2}} x||_2^{-1}(\bar{a}_i^T x - b_i) \ge \Phi^{-1}(p) \\
+   \Longleftrightarrow &amp; \Phi^{-1}(p) ||\Sigma_i^{\frac{1}{2}} x||_2 \le b_i - \bar{a}_i^T x
+\end{align}\]</span>
+which is exactly the same as inequality constraints in SOCP formulation. (You can see why we enforce <span class="math inline">\(p &gt; 0.5\)</span> here: otherwise <span class="math inline">\(\Phi^{-1}(p)\)</span> will be negative and the constraint with not be an second-order cone.)</p>
+<p>In the following code example, we set up four inequality constraints and let <span class="math inline">\(\bar{a}_i^T x \le b_i, \ i = 1 \dots 4\)</span> form an square located at the origin of size <span class="math inline">\(2\)</span>. Then, for convenience, we set <span class="math inline">\(\Sigma_i \equiv \sigma^2 I\)</span>.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="appconvex.html#cb4-1" tabindex="-1"></a><span class="im">import</span> cvxpy <span class="im">as</span> cp</span>
+<span id="cb4-2"><a href="appconvex.html#cb4-2" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb4-3"><a href="appconvex.html#cb4-3" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> norm</span>
+<span id="cb4-4"><a href="appconvex.html#cb4-4" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="appconvex.html#cb4-5" tabindex="-1"></a><span class="co">## Define the SOCP example setting</span></span>
+<span id="cb4-6"><a href="appconvex.html#cb4-6" tabindex="-1"></a><span class="co"># define bar_ai, bi (i = 1, 2, 3, 4)</span></span>
+<span id="cb4-7"><a href="appconvex.html#cb4-7" tabindex="-1"></a>bar_a1 <span class="op">=</span> np.array([<span class="dv">1</span>, <span class="dv">0</span>])</span>
+<span id="cb4-8"><a href="appconvex.html#cb4-8" tabindex="-1"></a>b1 <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb4-9"><a href="appconvex.html#cb4-9" tabindex="-1"></a>bar_a2 <span class="op">=</span> np.array([<span class="dv">0</span>, <span class="dv">1</span>])</span>
+<span id="cb4-10"><a href="appconvex.html#cb4-10" tabindex="-1"></a>b2 <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb4-11"><a href="appconvex.html#cb4-11" tabindex="-1"></a>bar_a3 <span class="op">=</span> np.array([<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>])</span>
+<span id="cb4-12"><a href="appconvex.html#cb4-12" tabindex="-1"></a>b3 <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb4-13"><a href="appconvex.html#cb4-13" tabindex="-1"></a>bar_a4 <span class="op">=</span> np.array([<span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span>])</span>
+<span id="cb4-14"><a href="appconvex.html#cb4-14" tabindex="-1"></a>b4 <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb4-15"><a href="appconvex.html#cb4-15" tabindex="-1"></a>sigma <span class="op">=</span> <span class="fl">0.1</span> </span>
+<span id="cb4-16"><a href="appconvex.html#cb4-16" tabindex="-1"></a>c <span class="op">=</span> np.array([<span class="dv">2</span>, <span class="dv">3</span>])</span>
+<span id="cb4-17"><a href="appconvex.html#cb4-17" tabindex="-1"></a>p <span class="op">=</span> <span class="fl">0.9</span> <span class="co"># p should be more than 0.5</span></span>
+<span id="cb4-18"><a href="appconvex.html#cb4-18" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="appconvex.html#cb4-19" tabindex="-1"></a><span class="co">## Step 1: define variables and parameters</span></span>
+<span id="cb4-20"><a href="appconvex.html#cb4-20" tabindex="-1"></a>Phi_inv <span class="op">=</span> norm.ppf(p) <span class="co"># get Phi^{-1}(p)</span></span>
+<span id="cb4-21"><a href="appconvex.html#cb4-21" tabindex="-1"></a></span>
+<span id="cb4-22"><a href="appconvex.html#cb4-22" tabindex="-1"></a><span class="co">## Step 2: define objective and constraints</span></span>
+<span id="cb4-23"><a href="appconvex.html#cb4-23" tabindex="-1"></a>x <span class="op">=</span> cp.Variable(<span class="dv">2</span>) <span class="co"># variable: x = [x1, x2]^T</span></span>
+<span id="cb4-24"><a href="appconvex.html#cb4-24" tabindex="-1"></a>obj <span class="op">=</span> cp.Minimize(c.T <span class="op">@</span> x)</span>
+<span id="cb4-25"><a href="appconvex.html#cb4-25" tabindex="-1"></a><span class="co"># use cp.SOC(t, x) to create the SOC constraint ||x||_2 &lt;= t</span></span>
+<span id="cb4-26"><a href="appconvex.html#cb4-26" tabindex="-1"></a>constraints <span class="op">=</span> [</span>
+<span id="cb4-27"><a href="appconvex.html#cb4-27" tabindex="-1"></a>    cp.SOC(b1 <span class="op">-</span> bar_a1.T <span class="op">@</span> x, sigma<span class="op">*</span>Phi_inv<span class="op">*</span>x),</span>
+<span id="cb4-28"><a href="appconvex.html#cb4-28" tabindex="-1"></a>    cp.SOC(b2 <span class="op">-</span> bar_a2.T <span class="op">@</span> x, sigma<span class="op">*</span>Phi_inv<span class="op">*</span>x),</span>
+<span id="cb4-29"><a href="appconvex.html#cb4-29" tabindex="-1"></a>    cp.SOC(b3 <span class="op">-</span> bar_a3.T <span class="op">@</span> x, sigma<span class="op">*</span>Phi_inv<span class="op">*</span>x),</span>
+<span id="cb4-30"><a href="appconvex.html#cb4-30" tabindex="-1"></a>    cp.SOC(b4 <span class="op">-</span> bar_a4.T <span class="op">@</span> x, sigma<span class="op">*</span>Phi_inv<span class="op">*</span>x),</span>
+<span id="cb4-31"><a href="appconvex.html#cb4-31" tabindex="-1"></a>]</span>
+<span id="cb4-32"><a href="appconvex.html#cb4-32" tabindex="-1"></a>prob <span class="op">=</span> cp.Problem(obj, constraints) <span class="co"># form the problem</span></span>
+<span id="cb4-33"><a href="appconvex.html#cb4-33" tabindex="-1"></a></span>
+<span id="cb4-34"><a href="appconvex.html#cb4-34" tabindex="-1"></a><span class="co">## Step 3: solve problem and get results</span></span>
+<span id="cb4-35"><a href="appconvex.html#cb4-35" tabindex="-1"></a>prob.solve()  </span>
+<span id="cb4-36"><a href="appconvex.html#cb4-36" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;status: &quot;</span>, prob.status) <span class="co"># check whether the status is &quot;optimal&quot;</span></span>
+<span id="cb4-37"><a href="appconvex.html#cb4-37" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;optimal value: &quot;</span>, prob.value) <span class="co"># optimal objective</span></span>
+<span id="cb4-38"><a href="appconvex.html#cb4-38" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;optimal solution: &quot;</span>, x.value) <span class="co"># optimal x</span></span></code></pre></div>
+</div>
+<div id="semidefinite-programming-sdp" class="section level3 hasAnchor" number="10.2.6">
+<h3><span class="header-section-number">B.2.6</span> Semidefinite Programming (SDP)<a href="appconvex.html#semidefinite-programming-sdp" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><strong>Definition.</strong> An SDP has the following form:
+<span class="math display" id="eq:app-sdpdef">\[\begin{align}
+   \tag{B.5}
+   \min_{X_i, x_i} \ &amp; \sum_{i=1}^{n_s} C_i \cdot X_i + \sum_{i=1}^{n_u} c_i \cdot x_i \\
+   \text{subject to } &amp; \sum_{i=1}^{n_s} A_{i,j} \cdot X_i + \sum_{i=1}^{n_u} a_{i,j} \cdot x_i = b_j, \quad j = 1 \dots m \\
+   &amp; X_i \in \mathcal{S}_+^{d_i}, \quad i = 1 \dots n_s \\
+   &amp; x_i \in \mathbb{R}^{d_i}, \quad i = 1 \dots n_u  
+\end{align}\]</span>
+where <span class="math inline">\(C_i, A_{i, j} \in \mathbb{R}^{d_i \times d_i}\)</span>, <span class="math inline">\(c_i, a_{i, j} \in \mathbb{R}^{d_i}\)</span>, and <span class="math inline">\(\cdot\)</span> means element-wise product. For two square matrices <span class="math inline">\(A, B\)</span>, the dot product <span class="math inline">\(A \cdot B\)</span> is equal to <span class="math inline">\(\text{tr}(A B)\)</span>; for two vectors <span class="math inline">\(a, b\)</span>, the dot product <span class="math inline">\(a \cdot b\)</span> is the same as inner product <span class="math inline">\(a^T b\)</span>.</p>
+<p>Note that actually there are many “standard” forms of SDP. For example, in the convex optimization theory part, you may find an SDP that looks like:
+<span class="math display">\[\begin{align}
+   \min_X \ &amp; C \cdot X \\
+   \text{subject to } &amp; A \cdot X = b \\
+   &amp; X \succeq 0
+\end{align}\]</span>
+It is convenient for us to analyze the theoretical properties of SDP with this form. Also, in SDP solvers’ User Guide, you may see more complex SDP forms which involve more general convex cones. For example, see <a href="https://docs.mosek.com/latest/pythonapi/tutorial-sdo-shared.html">MOSEK’s Python API docs</a>. Here we turn to use the form of <a href="appconvex.html#eq:app-sdpdef">(B.5)</a> for two reasons: (1) it is general enough: our SDP example below can be converted to this form (also, SDPs from sum-of-squares programming in this book are exactly of the form <a href="appconvex.html#eq:app-sdpdef">(B.5)</a>); (2) it is more readable than more complex forms.</p>
+<p><strong>Example.</strong> We consider the problem of finding the minimum eigenvalue for a positive semidefinite matrix <span class="math inline">\(S\)</span>. We will show that this problem can be converted to <a href="appconvex.html#eq:app-sdpdef">(B.5)</a>. Since <span class="math inline">\(S\)</span> is positive semidefinite, the finding procedure can be cast as
+<span class="math display">\[\begin{align}
+    \max_\lambda &amp; \ \lambda \\
+    \text{subject to } &amp; S - \lambda I \succeq 0
+\end{align}\]</span>
+Now define an auxiliary matrix <span class="math inline">\(X := S - \lambda I\)</span>. We have
+<span class="math display">\[\begin{align}
+    \min_{\lambda, X} &amp; \ -\lambda \\
+   \text{subject to } &amp;  X + \lambda I = S \\
+   &amp; X \succeq 0
+\end{align}\]</span>
+It is obvious that the linear matrix equality constraint <span class="math inline">\(X + \lambda I = S\)</span> can be divided into several linear scalar equality constraints in <a href="appconvex.html#eq:app-sdpdef">(B.5)</a>. For example, for the first element in <span class="math inline">\(S\)</span>, we will have <span class="math inline">\(X[0,0] + \lambda = S[0,0]\)</span>.</p>
+<p>In the code example, we consider <span class="math inline">\(S \in \mathbb{S}_+^3\)</span>. Thereby <span class="math inline">\(X + \lambda I = S\)</span> will lead to <span class="math inline">\(6\)</span> linear equality constraints (We don’t consider <span class="math inline">\(X\)</span> is a symmetric matrix here, since CVXPY will implicitly consider this. Thus, only the upper-triangular part of <span class="math inline">\(X\)</span> and <span class="math inline">\(S\)</span> are actually used in the equality construction.):
+<span class="math display">\[\begin{align}
+   &amp; \left\langle \begin{bmatrix}
+      1 &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; 0
+   \end{bmatrix}, X \right\rangle + \lambda = S[0, 0],  
+   \left\langle \begin{bmatrix}
+      0 &amp; 1 &amp; 0 \\ 0 &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; 0
+   \end{bmatrix}, X \right\rangle = S[0, 1],
+   \left\langle \begin{bmatrix}
+      0 &amp; 0 &amp; 1 \\ 0 &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; 0
+   \end{bmatrix}, X \right\rangle = S[0, 2] \\
+   &amp; \left\langle \begin{bmatrix}
+      0 &amp; 0 &amp; 0 \\ 0 &amp; 1 &amp; 0 \\ 0 &amp; 0 &amp; 0
+   \end{bmatrix}, X \right\rangle + \lambda = S[1, 1],
+   \left\langle \begin{bmatrix}
+      0 &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; 1 \\ 0 &amp; 0 &amp; 0
+   \end{bmatrix}, X \right\rangle = S[1, 2],
+   \left\langle \begin{bmatrix}
+      0 &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; 1
+   \end{bmatrix}, X \right\rangle + \lambda = S[2, 2]
+\end{align}\]</span>
+To generate a ramdom <span class="math inline">\(S \in \mathcal{S}_+^3\)</span>, you just need to assign three nonnegative eigenvalues to the program. After that, an random <span class="math inline">\(S\)</span> will be generated by <span class="math inline">\(S = Q \ \text{diag}(\lambda_1, \lambda_2, \lambda_3) \ Q^T\)</span>, where <span class="math inline">\(Q\)</span> is random orthonormal matrix.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="appconvex.html#cb5-1" tabindex="-1"></a><span class="im">import</span> cvxpy <span class="im">as</span> cp</span>
+<span id="cb5-2"><a href="appconvex.html#cb5-2" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb5-3"><a href="appconvex.html#cb5-3" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> ortho_group</span>
+<span id="cb5-4"><a href="appconvex.html#cb5-4" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="appconvex.html#cb5-5" tabindex="-1"></a><span class="co">## Define the SDP example setting</span></span>
+<span id="cb5-6"><a href="appconvex.html#cb5-6" tabindex="-1"></a><span class="co"># this function help to generate PD matrix of size 3*3 </span></span>
+<span id="cb5-7"><a href="appconvex.html#cb5-7" tabindex="-1"></a><span class="co"># if you provide the eigenvalues [lam_1, lam_2, lam_3]</span></span>
+<span id="cb5-8"><a href="appconvex.html#cb5-8" tabindex="-1"></a><span class="kw">def</span> generate_random_PD_matrix(lam_list):</span>
+<span id="cb5-9"><a href="appconvex.html#cb5-9" tabindex="-1"></a>    <span class="cf">assert</span> np.<span class="bu">all</span>(lam_list <span class="op">&gt;=</span> <span class="dv">0</span>) <span class="co"># all eigenvalues &gt;= 0</span></span>
+<span id="cb5-10"><a href="appconvex.html#cb5-10" tabindex="-1"></a>    <span class="co"># S = Q @ D @ Q.T</span></span>
+<span id="cb5-11"><a href="appconvex.html#cb5-11" tabindex="-1"></a>    D <span class="op">=</span> np.diag(lam_list)</span>
+<span id="cb5-12"><a href="appconvex.html#cb5-12" tabindex="-1"></a>    Q <span class="op">=</span> ortho_group.rvs(<span class="dv">3</span>)</span>
+<span id="cb5-13"><a href="appconvex.html#cb5-13" tabindex="-1"></a>    <span class="cf">return</span> Q <span class="op">@</span> D <span class="op">@</span> Q.T</span>
+<span id="cb5-14"><a href="appconvex.html#cb5-14" tabindex="-1"></a>lam_list <span class="op">=</span> np.array([<span class="fl">0.5</span>, <span class="fl">2.4</span>, <span class="fl">3.7</span>])</span>
+<span id="cb5-15"><a href="appconvex.html#cb5-15" tabindex="-1"></a>S <span class="op">=</span> generate_random_PD_matrix(lam_list) <span class="co"># get a PD matrix S</span></span>
+<span id="cb5-16"><a href="appconvex.html#cb5-16" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="appconvex.html#cb5-17" tabindex="-1"></a><span class="co">## Step 1: define variables and parameters</span></span>
+<span id="cb5-18"><a href="appconvex.html#cb5-18" tabindex="-1"></a><span class="co"># get coefficients for equality constraints</span></span>
+<span id="cb5-19"><a href="appconvex.html#cb5-19" tabindex="-1"></a>A_00 <span class="op">=</span> np.array([[<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>]]) <span class="co"># tr(A_00 @ X) + lam = S_00</span></span>
+<span id="cb5-20"><a href="appconvex.html#cb5-20" tabindex="-1"></a>A_01 <span class="op">=</span> np.array([[<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>]]) <span class="co"># tr(A_01 @ X) = S_01</span></span>
+<span id="cb5-21"><a href="appconvex.html#cb5-21" tabindex="-1"></a>A_02 <span class="op">=</span> np.array([[<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>], [<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>]]) <span class="co"># tr(A_02 @ X) = S_02</span></span>
+<span id="cb5-22"><a href="appconvex.html#cb5-22" tabindex="-1"></a>A_11 <span class="op">=</span> np.array([[<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>]]) <span class="co"># tr(A_11 @ X) + lam = S_11</span></span>
+<span id="cb5-23"><a href="appconvex.html#cb5-23" tabindex="-1"></a>A_12 <span class="op">=</span> np.array([[<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>], [<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>]]) <span class="co"># tr(A_12 @ X) = S_12</span></span>
+<span id="cb5-24"><a href="appconvex.html#cb5-24" tabindex="-1"></a>A_22 <span class="op">=</span> np.array([[<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>]]) <span class="co"># tr(A_22 @ X) + lam = S_22</span></span>
+<span id="cb5-25"><a href="appconvex.html#cb5-25" tabindex="-1"></a></span>
+<span id="cb5-26"><a href="appconvex.html#cb5-26" tabindex="-1"></a><span class="co">## Step 2: define objective and constraints</span></span>
+<span id="cb5-27"><a href="appconvex.html#cb5-27" tabindex="-1"></a><span class="co"># define a PD matrix variable X of size 3*3</span></span>
+<span id="cb5-28"><a href="appconvex.html#cb5-28" tabindex="-1"></a>X <span class="op">=</span> cp.Variable((<span class="dv">3</span>, <span class="dv">3</span>), symmetric<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb5-29"><a href="appconvex.html#cb5-29" tabindex="-1"></a>constraints <span class="op">=</span> [X <span class="op">&gt;&gt;</span> <span class="dv">0</span>] <span class="co"># the operator &gt;&gt; denotes matrix inequality</span></span>
+<span id="cb5-30"><a href="appconvex.html#cb5-30" tabindex="-1"></a>lam <span class="op">=</span> cp.Variable(<span class="dv">1</span>)</span>
+<span id="cb5-31"><a href="appconvex.html#cb5-31" tabindex="-1"></a>constraints <span class="op">+=</span> [</span>
+<span id="cb5-32"><a href="appconvex.html#cb5-32" tabindex="-1"></a>    cp.trace(A_00 <span class="op">@</span> X) <span class="op">+</span> lam <span class="op">==</span> S[<span class="dv">0</span>,<span class="dv">0</span>],</span>
+<span id="cb5-33"><a href="appconvex.html#cb5-33" tabindex="-1"></a>    cp.trace(A_01 <span class="op">@</span> X) <span class="op">==</span> S[<span class="dv">0</span>,<span class="dv">1</span>],</span>
+<span id="cb5-34"><a href="appconvex.html#cb5-34" tabindex="-1"></a>    cp.trace(A_02 <span class="op">@</span> X) <span class="op">==</span> S[<span class="dv">0</span>,<span class="dv">2</span>],</span>
+<span id="cb5-35"><a href="appconvex.html#cb5-35" tabindex="-1"></a>    cp.trace(A_11 <span class="op">@</span> X) <span class="op">+</span> lam <span class="op">==</span> S[<span class="dv">1</span>,<span class="dv">1</span>],</span>
+<span id="cb5-36"><a href="appconvex.html#cb5-36" tabindex="-1"></a>    cp.trace(A_12 <span class="op">@</span> X) <span class="op">==</span> S[<span class="dv">1</span>,<span class="dv">2</span>],</span>
+<span id="cb5-37"><a href="appconvex.html#cb5-37" tabindex="-1"></a>    cp.trace(A_22 <span class="op">@</span> X) <span class="op">+</span> lam <span class="op">==</span> S[<span class="dv">2</span>,<span class="dv">2</span>],</span>
+<span id="cb5-38"><a href="appconvex.html#cb5-38" tabindex="-1"></a>]</span>
+<span id="cb5-39"><a href="appconvex.html#cb5-39" tabindex="-1"></a>obj <span class="op">=</span> cp.Minimize(<span class="op">-</span>lam)</span>
+<span id="cb5-40"><a href="appconvex.html#cb5-40" tabindex="-1"></a>prob <span class="op">=</span> cp.Problem(obj, constraints) <span class="co"># form the problem</span></span>
+<span id="cb5-41"><a href="appconvex.html#cb5-41" tabindex="-1"></a></span>
+<span id="cb5-42"><a href="appconvex.html#cb5-42" tabindex="-1"></a><span class="co">## Step 3: solve problem and get results</span></span>
+<span id="cb5-43"><a href="appconvex.html#cb5-43" tabindex="-1"></a>prob.solve()  </span>
+<span id="cb5-44"><a href="appconvex.html#cb5-44" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;status: &quot;</span>, prob.status) <span class="co"># check whether the status is &quot;optimal&quot;</span></span>
+<span id="cb5-45"><a href="appconvex.html#cb5-45" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;optimal value: &quot;</span>, prob.value) <span class="co"># optimal objective</span></span>
+<span id="cb5-46"><a href="appconvex.html#cb5-46" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;optimal solution: &quot;</span>, lam.value) <span class="co"># optimal lam</span></span></code></pre></div>
+<hr />
 </div>
 </div>
 </div>
