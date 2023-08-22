@@ -258,7 +258,7 @@ In general, $f_i,h_i$ may not be differentiable. There are also KKT conditions f
 
 ### CVXPY Introduction
 
-In the last section, we have learned basic concepts and theorems in convex optimization. In this section, on the other hand, we will introduce you to how to do basic convex optimization problem modeling with CVXPY, an easy-to-use Python package. To install CVXPY, please refer to this [page](https://www.cvxpy.org/install/index.html). To define and solve a convex optimization problem CVXPY, basically, there are three steps (apart from importing necessary packages):
+In the last section, we have learned basic concepts and theorems in convex optimization. In this section, on the other hand, we will introduce you how to model basic convex optimization problems with CVXPY, an easy-to-use Python package. To install CVXPY, please refer to this [page](https://www.cvxpy.org/install/index.html). To define and solve a convex optimization problem in CVXPY, there are three steps (apart from importing necessary packages):
 
 - Step 1: Define parameters and variables in a certain type of convex problem. Here variables are what you are trying to optimize or "learn". Parameters are the "coefficients" of variables in the objective and constraints. 
 
@@ -333,7 +333,7 @@ print("optimal solution: ", x.value) # optimal x
 
 ### Quadratic Programming (QP)
 
-**Definition.** An QP has the following form:
+**Definition.** A QP has the following form:
 \begin{align}
    (\#eq:app-qpdef)
    \min_{x \in \mathbb{R}^n} \ & \frac{1}{2} x^T P x + q^T x \\
