@@ -31,7 +31,7 @@
   
   
 <link rel="prev" href="stability.html"/>
-<link rel="next" href="adaptivecontrol.html"/>
+<link rel="next" href="geometric-vision.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -226,17 +226,30 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="6.2" data-path="output-feedback.html"><a href="output-feedback.html#observer-feedback"><i class="fa fa-check"></i><b>6.2</b> Observer Feedback</a></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html"><i class="fa fa-check"></i><b>7</b> Adaptive Control</a>
+<li class="chapter" data-level="7" data-path="geometric-vision.html"><a href="geometric-vision.html"><i class="fa fa-check"></i><b>7</b> Geometric Vision</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#model-reference-adaptive-control"><i class="fa fa-check"></i><b>7.1</b> Model-Reference Adaptive Control</a>
+<li class="chapter" data-level="7.1" data-path="geometric-vision.html"><a href="geometric-vision.html#d-rotations-and-poses"><i class="fa fa-check"></i><b>7.1</b> 3D Rotations and Poses</a></li>
+<li class="chapter" data-level="7.2" data-path="geometric-vision.html"><a href="geometric-vision.html#the-pinhole-camera-model"><i class="fa fa-check"></i><b>7.2</b> The Pinhole Camera Model</a></li>
+<li class="chapter" data-level="7.3" data-path="geometric-vision.html"><a href="geometric-vision.html#camera-pose-estimation"><i class="fa fa-check"></i><b>7.3</b> Camera Pose Estimation</a>
 <ul>
-<li class="chapter" data-level="7.1.1" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#first-order-systems"><i class="fa fa-check"></i><b>7.1.1</b> First-Order Systems</a></li>
-<li class="chapter" data-level="7.1.2" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#high-order-systems"><i class="fa fa-check"></i><b>7.1.2</b> High-Order Systems</a></li>
-<li class="chapter" data-level="7.1.3" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#robotic-manipulator"><i class="fa fa-check"></i><b>7.1.3</b> Robotic Manipulator</a></li>
+<li class="chapter" data-level="7.3.1" data-path="geometric-vision.html"><a href="geometric-vision.html#the-p3p-problem"><i class="fa fa-check"></i><b>7.3.1</b> The P3P Problem</a></li>
+<li class="chapter" data-level="7.3.2" data-path="geometric-vision.html"><a href="geometric-vision.html#the-pnp-problem"><i class="fa fa-check"></i><b>7.3.2</b> The PnP Problem</a></li>
+<li class="chapter" data-level="7.3.3" data-path="geometric-vision.html"><a href="geometric-vision.html#global-optimality"><i class="fa fa-check"></i><b>7.3.3</b> Global Optimality</a></li>
+<li class="chapter" data-level="7.3.4" data-path="geometric-vision.html"><a href="geometric-vision.html#handling-outliers"><i class="fa fa-check"></i><b>7.3.4</b> Handling Outliers</a></li>
 </ul></li>
-<li class="chapter" data-level="7.2" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#certainty-equivalent-adaptive-control"><i class="fa fa-check"></i><b>7.2</b> Certainty-Equivalent Adaptive Control</a></li>
+<li class="chapter" data-level="7.4" data-path="geometric-vision.html"><a href="geometric-vision.html#point-cloud-registration"><i class="fa fa-check"></i><b>7.4</b> Point Cloud Registration</a></li>
 </ul></li>
-<li class="chapter" data-level="8" data-path="psets.html"><a href="psets.html"><i class="fa fa-check"></i><b>8</b> Problem Sets</a></li>
+<li class="chapter" data-level="8" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html"><i class="fa fa-check"></i><b>8</b> Adaptive Control</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#model-reference-adaptive-control"><i class="fa fa-check"></i><b>8.1</b> Model-Reference Adaptive Control</a>
+<ul>
+<li class="chapter" data-level="8.1.1" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#first-order-systems"><i class="fa fa-check"></i><b>8.1.1</b> First-Order Systems</a></li>
+<li class="chapter" data-level="8.1.2" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#high-order-systems"><i class="fa fa-check"></i><b>8.1.2</b> High-Order Systems</a></li>
+<li class="chapter" data-level="8.1.3" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#robotic-manipulator"><i class="fa fa-check"></i><b>8.1.3</b> Robotic Manipulator</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#certainty-equivalent-adaptive-control"><i class="fa fa-check"></i><b>8.2</b> Certainty-Equivalent Adaptive Control</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="psets.html"><a href="psets.html"><i class="fa fa-check"></i><b>9</b> Problem Sets</a></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
 <li class="chapter" data-level="A" data-path="app-lti-system-theory.html"><a href="app-lti-system-theory.html"><i class="fa fa-check"></i><b>A</b> Linear System Theory</a>
 <ul>
@@ -1222,7 +1235,7 @@ Niazi, Muhammad Umar B, John Cao, Xudong Sun, Amritam Das, and Karl Henrik Johan
         </div>
       </div>
 <a href="stability.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="adaptivecontrol.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="geometric-vision.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

@@ -3132,6 +3132,47 @@ where \(c\) is some positive constant. The challenge now is in choosing a suitab
 
 \end{example}
 
+\hypertarget{geometric-vision}{%
+\chapter{Geometric Vision}\label{geometric-vision}}
+
+In this Chapter, we introduce the fundamentals of \emph{geometric vision}, a (classical) branch of computer vision that seeks to estimate geometric models (e.g., 3D rotations, translations, and points) from sensor measurements (e.g., images and point clouds). There are two goals for introducing geometric vision.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  In the output feedback Chapter \ref{output-feedback}, we see that the full state \(x\) of a dynamical system is often not available, and needs to be estimated from the measurement signal \(y\) that satisfies
+  \[
+  y(t) = h(x(t),u(t))
+  \]
+  potentially plus some noise. In Chapter \ref{output-feedback}, we studied the case where \(y\) is part of the state \(x\), often the position \(q\) of a second-order system \(x=[q;\dot{q}]\). For example, in the pendulm swing-up example, we assume the angular position \(\theta\) is observed, but not the angular velocity \(\dot{\theta}\). However, in many practical applications, the measurement signal \(y\) does not directly tell us the position \(q\), and we need to estimate \(q\) from \(y\). For instance, a quadcopter needs to estimate its position from its onboard cameras. Once we obtain an estimated \(q\) from \(y\), we can use the observer synthesis methods in Chapter \ref{output-feedback} to obtain the full state estimation.
+\item
+  The estimation community and the control community are a bit separated (at least in my opinion), despite that they share a lot of common tools, especially \emph{optimization}. We will see that estimating \(q\) from \(y\), where \(y\) could be a high-dimensional image, is often formulated as an optimization problem that is difficult to solve. However, using the SOS tool we developed in Chapter \ref{stability}, we can actually solve the optimization problem to global optimality.
+\end{enumerate}
+
+\hypertarget{d-rotations-and-poses}{%
+\section{3D Rotations and Poses}\label{d-rotations-and-poses}}
+
+\hypertarget{the-pinhole-camera-model}{%
+\section{The Pinhole Camera Model}\label{the-pinhole-camera-model}}
+
+\hypertarget{camera-pose-estimation}{%
+\section{Camera Pose Estimation}\label{camera-pose-estimation}}
+
+\hypertarget{the-p3p-problem}{%
+\subsection{The P3P Problem}\label{the-p3p-problem}}
+
+\hypertarget{the-pnp-problem}{%
+\subsection{The PnP Problem}\label{the-pnp-problem}}
+
+\hypertarget{global-optimality}{%
+\subsection{Global Optimality}\label{global-optimality}}
+
+\hypertarget{handling-outliers}{%
+\subsection{Handling Outliers}\label{handling-outliers}}
+
+\hypertarget{point-cloud-registration}{%
+\section{Point Cloud Registration}\label{point-cloud-registration}}
+
 \hypertarget{adaptivecontrol}{%
 \chapter{Adaptive Control}\label{adaptivecontrol}}
 
