@@ -208,13 +208,13 @@ We can easily see that $$d^*\leq p^*$$ always hold. This property is called **we
 ::: {.theorembox}
 ::: {.theorem #slater name="Slater's constraint qualification"}
   Strong duality holds for a convex problem
-  \begin{equation}
+ \begin{equation}
   \begin{aligned}
   p^* = \quad \min_{x} \quad & f_0(x)\\
   \textrm{s.t.} \quad & f_i(x)\leq 0\quad i=1...,m\\
     & Ax=b   \\
   \end{aligned}
-  \end{equation}
+ \end{equation}
   if it is strictly feasible, i.e.
   $$\exists x\in\textbf{relint}\mathcal{D}:\quad f_i(x)<0,\quad i=1...m,\quad Ax=b$$
   And the linear inequalities do not need to hold with strict inequality.
@@ -222,13 +222,43 @@ We can easily see that $$d^*\leq p^*$$ always hold. This property is called **we
 :::
 
 ### KKT condition {#appconvex-theory-kkt}
-KKT conditions.
+ Note that if strong duality holds, denote $x^*$ to be primal optimal, and $(\lambda^*,\nu^*)$ to be dual optimal. Then:
+
+ 
+   \begin{equation}
+  \begin{aligned}
+  f_0(x^*) = g(\lambda^*,\nu^*) = & \inf_x(f_0(x)+\sum_{i=1}^m\lambda_i^*f_i(x)+\sum_{i=1}^p\nu_i^*h_i(x))\\
+ \leq & f_0(x^*)+\sum_{i=1}^m\lambda_i^*f_i(x)+\sum_{i=1}^p\nu_i^*h_i(x)\\
+ \leq & f_0(x^*)\\
+  \end{aligned}
+  \end{equation}
+  
+  from this, combining $\lambda^*\geq 0$ and $f_i(x^*)\leq 0$, we can know that: $\lambda_i^*f_i(x^*)=0\quad i=1\cdots m$. This means for $\lambda_i^*$ and $f_i(x^*)$, one of them must be zero, which is known as complementary slackness).
+  
+ Thus we arrived at the following four conditions, which are called KKT conditions.
+ 
+::: {.theorembox}
+::: {.theorem #KKT name="Karush-Kuhn-Tucker(KKT) Conditions"}
+  The following four conditions are called KKT conditions (for a problem with differentiable $f_i,h_i$)
+  
+  1. Primal feasible: $f_i(x) \leq 0,i,\cdots ,m,\ h_i(x) = 0,i=1,\cdots ,p$
+  2. Dual feasible: $\lambda\succeq0$
+  3. Complementary slackness: $\lambda_if_i(x)=0,i=1,\cdots,m$
+  4. Gradient of Lagrangian with respect to $x$ vanishes:$\nabla f_0(x)+\sum_{i=1}^m\lambda_i\nabla f_i(x)+\sum_{i=1}^p\nu_i\nabla h_i(x) = 0$
+:::
+:::
+
+From the discussion above, we know that if strong duality holds and $x,\lambda,\nu$ are optimal, then they must satisfy the KKT conditions. 
+
+Also if $x,\lambda,\nu$ satisfy KKT for a convex problem, then they are optimal. However, the converse is not generally true, since KKT condition implies strong duality. If Slater's condition is satisfied, then $x$ is optimal if and only if there exist $\lambda,\nu$ that satisfy KKT conditions. Sometimes, by solving the KKT system, we can derive the closed-form solution of a optimization directly. Also, sometimes we will use the residual of the KKT system as the termination condition.
+
+In general, $f_i,h_i$ may not be differentiable. There are also KKT conditions for them, which will include knowledge of subdifferential and will not be included here.
 
 ## Practice
 
 ### CVXPY Introduction
 
-In the last section, we have learned basic concepts and theorems in convex optimization. In this section, on the other hand, we will introduce you to how to do basic convex optimization problem modeling with CVXPY, an easy-to-use Python package. To install CVXPY, please refer to this [page](https://www.cvxpy.org/install/index.html). To define and solve a convex optimization problem CVXPY, basically, there are three steps (apart from importing necessary packages):
+In the last section, we have learned basic concepts and theorems in convex optimization. In this section, on the other hand, we will introduce you how to model basic convex optimization problems with CVXPY, an easy-to-use Python package. To install CVXPY, please refer to this [page](https://www.cvxpy.org/install/index.html). To define and solve a convex optimization problem in CVXPY, there are three steps (apart from importing necessary packages):
 
 - Step 1: Define parameters and variables in a certain type of convex problem. Here variables are what you are trying to optimize or "learn". Parameters are the "coefficients" of variables in the objective and constraints. 
 
@@ -303,7 +333,7 @@ print("optimal solution: ", x.value) # optimal x
 
 ### Quadratic Programming (QP)
 
-**Definition.** An QP has the following form:
+**Definition.** A QP has the following form:
 \begin{align}
    (\#eq:app-qpdef)
    \min_{x \in \mathbb{R}^n} \ & \frac{1}{2} x^T P x + q^T x \\
