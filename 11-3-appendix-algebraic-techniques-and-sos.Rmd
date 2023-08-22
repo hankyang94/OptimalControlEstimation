@@ -1,4 +1,4 @@
-# Algebraic techniques and SOS
+# Algebraic Techniques and Sum-of-Squares
 
 ## Algebra
 

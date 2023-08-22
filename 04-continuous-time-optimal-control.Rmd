@@ -368,16 +368,18 @@ u^\star = \arg\min_{u \in \mathbb{U}} H(x^\star,u,p) = \arg\min_{u \in \mathbb{U
 (\#eq:pmp-solve-u-from-H)
 \end{equation}
 can be solved analytically so that $u^\star$ becomes a function of $x^\star$ and $p$. For example, this is possible when problem \@ref(eq:pmp-solve-u-from-H) is a convex problem, for which one can invoke the KKT optimality conditions (cf. Appendix \@ref(appconvex-theory-kkt)). Once $u^\star(t)$ is expressed as a function of $x^\star(t)$ and $p(t)$, we can merge the system equation \@ref(eq:pmp-optimal-system-dynamics) and the adjoint equation \@ref(eq:adjoint-equation-p) together and arrive at
-$$
+\begin{equation}
 \begin{cases}
 \dot{x}^\star(t) = f(x^\star(t), u^\star(t)) \\
 \dot{p}(t) = - \nabla_x f(x^\star(t),u^\star(t)) p(t) - \nabla_x g(x^\star(t),u^\star(t))
 \end{cases},
-$$
+(\#eq:two-point-boundary-problem)
+\end{equation}
 which is a set of $2n$ first-order differential equations in $x^\star(t)$ and $p(t)$. The boundary conditions are 
-$$
+\begin{equation}
 x^\star(0) = x_0, \quad p(T) = \nabla h(x^\star(T)).
-$$
+(\#eq:two-point-boundary-problem-boundary)
+\end{equation}
 The number of boundary conditions is also $2n$, so generally we expect to be able to solve these differential equations numerically. 
 
 
