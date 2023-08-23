@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 6 Output Feedback | Optimal Control and Estimation</title>
   <meta name="description" content="Lecture notes for Harvard ES/AM 158 Introduction to Optimal Control and Estimation." />
-  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 6 Output Feedback | Optimal Control and Estimation" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-08-22" />
+<meta name="date" content="2023-08-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -344,7 +344,7 @@ where <span class="math inline">\(x(t) \in \mathbb{X} \subseteq \mathbb{R}^n\)</
 <li><p><span class="math inline">\(\mathcal{U}\)</span> the set of all sufficiently many times differentiable inputs <span class="math inline">\(u: [0,+\infty) \rightarrow \mathbb{U}\)</span>.</p></li>
 </ul>
 <p>The problem of state observation is to produce an estimated state <span class="math inline">\(\hat{x}(t)\)</span> of the true state <span class="math inline">\(X(x_0,t_0;t;u)\)</span> based on knowledge about the system <a href="output-feedback.html#eq:output-feedback-system">(6.1)</a> and information about the history of inputs <span class="math inline">\(u_{[0,t]}\)</span> and outputs <span class="math inline">\(y_{[0,t]}\)</span>, so that <span class="math inline">\(\hat{x}(t)\)</span> asymptotically converges to <span class="math inline">\(X(x_0,t_0;t;u)\)</span>, for any initial condition <span class="math inline">\(x_0 \in \mathcal{X}_0\)</span> and any input <span class="math inline">\(u \in \mathcal{U}\)</span>.</p>
-<p>There are multiple ways for solving the problem of state observation (see e.g., <span class="citation">(<a href="#ref-bernard19book-observer">Bernard 2019</a>)</span>, <span class="citation">(<a href="#ref-bernard22arc-observer">Bernard, Andrieu, and Astolfi 2022</a>)</span>). Here we are particularly interested in the approach using a <em>state observer</em>, i.e., a dynamical system whose <em>internal state</em> evolves according to the history of inputs and outputs, from which a state estimation can be reconstructed that guarantees asymptotic convergence to the true state. We formalize this concept below.</p>
+<p>There are multiple ways for solving the problem of state observation (see e.g., <span class="citation">(<a href="#ref-bernard19book-observer" role="doc-biblioref">Bernard 2019</a>)</span>, <span class="citation">(<a href="#ref-bernard22arc-observer" role="doc-biblioref">Bernard, Andrieu, and Astolfi 2022</a>)</span>). Here we are particularly interested in the approach using a <em>state observer</em>, i.e., a dynamical system whose <em>internal state</em> evolves according to the history of inputs and outputs, from which a state estimation can be reconstructed that guarantees asymptotic convergence to the true state. We formalize this concept below.</p>
 <div class="definitionbox">
 <div class="definition">
 <p><span id="def:stateobserver" class="definition"><strong>Definition 6.1  (State Observer) </strong></span>A state observer for system <a href="output-feedback.html#eq:output-feedback-system">(6.1)</a> is a couple <span class="math inline">\((\mathcal{F},\mathcal{T})\)</span> such that</p>
@@ -433,7 +433,7 @@ Moreover, denoting <span class="math inline">\(\mathcal{T}\)</span> the family o
 </div>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-7" class="proof"><em>Proof</em>. </span>See Theorem 1.1 in <span class="citation">(<a href="#ref-bernard19book-observer">Bernard 2019</a>)</span>.</p>
+<p><span id="unlabeled-div-7" class="proof"><em>Proof</em>. </span>See Theorem 1.1 in <span class="citation">(<a href="#ref-bernard19book-observer" role="doc-biblioref">Bernard 2019</a>)</span>.</p>
 </div>
 <p>A simpler version of Theorem <a href="output-feedback.html#thm:observerdesignmeta">6.1</a> where the coordinate transformation <span class="math inline">\(T_u\)</span> is stationary and fixed for all <span class="math inline">\(u\)</span> is stated below as a corollary.</p>
 <div class="theorembox">
@@ -682,7 +682,7 @@ You should check out the Matlab code of this example <a href="https://github.com
 \tag{6.17}
 \end{equation}\]</span>
 The difference between the state-affine template <a href="output-feedback.html#eq:state-affine-template">(6.17)</a> and the Luenberger template <a href="output-feedback.html#eq:Luenberger-linear-template">(6.10)</a> is that the linear matrices <span class="math inline">\(A,C\)</span> are allowed to depend nonlinearly on the input <span class="math inline">\((u,y)\)</span>.</p>
-<p>Kalman and Bucy originally proposed an observer for linear time-varying systems <span class="citation">(<a href="#ref-kalman61-new">Kalman and Bucy 1961</a>)</span>. The result is later extened by <span class="citation">(<a href="#ref-besanccon96ejc-observer">Besançon, Bornard, and Hammouri 1996</a>)</span> and <span class="citation">(<a href="#ref-hammouri90cdc-observer">Hammouri and Leon Morales 1990</a>)</span> to deal with coefficient matrices dependent on the control. The following theorem is a direct extension of the result from <span class="citation">(<a href="#ref-besanccon96ejc-observer">Besançon, Bornard, and Hammouri 1996</a>)</span> and <span class="citation">(<a href="#ref-hammouri90cdc-observer">Hammouri and Leon Morales 1990</a>)</span> by considering <span class="math inline">\((u,y)\)</span> as an augmented control input.</p>
+<p>Kalman and Bucy originally proposed an observer for linear time-varying systems <span class="citation">(<a href="#ref-kalman61-new" role="doc-biblioref">Kalman and Bucy 1961</a>)</span>. The result is later extened by <span class="citation">(<a href="#ref-besanccon96ejc-observer" role="doc-biblioref">Besançon, Bornard, and Hammouri 1996</a>)</span> and <span class="citation">(<a href="#ref-hammouri90cdc-observer" role="doc-biblioref">Hammouri and Leon Morales 1990</a>)</span> to deal with coefficient matrices dependent on the control. The following theorem is a direct extension of the result from <span class="citation">(<a href="#ref-besanccon96ejc-observer" role="doc-biblioref">Besançon, Bornard, and Hammouri 1996</a>)</span> and <span class="citation">(<a href="#ref-hammouri90cdc-observer" role="doc-biblioref">Hammouri and Leon Morales 1990</a>)</span> by considering <span class="math inline">\((u,y)\)</span> as an augmented control input.</p>
 <p>Before presenting the theorem, we need to introduce the following terminology.</p>
 <div class="definitionbox">
 <div class="definition">
@@ -879,7 +879,7 @@ On the other hand,
 </div>
 <div id="kazantzis-kravaris-luenberger-kkl-template" class="section level3 hasAnchor" number="6.1.4">
 <h3><span class="header-section-number">6.1.4</span> Kazantzis-Kravaris-Luenberger (KKL) Template<a href="output-feedback.html#kazantzis-kravaris-luenberger-kkl-template" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>In Luenberger’s original paper about observer design for linear systems <span class="citation">(<a href="#ref-luenberger64-observer">Luenberger 1964</a>)</span>, the goal was to transform a linear system
+<p>In Luenberger’s original paper about observer design for linear systems <span class="citation">(<a href="#ref-luenberger64-observer" role="doc-biblioref">Luenberger 1964</a>)</span>, the goal was to transform a linear system
 <span class="math display">\[
 \dot{x} = F x, \quad y = C x
 \]</span>
@@ -912,10 +912,10 @@ with <span class="math inline">\(A\)</span> a Hurwitz matrix (but <span class="m
 \dot{\hat{\xi}} = A \hat{\xi} + B(u,y).
 \tag{6.28}
 \end{equation}\]</span>
-We refer to such a nonlinear Luenberger template the Kazantzis-Kravaris-Luenberger (KKL) template, due to the seminal work <span class="citation">(<a href="#ref-kazantzis98scl-kkl">Kazantzis and Kravaris 1998</a>)</span>.</p>
+We refer to such a nonlinear Luenberger template the Kazantzis-Kravaris-Luenberger (KKL) template, due to the seminal work <span class="citation">(<a href="#ref-kazantzis98scl-kkl" role="doc-biblioref">Kazantzis and Kravaris 1998</a>)</span>.</p>
 <p>The KKL template, once found, is nice in the sense that (i) the observer <a href="output-feedback.html#eq:kkl-observer">(6.28)</a> is a simple copy of the dynamics and also very easy to implement (as opposed to the Kalman-Bucy observer); and (ii) checking if the matrix <span class="math inline">\(A\)</span> is Hurwitz is easy, at least when <span class="math inline">\(A\)</span> has reasonable size, (e.g., compared to checking the regular persistence condition in the state-affine template in Theorem <a href="output-feedback.html#thm:kalmanbucystateaffine">6.3</a>).</p>
 <p>However, the KKL template is difficult to realize in the sense that (i) what kind of nonlinear systems can be converted to <a href="output-feedback.html#eq:kkl-template">(6.27)</a>, and (ii) for those systems, how do we find the coordinate transformation?</p>
-<p>Recent works have leveraged deep learning to learn the coordinate transformation, for example in <span class="citation">(<a href="#ref-janny21cdc-deepkkl">Janny et al. 2021</a>)</span>, <span class="citation">(<a href="#ref-niazi23lacc-earning">Niazi et al. 2023</a>)</span>, <span class="citation">(<a href="#ref-miao23ll4dc-earning">Miao and Gatsis 2023</a>)</span>. Before hammering the problem with deep learning, let us look at the fundamentals of the KKL observer.</p>
+<p>Recent works have leveraged deep learning to learn the coordinate transformation, for example in <span class="citation">(<a href="#ref-janny21cdc-deepkkl" role="doc-biblioref">Janny et al. 2021</a>)</span>, <span class="citation">(<a href="#ref-niazi23lacc-earning" role="doc-biblioref">Niazi et al. 2023</a>)</span>, <span class="citation">(<a href="#ref-miao23ll4dc-earning" role="doc-biblioref">Miao and Gatsis 2023</a>)</span>. Before hammering the problem with deep learning, let us look at the fundamentals of the KKL observer.</p>
 <div id="autonomous-systems-1" class="section level4 hasAnchor" number="6.1.4.1">
 <h4><span class="header-section-number">6.1.4.1</span> Autonomous Systems<a href="output-feedback.html#autonomous-systems-1" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>Consider the autonomous version of system <a href="output-feedback.html#eq:output-feedback-system">(6.1)</a> without control
@@ -924,7 +924,7 @@ We refer to such a nonlinear Luenberger template the Kazantzis-Kravaris-Luenberg
 \tag{6.29}
 \end{equation}\]</span>
 where <span class="math inline">\(x \in \mathbb{X} \subseteq \mathbb{R}^n, y \in \mathbb{Y} \subseteq \mathbb{R}^d\)</span>.</p>
-<p>The following result, established by <span class="citation">(<a href="#ref-andrieu06sicopt-kkl">Andrieu and Praly 2006</a>)</span>, states that the KKL observer exists under mild conditions.</p>
+<p>The following result, established by <span class="citation">(<a href="#ref-andrieu06sicopt-kkl" role="doc-biblioref">Andrieu and Praly 2006</a>)</span>, states that the KKL observer exists under mild conditions.</p>
 <div class="theorembox">
 <div class="theorem">
 <p><span id="thm:kklautonomous" class="theorem"><strong>Theorem 6.4  (KKL Observer for Autonomous Systems) </strong></span>Assum <span class="math inline">\(\mathcal{X}\)</span> and <span class="math inline">\(\mathcal{L}\)</span> are open bounded sets in <span class="math inline">\(\mathbb{X}\)</span> (the state space) such that <span class="math inline">\(\mathrm{cl}(\mathcal{X})\)</span> is contained in <span class="math inline">\(\mathcal{L}\)</span> and the system <a href="output-feedback.html#eq:kkl-autonomous-system">(6.29)</a> is backward <span class="math inline">\(\mathcal{L}\)</span>-distinguishable on <span class="math inline">\(\mathcal{X}\)</span> (cf. Definition <a href="output-feedback.html#def:observability">6.2</a>). Then there exists a strictly positive number <span class="math inline">\(\gamma\)</span> and a set <span class="math inline">\(\mathcal{S}\)</span> of zero Lebesgue measure in <span class="math inline">\(\mathbb{C}^{n+1}\)</span> such that denoting <span class="math inline">\(\Omega = \{ \lambda \in \mathbb{C} \mid \mathrm{Re}(\lambda) &lt; - \gamma \}\)</span>, for any <span class="math inline">\((\lambda_1,\dots,\lambda_{n+1}) \in \Omega^{n+1} \backslash \mathcal{S}\)</span>, there exists a function <span class="math inline">\(T: \mathbb{R}^n \rightarrow \mathbb{R}^{(n+1)d}\)</span> uniformly injective on <span class="math inline">\(\mathcal{X}\)</span> satisfying
@@ -1010,13 +1010,13 @@ we have
 &amp; &amp; -\lambda_p \end{bmatrix}}_{A} \xi + \begin{bmatrix}1 \\ \vdots \\ 1 \end{bmatrix} y
 \]</span>
 with <span class="math inline">\(A\)</span> clearly Hurwitz.</p>
-<p>With some extra arguments (cf. Section 8.1.1 in <span class="citation">(<a href="#ref-bernard19book-observer">Bernard 2019</a>)</span>), one can see that the transformation <span class="math inline">\(T\)</span> is injective with <span class="math inline">\(p \geq 4\)</span> distinct <span class="math inline">\(\lambda_i\)</span>’s. Therefore, this is a valid KKL observer.</p>
+<p>With some extra arguments (cf. Section 8.1.1 in <span class="citation">(<a href="#ref-bernard19book-observer" role="doc-biblioref">Bernard 2019</a>)</span>), one can see that the transformation <span class="math inline">\(T\)</span> is injective with <span class="math inline">\(p \geq 4\)</span> distinct <span class="math inline">\(\lambda_i\)</span>’s. Therefore, this is a valid KKL observer.</p>
 <p>The final issue that one needs to think about is, since the observer is estimating <span class="math inline">\(\hat{\xi}\)</span>, how to recover <span class="math inline">\(\hat{x}\)</span>? In this example, there is actually no analytical formula for recovering <span class="math inline">\(\hat{x}\)</span> from <span class="math inline">\(\hat{\xi}\)</span>. In this case, one approach is to solve the following optimization problem
 <span class="math display">\[
 \hat{x} = \arg\min_{x} \Vert \hat{\xi} - T(x) \Vert^2,
 \]</span>
 which may be quite expensive.</p>
-<p>A more general treatment is given in Section 8.2.2 in <span class="citation">(<a href="#ref-bernard19book-observer">Bernard 2019</a>)</span>.</p>
+<p>A more general treatment is given in Section 8.2.2 in <span class="citation">(<a href="#ref-bernard19book-observer" role="doc-biblioref">Bernard 2019</a>)</span>.</p>
 </div>
 </div>
 </div>
@@ -1056,7 +1056,7 @@ where, compared to the Luenberger observer <a href="output-feedback.html#eq:Luen
 \tag{6.33}
 \end{equation}\]</span>
 where the last constraint is added to make sure <span class="math inline">\(V(e)\)</span> is radially unbounded. Furthermore, if we replace the second constraint by <span class="math inline">\(\dot{V}(e) \leq - \lambda V(e)\)</span>, then we can guarantee <span class="math inline">\(V(e)\)</span> converges to zero exponentially.</p>
-<p>Problem <a href="output-feedback.html#eq:sos-observer-nonconvex">(6.33)</a>, however, is not a convex optimization problem, due to the term <span class="math inline">\(\frac{\partial V}{\partial e} K\)</span> being bilinear in the coefficients of <span class="math inline">\(V\)</span> and <span class="math inline">\(K\)</span>. Nevertheless, as shown in <span class="citation">(<a href="#ref-ebenbauer05cdc-polynomial">Ebenbauer, Renz, and Allgower 2005</a>)</span>, we can use a reparameterization trick to formulate a stronger version of <a href="output-feedback.html#eq:sos-observer-nonconvex">(6.33)</a> as follows.
+<p>Problem <a href="output-feedback.html#eq:sos-observer-nonconvex">(6.33)</a>, however, is not a convex optimization problem, due to the term <span class="math inline">\(\frac{\partial V}{\partial e} K\)</span> being bilinear in the coefficients of <span class="math inline">\(V\)</span> and <span class="math inline">\(K\)</span>. Nevertheless, as shown in <span class="citation">(<a href="#ref-ebenbauer05cdc-polynomial" role="doc-biblioref">Ebenbauer, Renz, and Allgower 2005</a>)</span>, we can use a reparameterization trick to formulate a stronger version of <a href="output-feedback.html#eq:sos-observer-nonconvex">(6.33)</a> as follows.
 <span class="math display" id="eq:sos-observer-convex-formulation">\[\begin{equation}
 \begin{split}
 \text{find} &amp; \quad V, Q(Ce), M(Ce,Cx) \\
@@ -1223,7 +1223,7 @@ Niazi, Muhammad Umar B, John Cao, Xudong Sun, Amritam Das, and Karl Henrik Johan
 <hr />
 <ol start="7">
 <li id="fn7"><p>We say “any solution” because there may be several solutions to the observer <a href="output-feedback.html#eq:observer-definition-1">(6.2)</a> due to <span class="math inline">\(\mathcal{F}\)</span> only being continuous. This is not a problem as long as any such solution satisfies the required convergence property.<a href="output-feedback.html#fnref7" class="footnote-back">↩︎</a></p></li>
-<li id="fn8"><p>The time dependence of <span class="math inline">\(\mathcal{T}_u\)</span> enables us to cover the case where the knowledge of the <span class="math inline">\(u\)</span> and <span class="math inline">\(y_{x_0,u}\)</span> is used to construct the estimate from the observer state. In particular, using the output sometimes can reduce the dimension of the observer state (and thus alleviate the computations), thus obtaining a reduced-order observer. For example, see <span class="citation">(<a href="#ref-karagiannis05cdc-nonlinear">Karagiannis and Astolfi 2005</a>)</span> and <span class="citation">(<a href="#ref-astolfi03tac-immersion">Astolfi and Ortega 2003</a>)</span>.<a href="output-feedback.html#fnref8" class="footnote-back">↩︎</a></p></li>
+<li id="fn8"><p>The time dependence of <span class="math inline">\(\mathcal{T}_u\)</span> enables us to cover the case where the knowledge of the <span class="math inline">\(u\)</span> and <span class="math inline">\(y_{x_0,u}\)</span> is used to construct the estimate from the observer state. In particular, using the output sometimes can reduce the dimension of the observer state (and thus alleviate the computations), thus obtaining a reduced-order observer. For example, see <span class="citation">(<a href="#ref-karagiannis05cdc-nonlinear" role="doc-biblioref">Karagiannis and Astolfi 2005</a>)</span> and <span class="citation">(<a href="#ref-astolfi03tac-immersion" role="doc-biblioref">Astolfi and Ortega 2003</a>)</span>.<a href="output-feedback.html#fnref8" class="footnote-back">↩︎</a></p></li>
 <li id="fn9"><p>A function <span class="math inline">\(\rho: \mathbb{R}_+ \rightarrow \mathbb{R}_+\)</span> is a <span class="math inline">\(\mathcal{K}\)</span> function if <span class="math inline">\(\rho(0) = 0\)</span>, <span class="math inline">\(\rho\)</span> is continuous, and <span class="math inline">\(\rho\)</span> is increasing.<a href="output-feedback.html#fnref9" class="footnote-back">↩︎</a></p></li>
 <li id="fn10"><p>An injective function is a function <span class="math inline">\(f\)</span> that maps distinct elements of its domain to distinct elements. That is, <span class="math inline">\(f(x_a) = f(x_b)\)</span> implies <span class="math inline">\(x_a = x_b\)</span>, or equivalently, <span class="math inline">\(x_a \neq x_b\)</span> implies <span class="math inline">\(f(x_a) \neq f(x_b)\)</span>.<a href="output-feedback.html#fnref10" class="footnote-back">↩︎</a></p></li>
 <li id="fn11"><p>I have to say I was a bit surprised when I arrived at this formulation.<a href="output-feedback.html#fnref11" class="footnote-back">↩︎</a></p></li>
@@ -1277,7 +1277,7 @@ gitbook.start({
 "link": null,
 "text": null
 },
-"download": ["optimal-control-estimation.pdf", "optimal-control-estimation.epub"],
+"download": ["optimal-control-estimation.pdf"],
 "search": {
 "engine": "fuse",
 "options": null

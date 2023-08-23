@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 1 The Optimal Control Formulation | Optimal Control and Estimation</title>
   <meta name="description" content="Lecture notes for Harvard ES/AM 158 Introduction to Optimal Control and Estimation." />
-  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 1 The Optimal Control Formulation | Optimal Control and Estimation" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-08-22" />
+<meta name="date" content="2023-08-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -381,8 +381,8 @@ The cost attained by the optimal controller, i.e., <span class="math inline">\(J
 <span class="math display">\[
 \min_{u_0,\dots,u_{N-1}} \mathbb{E} \left\{ g_N(x_N) + \sum_{k=0}^{N-1} g_k (x_k, u_k)  \right\}
 \]</span>
-where all the controls are planned at <span class="math inline">\(k=0\)</span>. Intuitively, a closed-loop policy is able to utilize the extra information received at each timestep (i.e., it observes <span class="math inline">\(x_{k+1}\)</span> and hence also observes the disturbance <span class="math inline">\(w_k\)</span>) to obtain a lower cost than an open-loop controller. Example 1.2.1 in <span class="citation">(<a href="#ref-bertsekas12book-dpocI">Bertsekas 2012</a>)</span> gives a concrete application where a closed-loop policy attains a lower cost than an open-loop policy.</p>
-<p>In deterministic control (i.e., when <span class="math inline">\(w_k \equiv 0,\forall k\)</span>), however, a closed-loop policy has no advantage over an open-loop controller. This is obvious because at <span class="math inline">\(k=0\)</span>, even the open-loop controller predicts perfectly the consequences of all its actions and there is no extra information to be observed at later time steps. In fact, even in stochastic problems, a closed-loop policy may not be advantageous, see Exercise 1.27 in <span class="citation">(<a href="#ref-bertsekas12book-dpocI">Bertsekas 2012</a>)</span>.</p>
+where all the controls are planned at <span class="math inline">\(k=0\)</span>. Intuitively, a closed-loop policy is able to utilize the extra information received at each timestep (i.e., it observes <span class="math inline">\(x_{k+1}\)</span> and hence also observes the disturbance <span class="math inline">\(w_k\)</span>) to obtain a lower cost than an open-loop controller. Example 1.2.1 in <span class="citation">(<a href="#ref-bertsekas12book-dpocI" role="doc-biblioref">Bertsekas 2012</a>)</span> gives a concrete application where a closed-loop policy attains a lower cost than an open-loop policy.</p>
+<p>In deterministic control (i.e., when <span class="math inline">\(w_k \equiv 0,\forall k\)</span>), however, a closed-loop policy has no advantage over an open-loop controller. This is obvious because at <span class="math inline">\(k=0\)</span>, even the open-loop controller predicts perfectly the consequences of all its actions and there is no extra information to be observed at later time steps. In fact, even in stochastic problems, a closed-loop policy may not be advantageous, see Exercise 1.27 in <span class="citation">(<a href="#ref-bertsekas12book-dpocI" role="doc-biblioref">Bertsekas 2012</a>)</span>.</p>
 </div>
 </div>
 <div id="dynamic-programming-and-principle-of-optimality" class="section level2 hasAnchor" number="1.2">
@@ -513,7 +513,7 @@ gitbook.start({
 "link": null,
 "text": null
 },
-"download": ["optimal-control-estimation.pdf", "optimal-control-estimation.epub"],
+"download": ["optimal-control-estimation.pdf"],
 "search": {
 "engine": "fuse",
 "options": null

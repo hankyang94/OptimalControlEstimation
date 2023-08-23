@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 2 Exact Dynamic Programming | Optimal Control and Estimation</title>
   <meta name="description" content="Lecture notes for Harvard ES/AM 158 Introduction to Optimal Control and Estimation." />
-  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 2 Exact Dynamic Programming | Optimal Control and Estimation" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-08-22" />
+<meta name="date" content="2023-08-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -473,8 +473,8 @@ x_{k+1} = A x_k + B (-K x_k) = (A - BK) x_k
 is stable, i.e., the eigenvalues of the matrix <span class="math inline">\(A - BK\)</span> are strictly within the unit circle (see Appendix <a href="app-lti-system-theory.html#app-lti-stability-dt">A.1.2</a>).</p>
 </div>
 </div>
-<p>A rigorous proof of Proposition <a href="exactdp.html#prp:infinitehorizonlqrsolution">2.2</a> is available in Proposition 3.1.1 of <span class="citation">(<a href="#ref-bertsekas12book-dpocI">Bertsekas 2012</a>)</span>. The proof basically studies the limit of the discrete-time Riccati equation <a href="exactdp.html#eq:finite-discrete-lqr-riccati">(2.7)</a> when <span class="math inline">\(N \rightarrow \infty\)</span>. Indeed, the algebraic Riccati equation <a href="exactdp.html#eq:algebraic-riccati">(2.13)</a> is the limit of the discrete-time Riccati equation <a href="exactdp.html#eq:finite-discrete-lqr-riccati">(2.7)</a> when <span class="math inline">\(N \rightarrow \infty\)</span>. The assumptions of <span class="math inline">\((A,B)\)</span> being controllable and <span class="math inline">\((A,C)\)</span> being observable can be relaxted to <span class="math inline">\((A,B)\)</span> being stabilizable and <span class="math inline">\((A,C)\)</span> being detectable (for definitions of stabilizability and detectability, see Appendix <a href="app-lti-system-theory.html#app-lti-system-theory">A</a>).</p>
-<p>We have not discussed how to solve the algebraic Riccati equation <a href="exactdp.html#eq:finite-discrete-lqr-riccati">(2.7)</a>. It is clear that <a href="exactdp.html#eq:finite-discrete-lqr-riccati">(2.7)</a> is not a linear system of equations in <span class="math inline">\(S\)</span>. In fact, the numerical algorithms for solving the algebraic Riccati equation can be highly nontrivial, for example see <span class="citation">(<a href="#ref-arnold84ieee-generalized">Arnold and Laub 1984</a>)</span>. Fortunately, such algorithms are often readily available, and as practitioners we do not need to worry about solving the algebraic Riccati equation by ourselves. For example, the Matlab <a href="https://www.mathworks.com/help/control/ref/dlqr.html"><code>dlqr</code></a> function computes the <span class="math inline">\(K\)</span> and <span class="math inline">\(S\)</span> matrices from <span class="math inline">\(A,B,Q,R\)</span>.</p>
+<p>A rigorous proof of Proposition <a href="exactdp.html#prp:infinitehorizonlqrsolution">2.2</a> is available in Proposition 3.1.1 of <span class="citation">(<a href="#ref-bertsekas12book-dpocI" role="doc-biblioref">Bertsekas 2012</a>)</span>. The proof basically studies the limit of the discrete-time Riccati equation <a href="exactdp.html#eq:finite-discrete-lqr-riccati">(2.7)</a> when <span class="math inline">\(N \rightarrow \infty\)</span>. Indeed, the algebraic Riccati equation <a href="exactdp.html#eq:algebraic-riccati">(2.13)</a> is the limit of the discrete-time Riccati equation <a href="exactdp.html#eq:finite-discrete-lqr-riccati">(2.7)</a> when <span class="math inline">\(N \rightarrow \infty\)</span>. The assumptions of <span class="math inline">\((A,B)\)</span> being controllable and <span class="math inline">\((A,C)\)</span> being observable can be relaxted to <span class="math inline">\((A,B)\)</span> being stabilizable and <span class="math inline">\((A,C)\)</span> being detectable (for definitions of stabilizability and detectability, see Appendix <a href="app-lti-system-theory.html#app-lti-system-theory">A</a>).</p>
+<p>We have not discussed how to solve the algebraic Riccati equation <a href="exactdp.html#eq:finite-discrete-lqr-riccati">(2.7)</a>. It is clear that <a href="exactdp.html#eq:finite-discrete-lqr-riccati">(2.7)</a> is not a linear system of equations in <span class="math inline">\(S\)</span>. In fact, the numerical algorithms for solving the algebraic Riccati equation can be highly nontrivial, for example see <span class="citation">(<a href="#ref-arnold84ieee-generalized" role="doc-biblioref">Arnold and Laub 1984</a>)</span>. Fortunately, such algorithms are often readily available, and as practitioners we do not need to worry about solving the algebraic Riccati equation by ourselves. For example, the Matlab <a href="https://www.mathworks.com/help/control/ref/dlqr.html"><code>dlqr</code></a> function computes the <span class="math inline">\(K\)</span> and <span class="math inline">\(S\)</span> matrices from <span class="math inline">\(A,B,Q,R\)</span>.</p>
 <p>Let us now apply the infinite-horizon LQR solution to stabilizing a simple pendulum.</p>
 <div class="examplebox">
 <div class="example">
@@ -598,7 +598,7 @@ gitbook.start({
 "link": null,
 "text": null
 },
-"download": ["optimal-control-estimation.pdf", "optimal-control-estimation.epub"],
+"download": ["optimal-control-estimation.pdf"],
 "search": {
 "engine": "fuse",
 "options": null

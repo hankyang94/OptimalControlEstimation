@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>A Linear System Theory | Optimal Control and Estimation</title>
   <meta name="description" content="Lecture notes for Harvard ES/AM 158 Introduction to Optimal Control and Estimation." />
-  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
 
   <meta property="og:title" content="A Linear System Theory | Optimal Control and Estimation" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-08-22" />
+<meta name="date" content="2023-08-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -555,7 +555,7 @@ where <span class="math inline">\(x \in \mathbb{R}^n\)</span> the state, <span c
       y(t) &amp; = C x(t) + D u(t)
    \end{split}
 \end{equation}\]</span></p>
-<p>To study the internal structure of linear systems, two important properties should be considered: controllability and observability. In the following analysis, we will see that they are actually dual concepts. Their definitions <span class="citation">(<a href="#ref-chen1984book-linear">Chen 1984</a>)</span> are given below.</p>
+<p>To study the internal structure of linear systems, two important properties should be considered: controllability and observability. In the following analysis, we will see that they are actually dual concepts. Their definitions <span class="citation">(<a href="#ref-chen1984book-linear" role="doc-biblioref">Chen 1984</a>)</span> are given below.</p>
 <div class="definitionbox">
 <div class="definition">
 <p><span id="def:lticontrollable" class="definition"><strong>Definition A.2  (Controllability) </strong></span>The LTI system <a href="app-lti-system-theory.html#eq:app-linear-system">(A.4)</a>, or the pair <span class="math inline">\((A, B)\)</span>, is controllable, if for any initial state <span class="math inline">\(x(0) = x_0\)</span> and final state <span class="math inline">\(x_f\)</span>, there exists a sequence of control inputs that transfer the system from <span class="math inline">\(x_0\)</span> to <span class="math inline">\(x_f\)</span> in finite time.</p>
@@ -851,7 +851,7 @@ where the penultimate equality uses Cayley Hamilton Theorem.</p>
 <p>There are a few equivalent statements to express an LTI system’s controllability that one should be familiar with:</p>
 <div class="theorembox">
 <div class="theorem">
-<p><span id="thm:lticontrollable" class="theorem"><strong>Theorem A.5  (Equivalent Statements for Controllability) </strong></span>The following statements are equivalent <span class="citation">(<a href="#ref-chen1984book-linear">Chen 1984</a>)</span>, <span class="citation">(<a href="#ref-zhou1996book-robust">Zhou, Doyle, and Glover 1996</a>)</span>:</p>
+<p><span id="thm:lticontrollable" class="theorem"><strong>Theorem A.5  (Equivalent Statements for Controllability) </strong></span>The following statements are equivalent <span class="citation">(<a href="#ref-chen1984book-linear" role="doc-biblioref">Chen 1984</a>)</span>, <span class="citation">(<a href="#ref-zhou1996book-robust" role="doc-biblioref">Zhou, Doyle, and Glover 1996</a>)</span>:</p>
 <ol style="list-style-type: decimal">
 <li><p><span class="math inline">\((A, B)\)</span> is controllable.</p></li>
 <li><p>The matrix
@@ -1029,7 +1029,7 @@ Now arbitrarily pick <span class="math inline">\(F \in \mathbb{R}^{m\times n}\)<
    \end{split}
 \end{equation*}\]</span>
 where <span class="math inline">\(I_1\)</span> is the identity matrix of size <span class="math inline">\(k\)</span>. Similarly, <span class="math inline">\(I_2\)</span> of size <span class="math inline">\(n-k\)</span>. Thus, at least <span class="math inline">\(n-k\)</span> eigenvalues of <span class="math inline">\(A+BF\)</span> cannot be freely assigned by choosing <span class="math inline">\(F\)</span>. Contradiction!</p>
-<p>(<span class="math inline">\(1. \Rightarrow 6.\)</span>) Here we only represent the SIMO case. For the MIMO case, the proof is far more complex. Interesting readers can refer to <span class="citation">(<a href="#ref-davison1968tac-poleassign">Davison and Wonham 1968</a>)</span> (the shortest proof I can find). Since there is only one input, the matrix <span class="math inline">\(B\)</span> degenerate to vector <span class="math inline">\(b\)</span>. From Corollary <a href="app-lti-system-theory.html#cor:cayham-4">A.5</a>, there exist a similarity transformation matrix <span class="math inline">\(T\)</span>, s.t.
+<p>(<span class="math inline">\(1. \Rightarrow 6.\)</span>) Here we only represent the SIMO case. For the MIMO case, the proof is far more complex. Interesting readers can refer to <span class="citation">(<a href="#ref-davison1968tac-poleassign" role="doc-biblioref">Davison and Wonham 1968</a>)</span> (the shortest proof I can find). Since there is only one input, the matrix <span class="math inline">\(B\)</span> degenerate to vector <span class="math inline">\(b\)</span>. From Corollary <a href="app-lti-system-theory.html#cor:cayham-4">A.5</a>, there exist a similarity transformation matrix <span class="math inline">\(T\)</span>, s.t.
 <span class="math display">\[\begin{equation*}
    T A T^{-1} = A_1 := \begin{bmatrix}
       -a_1 &amp; -a_2 &amp; \dots &amp; -a_{n-1} &amp; -a_n \\
@@ -1070,7 +1070,7 @@ Now consider <span class="math inline">\(F(z) = v^* e^{Az} B, z\in \mathcal{C}\)
 </div>
 <div id="duality" class="section level3 hasAnchor" number="10.2.3">
 <h3><span class="header-section-number">A.2.3</span> Duality<a href="app-lti-system-theory.html#duality" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>Although controllability and observability seemingly have no direct connections from their definitions <a href="app-lti-system-theory.html#def:lticontrollable">A.2</a> and <a href="app-lti-system-theory.html#def:ltiobservable">A.3</a>, the following theorem <span class="citation">(<a href="#ref-chen1984book-linear">Chen 1984</a>)</span> states their tight relations.</p>
+<p>Although controllability and observability seemingly have no direct connections from their definitions <a href="app-lti-system-theory.html#def:lticontrollable">A.2</a> and <a href="app-lti-system-theory.html#def:ltiobservable">A.3</a>, the following theorem <span class="citation">(<a href="#ref-chen1984book-linear" role="doc-biblioref">Chen 1984</a>)</span> states their tight relations.</p>
 <div class="theorembox">
 <div class="theorem">
 <p><span id="thm:lti-dual-conobs" class="theorem"><strong>Theorem A.6  (Theorem of Duality) </strong></span>The pair <span class="math inline">\((C,A)\)</span> is observable if and only if <span class="math inline">\((A^*,C^*)\)</span> is controllable.</p>
@@ -1121,7 +1121,7 @@ is nonsingular for all <span class="math inline">\(t &gt;0\)</span>. The latter 
 <p>With the Theorem of Duality <a href="app-lti-system-theory.html#thm:lti-dual-conobs">A.6</a>, we can directly write down the equivalent statements of observability without any additional proofs:</p>
 <div class="theorembox">
 <div class="theorem">
-<p><span id="thm:ltiobservable" class="theorem"><strong>Theorem A.7  (Equivalent Statements for Observability) </strong></span>The following statements are equivalent <span class="citation">(<a href="#ref-chen1984book-linear">Chen 1984</a>)</span>, <span class="citation">(<a href="#ref-zhou1996book-robust">Zhou, Doyle, and Glover 1996</a>)</span>:</p>
+<p><span id="thm:ltiobservable" class="theorem"><strong>Theorem A.7  (Equivalent Statements for Observability) </strong></span>The following statements are equivalent <span class="citation">(<a href="#ref-chen1984book-linear" role="doc-biblioref">Chen 1984</a>)</span>, <span class="citation">(<a href="#ref-zhou1996book-robust" role="doc-biblioref">Zhou, Doyle, and Glover 1996</a>)</span>:</p>
 <ol style="list-style-type: decimal">
 <li><p><span class="math inline">\((C, A)\)</span> is observable.</p></li>
 <li><p>The matrix
@@ -1188,7 +1188,7 @@ W_o = \int_{0}^{\infty} e^{A^*\tau} C^* C e^{A\tau} d\tau
 <h3><span class="header-section-number">A.3.1</span> Equivalent Statements for Stabilizability<a href="app-lti-system-theory.html#equivalent-statements-for-stabilizability" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div class="theorembox">
 <div class="theorem">
-<p><span id="thm:ltistabilizable" class="theorem"><strong>Theorem A.8  (Equivalent Statements for Stabilizability) </strong></span>The following statements are equivalent <span class="citation">(<a href="#ref-zhou1996book-robust">Zhou, Doyle, and Glover 1996</a>)</span>:</p>
+<p><span id="thm:ltistabilizable" class="theorem"><strong>Theorem A.8  (Equivalent Statements for Stabilizability) </strong></span>The following statements are equivalent <span class="citation">(<a href="#ref-zhou1996book-robust" role="doc-biblioref">Zhou, Doyle, and Glover 1996</a>)</span>:</p>
 <ol style="list-style-type: decimal">
 <li><p><span class="math inline">\((A,B)\)</span> is stabilizable.</p></li>
 <li><p>For all <span class="math inline">\(\lambda\)</span> and <span class="math inline">\(x\)</span> such that <span class="math inline">\(x^* A = \lambda x^*\)</span> and <span class="math inline">\(\text{Re} \lambda \ge 0\)</span>, <span class="math inline">\(x^* B \ne 0\)</span>.</p></li>
@@ -1294,7 +1294,7 @@ where <span class="math inline">\(\bar{A}_c \in \mathbb{C}^{k_1 \times k_1}\)</s
 <p>Thanks to duality, we can directly write down the equivalent statements of observability without any additional proofs:</p>
 <div class="theorembox">
 <div class="theorem">
-<p><span id="thm:ltidetectable" class="theorem"><strong>Theorem A.9  (Equivalent Statements for Detectability) </strong></span>The following statements are equivalent <span class="citation">(<a href="#ref-zhou1996book-robust">Zhou, Doyle, and Glover 1996</a>)</span>:</p>
+<p><span id="thm:ltidetectable" class="theorem"><strong>Theorem A.9  (Equivalent Statements for Detectability) </strong></span>The following statements are equivalent <span class="citation">(<a href="#ref-zhou1996book-robust" role="doc-biblioref">Zhou, Doyle, and Glover 1996</a>)</span>:</p>
 <ol style="list-style-type: decimal">
 <li><p><span class="math inline">\((C,A)\)</span> is detectable.</p></li>
 <li><p>For all <span class="math inline">\(\lambda\)</span> and <span class="math inline">\(x\)</span> such that <span class="math inline">\(A x = \lambda x\)</span> and <span class="math inline">\(\text{Re} \lambda \ge 0\)</span>, <span class="math inline">\(C x \ne 0\)</span>.</p></li>
@@ -1424,7 +1424,7 @@ gitbook.start({
 "link": null,
 "text": null
 },
-"download": ["optimal-control-estimation.pdf", "optimal-control-estimation.epub"],
+"download": ["optimal-control-estimation.pdf"],
 "search": {
 "engine": "fuse",
 "options": null

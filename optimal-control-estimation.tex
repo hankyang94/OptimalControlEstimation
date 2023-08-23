@@ -5,19 +5,16 @@
 \documentclass[
 ]{book}
 \usepackage{amsmath,amssymb}
+\usepackage{lmodern}
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-  \usepackage{unicode-math} % this also loads fontspec
+  \usepackage{unicode-math}
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
-\fi
-\usepackage{lmodern}
-\ifPDFTeX\else
-  % xetex/luatex font selection
 \fi
 % Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
@@ -47,13 +44,13 @@
 \newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
 \newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
 \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
 \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
 \newcommand{\BuiltInTok}[1]{#1}
 \newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
 \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
 \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
 \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
 \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
@@ -61,7 +58,7 @@
 \newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
 \newcommand{\ExtensionTok}[1]{#1}
 \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
 \newcommand{\ImportTok}[1]{#1}
 \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
@@ -70,7 +67,7 @@
 \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
 \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
 \newcommand{\RegionMarkerTok}[1]{#1}
-\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
 \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
@@ -145,7 +142,7 @@ arc=4pt}
 \bibliographystyle{apalike}
 \IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\urlstyle{same}
+\urlstyle{same} % disable monospaced font for URLs
 \hypersetup{
   pdftitle={Optimal Control and Estimation},
   pdfauthor={Heng Yang},
@@ -154,7 +151,7 @@ arc=4pt}
 
 \title{Optimal Control and Estimation}
 \author{Heng Yang}
-\date{2023-08-22}
+\date{2023-08-23}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -1489,7 +1486,7 @@ is unstable at the equilibrium point \(x = 0\).
 Lyapunov stability does not guarantee the system trajectory will actually converge to \(x =0\). Instead, asymptotic stability will ask the system trajectory to converge to \(x=0\).
 
 \begin{definition}[Asymptotic Stability and Domain of Attraction]
-\protect\hypertarget{def:asymptoticstability}{}\label{def:asymptoticstability}The equilibrium point \(x = 0\) is said to be \emph{asymptotically stable} if (i) it is Lyapunov stable, and (ii) there exists some \(r > 0\) such that \(x(0) \in B_r\) implies \(x(t) \rightarrow 0\) as \(t \rightarrow 0\).
+\protect\hypertarget{def:asymptoticstability}{}\label{def:asymptoticstability}The equilibrium point \(x = 0\) is said to be \emph{asymptotically stable} if (i) it is Lyapunov stable, and (ii) there exists some \(r > 0\) such that \(x(0) \in B_r\) implies \(x(t) \rightarrow 0\) as \(t \rightarrow \infty\).
 
 \emph{The} domain of attraction (for the equilibrium \(x=0\)) is the largest set of points in the state space such that trajectories initiated at those points will converge to the equilibrium point. That is,
 \[
@@ -1609,7 +1606,7 @@ The linearization method is easy to carry out. However, it tells us nothing abou
 \hypertarget{lyapunov-analysis}{%
 \subsection{Lyapunov Analysis}\label{lyapunov-analysis}}
 
-The basic idea of Lyapunov analysis is quite intuitive: if can find an ``energy-like'' scalar functin for a system such that the scalar function is zero at an equilibrium point and positive everywhere else, and the time-derivative of the scalar function is zero at the equilibrium point but negative otherwise, then we know that the energy of the system will eventually converge to zero, and hence the state trajectory will converge to the equilibrium point. Lyapunov analysis was originally inspired by the energy function of a mechanical system: the total energy of a mechanical system (potental energy plus kinetic energy) will settle down to its minimum value if it is constantly dissipated (e.g., due to damping). However, the concept of a Lyapunov function is much broader than the energy function, i.e., it can be an arbitrary abstract function without any physical meaning.
+The basic idea of Lyapunov analysis is quite intuitive: if can find an ``energy-like'' scalar function for a system such that the scalar function is zero at an equilibrium point and positive everywhere else, and the time-derivative of the scalar function is zero at the equilibrium point but negative otherwise, then we know that the energy of the system will eventually converge to zero, and hence the state trajectory will converge to the equilibrium point. Lyapunov analysis was originally inspired by the energy function of a mechanical system: the total energy of a mechanical system (potental energy plus kinetic energy) will settle down to its minimum value if it is constantly dissipated (e.g., due to damping). However, the concept of a Lyapunov function is much broader than the energy function, i.e., it can be an arbitrary abstract function without any physical meaning.
 
 Let us now introduce the concept of a Lyapunov function.
 
@@ -1719,9 +1716,9 @@ For the autonomous system \eqref{eq:autonomous-system}, suppose there exists a s
 
 \begin{itemize}
 \item
-  \(V(x)\) is positive define;
+  \(V(x)\) is positive definite;
 \item
-  \(\dot{V}(x)\) is negative define;
+  \(\dot{V}(x)\) is negative definite;
 \item
   \(V(x) \rightarrow \infty\) as \(\Vert x \Vert \rightarrow \infty\),
 \end{itemize}
@@ -1754,7 +1751,7 @@ x(0) \in G \Longrightarrow x(t) \in G,\forall t.
 \]
 \end{definition}
 
-A trivial invariant set if the entire state space \(\mathbb{X}\). Another example of an invariant set is the singleton \(\{x^\star \}\) with \(x^\star\) being an equilibrium point. A nontrivial invariant set is the domain of attraction of an equilibrium point (cf.~Definition \ref{def:asymptoticstability}).
+A trivial invariant set is the entire state space \(\mathbb{X}\). Another example of an invariant set is the singleton \(\{x^\star \}\) with \(x^\star\) being an equilibrium point. A nontrivial invariant set is the domain of attraction of an equilibrium point (cf.~Definition \ref{def:asymptoticstability}).
 
 We now state the local invariant set theorem.
 
@@ -1765,7 +1762,7 @@ We now state the local invariant set theorem.
 \item
   the sublevel set \(\Omega_{\rho} = \{ x \in \mathbb{X} \mid V(x) < \rho \}\) is bounded for some \(\rho > 0\), and
 \item
-  \(V(x) \leq 0\) for all \(x \in \Omega_{\rho}\).
+  \(\dot{V}(x) \leq 0\) for all \(x \in \Omega_{\rho}\).
 \end{itemize}
 
 Let \(\mathcal{R}\) be the set of all points within \(\Omega_{\rho}\) such that \(\dot{V}(x) = 0\), and \(\mathcal{M}\) be the largest invariant set in \(\mathcal{R}\). Then, every trajectory that starts in \(\Omega_{\rho}\) will converge to \(\mathcal{M}\) as \(t \rightarrow \infty\).
@@ -2110,7 +2107,7 @@ Plotting \(\dot{V}(x)\) in the constraint set \eqref{eq:lyapunovlocalstabilitype
 
 }
 
-\caption{Derivative of the lyapunov local stability certificate computed via convex optimization.}\label{fig:lyapunov-local-certificate-pendulum-Vdot}
+\caption{Derivative of the Lyapunov local stability certificate computed via convex optimization.}\label{fig:lyapunov-local-certificate-pendulum-Vdot}
 \end{figure}
 
 and verify that \(\dot{V}(x)\) is locally negative definite.
@@ -2522,7 +2519,7 @@ Table \ref{tab:pendulumLuenbergerRate} below shows the convergence rates compute
   >{\centering\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.1395}}
   >{\centering\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.1395}}@{}}
 \caption{\label{tab:pendulumLuenbergerRate} Convergence rate estimation of the Luenberger observer for a simple pendulm.}\tabularnewline
-\toprule\noalign{}
+\toprule()
 \begin{minipage}[b]{\linewidth}\centering
 \(k\)
 \end{minipage} & \begin{minipage}[b]{\linewidth}\centering
@@ -2538,9 +2535,9 @@ Table \ref{tab:pendulumLuenbergerRate} below shows the convergence rates compute
 \end{minipage} & \begin{minipage}[b]{\linewidth}\centering
 \(10000\)
 \end{minipage} \\
-\midrule\noalign{}
+\midrule()
 \endfirsthead
-\toprule\noalign{}
+\toprule()
 \begin{minipage}[b]{\linewidth}\centering
 \(k\)
 \end{minipage} & \begin{minipage}[b]{\linewidth}\centering
@@ -2556,11 +2553,10 @@ Table \ref{tab:pendulumLuenbergerRate} below shows the convergence rates compute
 \end{minipage} & \begin{minipage}[b]{\linewidth}\centering
 \(10000\)
 \end{minipage} \\
-\midrule\noalign{}
+\midrule()
 \endhead
-\bottomrule\noalign{}
-\endlastfoot
 \(\gamma\) & \(0.0019\) & \(0.0523\) & \(0.0990\) & \(0.1000\) & \(0.1000\) & \(0.1000\) \\
+\bottomrule()
 \end{longtable}
 
 \textbf{Optimal \(K\)}. Is it true that \(0.1\) is the best convergence rate, or in other words, what is the best \(K\) that maximizes the convergence rate \(\gamma\)?

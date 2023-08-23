@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 4 Continuous-time Optimal Control | Optimal Control and Estimation</title>
   <meta name="description" content="Lecture notes for Harvard ES/AM 158 Introduction to Optimal Control and Estimation." />
-  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 4 Continuous-time Optimal Control | Optimal Control and Estimation" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-08-22" />
+<meta name="date" content="2023-08-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -519,7 +519,7 @@ and any <span class="math inline">\(u \in \mathbb{U}\)</span> would attain the m
 <h2><span class="header-section-number">4.4</span> The Pontryagin Minimum Principle<a href="continuous-time-optimal-control.html#the-pontryagin-minimum-principle" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The HJB equation in Theorem <a href="continuous-time-optimal-control.html#thm:hjbsufficient">4.1</a> provides a <em>sufficient</em> condition for the optimal cost-to-go. However, since the HJB equation is a sufficient condition, there do exist cases where the optimal cost-to-go does not satisfy the HJB equation but is still optimal (e.g., when the optimal cost-to-go is not continuously differentiable).</p>
 <p>We now introduce a <em>necessary</em> condition that any optimal control trajectory and state trajectory must satisfy. This condition is the celebrated Pontryagin minimum principle.</p>
-<p>A rigorous derivation of the Pontryagin minimum principle can be mathematically involving and is beyond the scope of this lecture notes (see Section 7.3.2 in <span class="citation">(<a href="#ref-bertsekas12book-dpocI">Bertsekas 2012</a>)</span> for a more rigorous treatment). In the following, we provide an informal derivation of the Pontryagin minimum principle.</p>
+<p>A rigorous derivation of the Pontryagin minimum principle can be mathematically involving and is beyond the scope of this lecture notes (see Section 7.3.2 in <span class="citation">(<a href="#ref-bertsekas12book-dpocI" role="doc-biblioref">Bertsekas 2012</a>)</span> for a more rigorous treatment). In the following, we provide an informal derivation of the Pontryagin minimum principle.</p>
 <p>Recall the HJB equation in Theorem <a href="continuous-time-optimal-control.html#thm:hjbsufficient">4.1</a> states that, if a control trajectory <span class="math inline">\(u^\star(t)\)</span> and the associated state trajectory <span class="math inline">\(x^\star(t)\)</span> is optimal, then for all <span class="math inline">\(t \in [0,T]\)</span>, the following condition must hold
 <span class="math display" id="eq:pmp-intro-from-hjb">\[\begin{equation}
 u^\star(t) = \arg\min_{u \in \mathbb{U}} \left[ g(x^\star(t),u) + \nabla_x J(t,x^\star(t))^T f(x^\star(t),u)  \right]
@@ -547,7 +547,7 @@ In words, the partial derivates (with respect to <span class="math inline">\(t\)
 0 = \min_{u \in \mathbb{U}} \left[ g(x,u) + \nabla_t J(t,x) + \nabla_x J(t,x)^Tf(x,u)  \right].
 \tag{4.12}
 \end{equation}\]</span>
-Assume that <span class="math inline">\(\mu^\star(t,x)\)</span> attains the minimum in the equation above and it is also continuously differentiable. Note that we have made the restrictive assumption that <span class="math inline">\(\mathbb{U}\)</span> is convex and <span class="math inline">\(\mu^\star(t,x)\)</span> is continuously differentiable, which are not necessary in a more rigorous derivation of Pontryagin’s principle (cf. Section 7.3.2 in <span class="citation">(<a href="#ref-bertsekas12book-dpocI">Bertsekas 2012</a>)</span>).</p>
+Assume that <span class="math inline">\(\mu^\star(t,x)\)</span> attains the minimum in the equation above and it is also continuously differentiable. Note that we have made the restrictive assumption that <span class="math inline">\(\mathbb{U}\)</span> is convex and <span class="math inline">\(\mu^\star(t,x)\)</span> is continuously differentiable, which are not necessary in a more rigorous derivation of Pontryagin’s principle (cf. Section 7.3.2 in <span class="citation">(<a href="#ref-bertsekas12book-dpocI" role="doc-biblioref">Bertsekas 2012</a>)</span>).</p>
 <p>We differentiate both sides of <a href="continuous-time-optimal-control.html#eq:hjb-equation-restate-for-pmp">(4.12)</a> with respect to <span class="math inline">\(t\)</span> and <span class="math inline">\(x\)</span>. In particular, let
 <span class="math display">\[
 F(t,x,u) = g(x,u) + \nabla_t J(t,x) + \nabla_x J(t,x)^T f(x,u)
@@ -742,7 +742,7 @@ gitbook.start({
 "link": null,
 "text": null
 },
-"download": ["optimal-control-estimation.pdf", "optimal-control-estimation.epub"],
+"download": ["optimal-control-estimation.pdf"],
 "search": {
 "engine": "fuse",
 "options": null
