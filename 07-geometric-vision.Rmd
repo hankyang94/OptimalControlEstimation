@@ -1,0 +1,30 @@
+# Geometric Vision {#geometric-vision}
+
+In this Chapter, we introduce the fundamentals of _geometric vision_, a (classical) branch of computer vision that seeks to estimate geometric models (e.g., 3D rotations, translations, and points) from sensor measurements (e.g., images and point clouds). There are two goals for introducing geometric vision.
+
+1. In the output feedback Chapter \@ref(output-feedback), we see that the full state $x$ of a dynamical system is often not available, and needs to be estimated from the measurement signal $y$ that satisfies
+$$
+y(t) = h(x(t),u(t))
+$$
+potentially plus some noise. In Chapter \@ref(output-feedback), we studied the case where $y$ is part of the state $x$, often the position $q$ of a second-order system $x=[q;\dot{q}]$. For example, in the pendulm swing-up example, we assume the angular position $\theta$ is observed, but not the angular velocity $\dot{\theta}$. However, in many practical applications, the measurement signal $y$ does not directly tell us the position $q$, and we need to estimate $q$ from $y$. For instance, a quadcopter needs to estimate its position from its onboard cameras. Once we obtain an estimated $q$ from $y$, we can use the observer synthesis methods in Chapter \@ref(output-feedback) to obtain the full state estimation.
+
+2. The estimation community and the control community are a bit separated (at least in my opinion), despite that they share a lot of common tools, especially _optimization_. We will see that estimating $q$ from $y$, where $y$ could be a high-dimensional image, is often formulated as an optimization problem that is difficult to solve. However, using the SOS tool we developed in Chapter \@ref(stability), we can actually solve the optimization problem to global optimality. 
+
+## 3D Rotations and Poses
+
+
+## The Pinhole Camera Model
+
+
+## Camera Pose Estimation
+
+### The P3P Problem 
+
+
+### The PnP Problem 
+
+### Global Optimality
+
+### Handling Outliers
+
+## Point Cloud Registration
