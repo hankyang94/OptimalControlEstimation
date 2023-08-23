@@ -31,6 +31,10 @@ Lecture notes for Harvard ES/AM 158 Introduction to Optimal Control and Estimati
 
 - After you are done with your edits, and you have checked that the book can still compile after your edits (preview the html files to make sure they look the way you want), you can push your changes to the `main` branch (you should pull first before your push, in case other people have made their changes too).
 
+- The edits you made will automatically take effects on Hank's website in a few minutes.
+
+<!--
 - Let Hank know you have made your edits. Hank will review the edits and deploy these changes to the `gh-pages` branch. Then those changes will be online and public.
 
 At this time there are only a small number of people writing the book, so this centralized way will probably work well. Feel free to suggest better ways as Hank is not an expert using github.
+-->

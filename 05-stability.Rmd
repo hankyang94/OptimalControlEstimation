@@ -116,7 +116,7 @@ Lyapunov stability does not guarantee the system trajectory will actually conver
 
 ::: {.definitionbox}
 ::: {.definition #asymptoticstability name="Asymptotic Stability and Domain of Attraction"}
-The equilibrium point $x = 0$ is said to be _asymptotically stable_ if (i) it is Lyapunov stable, and (ii) there exists some $r > 0$ such that $x(0) \in B_r$ implies $x(t) \rightarrow 0$ as $t \rightarrow 0$. 
+The equilibrium point $x = 0$ is said to be _asymptotically stable_ if (i) it is Lyapunov stable, and (ii) there exists some $r > 0$ such that $x(0) \in B_r$ implies $x(t) \rightarrow 0$ as $t \rightarrow \infty$. 
 
 _The_ domain of attraction (for the equilibrium $x=0$) is the largest set of points in the state space such that trajectories initiated at those points will converge to the equilibrium point. That is,
 $$
@@ -232,7 +232,7 @@ The linearization method is easy to carry out. However, it tells us nothing abou
 
 ### Lyapunov Analysis
 
-The basic idea of Lyapunov analysis is quite intuitive: if can find an "energy-like" scalar functin for a system such that the scalar function is zero at an equilibrium point and positive everywhere else, and the time-derivative of the scalar function is zero at the equilibrium point but negative otherwise, then we know that the energy of the system will eventually converge to zero, and hence the state trajectory will converge to the equilibrium point. Lyapunov analysis was originally inspired by the energy function of a mechanical system: the total energy of a mechanical system (potental energy plus kinetic energy) will settle down to its minimum value if it is constantly dissipated (e.g., due to damping). However, the concept of a Lyapunov function is much broader than the energy function, i.e., it can be an arbitrary abstract function without any physical meaning. 
+The basic idea of Lyapunov analysis is quite intuitive: if can find an "energy-like" scalar function for a system such that the scalar function is zero at an equilibrium point and positive everywhere else, and the time-derivative of the scalar function is zero at the equilibrium point but negative otherwise, then we know that the energy of the system will eventually converge to zero, and hence the state trajectory will converge to the equilibrium point. Lyapunov analysis was originally inspired by the energy function of a mechanical system: the total energy of a mechanical system (potental energy plus kinetic energy) will settle down to its minimum value if it is constantly dissipated (e.g., due to damping). However, the concept of a Lyapunov function is much broader than the energy function, i.e., it can be an arbitrary abstract function without any physical meaning. 
 
 Let us now introduce the concept of a Lyapunov function.
 
@@ -338,9 +338,9 @@ In many applications, we desire to certify the global stability of an equilibriu
 ::: {.theorem #lyapunovglobalstability name="Lyapunov Global Stability"}
 For the autonomous system \@ref(eq:autonomous-system), suppose there exists a scalar function $V(x)$ with (continuous partial derivatives) such that 
 
-- $V(x)$ is positive define;
+- $V(x)$ is positive definite;
 
-- $\dot{V}(x)$ is negative define;
+- $\dot{V}(x)$ is negative definite;
 
 - $V(x) \rightarrow \infty$ as $\Vert x \Vert \rightarrow \infty$,
 
@@ -370,7 +370,7 @@ $$
 :::
 :::
 
-A trivial invariant set if the entire state space $\mathbb{X}$. Another example of an invariant set is the singleton $\{x^\star \}$ with $x^\star$ being an equilibrium point. A nontrivial invariant set is the domain of attraction of an equilibrium point (cf. Definition \@ref(def:asymptoticstability)).
+A trivial invariant set is the entire state space $\mathbb{X}$. Another example of an invariant set is the singleton $\{x^\star \}$ with $x^\star$ being an equilibrium point. A nontrivial invariant set is the domain of attraction of an equilibrium point (cf. Definition \@ref(def:asymptoticstability)).
 
 We now state the local invariant set theorem.
 
@@ -380,7 +380,7 @@ Consider the autonomous system \@ref(eq:autonomous-system), and let $V(x)$ be a 
 
 - the sublevel set $\Omega_{\rho} = \{ x \in \mathbb{X} \mid V(x) < \rho \}$ is bounded for some $\rho > 0$, and 
 
-- $V(x) \leq 0$ for all $x \in \Omega_{\rho}$.
+- $\dot{V}(x) \leq 0$ for all $x \in \Omega_{\rho}$.
 
 Let $\mathcal{R}$ be the set of all points within $\Omega_{\rho}$ such that $\dot{V}(x) = 0$, and $\mathcal{M}$ be the largest invariant set in $\mathcal{R}$. Then, every trajectory that starts in $\Omega_{\rho}$ will converge to $\mathcal{M}$ as $t \rightarrow \infty$.
 :::
@@ -703,7 +703,7 @@ knitr::include_graphics('images/pendulum-local-lyapunov-certificate-V.png')
 and verify that $V(x)$ is locally positive definite.
 
 Plotting $\dot{V}(x)$ in the constraint set \@ref(eq:lyapunovlocalstabilitypendulumsos-constraintset) using $(\theta, \dot{\theta})$ coordinates, we get
-```{r lyapunov-local-certificate-pendulum-Vdot, out.width='60%', fig.show='hold', fig.cap='Derivative of the lyapunov local stability certificate computed via convex optimization.', fig.align='center', echo=FALSE}
+```{r lyapunov-local-certificate-pendulum-Vdot, out.width='60%', fig.show='hold', fig.cap='Derivative of the Lyapunov local stability certificate computed via convex optimization.', fig.align='center', echo=FALSE}
 knitr::include_graphics('images/pendulum-local-lyapunov-certificate-Vdot.png')
 ```
 and verify that $\dot{V}(x)$ is locally negative definite.
