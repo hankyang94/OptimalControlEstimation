@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-08-23" />
+<meta name="date" content="2023-08-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -173,7 +173,9 @@ div.csl-indent {
 <li class="chapter" data-level="2.1" data-path="exactdp.html"><a href="exactdp.html#lqr"><i class="fa fa-check"></i><b>2.1</b> Linear Quadratic Regulator</a>
 <ul>
 <li class="chapter" data-level="2.1.1" data-path="exactdp.html"><a href="exactdp.html#infinite-horizon-lqr"><i class="fa fa-check"></i><b>2.1.1</b> Infinite-Horizon LQR</a></li>
+<li class="chapter" data-level="2.1.2" data-path="exactdp.html"><a href="exactdp.html#lqr-with-constraints"><i class="fa fa-check"></i><b>2.1.2</b> LQR with Constraints</a></li>
 </ul></li>
+<li class="chapter" data-level="2.2" data-path="exactdp.html"><a href="exactdp.html#finite-states-and-finite-controls"><i class="fa fa-check"></i><b>2.2</b> Finite States and Finite Controls</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="approximatedp.html"><a href="approximatedp.html"><i class="fa fa-check"></i><b>3</b> Approximate Dynamic Programming</a>
 <ul>
@@ -281,7 +283,7 @@ div.csl-indent {
 <li class="chapter" data-level="B.1.3" data-path="appconvex.html"><a href="appconvex.html#lagrange-dual"><i class="fa fa-check"></i><b>B.1.3</b> Lagrange dual</a></li>
 <li class="chapter" data-level="B.1.4" data-path="appconvex.html"><a href="appconvex.html#appconvex-theory-kkt"><i class="fa fa-check"></i><b>B.1.4</b> KKT condition</a></li>
 </ul></li>
-<li class="chapter" data-level="B.2" data-path="appconvex.html"><a href="appconvex.html#practice"><i class="fa fa-check"></i><b>B.2</b> Practice</a>
+<li class="chapter" data-level="B.2" data-path="appconvex.html"><a href="appconvex.html#appconvex-practice"><i class="fa fa-check"></i><b>B.2</b> Practice</a>
 <ul>
 <li class="chapter" data-level="B.2.1" data-path="appconvex.html"><a href="appconvex.html#cvxpy-introduction"><i class="fa fa-check"></i><b>B.2.1</b> CVXPY Introduction</a></li>
 <li class="chapter" data-level="B.2.2" data-path="appconvex.html"><a href="appconvex.html#linear-programming-lp"><i class="fa fa-check"></i><b>B.2.2</b> Linear Programming (LP)</a></li>
@@ -326,7 +328,29 @@ div.csl-indent {
 <div id="psets" class="section level1 hasAnchor" number="9">
 <h1><span class="header-section-number">Chapter 9</span> Problem Sets<a href="psets.html#psets" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <div class="exercise">
-<p><span id="exr:lqrmanifold" class="exercise"><strong>Exercise 9.1  (LQR on A Manifold) </strong></span>LQR <span class="citation">(<a href="#ref-saccon13tac-lie" role="doc-biblioref">Saccon, Hauser, and Aguiar 2013</a>)</span> <span class="citation">(<a href="#ref-teng22cdc-lie" role="doc-biblioref">Teng et al. 2022</a>)</span></p>
+<p><span id="exr:lqrconstraints" class="exercise"><strong>Exercise 9.1  (LQR with Constraints) </strong></span>Consider a variant of the LQR problem <a href="exactdp.html#eq:lqr-formulation">(2.2)</a> where the controls are bounded between <span class="math inline">\([-u_{\max}, u_{\max}]\)</span>, the system matrices <span class="math inline">\(A_k, B_k\)</span> are constant, and the dynamics is deterministic:
+<span class="math display" id="eq:lqr-constraints">\[\begin{equation}
+\begin{split}
+J(x_0) = \min_{u_{0},\dots,u_{N-1} \in [-u_{\max},u_{\max}]} &amp;\quad  x_N^T Q_N x_N + \sum_{k=0}^{N-1} (x_k^T Q_k x_k + u_k^T R_k u_k) \\
+\text{subject to} &amp;\quad  x_{k+1} = A x_k + B u_k,  k=0,\dots,N-1
+\end{split}
+\tag{9.1}
+\end{equation}\]</span>
+We assume <span class="math inline">\(Q_k\succeq 0\)</span> for <span class="math inline">\(k=0,\dots,N\)</span> and <span class="math inline">\(R_k \succ 0\)</span> for all <span class="math inline">\(k=0,\dots,N-1\)</span>.</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>Show that Problem <a href="psets.html#eq:lqr-constraints">(9.1)</a>, when <span class="math inline">\(x_0\)</span> is given, is a convex optimization problem.</p></li>
+<li><p>Discretize the continuous-time double integrator dynamics
+<span class="math display">\[
+\ddot{q} = u, \quad u \in [-1,1]
+\]</span>
+in the form of <span class="math inline">\(x_{k+1} = A x_k + B u_k\)</span> with a constant <span class="math inline">\(dt\)</span> time discretization. (Hint: take <span class="math inline">\(x = [q,\dot{q}]\)</span> as the state vector.)</p></li>
+<li><p>Fix <span class="math inline">\(N=50\)</span>, <span class="math inline">\(dt=0.1\)</span> and choose your favorite <span class="math inline">\(Q_k\)</span> and <span class="math inline">\(R_k\)</span>. Solve the convex optimization <a href="psets.html#eq:lqr-constraints">(9.1)</a> at a dense grid of <span class="math inline">\(x_0\)</span>. Plot <span class="math inline">\(J(x_0)\)</span>. (Hint: you will most likely benefit from Appendix <a href="appconvex.html#appconvex-practice">B.2</a>.)</p></li>
+<li><p>Increase <span class="math inline">\(N\)</span> and decrease <span class="math inline">\(dt\)</span>, plot <span class="math inline">\(J(x_0)\)</span> for different pairs of <span class="math inline">\((N,dt)\)</span>. What do you observe?</p></li>
+<li><p>(Bonus) Can you write down the KKT optimality conditions of <a href="psets.html#eq:lqr-constraints">(9.1)</a> and explain what you have observed from the numerical experiment? (Hint: KKT optimality conditions can be found in Theorem <a href="appconvex.html#thm:KKT">B.2</a>.)</p></li>
+</ol>
+</div>
+<div class="exercise">
+<p><span id="exr:lqrmanifold" class="exercise"><strong>Exercise 9.2  (LQR on A Manifold) </strong></span>LQR <span class="citation">(<a href="#ref-saccon13tac-lie" role="doc-biblioref">Saccon, Hauser, and Aguiar 2013</a>)</span> <span class="citation">(<a href="#ref-teng22cdc-lie" role="doc-biblioref">Teng et al. 2022</a>)</span></p>
 </div>
 
 </div>

@@ -151,7 +151,7 @@ arc=4pt}
 
 \title{Optimal Control and Estimation}
 \author{Heng Yang}
-\date{2023-08-23}
+\date{2023-08-24}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -189,7 +189,7 @@ This is the textbook for Harvard ES/AM 158: Introduction to Optimal Control and 
 
 \textbf{Time}: Mon/Wed 2:15 - 3:30pm
 
-\textbf{Location}: Science and Engineering Complex, Room TBD
+\textbf{Location}: Science and Engineering Complex, 1.413
 
 \textbf{Instructor}: \href{https://hankyang.seas.harvard.edu/}{Heng Yang}
 
@@ -606,6 +606,16 @@ You can play with the Matlab code \href{https://github.com/ComputationalRobotics
 \end{figure}
 
 \end{example}
+
+\hypertarget{lqr-with-constraints}{%
+\subsection{LQR with Constraints}\label{lqr-with-constraints}}
+
+Let's explore LQR with constraints in Exercise \ref{exr:lqrconstraints}
+
+\hypertarget{finite-states-and-finite-controls}{%
+\section{Finite States and Finite Controls}\label{finite-states-and-finite-controls}}
+
+In Section \ref{lqr}, we see that linear dynamics and quadratic costs leads to exact dynamic programming.
 
 \hypertarget{approximatedp}{%
 \chapter{Approximate Dynamic Programming}\label{approximatedp}}
@@ -3572,6 +3582,39 @@ which implies the boundedness of \(\dot{s}\) (note that \(H\) is uniformly posit
 \hypertarget{psets}{%
 \chapter{Problem Sets}\label{psets}}
 
+\begin{exercise}[LQR with Constraints]
+\protect\hypertarget{exr:lqrconstraints}{}\label{exr:lqrconstraints}
+
+Consider a variant of the LQR problem \eqref{eq:lqr-formulation} where the controls are bounded between \([-u_{\max}, u_{\max}]\), the system matrices \(A_k, B_k\) are constant, and the dynamics is deterministic:
+\begin{equation}
+\begin{split}
+J(x_0) = \min_{u_{0},\dots,u_{N-1} \in [-u_{\max},u_{\max}]} &\quad  x_N^T Q_N x_N + \sum_{k=0}^{N-1} (x_k^T Q_k x_k + u_k^T R_k u_k) \\
+\text{subject to} &\quad  x_{k+1} = A x_k + B u_k,  k=0,\dots,N-1
+\end{split}
+\label{eq:lqr-constraints}
+\end{equation}
+We assume \(Q_k\succeq 0\) for \(k=0,\dots,N\) and \(R_k \succ 0\) for all \(k=0,\dots,N-1\).
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\item
+  Show that Problem \eqref{eq:lqr-constraints}, when \(x_0\) is given, is a convex optimization problem.
+\item
+  Discretize the continuous-time double integrator dynamics
+  \[
+  \ddot{q} = u, \quad u \in [-1,1]
+  \]
+  in the form of \(x_{k+1} = A x_k + B u_k\) with a constant \(dt\) time discretization. (Hint: take \(x = [q,\dot{q}]\) as the state vector.)
+\item
+  Fix \(N=50\), \(dt=0.1\) and choose your favorite \(Q_k\) and \(R_k\). Solve the convex optimization \eqref{eq:lqr-constraints} at a dense grid of \(x_0\). Plot \(J(x_0)\). (Hint: you will most likely benefit from Appendix \ref{appconvex-practice}.)
+\item
+  Increase \(N\) and decrease \(dt\), plot \(J(x_0)\) for different pairs of \((N,dt)\). What do you observe?
+\item
+  (Bonus) Can you write down the KKT optimality conditions of \eqref{eq:lqr-constraints} and explain what you have observed from the numerical experiment? (Hint: KKT optimality conditions can be found in Theorem \ref{thm:KKT}.)
+\end{enumerate}
+
+\end{exercise}
+
 \begin{exercise}[LQR on A Manifold]
 \protect\hypertarget{exr:lqrmanifold}{}\label{exr:lqrmanifold}LQR \citep{saccon13tac-lie} \citep{teng22cdc-lie}
 \end{exercise}
@@ -4878,8 +4921,8 @@ Also if \(x,\lambda,\nu\) satisfy KKT for a convex problem, then they are optima
 
 In general, \(f_i,h_i\) may not be differentiable. There are also KKT conditions for them, which will include knowledge of subdifferential and will not be included here.
 
-\hypertarget{practice}{%
-\section{Practice}\label{practice}}
+\hypertarget{appconvex-practice}{%
+\section{Practice}\label{appconvex-practice}}
 
 \hypertarget{cvxpy-introduction}{%
 \subsection{CVXPY Introduction}\label{cvxpy-introduction}}
