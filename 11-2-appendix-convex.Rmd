@@ -254,7 +254,7 @@ Also if $x,\lambda,\nu$ satisfy KKT for a convex problem, then they are optimal.
 
 In general, $f_i,h_i$ may not be differentiable. There are also KKT conditions for them, which will include knowledge of subdifferential and will not be included here.
 
-## Practice
+## Practice {#appconvex-practice}
 
 ### CVXPY Introduction
 

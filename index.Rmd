@@ -20,7 +20,7 @@ This is the textbook for Harvard ES/AM 158: Introduction to Optimal Control and 
 
 **Time**: Mon/Wed 2:15 - 3:30pm
 
-**Location**: Science and Engineering Complex, Room TBD
+**Location**: Science and Engineering Complex, 1.413
 
 **Instructor**: [Heng Yang](https://hankyang.seas.harvard.edu/)
 

@@ -237,3 +237,11 @@ knitr::include_graphics('images/pendulum-stabilization-lqr.png')
 
 :::
 :::
+
+### LQR with Constraints
+
+Let's explore LQR with constraints in Exercise \@ref(exr:lqrconstraints)
+
+## Finite States and Finite Controls 
+
+In Section \@ref(lqr), we see that linear dynamics and quadratic costs leads to exact dynamic programming. 
