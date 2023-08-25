@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-08-24" />
+<meta name="date" content="2023-08-25" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -285,7 +285,7 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="B.2" data-path="appconvex.html"><a href="appconvex.html#appconvex-practice"><i class="fa fa-check"></i><b>B.2</b> Practice</a>
 <ul>
-<li class="chapter" data-level="B.2.1" data-path="appconvex.html"><a href="appconvex.html#cvxpy-introduction"><i class="fa fa-check"></i><b>B.2.1</b> CVXPY Introduction</a></li>
+<li class="chapter" data-level="B.2.1" data-path="appconvex.html"><a href="appconvex.html#cvx-introduction"><i class="fa fa-check"></i><b>B.2.1</b> CVX Introduction</a></li>
 <li class="chapter" data-level="B.2.2" data-path="appconvex.html"><a href="appconvex.html#linear-programming-lp"><i class="fa fa-check"></i><b>B.2.2</b> Linear Programming (LP)</a></li>
 <li class="chapter" data-level="B.2.3" data-path="appconvex.html"><a href="appconvex.html#quadratic-programming-qp"><i class="fa fa-check"></i><b>B.2.3</b> Quadratic Programming (QP)</a></li>
 <li class="chapter" data-level="B.2.4" data-path="appconvex.html"><a href="appconvex.html#quadratically-constrained-quadratic-programming-qcqp"><i class="fa fa-check"></i><b>B.2.4</b> Quadratically Constrained Quadratic Programming (QCQP)</a></li>
@@ -539,14 +539,17 @@ And the linear inequalities do not need to hold with strict inequality.</p>
 </div>
 <div id="appconvex-practice" class="section level2 hasAnchor" number="11.2">
 <h2><span class="header-section-number">B.2</span> Practice<a href="appconvex.html#appconvex-practice" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div id="cvxpy-introduction" class="section level3 hasAnchor" number="11.2.1">
-<h3><span class="header-section-number">B.2.1</span> CVXPY Introduction<a href="appconvex.html#cvxpy-introduction" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>In the last section, we have learned basic concepts and theorems in convex optimization. In this section, on the other hand, we will introduce you how to model basic convex optimization problems with CVXPY, an easy-to-use Python package. To install CVXPY, please refer to this <a href="https://www.cvxpy.org/install/index.html">page</a>. To define and solve a convex optimization problem in CVXPY, there are three steps (apart from importing necessary packages):</p>
-<ul>
-<li><p>Step 1: Define parameters and variables in a certain type of convex problem. Here variables are what you are trying to optimize or “learn”. Parameters are the “coefficients” of variables in the objective and constraints.</p></li>
-<li><p>Step 2: Define the objective function and constraints.</p></li>
-<li><p>Step 3: Solve the problem and get the results.</p></li>
-</ul>
+<div id="cvx-introduction" class="section level3 hasAnchor" number="11.2.1">
+<h3><span class="header-section-number">B.2.1</span> CVX Introduction<a href="appconvex.html#cvx-introduction" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>In the last section, we have learned basic concepts and theorems in convex optimization. In this section, on the other hand, we will introduce you how to model basic convex optimization problems with CVX, an easy-to-use MATLAB package. To install CVX, please refer to this <a href="http://cvxr.com/cvx/doc/install.html">page</a>. Note that every time you what to use the CVX package, you should add it to your MATLAB path. For example, if I install CVX package in the parent directory of my current directory with default directory name <code>cvx</code>, the following line should be added before your CVX codes:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode matlab"><code class="sourceCode matlab"><span id="cb1-1"><a href="appconvex.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="va">addpath</span>(<span class="va">genpath</span>(<span class="st">&quot;../cvx/&quot;</span>))<span class="op">;</span></span></code></pre></div>
+<p>With CVX, it is incredibly easy for us to define and solve a convex optimization problem. You just need to:</p>
+<ol style="list-style-type: decimal">
+<li><p>define the variables.</p></li>
+<li><p>define the objective function you want to minimize or maximize.</p></li>
+<li><p>define the constraints.</p></li>
+</ol>
+<p>After running your codes, the optimal objective value is stored in the variable <code>cvx_optval</code>, and the problem status is stored in the variable <code>cvx_status</code> (when your problem is well-defined, this variable’s value will be <code>Solved</code>). The optimal solutions will be stored in the variables you define.</p>
 <p>Throughout this section, we will study five types of convex optimization problems: linear programming (LP), quadratic programming (QP), (convex) quadratically constrained quadratic programming (QCQP), second-order cone programming (SOCP), and semidefinite programming (SDP). Given two types of optimization problems <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>, we say <span class="math inline">\(A &lt; B\)</span> if <span class="math inline">\(A\)</span> can always be converted to <span class="math inline">\(B\)</span> while the inverse is not true. Under this notation, we have
 <span class="math display">\[\begin{equation*}
    \text{LP} &lt; \text{QP} &lt; \text{QCQP} &lt; \text{SOCP} &lt; \text{SDP}
@@ -580,33 +583,24 @@ where <span class="math inline">\(x\)</span> is the variable, <span class="math 
       l_1 \\ l_1 \\ l_2 \\ l_2
    \end{bmatrix}
 \end{equation*}\]</span></p>
-<p>Corresponding CVXPY codes are shown below:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="appconvex.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cvxpy <span class="im">as</span> cp</span>
-<span id="cb1-2"><a href="appconvex.html#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-3"><a href="appconvex.html#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="appconvex.html#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">## Define the LP example setting</span></span>
-<span id="cb1-5"><a href="appconvex.html#cb1-5" aria-hidden="true" tabindex="-1"></a>c1 <span class="op">=</span> <span class="dv">2</span></span>
-<span id="cb1-6"><a href="appconvex.html#cb1-6" aria-hidden="true" tabindex="-1"></a>c2 <span class="op">=</span> <span class="op">-</span><span class="dv">5</span></span>
-<span id="cb1-7"><a href="appconvex.html#cb1-7" aria-hidden="true" tabindex="-1"></a>l1 <span class="op">=</span> <span class="dv">3</span></span>
-<span id="cb1-8"><a href="appconvex.html#cb1-8" aria-hidden="true" tabindex="-1"></a>l2 <span class="op">=</span> <span class="dv">7</span></span>
-<span id="cb1-9"><a href="appconvex.html#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="appconvex.html#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">## Step 1: define variables and parameters</span></span>
-<span id="cb1-11"><a href="appconvex.html#cb1-11" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> cp.Variable(<span class="dv">2</span>) <span class="co"># variable: x = [x1, x2]^T</span></span>
-<span id="cb1-12"><a href="appconvex.html#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># parameters: c, A, b</span></span>
-<span id="cb1-13"><a href="appconvex.html#cb1-13" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> np.array([c1, c2]) </span>
-<span id="cb1-14"><a href="appconvex.html#cb1-14" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> np.array([[<span class="dv">1</span>, <span class="dv">0</span>], [<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">1</span>], [<span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span>]])</span>
-<span id="cb1-15"><a href="appconvex.html#cb1-15" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> np.array([l1, l1, l2, l2])</span>
-<span id="cb1-16"><a href="appconvex.html#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="appconvex.html#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">## Step 2: define objective and constraints</span></span>
-<span id="cb1-18"><a href="appconvex.html#cb1-18" aria-hidden="true" tabindex="-1"></a>obj <span class="op">=</span> cp.Minimize(c.T <span class="op">@</span> x)</span>
-<span id="cb1-19"><a href="appconvex.html#cb1-19" aria-hidden="true" tabindex="-1"></a>constraints <span class="op">=</span> [A <span class="op">@</span> x <span class="op">&lt;=</span> b]</span>
-<span id="cb1-20"><a href="appconvex.html#cb1-20" aria-hidden="true" tabindex="-1"></a>prob <span class="op">=</span> cp.Problem(obj, constraints) <span class="co"># form the problem</span></span>
-<span id="cb1-21"><a href="appconvex.html#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-22"><a href="appconvex.html#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co">## Step 3: solve problem and get results</span></span>
-<span id="cb1-23"><a href="appconvex.html#cb1-23" aria-hidden="true" tabindex="-1"></a>prob.solve()  </span>
-<span id="cb1-24"><a href="appconvex.html#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;status: &quot;</span>, prob.status) <span class="co"># check whether the status is &quot;optimal&quot;</span></span>
-<span id="cb1-25"><a href="appconvex.html#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;optimal value: &quot;</span>, prob.value) <span class="co"># optimal objective</span></span>
-<span id="cb1-26"><a href="appconvex.html#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;optimal solution: &quot;</span>, x.value) <span class="co"># optimal x</span></span></code></pre></div>
+<p>Corresponding CVX codes are shown below:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode matlab"><code class="sourceCode matlab"><span id="cb2-1"><a href="appconvex.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">%% Define the LP example setting</span></span>
+<span id="cb2-2"><a href="appconvex.html#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="va">c1</span> <span class="op">=</span> <span class="fl">2</span><span class="op">;</span></span>
+<span id="cb2-3"><a href="appconvex.html#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="va">c2</span> <span class="op">=</span> <span class="op">-</span><span class="fl">5</span><span class="op">;</span></span>
+<span id="cb2-4"><a href="appconvex.html#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="va">l1</span> <span class="op">=</span> <span class="fl">3</span><span class="op">;</span></span>
+<span id="cb2-5"><a href="appconvex.html#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="va">l2</span> <span class="op">=</span> <span class="fl">7</span><span class="op">;</span></span>
+<span id="cb2-6"><a href="appconvex.html#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">% parameters: c, A, b</span></span>
+<span id="cb2-7"><a href="appconvex.html#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="va">c</span> <span class="op">=</span> [<span class="va">c1</span><span class="op">;</span> <span class="va">c2</span>]<span class="op">;</span></span>
+<span id="cb2-8"><a href="appconvex.html#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="va">A</span> <span class="op">=</span> [<span class="fl">1</span><span class="op">,</span> <span class="fl">0</span><span class="op">;</span> <span class="op">-</span><span class="fl">1</span><span class="op">,</span> <span class="fl">0</span><span class="op">;</span> <span class="fl">0</span><span class="op">,</span> <span class="fl">1</span><span class="op">;</span> <span class="fl">0</span><span class="op">,</span> <span class="op">-</span><span class="fl">1</span>]<span class="op">;</span></span>
+<span id="cb2-9"><a href="appconvex.html#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="va">b</span> <span class="op">=</span> [<span class="va">l1</span><span class="op">;</span> <span class="va">l1</span><span class="op">;</span> <span class="va">l2</span><span class="op">;</span> <span class="va">l2</span>]<span class="op">;</span></span>
+<span id="cb2-10"><a href="appconvex.html#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="appconvex.html#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">%% solve LP</span></span>
+<span id="cb2-12"><a href="appconvex.html#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="va">cvx_begin</span></span>
+<span id="cb2-13"><a href="appconvex.html#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="va">variable</span> <span class="va">x</span>(<span class="fl">2</span>)<span class="op">;</span> <span class="co">% define variables [x1, x2]</span></span>
+<span id="cb2-14"><a href="appconvex.html#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="va">minimize</span>(<span class="va">c</span><span class="op">&#39;</span> <span class="op">*</span> <span class="va">x</span>)<span class="op">;</span> <span class="co">% define the objective</span></span>
+<span id="cb2-15"><a href="appconvex.html#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="va">subject</span> <span class="va">to</span></span>
+<span id="cb2-16"><a href="appconvex.html#cb2-16" aria-hidden="true" tabindex="-1"></a>        <span class="va">A</span> <span class="op">*</span> <span class="va">x</span> <span class="op">&lt;=</span> <span class="va">b</span><span class="op">;</span> <span class="co">% define the linear constraint</span></span>
+<span id="cb2-17"><a href="appconvex.html#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="va">cvx_end</span></span></code></pre></div>
 </div>
 <div id="quadratic-programming-qp" class="section level3 hasAnchor" number="11.2.3">
 <h3><span class="header-section-number">B.2.3</span> Quadratic Programming (QP)<a href="appconvex.html#quadratic-programming-qp" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -639,42 +633,36 @@ Same as in the LP example, <span class="math inline">\(G\)</span> and <span clas
       l_1 \\ l_1 \\ l_2 \\ l_2
    \end{bmatrix}
 \end{equation*}\]</span></p>
-<p>Corresponding CVXPY codes are shown below:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="appconvex.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cvxpy <span class="im">as</span> cp</span>
-<span id="cb2-2"><a href="appconvex.html#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb2-3"><a href="appconvex.html#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="appconvex.html#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">## Define the LP example setting</span></span>
-<span id="cb2-5"><a href="appconvex.html#cb2-5" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">=</span> <span class="dv">2</span></span>
-<span id="cb2-6"><a href="appconvex.html#cb2-6" aria-hidden="true" tabindex="-1"></a>p2 <span class="op">=</span> <span class="fl">0.5</span></span>
-<span id="cb2-7"><a href="appconvex.html#cb2-7" aria-hidden="true" tabindex="-1"></a>p3 <span class="op">=</span> <span class="dv">4</span></span>
-<span id="cb2-8"><a href="appconvex.html#cb2-8" aria-hidden="true" tabindex="-1"></a>q1 <span class="op">=</span> <span class="op">-</span><span class="dv">3</span></span>
-<span id="cb2-9"><a href="appconvex.html#cb2-9" aria-hidden="true" tabindex="-1"></a>q2 <span class="op">=</span> <span class="op">-</span><span class="fl">6.5</span></span>
-<span id="cb2-10"><a href="appconvex.html#cb2-10" aria-hidden="true" tabindex="-1"></a>l1 <span class="op">=</span> <span class="dv">2</span></span>
-<span id="cb2-11"><a href="appconvex.html#cb2-11" aria-hidden="true" tabindex="-1"></a>l2 <span class="op">=</span> <span class="fl">2.5</span></span>
-<span id="cb2-12"><a href="appconvex.html#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># check if the generated P is positive semidefinite</span></span>
-<span id="cb2-13"><a href="appconvex.html#cb2-13" aria-hidden="true" tabindex="-1"></a>tmp1 <span class="op">=</span> (p1 <span class="op">&gt;=</span> <span class="dv">0</span>)</span>
-<span id="cb2-14"><a href="appconvex.html#cb2-14" aria-hidden="true" tabindex="-1"></a>tmp2 <span class="op">=</span> (p1<span class="op">*</span>p3 <span class="op">-</span> <span class="dv">4</span><span class="op">*</span>p2<span class="op">**</span><span class="dv">2</span> <span class="op">&gt;=</span> <span class="dv">0</span>)</span>
-<span id="cb2-15"><a href="appconvex.html#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span>(tmp1 <span class="kw">and</span> tmp2, <span class="st">&quot;P is not positve semidefinite!&quot;</span>)</span>
-<span id="cb2-16"><a href="appconvex.html#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-17"><a href="appconvex.html#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co">## Step 1: define variables and parameters</span></span>
-<span id="cb2-18"><a href="appconvex.html#cb2-18" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> cp.Variable(<span class="dv">2</span>) <span class="co"># variable: x = [x1, x2]^T</span></span>
-<span id="cb2-19"><a href="appconvex.html#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co"># parameters: P, q, G, h</span></span>
-<span id="cb2-20"><a href="appconvex.html#cb2-20" aria-hidden="true" tabindex="-1"></a>P <span class="op">=</span> <span class="dv">2</span><span class="op">*</span>np.array([[p1, p2], [p2, p3]])</span>
-<span id="cb2-21"><a href="appconvex.html#cb2-21" aria-hidden="true" tabindex="-1"></a>q <span class="op">=</span> np.array([q1, q2]) </span>
-<span id="cb2-22"><a href="appconvex.html#cb2-22" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> np.array([[<span class="dv">1</span>, <span class="dv">0</span>], [<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">1</span>], [<span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span>]])</span>
-<span id="cb2-23"><a href="appconvex.html#cb2-23" aria-hidden="true" tabindex="-1"></a>h <span class="op">=</span> np.array([l1, l1, l2, l2])</span>
-<span id="cb2-24"><a href="appconvex.html#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-25"><a href="appconvex.html#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="co">## Step 2: define the objective and constraints</span></span>
-<span id="cb2-26"><a href="appconvex.html#cb2-26" aria-hidden="true" tabindex="-1"></a>fx <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> cp.quad_form(x, P) <span class="op">+</span> q.T <span class="op">@</span> x</span>
-<span id="cb2-27"><a href="appconvex.html#cb2-27" aria-hidden="true" tabindex="-1"></a>obj <span class="op">=</span> cp.Minimize(fx)</span>
-<span id="cb2-28"><a href="appconvex.html#cb2-28" aria-hidden="true" tabindex="-1"></a>constraints <span class="op">=</span> [G <span class="op">@</span> x <span class="op">&lt;=</span> h]</span>
-<span id="cb2-29"><a href="appconvex.html#cb2-29" aria-hidden="true" tabindex="-1"></a>prob <span class="op">=</span> cp.Problem(obj, constraints) <span class="co"># form the problem</span></span>
-<span id="cb2-30"><a href="appconvex.html#cb2-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-31"><a href="appconvex.html#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="co">## Step 3: solve the problem and get results</span></span>
-<span id="cb2-32"><a href="appconvex.html#cb2-32" aria-hidden="true" tabindex="-1"></a>prob.solve()  </span>
-<span id="cb2-33"><a href="appconvex.html#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;status: &quot;</span>, prob.status) <span class="co"># check whether the status is &quot;optimal&quot;</span></span>
-<span id="cb2-34"><a href="appconvex.html#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;optimal value: &quot;</span>, prob.value) <span class="co"># optimal objective</span></span>
-<span id="cb2-35"><a href="appconvex.html#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;optimal solution: &quot;</span>, x.value) <span class="co"># optimal x</span></span></code></pre></div>
+<p>Corresponding CVX codes are shown below:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode matlab"><code class="sourceCode matlab"><span id="cb3-1"><a href="appconvex.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">%% Define the QP example setting</span></span>
+<span id="cb3-2"><a href="appconvex.html#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="va">p1</span> <span class="op">=</span> <span class="fl">2</span><span class="op">;</span></span>
+<span id="cb3-3"><a href="appconvex.html#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="va">p2</span> <span class="op">=</span> <span class="fl">0.5</span><span class="op">;</span></span>
+<span id="cb3-4"><a href="appconvex.html#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="va">p3</span> <span class="op">=</span> <span class="fl">4</span><span class="op">;</span></span>
+<span id="cb3-5"><a href="appconvex.html#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="va">q1</span> <span class="op">=</span> <span class="op">-</span><span class="fl">3</span><span class="op">;</span></span>
+<span id="cb3-6"><a href="appconvex.html#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="va">q2</span> <span class="op">=</span> <span class="op">-</span><span class="fl">6.5</span><span class="op">;</span></span>
+<span id="cb3-7"><a href="appconvex.html#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="va">l1</span> <span class="op">=</span> <span class="fl">2</span><span class="op">;</span></span>
+<span id="cb3-8"><a href="appconvex.html#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="va">l2</span> <span class="op">=</span> <span class="fl">2.5</span><span class="op">;</span></span>
+<span id="cb3-9"><a href="appconvex.html#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">% check if the generated P is positive semidefinite</span></span>
+<span id="cb3-10"><a href="appconvex.html#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="va">tmp1</span> <span class="op">=</span> (<span class="va">p1</span> <span class="op">&gt;=</span> <span class="fl">0</span>)<span class="op">;</span></span>
+<span id="cb3-11"><a href="appconvex.html#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="va">tmp2</span> <span class="op">=</span> (<span class="va">p1</span><span class="op">*</span><span class="va">p3</span> <span class="op">-</span> <span class="fl">4</span><span class="op">*</span><span class="va">p2</span><span class="op">^</span><span class="fl">2</span> <span class="op">&gt;=</span> <span class="fl">0</span>)<span class="op">;</span></span>
+<span id="cb3-12"><a href="appconvex.html#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="kw">if</span> <span class="op">~</span>(<span class="va">tmp1</span> <span class="op">&amp;&amp;</span> <span class="va">tmp2</span>)</span>
+<span id="cb3-13"><a href="appconvex.html#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="va">error</span>(<span class="st">&quot;P is not positve semidefinite!&quot;</span>)<span class="op">;</span></span>
+<span id="cb3-14"><a href="appconvex.html#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb3-15"><a href="appconvex.html#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">% parameters: P, q, G, h</span></span>
+<span id="cb3-16"><a href="appconvex.html#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="va">P</span> <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> [<span class="va">p1</span><span class="op">,</span> <span class="va">p2</span><span class="op">;</span> <span class="va">p2</span><span class="op">,</span> <span class="va">p3</span>]<span class="op">;</span></span>
+<span id="cb3-17"><a href="appconvex.html#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="va">q</span> <span class="op">=</span> [<span class="va">q1</span><span class="op">;</span> <span class="va">q2</span>]<span class="op">;</span></span>
+<span id="cb3-18"><a href="appconvex.html#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="va">G</span> <span class="op">=</span> [<span class="fl">1</span><span class="op">,</span> <span class="fl">0</span><span class="op">;</span> <span class="op">-</span><span class="fl">1</span><span class="op">,</span> <span class="fl">0</span><span class="op">;</span> <span class="fl">0</span><span class="op">,</span> <span class="fl">1</span><span class="op">;</span> <span class="fl">0</span><span class="op">,</span> <span class="op">-</span><span class="fl">1</span>]<span class="op">;</span></span>
+<span id="cb3-19"><a href="appconvex.html#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="va">h</span> <span class="op">=</span> [<span class="va">l1</span><span class="op">;</span> <span class="va">l1</span><span class="op">;</span> <span class="va">l2</span><span class="op">;</span> <span class="va">l2</span>]<span class="op">;</span></span>
+<span id="cb3-20"><a href="appconvex.html#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-21"><a href="appconvex.html#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co">%% Solve the QP problem</span></span>
+<span id="cb3-22"><a href="appconvex.html#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="va">cvx_begin</span></span>
+<span id="cb3-23"><a href="appconvex.html#cb3-23" aria-hidden="true" tabindex="-1"></a>    <span class="va">variable</span> <span class="va">x</span>(<span class="fl">2</span>)<span class="op">;</span> <span class="co">% define variables [x1; x2]</span></span>
+<span id="cb3-24"><a href="appconvex.html#cb3-24" aria-hidden="true" tabindex="-1"></a>    <span class="co">% define the objective, where quad_form(x, P) = x&#39;*P*x</span></span>
+<span id="cb3-25"><a href="appconvex.html#cb3-25" aria-hidden="true" tabindex="-1"></a>    <span class="va">obj</span> <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> <span class="va">quad_form</span>(<span class="va">x</span><span class="op">,</span> <span class="va">P</span>) <span class="op">+</span> <span class="va">q</span><span class="op">&#39;</span> <span class="op">*</span> <span class="va">x</span><span class="op">;</span> </span>
+<span id="cb3-26"><a href="appconvex.html#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="va">minimize</span>(<span class="va">obj</span>)<span class="op">;</span> </span>
+<span id="cb3-27"><a href="appconvex.html#cb3-27" aria-hidden="true" tabindex="-1"></a>    <span class="va">subject</span> <span class="va">to</span></span>
+<span id="cb3-28"><a href="appconvex.html#cb3-28" aria-hidden="true" tabindex="-1"></a>        <span class="va">G</span> <span class="op">*</span> <span class="va">x</span> <span class="op">&lt;=</span> <span class="va">h</span><span class="op">;</span> <span class="co">% define the linear constraint</span></span>
+<span id="cb3-29"><a href="appconvex.html#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="va">cvx_end</span></span></code></pre></div>
 </div>
 <div id="quadratically-constrained-quadratic-programming-qcqp" class="section level3 hasAnchor" number="11.2.4">
 <h3><span class="header-section-number">B.2.4</span> Quadratically Constrained Quadratic Programming (QCQP)<a href="appconvex.html#quadratically-constrained-quadratic-programming-qcqp" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -743,51 +731,44 @@ With these two assumptions, we want to minimize:
 \end{equation*}\]</span></p></li>
 </ol>
 <p>The corresponding codes are shown below. In this example, we test the minimum distance between a circle <span class="math inline">\(y_1^2 + z_1^2 \le 1\)</span> and another circle <span class="math inline">\((y_2 - 2)^2 + (z_2 - 2)^2 \le 1\)</span>. You can check whether the result from QCQP aligns with your manual calculation.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="appconvex.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cvxpy <span class="im">as</span> cp</span>
-<span id="cb3-2"><a href="appconvex.html#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb3-3"><a href="appconvex.html#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy.linalg <span class="im">import</span> cholesky, inv, norm</span>
-<span id="cb3-4"><a href="appconvex.html#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="appconvex.html#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">## Define the QCQP example setting</span></span>
-<span id="cb3-6"><a href="appconvex.html#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> if_ellipse(K, k, c):</span>
-<span id="cb3-7"><a href="appconvex.html#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># examine whether 0.5*x^T K x + k^T x + c &lt;= 0 is a ellipse</span></span>
-<span id="cb3-8"><a href="appconvex.html#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># if K is not positive semidefinite, Cholesky will raise an error</span></span>
-<span id="cb3-9"><a href="appconvex.html#cb3-9" aria-hidden="true" tabindex="-1"></a>    L <span class="op">=</span> cholesky(K) </span>
-<span id="cb3-10"><a href="appconvex.html#cb3-10" aria-hidden="true" tabindex="-1"></a>    radius_square <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> norm(inv(L) <span class="op">@</span> k)<span class="op">**</span><span class="dv">2</span> <span class="op">-</span> c</span>
-<span id="cb3-11"><a href="appconvex.html#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> radius_square <span class="op">&gt;</span> <span class="dv">0</span></span>
-<span id="cb3-12"><a href="appconvex.html#cb3-12" aria-hidden="true" tabindex="-1"></a>K1 <span class="op">=</span> np.eye(<span class="dv">2</span>)</span>
-<span id="cb3-13"><a href="appconvex.html#cb3-13" aria-hidden="true" tabindex="-1"></a>k1 <span class="op">=</span> np.zeros(<span class="dv">2</span>)</span>
-<span id="cb3-14"><a href="appconvex.html#cb3-14" aria-hidden="true" tabindex="-1"></a>c1 <span class="op">=</span> <span class="op">-</span><span class="fl">0.5</span></span>
-<span id="cb3-15"><a href="appconvex.html#cb3-15" aria-hidden="true" tabindex="-1"></a>K2 <span class="op">=</span> np.array([[<span class="dv">1</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">1</span>]])</span>
-<span id="cb3-16"><a href="appconvex.html#cb3-16" aria-hidden="true" tabindex="-1"></a>k2 <span class="op">=</span> np.array([<span class="dv">2</span>, <span class="dv">2</span>])</span>
-<span id="cb3-17"><a href="appconvex.html#cb3-17" aria-hidden="true" tabindex="-1"></a>c2 <span class="op">=</span> <span class="fl">3.5</span></span>
-<span id="cb3-18"><a href="appconvex.html#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> (if_ellipse(K1, k1, c1) <span class="kw">and</span> if_ellipse(K2, k2, c2)):</span>
-<span id="cb3-19"><a href="appconvex.html#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="st">&quot;The example setting is not correct&quot;</span>)</span>
-<span id="cb3-20"><a href="appconvex.html#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-21"><a href="appconvex.html#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co">## Step 1: define variables and parameters</span></span>
-<span id="cb3-22"><a href="appconvex.html#cb3-22" aria-hidden="true" tabindex="-1"></a>P0 <span class="op">=</span> np.array([[<span class="dv">1</span>,<span class="dv">0</span>,<span class="op">-</span><span class="dv">1</span>,<span class="dv">0</span>], [<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="op">-</span><span class="dv">1</span>], [<span class="op">-</span><span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>], [<span class="dv">0</span>,<span class="op">-</span><span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>]])</span>
-<span id="cb3-23"><a href="appconvex.html#cb3-23" aria-hidden="true" tabindex="-1"></a>P1 <span class="op">=</span> np.zeros((<span class="dv">4</span>,<span class="dv">4</span>))</span>
-<span id="cb3-24"><a href="appconvex.html#cb3-24" aria-hidden="true" tabindex="-1"></a>P1[:<span class="dv">2</span>, :<span class="dv">2</span>] <span class="op">=</span> K1</span>
-<span id="cb3-25"><a href="appconvex.html#cb3-25" aria-hidden="true" tabindex="-1"></a>P2 <span class="op">=</span> np.zeros((<span class="dv">4</span>,<span class="dv">4</span>))</span>
-<span id="cb3-26"><a href="appconvex.html#cb3-26" aria-hidden="true" tabindex="-1"></a>P2[<span class="dv">2</span>:, <span class="dv">2</span>:] <span class="op">=</span> K2</span>
-<span id="cb3-27"><a href="appconvex.html#cb3-27" aria-hidden="true" tabindex="-1"></a>q1 <span class="op">=</span> np.concatenate([k1, np.zeros(<span class="dv">2</span>)])</span>
-<span id="cb3-28"><a href="appconvex.html#cb3-28" aria-hidden="true" tabindex="-1"></a>q2 <span class="op">=</span> np.concatenate([np.zeros(<span class="dv">2</span>), k2])</span>
-<span id="cb3-29"><a href="appconvex.html#cb3-29" aria-hidden="true" tabindex="-1"></a>r1 <span class="op">=</span> c1</span>
-<span id="cb3-30"><a href="appconvex.html#cb3-30" aria-hidden="true" tabindex="-1"></a>r2 <span class="op">=</span> c2</span>
-<span id="cb3-31"><a href="appconvex.html#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-32"><a href="appconvex.html#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="co">## Step 2: define objective and constraints</span></span>
-<span id="cb3-33"><a href="appconvex.html#cb3-33" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> cp.Variable(<span class="dv">4</span>) <span class="co"># variable: x = [y1, z1, y2, z2]^T</span></span>
-<span id="cb3-34"><a href="appconvex.html#cb3-34" aria-hidden="true" tabindex="-1"></a>fx <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> cp.quad_form(x, P0)</span>
-<span id="cb3-35"><a href="appconvex.html#cb3-35" aria-hidden="true" tabindex="-1"></a>obj <span class="op">=</span> cp.Minimize(fx)</span>
-<span id="cb3-36"><a href="appconvex.html#cb3-36" aria-hidden="true" tabindex="-1"></a>con1 <span class="op">=</span> (<span class="fl">0.5</span> <span class="op">*</span> cp.quad_form(x, P1) <span class="op">+</span> q1.T <span class="op">@</span> x <span class="op">+</span> r1 <span class="op">&lt;=</span> <span class="dv">0</span>) <span class="co"># ellipse 1</span></span>
-<span id="cb3-37"><a href="appconvex.html#cb3-37" aria-hidden="true" tabindex="-1"></a>con2 <span class="op">=</span> (<span class="fl">0.5</span> <span class="op">*</span> cp.quad_form(x, P2) <span class="op">+</span> q2.T <span class="op">@</span> x <span class="op">+</span> r2 <span class="op">&lt;=</span> <span class="dv">0</span>) <span class="co"># ellipse 2</span></span>
-<span id="cb3-38"><a href="appconvex.html#cb3-38" aria-hidden="true" tabindex="-1"></a>constraints <span class="op">=</span> [con1, con2]</span>
-<span id="cb3-39"><a href="appconvex.html#cb3-39" aria-hidden="true" tabindex="-1"></a>prob <span class="op">=</span> cp.Problem(obj, constraints) <span class="co"># form the problem</span></span>
-<span id="cb3-40"><a href="appconvex.html#cb3-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-41"><a href="appconvex.html#cb3-41" aria-hidden="true" tabindex="-1"></a><span class="co">## Step 3: solve problem and get results</span></span>
-<span id="cb3-42"><a href="appconvex.html#cb3-42" aria-hidden="true" tabindex="-1"></a>prob.solve()  </span>
-<span id="cb3-43"><a href="appconvex.html#cb3-43" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;status: &quot;</span>, prob.status) <span class="co"># check whether the status is &quot;optimal&quot;</span></span>
-<span id="cb3-44"><a href="appconvex.html#cb3-44" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;optimal value: &quot;</span>, prob.value) <span class="co"># optimal objective</span></span>
-<span id="cb3-45"><a href="appconvex.html#cb3-45" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;optimal solution: &quot;</span>, x.value) <span class="co"># optimal x</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode matlab"><code class="sourceCode matlab"><span id="cb4-1"><a href="appconvex.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">%% Define the QCQP example setting</span></span>
+<span id="cb4-2"><a href="appconvex.html#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="va">K1</span> <span class="op">=</span> <span class="va">eye</span>(<span class="fl">2</span>)<span class="op">;</span></span>
+<span id="cb4-3"><a href="appconvex.html#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="va">k1</span> <span class="op">=</span> <span class="va">zeros</span>(<span class="fl">2</span><span class="op">,</span> <span class="fl">1</span>)<span class="op">;</span></span>
+<span id="cb4-4"><a href="appconvex.html#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="va">c1</span> <span class="op">=</span> <span class="op">-</span><span class="fl">0.5</span><span class="op">;</span></span>
+<span id="cb4-5"><a href="appconvex.html#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="va">K2</span> <span class="op">=</span> <span class="va">eye</span>(<span class="fl">2</span>)<span class="op">;</span></span>
+<span id="cb4-6"><a href="appconvex.html#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="va">k2</span> <span class="op">=</span> [<span class="fl">2</span><span class="op">;</span> <span class="fl">2</span>]<span class="op">;</span></span>
+<span id="cb4-7"><a href="appconvex.html#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="va">c2</span> <span class="op">=</span> <span class="fl">3.5</span><span class="op">;</span></span>
+<span id="cb4-8"><a href="appconvex.html#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="kw">if</span> <span class="op">~</span>(<span class="va">if_ellipse</span>(<span class="va">K1</span><span class="op">,</span> <span class="va">k1</span><span class="op">,</span> <span class="va">c1</span>) <span class="op">&amp;&amp;</span> <span class="va">if_ellipse</span>(<span class="va">K2</span><span class="op">,</span> <span class="va">k2</span><span class="op">,</span> <span class="va">c2</span>))</span>
+<span id="cb4-9"><a href="appconvex.html#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="va">error</span>(<span class="st">&quot;The example setting is not correct&quot;</span>)<span class="op">;</span></span>
+<span id="cb4-10"><a href="appconvex.html#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb4-11"><a href="appconvex.html#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">% define parameters P0, P1, P2, q1, q2, r1, r2</span></span>
+<span id="cb4-12"><a href="appconvex.html#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="va">P0</span> <span class="op">=</span> [<span class="fl">1</span><span class="op">,</span><span class="fl">0</span><span class="op">,-</span><span class="fl">1</span><span class="op">,</span><span class="fl">0</span><span class="op">;</span> <span class="fl">0</span><span class="op">,</span><span class="fl">1</span><span class="op">,</span><span class="fl">0</span><span class="op">,-</span><span class="fl">1</span><span class="op">;</span> <span class="op">-</span><span class="fl">1</span><span class="op">,</span><span class="fl">0</span><span class="op">,</span><span class="fl">1</span><span class="op">,</span><span class="fl">0</span><span class="op">;</span> <span class="fl">0</span><span class="op">,-</span><span class="fl">1</span><span class="op">,</span><span class="fl">0</span><span class="op">,</span><span class="fl">1</span>]<span class="op">;</span></span>
+<span id="cb4-13"><a href="appconvex.html#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="va">P1</span> <span class="op">=</span> <span class="va">zeros</span>(<span class="fl">4</span><span class="op">,</span> <span class="fl">4</span>)<span class="op">;</span></span>
+<span id="cb4-14"><a href="appconvex.html#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="va">P1</span>(<span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">,</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>) <span class="op">=</span> <span class="va">K1</span><span class="op">;</span></span>
+<span id="cb4-15"><a href="appconvex.html#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="va">P2</span> <span class="op">=</span> <span class="va">zeros</span>(<span class="fl">4</span><span class="op">,</span> <span class="fl">4</span>)<span class="op">;</span></span>
+<span id="cb4-16"><a href="appconvex.html#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="va">P2</span>(<span class="fl">3</span><span class="op">:</span><span class="fl">4</span><span class="op">,</span> <span class="fl">3</span><span class="op">:</span><span class="fl">4</span>) <span class="op">=</span> <span class="va">K2</span><span class="op">;</span></span>
+<span id="cb4-17"><a href="appconvex.html#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="va">q1</span> <span class="op">=</span> [<span class="va">k1</span><span class="op">;</span> <span class="va">zeros</span>(<span class="fl">2</span><span class="op">,</span> <span class="fl">1</span>)]<span class="op">;</span></span>
+<span id="cb4-18"><a href="appconvex.html#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="va">q2</span> <span class="op">=</span> [<span class="va">zeros</span>(<span class="fl">2</span><span class="op">,</span> <span class="fl">1</span>)<span class="op">;</span> <span class="va">k2</span>]<span class="op">;</span></span>
+<span id="cb4-19"><a href="appconvex.html#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="va">r1</span> <span class="op">=</span> <span class="va">c1</span><span class="op">;</span></span>
+<span id="cb4-20"><a href="appconvex.html#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="va">r2</span> <span class="op">=</span> <span class="va">c2</span><span class="op">;</span></span>
+<span id="cb4-21"><a href="appconvex.html#cb4-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-22"><a href="appconvex.html#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co">%% Solve the QCQP problem</span></span>
+<span id="cb4-23"><a href="appconvex.html#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="va">cvx_begin</span></span>
+<span id="cb4-24"><a href="appconvex.html#cb4-24" aria-hidden="true" tabindex="-1"></a>    <span class="va">variable</span> <span class="va">x</span>(<span class="fl">4</span>)<span class="op">;</span> <span class="co">% define variables [y1; z1; y2; z2]</span></span>
+<span id="cb4-25"><a href="appconvex.html#cb4-25" aria-hidden="true" tabindex="-1"></a>    <span class="co">% define the objective, where quad_form(x, P) = x&#39;*P*x</span></span>
+<span id="cb4-26"><a href="appconvex.html#cb4-26" aria-hidden="true" tabindex="-1"></a>    <span class="va">obj</span> <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> <span class="va">quad_form</span>(<span class="va">x</span><span class="op">,</span> <span class="va">P0</span>)<span class="op">;</span> </span>
+<span id="cb4-27"><a href="appconvex.html#cb4-27" aria-hidden="true" tabindex="-1"></a>    <span class="va">minimize</span>(<span class="va">obj</span>)<span class="op">;</span> </span>
+<span id="cb4-28"><a href="appconvex.html#cb4-28" aria-hidden="true" tabindex="-1"></a>    <span class="va">subject</span> <span class="va">to</span></span>
+<span id="cb4-29"><a href="appconvex.html#cb4-29" aria-hidden="true" tabindex="-1"></a>        <span class="fl">0.5</span> <span class="op">*</span> <span class="va">quad_form</span>(<span class="va">x</span><span class="op">,</span> <span class="va">P1</span>) <span class="op">+</span> <span class="va">q1</span><span class="op">&#39;</span> <span class="op">*</span> <span class="va">x</span> <span class="op">+</span> <span class="va">r1</span> <span class="op">&lt;=</span> <span class="fl">0</span><span class="op">;</span></span>
+<span id="cb4-30"><a href="appconvex.html#cb4-30" aria-hidden="true" tabindex="-1"></a>        <span class="fl">0.5</span> <span class="op">*</span> <span class="va">quad_form</span>(<span class="va">x</span><span class="op">,</span> <span class="va">P2</span>) <span class="op">+</span> <span class="va">q2</span><span class="op">&#39;</span> <span class="op">*</span> <span class="va">x</span> <span class="op">+</span> <span class="va">r2</span> <span class="op">&lt;=</span> <span class="fl">0</span><span class="op">;</span></span>
+<span id="cb4-31"><a href="appconvex.html#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="va">cvx_end</span></span>
+<span id="cb4-32"><a href="appconvex.html#cb4-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-33"><a href="appconvex.html#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="co">%% detect whether (K, k, c) generates a ellipse</span></span>
+<span id="cb4-34"><a href="appconvex.html#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="va">flag</span> <span class="op">=</span> <span class="va">if_ellipse</span>(<span class="va">K</span><span class="op">,</span> <span class="va">k</span><span class="op">,</span> <span class="va">c</span>)</span>
+<span id="cb4-35"><a href="appconvex.html#cb4-35" aria-hidden="true" tabindex="-1"></a>    <span class="va">L</span> <span class="op">=</span> <span class="va">chol</span>(<span class="va">K</span>)<span class="op">;</span></span>
+<span id="cb4-36"><a href="appconvex.html#cb4-36" aria-hidden="true" tabindex="-1"></a>    <span class="va">radius_square</span> <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> <span class="va">norm</span>(<span class="va">L</span> <span class="op">\</span> <span class="va">k</span>)<span class="op">^</span><span class="fl">2</span> <span class="op">-</span> <span class="va">c</span><span class="op">;</span> <span class="co">% L \ k = inv(L) * k</span></span>
+<span id="cb4-37"><a href="appconvex.html#cb4-37" aria-hidden="true" tabindex="-1"></a>    <span class="va">flag</span> <span class="op">=</span> (<span class="va">radius_square</span> <span class="op">&gt;</span> <span class="fl">0</span>)<span class="op">;</span></span>
+<span id="cb4-38"><a href="appconvex.html#cb4-38" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div>
 </div>
 <div id="second-order-cone-programming-socp" class="section level3 hasAnchor" number="11.2.5">
 <h3><span class="header-section-number">B.2.5</span> Second-Order Cone Programming (SOCP)<a href="appconvex.html#second-order-cone-programming-socp" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -829,44 +810,30 @@ Thus,
 \end{align}\]</span>
 which is exactly the same as inequality constraints in SOCP formulation. (You can see why we enforce <span class="math inline">\(p &gt; 0.5\)</span> here: otherwise <span class="math inline">\(\Phi^{-1}(p)\)</span> will be negative and the constraint with not be an second-order cone.)</p>
 <p>In the following code example, we set up four inequality constraints and let <span class="math inline">\(\bar{a}_i^T x \le b_i, \ i = 1 \dots 4\)</span> form an square located at the origin of size <span class="math inline">\(2\)</span>. Then, for convenience, we set <span class="math inline">\(\Sigma_i \equiv \sigma^2 I\)</span>.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="appconvex.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cvxpy <span class="im">as</span> cp</span>
-<span id="cb4-2"><a href="appconvex.html#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb4-3"><a href="appconvex.html#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> norm</span>
-<span id="cb4-4"><a href="appconvex.html#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="appconvex.html#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">## Define the SOCP example setting</span></span>
-<span id="cb4-6"><a href="appconvex.html#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># define bar_ai, bi (i = 1, 2, 3, 4)</span></span>
-<span id="cb4-7"><a href="appconvex.html#cb4-7" aria-hidden="true" tabindex="-1"></a>bar_a1 <span class="op">=</span> np.array([<span class="dv">1</span>, <span class="dv">0</span>])</span>
-<span id="cb4-8"><a href="appconvex.html#cb4-8" aria-hidden="true" tabindex="-1"></a>b1 <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb4-9"><a href="appconvex.html#cb4-9" aria-hidden="true" tabindex="-1"></a>bar_a2 <span class="op">=</span> np.array([<span class="dv">0</span>, <span class="dv">1</span>])</span>
-<span id="cb4-10"><a href="appconvex.html#cb4-10" aria-hidden="true" tabindex="-1"></a>b2 <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb4-11"><a href="appconvex.html#cb4-11" aria-hidden="true" tabindex="-1"></a>bar_a3 <span class="op">=</span> np.array([<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>])</span>
-<span id="cb4-12"><a href="appconvex.html#cb4-12" aria-hidden="true" tabindex="-1"></a>b3 <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb4-13"><a href="appconvex.html#cb4-13" aria-hidden="true" tabindex="-1"></a>bar_a4 <span class="op">=</span> np.array([<span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span>])</span>
-<span id="cb4-14"><a href="appconvex.html#cb4-14" aria-hidden="true" tabindex="-1"></a>b4 <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb4-15"><a href="appconvex.html#cb4-15" aria-hidden="true" tabindex="-1"></a>sigma <span class="op">=</span> <span class="fl">0.1</span> </span>
-<span id="cb4-16"><a href="appconvex.html#cb4-16" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> np.array([<span class="dv">2</span>, <span class="dv">3</span>])</span>
-<span id="cb4-17"><a href="appconvex.html#cb4-17" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> <span class="fl">0.9</span> <span class="co"># p should be more than 0.5</span></span>
-<span id="cb4-18"><a href="appconvex.html#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-19"><a href="appconvex.html#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co">## Step 1: define variables and parameters</span></span>
-<span id="cb4-20"><a href="appconvex.html#cb4-20" aria-hidden="true" tabindex="-1"></a>Phi_inv <span class="op">=</span> norm.ppf(p) <span class="co"># get Phi^{-1}(p)</span></span>
-<span id="cb4-21"><a href="appconvex.html#cb4-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-22"><a href="appconvex.html#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co">## Step 2: define objective and constraints</span></span>
-<span id="cb4-23"><a href="appconvex.html#cb4-23" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> cp.Variable(<span class="dv">2</span>) <span class="co"># variable: x = [x1, x2]^T</span></span>
-<span id="cb4-24"><a href="appconvex.html#cb4-24" aria-hidden="true" tabindex="-1"></a>obj <span class="op">=</span> cp.Minimize(c.T <span class="op">@</span> x)</span>
-<span id="cb4-25"><a href="appconvex.html#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co"># use cp.SOC(t, x) to create the SOC constraint ||x||_2 &lt;= t</span></span>
-<span id="cb4-26"><a href="appconvex.html#cb4-26" aria-hidden="true" tabindex="-1"></a>constraints <span class="op">=</span> [</span>
-<span id="cb4-27"><a href="appconvex.html#cb4-27" aria-hidden="true" tabindex="-1"></a>    cp.SOC(b1 <span class="op">-</span> bar_a1.T <span class="op">@</span> x, sigma<span class="op">*</span>Phi_inv<span class="op">*</span>x),</span>
-<span id="cb4-28"><a href="appconvex.html#cb4-28" aria-hidden="true" tabindex="-1"></a>    cp.SOC(b2 <span class="op">-</span> bar_a2.T <span class="op">@</span> x, sigma<span class="op">*</span>Phi_inv<span class="op">*</span>x),</span>
-<span id="cb4-29"><a href="appconvex.html#cb4-29" aria-hidden="true" tabindex="-1"></a>    cp.SOC(b3 <span class="op">-</span> bar_a3.T <span class="op">@</span> x, sigma<span class="op">*</span>Phi_inv<span class="op">*</span>x),</span>
-<span id="cb4-30"><a href="appconvex.html#cb4-30" aria-hidden="true" tabindex="-1"></a>    cp.SOC(b4 <span class="op">-</span> bar_a4.T <span class="op">@</span> x, sigma<span class="op">*</span>Phi_inv<span class="op">*</span>x),</span>
-<span id="cb4-31"><a href="appconvex.html#cb4-31" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb4-32"><a href="appconvex.html#cb4-32" aria-hidden="true" tabindex="-1"></a>prob <span class="op">=</span> cp.Problem(obj, constraints) <span class="co"># form the problem</span></span>
-<span id="cb4-33"><a href="appconvex.html#cb4-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-34"><a href="appconvex.html#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="co">## Step 3: solve problem and get results</span></span>
-<span id="cb4-35"><a href="appconvex.html#cb4-35" aria-hidden="true" tabindex="-1"></a>prob.solve()  </span>
-<span id="cb4-36"><a href="appconvex.html#cb4-36" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;status: &quot;</span>, prob.status) <span class="co"># check whether the status is &quot;optimal&quot;</span></span>
-<span id="cb4-37"><a href="appconvex.html#cb4-37" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;optimal value: &quot;</span>, prob.value) <span class="co"># optimal objective</span></span>
-<span id="cb4-38"><a href="appconvex.html#cb4-38" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;optimal solution: &quot;</span>, x.value) <span class="co"># optimal x</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode matlab"><code class="sourceCode matlab"><span id="cb5-1"><a href="appconvex.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">%% Define the SOCP example setting</span></span>
+<span id="cb5-2"><a href="appconvex.html#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="va">bar_a1</span> <span class="op">=</span> [<span class="fl">1</span><span class="op">;</span> <span class="fl">0</span>]<span class="op">;</span></span>
+<span id="cb5-3"><a href="appconvex.html#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="va">b1</span> <span class="op">=</span> <span class="fl">1</span><span class="op">;</span></span>
+<span id="cb5-4"><a href="appconvex.html#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="va">bar_a2</span> <span class="op">=</span> [<span class="fl">0</span><span class="op">;</span> <span class="fl">1</span>]<span class="op">;</span></span>
+<span id="cb5-5"><a href="appconvex.html#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="va">b2</span> <span class="op">=</span> <span class="fl">1</span><span class="op">;</span></span>
+<span id="cb5-6"><a href="appconvex.html#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="va">bar_a3</span> <span class="op">=</span> [<span class="op">-</span><span class="fl">1</span><span class="op">;</span> <span class="fl">0</span>]<span class="op">;</span></span>
+<span id="cb5-7"><a href="appconvex.html#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="va">b3</span> <span class="op">=</span> <span class="fl">1</span><span class="op">;</span></span>
+<span id="cb5-8"><a href="appconvex.html#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="va">bar_a4</span> <span class="op">=</span> [<span class="fl">0</span><span class="op">;</span> <span class="op">-</span><span class="fl">1</span>]<span class="op">;</span></span>
+<span id="cb5-9"><a href="appconvex.html#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="va">b4</span> <span class="op">=</span> <span class="fl">1</span><span class="op">;</span></span>
+<span id="cb5-10"><a href="appconvex.html#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="va">sigma</span> <span class="op">=</span> <span class="fl">0.1</span><span class="op">;</span> </span>
+<span id="cb5-11"><a href="appconvex.html#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="va">c</span> <span class="op">=</span> [<span class="fl">2</span><span class="op">;</span> <span class="fl">3</span>]<span class="op">;</span></span>
+<span id="cb5-12"><a href="appconvex.html#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="va">p</span> <span class="op">=</span> <span class="fl">0.9</span><span class="op">;</span> <span class="co">% p should be more than 0.5</span></span>
+<span id="cb5-13"><a href="appconvex.html#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="va">Phi_inv</span> <span class="op">=</span> <span class="va">norminv</span>(<span class="va">p</span>)<span class="op">;</span> <span class="co">% get Phi^{-1}(p)</span></span>
+<span id="cb5-14"><a href="appconvex.html#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="appconvex.html#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">%% Solve the SOCP problem</span></span>
+<span id="cb5-16"><a href="appconvex.html#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="va">cvx_begin</span></span>
+<span id="cb5-17"><a href="appconvex.html#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="va">variable</span> <span class="va">x</span>(<span class="fl">2</span>)<span class="op">;</span> <span class="co">% define variables [x1; x2]</span></span>
+<span id="cb5-18"><a href="appconvex.html#cb5-18" aria-hidden="true" tabindex="-1"></a>    <span class="va">minimize</span>(<span class="va">c</span><span class="op">&#39;</span> <span class="op">*</span> <span class="va">x</span>)<span class="op">;</span> </span>
+<span id="cb5-19"><a href="appconvex.html#cb5-19" aria-hidden="true" tabindex="-1"></a>    <span class="va">subject</span> <span class="va">to</span></span>
+<span id="cb5-20"><a href="appconvex.html#cb5-20" aria-hidden="true" tabindex="-1"></a>        <span class="va">sigma</span><span class="op">*</span><span class="va">Phi_inv</span> <span class="op">*</span> <span class="va">norm</span>(<span class="va">x</span>) <span class="op">&lt;=</span> <span class="va">b1</span> <span class="op">-</span> <span class="va">bar_a1</span><span class="op">&#39;</span> <span class="op">*</span> <span class="va">x</span><span class="op">;</span></span>
+<span id="cb5-21"><a href="appconvex.html#cb5-21" aria-hidden="true" tabindex="-1"></a>        <span class="va">sigma</span><span class="op">*</span><span class="va">Phi_inv</span> <span class="op">*</span> <span class="va">norm</span>(<span class="va">x</span>) <span class="op">&lt;=</span> <span class="va">b2</span> <span class="op">-</span> <span class="va">bar_a2</span><span class="op">&#39;</span> <span class="op">*</span> <span class="va">x</span><span class="op">;</span></span>
+<span id="cb5-22"><a href="appconvex.html#cb5-22" aria-hidden="true" tabindex="-1"></a>        <span class="va">sigma</span><span class="op">*</span><span class="va">Phi_inv</span> <span class="op">*</span> <span class="va">norm</span>(<span class="va">x</span>) <span class="op">&lt;=</span> <span class="va">b3</span> <span class="op">-</span> <span class="va">bar_a3</span><span class="op">&#39;</span> <span class="op">*</span> <span class="va">x</span><span class="op">;</span></span>
+<span id="cb5-23"><a href="appconvex.html#cb5-23" aria-hidden="true" tabindex="-1"></a>        <span class="va">sigma</span><span class="op">*</span><span class="va">Phi_inv</span> <span class="op">*</span> <span class="va">norm</span>(<span class="va">x</span>) <span class="op">&lt;=</span> <span class="va">b4</span> <span class="op">-</span> <span class="va">bar_a4</span><span class="op">&#39;</span> <span class="op">*</span> <span class="va">x</span><span class="op">;</span></span>
+<span id="cb5-24"><a href="appconvex.html#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="va">cvx_end</span></span></code></pre></div>
 </div>
 <div id="semidefinite-programming-sdp" class="section level3 hasAnchor" number="11.2.6">
 <h3><span class="header-section-number">B.2.6</span> Semidefinite Programming (SDP)<a href="appconvex.html#semidefinite-programming-sdp" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -875,17 +842,17 @@ which is exactly the same as inequality constraints in SOCP formulation. (You ca
    \tag{B.5}
    \min_{X_i, x_i} \ &amp; \sum_{i=1}^{n_s} C_i \cdot X_i + \sum_{i=1}^{n_u} c_i \cdot x_i \\
    \text{subject to } &amp; \sum_{i=1}^{n_s} A_{i,j} \cdot X_i + \sum_{i=1}^{n_u} a_{i,j} \cdot x_i = b_j, \quad j = 1 \dots m \\
-   &amp; X_i \in \mathcal{S}_+^{d_i}, \quad i = 1 \dots n_s \\
+   &amp; X_i \in \mathcal{S}_+^{D_i}, \quad i = 1 \dots n_s \\
    &amp; x_i \in \mathbb{R}^{d_i}, \quad i = 1 \dots n_u  
 \end{align}\]</span>
-where <span class="math inline">\(C_i, A_{i, j} \in \mathbb{R}^{d_i \times d_i}\)</span>, <span class="math inline">\(c_i, a_{i, j} \in \mathbb{R}^{d_i}\)</span>, and <span class="math inline">\(\cdot\)</span> means element-wise product. For two square matrices <span class="math inline">\(A, B\)</span>, the dot product <span class="math inline">\(A \cdot B\)</span> is equal to <span class="math inline">\(\text{tr}(A B)\)</span>; for two vectors <span class="math inline">\(a, b\)</span>, the dot product <span class="math inline">\(a \cdot b\)</span> is the same as inner product <span class="math inline">\(a^T b\)</span>.</p>
+where <span class="math inline">\(C_i, A_{i, j} \in \mathbb{R}^{D_i \times D_i}\)</span>, <span class="math inline">\(c_i, a_{i, j} \in \mathbb{R}^{d_i}\)</span>, and <span class="math inline">\(\cdot\)</span> means element-wise product. For two square matrices <span class="math inline">\(A, B\)</span>, the dot product <span class="math inline">\(A \cdot B\)</span> is equal to <span class="math inline">\(\text{tr}(A B)\)</span>; for two vectors <span class="math inline">\(a, b\)</span>, the dot product <span class="math inline">\(a \cdot b\)</span> is the same as inner product <span class="math inline">\(a^T b\)</span>.</p>
 <p>Note that actually there are many “standard” forms of SDP. For example, in the convex optimization theory part, you may find an SDP that looks like:
 <span class="math display">\[\begin{align}
    \min_X \ &amp; C \cdot X \\
    \text{subject to } &amp; A \cdot X = b \\
    &amp; X \succeq 0
 \end{align}\]</span>
-It is convenient for us to analyze the theoretical properties of SDP with this form. Also, in SDP solvers’ User Guide, you may see more complex SDP forms which involve more general convex cones. For example, see <a href="https://docs.mosek.com/latest/pythonapi/tutorial-sdo-shared.html">MOSEK’s Python API docs</a>. Here we turn to use the form of <a href="appconvex.html#eq:app-sdpdef">(B.5)</a> for two reasons: (1) it is general enough: our SDP example below can be converted to this form (also, SDPs from sum-of-squares programming in this book are exactly of the form <a href="appconvex.html#eq:app-sdpdef">(B.5)</a>); (2) it is more readable than more complex forms.</p>
+It is convenient for us to analyze the theoretical properties of SDP with this form. Also, in SDP solvers’ User Guide, you may see more complex SDP forms which involve more general convex cones. For example, see <a href="https://docs.mosek.com/10.0/toolbox/tutorial-sdo-shared.html#doc-tutorial-sdo">MOSEK’s MATLAB API docs</a>. Here we turn to use the form of <a href="appconvex.html#eq:app-sdpdef">(B.5)</a> for two reasons: (1) it is general enough: our SDP example below can be converted to this form (also, SDPs from sum-of-squares programming in this book are exactly of the form <a href="appconvex.html#eq:app-sdpdef">(B.5)</a>); (2) it is more readable than more complex forms.</p>
 <p><strong>Example.</strong> We consider the problem of finding the minimum eigenvalue for a positive semidefinite matrix <span class="math inline">\(S\)</span>. We will show that this problem can be converted to <a href="appconvex.html#eq:app-sdpdef">(B.5)</a>. Since <span class="math inline">\(S\)</span> is positive semidefinite, the finding procedure can be cast as
 <span class="math display">\[\begin{align}
     \max_\lambda &amp; \ \lambda \\
@@ -897,75 +864,57 @@ Now define an auxiliary matrix <span class="math inline">\(X := S - \lambda I\)<
    \text{subject to } &amp;  X + \lambda I = S \\
    &amp; X \succeq 0
 \end{align}\]</span>
-It is obvious that the linear matrix equality constraint <span class="math inline">\(X + \lambda I = S\)</span> can be divided into several linear scalar equality constraints in <a href="appconvex.html#eq:app-sdpdef">(B.5)</a>. For example, for the first element in <span class="math inline">\(S\)</span>, we will have <span class="math inline">\(X[0,0] + \lambda = S[0,0]\)</span>.</p>
-<p>In the code example, we consider <span class="math inline">\(S \in \mathbb{S}_+^3\)</span>. Thereby <span class="math inline">\(X + \lambda I = S\)</span> will lead to <span class="math inline">\(6\)</span> linear equality constraints (We don’t consider <span class="math inline">\(X\)</span> is a symmetric matrix here, since CVXPY will implicitly consider this. Thus, only the upper-triangular part of <span class="math inline">\(X\)</span> and <span class="math inline">\(S\)</span> are actually used in the equality construction.):
+It is obvious that the linear matrix equality constraint <span class="math inline">\(X + \lambda I = S\)</span> can be divided into several linear scalar equality constraints in <a href="appconvex.html#eq:app-sdpdef">(B.5)</a>. For example, we consider <span class="math inline">\(S \in \mathbb{S}_+^3\)</span>. Thereby <span class="math inline">\(X + \lambda I = S\)</span> will lead to <span class="math inline">\(6\)</span> linear equality constraints (We don’t consider <span class="math inline">\(X\)</span> is a symmetric matrix here, since most solvers will implicitly consider this. Thus, only the upper-triangular part of <span class="math inline">\(X\)</span> and <span class="math inline">\(S\)</span> are actually used in the equality construction.):
 <span class="math display">\[\begin{align}
-   &amp; \left\langle \begin{bmatrix}
+   &amp;  \begin{bmatrix}
       1 &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; 0
-   \end{bmatrix}, X \right\rangle + \lambda = S[0, 0],  
-   \left\langle \begin{bmatrix}
+   \end{bmatrix} \cdot X  + \lambda = S[0, 0],  
+    \begin{bmatrix}
       0 &amp; 1 &amp; 0 \\ 0 &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; 0
-   \end{bmatrix}, X \right\rangle = S[0, 1],
-   \left\langle \begin{bmatrix}
+   \end{bmatrix} \cdot X  = S[0, 1],
+    \begin{bmatrix}
       0 &amp; 0 &amp; 1 \\ 0 &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; 0
-   \end{bmatrix}, X \right\rangle = S[0, 2] \\
-   &amp; \left\langle \begin{bmatrix}
+   \end{bmatrix} \cdot X  = S[0, 2] \\
+   &amp;  \begin{bmatrix}
       0 &amp; 0 &amp; 0 \\ 0 &amp; 1 &amp; 0 \\ 0 &amp; 0 &amp; 0
-   \end{bmatrix}, X \right\rangle + \lambda = S[1, 1],
-   \left\langle \begin{bmatrix}
+   \end{bmatrix} \cdot X  + \lambda = S[1, 1],
+    \begin{bmatrix}
       0 &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; 1 \\ 0 &amp; 0 &amp; 0
-   \end{bmatrix}, X \right\rangle = S[1, 2],
-   \left\langle \begin{bmatrix}
+   \end{bmatrix} \cdot X  = S[1, 2],
+    \begin{bmatrix}
       0 &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; 1
-   \end{bmatrix}, X \right\rangle + \lambda = S[2, 2]
+   \end{bmatrix} \cdot X  + \lambda = S[2, 2]
 \end{align}\]</span>
-To generate a ramdom <span class="math inline">\(S \in \mathcal{S}_+^3\)</span>, you just need to assign three nonnegative eigenvalues to the program. After that, an random <span class="math inline">\(S\)</span> will be generated by <span class="math inline">\(S = Q \ \text{diag}(\lambda_1, \lambda_2, \lambda_3) \ Q^T\)</span>, where <span class="math inline">\(Q\)</span> is random orthonormal matrix.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="appconvex.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cvxpy <span class="im">as</span> cp</span>
-<span id="cb5-2"><a href="appconvex.html#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb5-3"><a href="appconvex.html#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> ortho_group</span>
-<span id="cb5-4"><a href="appconvex.html#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="appconvex.html#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">## Define the SDP example setting</span></span>
-<span id="cb5-6"><a href="appconvex.html#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># this function help to generate PD matrix of size 3*3 </span></span>
-<span id="cb5-7"><a href="appconvex.html#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># if you provide the eigenvalues [lam_1, lam_2, lam_3]</span></span>
-<span id="cb5-8"><a href="appconvex.html#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> generate_random_PD_matrix(lam_list):</span>
-<span id="cb5-9"><a href="appconvex.html#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> np.<span class="bu">all</span>(lam_list <span class="op">&gt;=</span> <span class="dv">0</span>) <span class="co"># all eigenvalues &gt;= 0</span></span>
-<span id="cb5-10"><a href="appconvex.html#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># S = Q @ D @ Q.T</span></span>
-<span id="cb5-11"><a href="appconvex.html#cb5-11" aria-hidden="true" tabindex="-1"></a>    D <span class="op">=</span> np.diag(lam_list)</span>
-<span id="cb5-12"><a href="appconvex.html#cb5-12" aria-hidden="true" tabindex="-1"></a>    Q <span class="op">=</span> ortho_group.rvs(<span class="dv">3</span>)</span>
-<span id="cb5-13"><a href="appconvex.html#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> Q <span class="op">@</span> D <span class="op">@</span> Q.T</span>
-<span id="cb5-14"><a href="appconvex.html#cb5-14" aria-hidden="true" tabindex="-1"></a>lam_list <span class="op">=</span> np.array([<span class="fl">0.5</span>, <span class="fl">2.4</span>, <span class="fl">3.7</span>])</span>
-<span id="cb5-15"><a href="appconvex.html#cb5-15" aria-hidden="true" tabindex="-1"></a>S <span class="op">=</span> generate_random_PD_matrix(lam_list) <span class="co"># get a PD matrix S</span></span>
-<span id="cb5-16"><a href="appconvex.html#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-17"><a href="appconvex.html#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">## Step 1: define variables and parameters</span></span>
-<span id="cb5-18"><a href="appconvex.html#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co"># get coefficients for equality constraints</span></span>
-<span id="cb5-19"><a href="appconvex.html#cb5-19" aria-hidden="true" tabindex="-1"></a>A_00 <span class="op">=</span> np.array([[<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>]]) <span class="co"># tr(A_00 @ X) + lam = S_00</span></span>
-<span id="cb5-20"><a href="appconvex.html#cb5-20" aria-hidden="true" tabindex="-1"></a>A_01 <span class="op">=</span> np.array([[<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>]]) <span class="co"># tr(A_01 @ X) = S_01</span></span>
-<span id="cb5-21"><a href="appconvex.html#cb5-21" aria-hidden="true" tabindex="-1"></a>A_02 <span class="op">=</span> np.array([[<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>], [<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>]]) <span class="co"># tr(A_02 @ X) = S_02</span></span>
-<span id="cb5-22"><a href="appconvex.html#cb5-22" aria-hidden="true" tabindex="-1"></a>A_11 <span class="op">=</span> np.array([[<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>]]) <span class="co"># tr(A_11 @ X) + lam = S_11</span></span>
-<span id="cb5-23"><a href="appconvex.html#cb5-23" aria-hidden="true" tabindex="-1"></a>A_12 <span class="op">=</span> np.array([[<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>], [<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>]]) <span class="co"># tr(A_12 @ X) = S_12</span></span>
-<span id="cb5-24"><a href="appconvex.html#cb5-24" aria-hidden="true" tabindex="-1"></a>A_22 <span class="op">=</span> np.array([[<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>]]) <span class="co"># tr(A_22 @ X) + lam = S_22</span></span>
-<span id="cb5-25"><a href="appconvex.html#cb5-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-26"><a href="appconvex.html#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="co">## Step 2: define objective and constraints</span></span>
-<span id="cb5-27"><a href="appconvex.html#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="co"># define a PD matrix variable X of size 3*3</span></span>
-<span id="cb5-28"><a href="appconvex.html#cb5-28" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> cp.Variable((<span class="dv">3</span>, <span class="dv">3</span>), symmetric<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb5-29"><a href="appconvex.html#cb5-29" aria-hidden="true" tabindex="-1"></a>constraints <span class="op">=</span> [X <span class="op">&gt;&gt;</span> <span class="dv">0</span>] <span class="co"># the operator &gt;&gt; denotes matrix inequality</span></span>
-<span id="cb5-30"><a href="appconvex.html#cb5-30" aria-hidden="true" tabindex="-1"></a>lam <span class="op">=</span> cp.Variable(<span class="dv">1</span>)</span>
-<span id="cb5-31"><a href="appconvex.html#cb5-31" aria-hidden="true" tabindex="-1"></a>constraints <span class="op">+=</span> [</span>
-<span id="cb5-32"><a href="appconvex.html#cb5-32" aria-hidden="true" tabindex="-1"></a>    cp.trace(A_00 <span class="op">@</span> X) <span class="op">+</span> lam <span class="op">==</span> S[<span class="dv">0</span>,<span class="dv">0</span>],</span>
-<span id="cb5-33"><a href="appconvex.html#cb5-33" aria-hidden="true" tabindex="-1"></a>    cp.trace(A_01 <span class="op">@</span> X) <span class="op">==</span> S[<span class="dv">0</span>,<span class="dv">1</span>],</span>
-<span id="cb5-34"><a href="appconvex.html#cb5-34" aria-hidden="true" tabindex="-1"></a>    cp.trace(A_02 <span class="op">@</span> X) <span class="op">==</span> S[<span class="dv">0</span>,<span class="dv">2</span>],</span>
-<span id="cb5-35"><a href="appconvex.html#cb5-35" aria-hidden="true" tabindex="-1"></a>    cp.trace(A_11 <span class="op">@</span> X) <span class="op">+</span> lam <span class="op">==</span> S[<span class="dv">1</span>,<span class="dv">1</span>],</span>
-<span id="cb5-36"><a href="appconvex.html#cb5-36" aria-hidden="true" tabindex="-1"></a>    cp.trace(A_12 <span class="op">@</span> X) <span class="op">==</span> S[<span class="dv">1</span>,<span class="dv">2</span>],</span>
-<span id="cb5-37"><a href="appconvex.html#cb5-37" aria-hidden="true" tabindex="-1"></a>    cp.trace(A_22 <span class="op">@</span> X) <span class="op">+</span> lam <span class="op">==</span> S[<span class="dv">2</span>,<span class="dv">2</span>],</span>
-<span id="cb5-38"><a href="appconvex.html#cb5-38" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb5-39"><a href="appconvex.html#cb5-39" aria-hidden="true" tabindex="-1"></a>obj <span class="op">=</span> cp.Minimize(<span class="op">-</span>lam)</span>
-<span id="cb5-40"><a href="appconvex.html#cb5-40" aria-hidden="true" tabindex="-1"></a>prob <span class="op">=</span> cp.Problem(obj, constraints) <span class="co"># form the problem</span></span>
-<span id="cb5-41"><a href="appconvex.html#cb5-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-42"><a href="appconvex.html#cb5-42" aria-hidden="true" tabindex="-1"></a><span class="co">## Step 3: solve problem and get results</span></span>
-<span id="cb5-43"><a href="appconvex.html#cb5-43" aria-hidden="true" tabindex="-1"></a>prob.solve()  </span>
-<span id="cb5-44"><a href="appconvex.html#cb5-44" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;status: &quot;</span>, prob.status) <span class="co"># check whether the status is &quot;optimal&quot;</span></span>
-<span id="cb5-45"><a href="appconvex.html#cb5-45" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;optimal value: &quot;</span>, prob.value) <span class="co"># optimal objective</span></span>
-<span id="cb5-46"><a href="appconvex.html#cb5-46" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;optimal solution: &quot;</span>, lam.value) <span class="co"># optimal lam</span></span></code></pre></div>
+Seems tedious? Fortunately, CVX provides a high-level API to handle these linear equality constraints: you just need to write down</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode matlab"><code class="sourceCode matlab"><span id="cb6-1"><a href="appconvex.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="va">X</span> <span class="op">+</span> <span class="va">lam</span> <span class="op">*</span> <span class="va">eye</span>(<span class="fl">3</span>) <span class="op">==</span> <span class="va">S</span><span class="op">;</span> <span class="co">% linear equality constraints: X + lam *I = S</span></span></code></pre></div>
+<p>CVX will autometically convert this high-level constraint to <a href="appconvex.html#eq:app-sdpdef">(B.5)</a> and pass them to the underlying solver.</p>
+<p>To generate a ramdom <span class="math inline">\(S \in \mathcal{S}_+^3\)</span>, you just need to assign three nonnegative eigenvalues to the program. After that, an random <span class="math inline">\(S\)</span> will be generated by <span class="math inline">\(S = Q \ \text{diag}(\lambda_1, \lambda_2, \lambda_3) \ Q^T\)</span>, where <span class="math inline">\(Q\)</span> is random orthonormal matrix.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode matlab"><code class="sourceCode matlab"><span id="cb7-1"><a href="appconvex.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">%% Define the SDP example setting</span></span>
+<span id="cb7-2"><a href="appconvex.html#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="va">lam_list</span> <span class="op">=</span> [<span class="fl">0.7</span><span class="op">;</span> <span class="fl">2.4</span><span class="op">;</span> <span class="fl">3.7</span>]<span class="op">;</span></span>
+<span id="cb7-3"><a href="appconvex.html#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="va">S</span> <span class="op">=</span> <span class="va">generate_random_PD_matrix</span>(<span class="va">lam_list</span>)<span class="op">;</span> <span class="co">% get a PD matrix S</span></span>
+<span id="cb7-4"><a href="appconvex.html#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="appconvex.html#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">%% Solve the SDP problem</span></span>
+<span id="cb7-6"><a href="appconvex.html#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="va">cvx_begin</span></span>
+<span id="cb7-7"><a href="appconvex.html#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="va">variable</span> <span class="va">X</span>(<span class="fl">3</span><span class="op">,</span> <span class="fl">3</span>) <span class="va">symmetric</span><span class="op">;</span></span>
+<span id="cb7-8"><a href="appconvex.html#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="va">variable</span> <span class="va">lam</span><span class="op">;</span> </span>
+<span id="cb7-9"><a href="appconvex.html#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="va">maximize</span>(<span class="va">lam</span>)<span class="op">;</span> </span>
+<span id="cb7-10"><a href="appconvex.html#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="va">subject</span> <span class="va">to</span></span>
+<span id="cb7-11"><a href="appconvex.html#cb7-11" aria-hidden="true" tabindex="-1"></a>        <span class="co">% here &quot;==&quot; should be read as &quot;is in&quot;</span></span>
+<span id="cb7-12"><a href="appconvex.html#cb7-12" aria-hidden="true" tabindex="-1"></a>        <span class="va">X</span> <span class="op">==</span> <span class="va">semidefinite</span>(<span class="fl">3</span>)<span class="op">;</span> </span>
+<span id="cb7-13"><a href="appconvex.html#cb7-13" aria-hidden="true" tabindex="-1"></a>        <span class="va">X</span> <span class="op">+</span> <span class="va">lam</span> <span class="op">*</span> <span class="va">eye</span>(<span class="fl">3</span>) <span class="op">==</span> <span class="va">S</span><span class="op">;</span></span>
+<span id="cb7-14"><a href="appconvex.html#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="va">cvx_end</span></span>
+<span id="cb7-15"><a href="appconvex.html#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="appconvex.html#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co">% this function help to generate PD matrix of size 3*3 </span></span>
+<span id="cb7-17"><a href="appconvex.html#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="co">% if you provide the eigenvalues [lam_1, lam_2, lam_3]</span></span>
+<span id="cb7-18"><a href="appconvex.html#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="va">S</span> <span class="op">=</span> <span class="va">generate_random_PD_matrix</span>(<span class="va">lam_list</span>)</span>
+<span id="cb7-19"><a href="appconvex.html#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="kw">if</span> <span class="op">~</span><span class="va">all</span>(<span class="va">lam_list</span> <span class="op">&gt;=</span> <span class="fl">0</span>) <span class="co">% all eigenvalues &gt;= 0</span></span>
+<span id="cb7-20"><a href="appconvex.html#cb7-20" aria-hidden="true" tabindex="-1"></a>        <span class="va">error</span>(<span class="st">&quot;All eigenvalues must be nonnegative.&quot;</span>)<span class="op">;</span></span>
+<span id="cb7-21"><a href="appconvex.html#cb7-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span>
+<span id="cb7-22"><a href="appconvex.html#cb7-22" aria-hidden="true" tabindex="-1"></a>    <span class="va">D</span> <span class="op">=</span> <span class="va">diag</span>(<span class="va">lam_list</span>)<span class="op">;</span></span>
+<span id="cb7-23"><a href="appconvex.html#cb7-23" aria-hidden="true" tabindex="-1"></a>    <span class="co">% use QR factorization to generate a random orthonormal matrix Q</span></span>
+<span id="cb7-24"><a href="appconvex.html#cb7-24" aria-hidden="true" tabindex="-1"></a>    [<span class="va">Q</span><span class="op">,</span> <span class="op">~</span>] <span class="op">=</span> <span class="va">qr</span>(<span class="va">rand</span>(<span class="fl">3</span><span class="op">,</span> <span class="fl">3</span>))<span class="op">;</span></span>
+<span id="cb7-25"><a href="appconvex.html#cb7-25" aria-hidden="true" tabindex="-1"></a>    <span class="va">S</span> <span class="op">=</span>  <span class="va">Q</span> <span class="op">*</span> <span class="va">D</span> <span class="op">*</span> <span class="va">Q</span><span class="op">&#39;;</span></span>
+<span id="cb7-26"><a href="appconvex.html#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div>
 <hr />
 </div>
 </div>
