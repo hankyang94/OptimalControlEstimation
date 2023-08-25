@@ -256,15 +256,23 @@ In general, $f_i,h_i$ may not be differentiable. There are also KKT conditions f
 
 ## Practice {#appconvex-practice}
 
-### CVXPY Introduction
+### CVX Introduction
 
-In the last section, we have learned basic concepts and theorems in convex optimization. In this section, on the other hand, we will introduce you how to model basic convex optimization problems with CVXPY, an easy-to-use Python package. To install CVXPY, please refer to this [page](https://www.cvxpy.org/install/index.html). To define and solve a convex optimization problem in CVXPY, there are three steps (apart from importing necessary packages):
+In the last section, we have learned basic concepts and theorems in convex optimization. In this section, on the other hand, we will introduce you how to model basic convex optimization problems with CVX, an easy-to-use MATLAB package. To install CVX, please refer to this [page](http://cvxr.com/cvx/doc/install.html). Note that every time you what to use the CVX package, you should add it to your MATLAB path. For example, if I install CVX package in the parent directory of my current directory with default directory name `cvx`, the following line should be added before your CVX codes:
 
-- Step 1: Define parameters and variables in a certain type of convex problem. Here variables are what you are trying to optimize or "learn". Parameters are the "coefficients" of variables in the objective and constraints. 
+```matlab
+addpath(genpath("../cvx/"));
+```
 
-- Step 2: Define the objective function and constraints.
+With CVX, it is incredibly easy for us to define and solve a convex optimization problem. You just need to:
 
-- Step 3: Solve the problem and get the results.
+1. define the variables.
+
+2. define the objective function you want to minimize or maximize.
+
+3. define the constraints.
+
+After running your codes, the optimal objective value is stored in the variable `cvx_optval`, and the problem status is stored in the variable `cvx_status` (when your problem is well-defined, this variable's value will be `Solved`). The optimal solutions will be stored in the variables you define. 
 
 Throughout this section, we will study five types of convex optimization problems: linear programming (LP), quadratic programming (QP), (convex) quadratically constrained quadratic programming (QCQP), second-order cone programming (SOCP), and semidefinite programming (SDP). Given two types of optimization problems $A$ and $B$, we say $A < B$ if $A$ can always be converted to $B$ while the inverse is not true. Under this notation, we have
 \begin{equation*}
@@ -301,34 +309,25 @@ where $x$ is the variable, $A \in \mathbb{R}^{m\times n}, b \in \mathbb{R}^m$, a
    \end{bmatrix}
 \end{equation*}
 
-Corresponding CVXPY codes are shown below: 
-```python
-import cvxpy as cp
-import numpy as np
+Corresponding CVX codes are shown below: 
+```matlab
+%% Define the LP example setting
+c1 = 2;
+c2 = -5;
+l1 = 3;
+l2 = 7;
+% parameters: c, A, b
+c = [c1; c2];
+A = [1, 0; -1, 0; 0, 1; 0, -1];
+b = [l1; l1; l2; l2];
 
-## Define the LP example setting
-c1 = 2
-c2 = -5
-l1 = 3
-l2 = 7
-
-## Step 1: define variables and parameters
-x = cp.Variable(2) # variable: x = [x1, x2]^T
-# parameters: c, A, b
-c = np.array([c1, c2]) 
-A = np.array([[1, 0], [-1, 0], [0, 1], [0, -1]])
-b = np.array([l1, l1, l2, l2])
-
-## Step 2: define objective and constraints
-obj = cp.Minimize(c.T @ x)
-constraints = [A @ x <= b]
-prob = cp.Problem(obj, constraints) # form the problem
-
-## Step 3: solve problem and get results
-prob.solve()  
-print("status: ", prob.status) # check whether the status is "optimal"
-print("optimal value: ", prob.value) # optimal objective
-print("optimal solution: ", x.value) # optimal x
+%% solve LP
+cvx_begin
+    variable x(2); % define variables [x1, x2]
+    minimize(c' * x); % define the objective
+    subject to
+        A * x <= b; % define the linear constraint
+cvx_end
 ```
 
 ### Quadratic Programming (QP)
@@ -366,43 +365,37 @@ Same as in the LP example, $G$ and $h$ can be expressed as:
    \end{bmatrix}
 \end{equation*}
 
-Corresponding CVXPY codes are shown below:
-```python
-import cvxpy as cp
-import numpy as np
+Corresponding CVX codes are shown below:
+```matlab
+%% Define the QP example setting
+p1 = 2;
+p2 = 0.5;
+p3 = 4;
+q1 = -3;
+q2 = -6.5;
+l1 = 2;
+l2 = 2.5;
+% check if the generated P is positive semidefinite
+tmp1 = (p1 >= 0);
+tmp2 = (p1*p3 - 4*p2^2 >= 0);
+if ~(tmp1 && tmp2)
+    error("P is not positve semidefinite!");
+end
+% parameters: P, q, G, h
+P = 2 * [p1, p2; p2, p3];
+q = [q1; q2];
+G = [1, 0; -1, 0; 0, 1; 0, -1];
+h = [l1; l1; l2; l2];
 
-## Define the LP example setting
-p1 = 2
-p2 = 0.5
-p3 = 4
-q1 = -3
-q2 = -6.5
-l1 = 2
-l2 = 2.5
-# check if the generated P is positive semidefinite
-tmp1 = (p1 >= 0)
-tmp2 = (p1*p3 - 4*p2**2 >= 0)
-assert(tmp1 and tmp2, "P is not positve semidefinite!")
-
-## Step 1: define variables and parameters
-x = cp.Variable(2) # variable: x = [x1, x2]^T
-# parameters: P, q, G, h
-P = 2*np.array([[p1, p2], [p2, p3]])
-q = np.array([q1, q2]) 
-G = np.array([[1, 0], [-1, 0], [0, 1], [0, -1]])
-h = np.array([l1, l1, l2, l2])
-
-## Step 2: define the objective and constraints
-fx = 0.5 * cp.quad_form(x, P) + q.T @ x
-obj = cp.Minimize(fx)
-constraints = [G @ x <= h]
-prob = cp.Problem(obj, constraints) # form the problem
-
-## Step 3: solve the problem and get results
-prob.solve()  
-print("status: ", prob.status) # check whether the status is "optimal"
-print("optimal value: ", prob.value) # optimal objective
-print("optimal solution: ", x.value) # optimal x
+%% Solve the QP problem
+cvx_begin
+    variable x(2); % define variables [x1; x2]
+    % define the objective, where quad_form(x, P) = x'*P*x
+    obj = 0.5 * quad_form(x, P) + q' * x; 
+    minimize(obj); 
+    subject to
+        G * x <= h; % define the linear constraint
+cvx_end
 ```
 
 ### Quadratically Constrained Quadratic Programming (QCQP)
@@ -477,52 +470,45 @@ Now, we construct $P, q, r$'s in QCQP with the above parameters. Define the vari
 
 The corresponding codes are shown below. In this example, we test the minimum distance between a circle $y_1^2 + z_1^2 \le 1$ and another circle $(y_2 - 2)^2 + (z_2 - 2)^2 \le 1$. You can check whether the result from QCQP aligns with your manual calculation.
 
-```python
-import cvxpy as cp
-import numpy as np
-from numpy.linalg import cholesky, inv, norm
+```matlab
+%% Define the QCQP example setting
+K1 = eye(2);
+k1 = zeros(2, 1);
+c1 = -0.5;
+K2 = eye(2);
+k2 = [2; 2];
+c2 = 3.5;
+if ~(if_ellipse(K1, k1, c1) && if_ellipse(K2, k2, c2))
+    error("The example setting is not correct");
+end
+% define parameters P0, P1, P2, q1, q2, r1, r2
+P0 = [1,0,-1,0; 0,1,0,-1; -1,0,1,0; 0,-1,0,1];
+P1 = zeros(4, 4);
+P1(1:2, 1:2) = K1;
+P2 = zeros(4, 4);
+P2(3:4, 3:4) = K2;
+q1 = [k1; zeros(2, 1)];
+q2 = [zeros(2, 1); k2];
+r1 = c1;
+r2 = c2;
 
-## Define the QCQP example setting
-def if_ellipse(K, k, c):
-    # examine whether 0.5*x^T K x + k^T x + c <= 0 is a ellipse
-    # if K is not positive semidefinite, Cholesky will raise an error
-    L = cholesky(K) 
-    radius_square = 0.5 * norm(inv(L) @ k)**2 - c
-    return radius_square > 0
-K1 = np.eye(2)
-k1 = np.zeros(2)
-c1 = -0.5
-K2 = np.array([[1, 0], [0, 1]])
-k2 = np.array([2, 2])
-c2 = 3.5
-if not (if_ellipse(K1, k1, c1) and if_ellipse(K2, k2, c2)):
-    raise ValueError("The example setting is not correct")
+%% Solve the QCQP problem
+cvx_begin
+    variable x(4); % define variables [y1; z1; y2; z2]
+    % define the objective, where quad_form(x, P) = x'*P*x
+    obj = 0.5 * quad_form(x, P0); 
+    minimize(obj); 
+    subject to
+        0.5 * quad_form(x, P1) + q1' * x + r1 <= 0;
+        0.5 * quad_form(x, P2) + q2' * x + r2 <= 0;
+cvx_end
 
-## Step 1: define variables and parameters
-P0 = np.array([[1,0,-1,0], [0,1,0,-1], [-1,0,1,0], [0,-1,0,1]])
-P1 = np.zeros((4,4))
-P1[:2, :2] = K1
-P2 = np.zeros((4,4))
-P2[2:, 2:] = K2
-q1 = np.concatenate([k1, np.zeros(2)])
-q2 = np.concatenate([np.zeros(2), k2])
-r1 = c1
-r2 = c2
-
-## Step 2: define objective and constraints
-x = cp.Variable(4) # variable: x = [y1, z1, y2, z2]^T
-fx = 0.5 * cp.quad_form(x, P0)
-obj = cp.Minimize(fx)
-con1 = (0.5 * cp.quad_form(x, P1) + q1.T @ x + r1 <= 0) # ellipse 1
-con2 = (0.5 * cp.quad_form(x, P2) + q2.T @ x + r2 <= 0) # ellipse 2
-constraints = [con1, con2]
-prob = cp.Problem(obj, constraints) # form the problem
-
-## Step 3: solve problem and get results
-prob.solve()  
-print("status: ", prob.status) # check whether the status is "optimal"
-print("optimal value: ", prob.value) # optimal objective
-print("optimal solution: ", x.value) # optimal x
+%% detect whether (K, k, c) generates a ellipse
+function flag = if_ellipse(K, k, c)
+    L = chol(K);
+    radius_square = 0.5 * norm(L \ k)^2 - c; % L \ k = inv(L) * k
+    flag = (radius_square > 0);
+end
 ```
 
 ### Second-Order Cone Programming (SOCP)
@@ -569,45 +555,31 @@ which is exactly the same as inequality constraints in SOCP formulation. (You ca
 
 In the following code example, we set up four inequality constraints and let $\bar{a}_i^T x \le b_i, \ i = 1 \dots 4$ form an square located at the origin of size $2$. Then, for convenience, we set $\Sigma_i \equiv \sigma^2 I$. 
 
-```python
-import cvxpy as cp
-import numpy as np
-from scipy.stats import norm
+```matlab
+%% Define the SOCP example setting
+bar_a1 = [1; 0];
+b1 = 1;
+bar_a2 = [0; 1];
+b2 = 1;
+bar_a3 = [-1; 0];
+b3 = 1;
+bar_a4 = [0; -1];
+b4 = 1;
+sigma = 0.1; 
+c = [2; 3];
+p = 0.9; % p should be more than 0.5
+Phi_inv = norminv(p); % get Phi^{-1}(p)
 
-## Define the SOCP example setting
-# define bar_ai, bi (i = 1, 2, 3, 4)
-bar_a1 = np.array([1, 0])
-b1 = 1
-bar_a2 = np.array([0, 1])
-b2 = 1
-bar_a3 = np.array([-1, 0])
-b3 = 1
-bar_a4 = np.array([0, -1])
-b4 = 1
-sigma = 0.1 
-c = np.array([2, 3])
-p = 0.9 # p should be more than 0.5
-
-## Step 1: define variables and parameters
-Phi_inv = norm.ppf(p) # get Phi^{-1}(p)
-
-## Step 2: define objective and constraints
-x = cp.Variable(2) # variable: x = [x1, x2]^T
-obj = cp.Minimize(c.T @ x)
-# use cp.SOC(t, x) to create the SOC constraint ||x||_2 <= t
-constraints = [
-    cp.SOC(b1 - bar_a1.T @ x, sigma*Phi_inv*x),
-    cp.SOC(b2 - bar_a2.T @ x, sigma*Phi_inv*x),
-    cp.SOC(b3 - bar_a3.T @ x, sigma*Phi_inv*x),
-    cp.SOC(b4 - bar_a4.T @ x, sigma*Phi_inv*x),
-]
-prob = cp.Problem(obj, constraints) # form the problem
-
-## Step 3: solve problem and get results
-prob.solve()  
-print("status: ", prob.status) # check whether the status is "optimal"
-print("optimal value: ", prob.value) # optimal objective
-print("optimal solution: ", x.value) # optimal x
+%% Solve the SOCP problem
+cvx_begin
+    variable x(2); % define variables [x1; x2]
+    minimize(c' * x); 
+    subject to
+        sigma*Phi_inv * norm(x) <= b1 - bar_a1' * x;
+        sigma*Phi_inv * norm(x) <= b2 - bar_a2' * x;
+        sigma*Phi_inv * norm(x) <= b3 - bar_a3' * x;
+        sigma*Phi_inv * norm(x) <= b4 - bar_a4' * x;
+cvx_end
 ```
 
 ### Semidefinite Programming (SDP)
@@ -617,10 +589,10 @@ print("optimal solution: ", x.value) # optimal x
    (\#eq:app-sdpdef)
    \min_{X_i, x_i} \ & \sum_{i=1}^{n_s} C_i \cdot X_i + \sum_{i=1}^{n_u} c_i \cdot x_i \\
    \text{subject to } & \sum_{i=1}^{n_s} A_{i,j} \cdot X_i + \sum_{i=1}^{n_u} a_{i,j} \cdot x_i = b_j, \quad j = 1 \dots m \\
-   & X_i \in \mathcal{S}_+^{d_i}, \quad i = 1 \dots n_s \\
+   & X_i \in \mathcal{S}_+^{D_i}, \quad i = 1 \dots n_s \\
    & x_i \in \mathbb{R}^{d_i}, \quad i = 1 \dots n_u  
 \end{align}
-where $C_i, A_{i, j} \in \mathbb{R}^{d_i \times d_i}$, $c_i, a_{i, j} \in \mathbb{R}^{d_i}$, and $\cdot$ means element-wise product. For two square matrices $A, B$, the dot product $A \cdot B$ is equal to $\text{tr}(A B)$; for two vectors $a, b$, the dot product $a \cdot b$ is the same as inner product $a^T b$.
+where $C_i, A_{i, j} \in \mathbb{R}^{D_i \times D_i}$, $c_i, a_{i, j} \in \mathbb{R}^{d_i}$, and $\cdot$ means element-wise product. For two square matrices $A, B$, the dot product $A \cdot B$ is equal to $\text{tr}(A B)$; for two vectors $a, b$, the dot product $a \cdot b$ is the same as inner product $a^T b$.
 
 Note that actually there are many "standard" forms of SDP. For example, in the convex optimization theory part, you may find an SDP that looks like:
 \begin{align}
@@ -628,7 +600,7 @@ Note that actually there are many "standard" forms of SDP. For example, in the c
    \text{subject to } & A \cdot X = b \\
    & X \succeq 0
 \end{align}
-It is convenient for us to analyze the theoretical properties of SDP with this form. Also, in SDP solvers' User Guide, you may see more complex SDP forms which involve more general convex cones. For example, see [MOSEK's Python API docs](https://docs.mosek.com/latest/pythonapi/tutorial-sdo-shared.html). Here we turn to use the form of \@ref(eq:app-sdpdef) for two reasons: (1) it is general enough: our SDP example below can be converted to this form (also, SDPs from sum-of-squares programming in this book are exactly of the form \@ref(eq:app-sdpdef)); (2) it is more readable than more complex forms.
+It is convenient for us to analyze the theoretical properties of SDP with this form. Also, in SDP solvers' User Guide, you may see more complex SDP forms which involve more general convex cones. For example, see [MOSEK's MATLAB API docs](https://docs.mosek.com/10.0/toolbox/tutorial-sdo-shared.html#doc-tutorial-sdo). Here we turn to use the form of \@ref(eq:app-sdpdef) for two reasons: (1) it is general enough: our SDP example below can be converted to this form (also, SDPs from sum-of-squares programming in this book are exactly of the form \@ref(eq:app-sdpdef)); (2) it is more readable than more complex forms.
 
 **Example.** We consider the problem of finding the minimum eigenvalue for a positive semidefinite matrix $S$. We will show that this problem can be converted to \@ref(eq:app-sdpdef). Since $S$ is positive semidefinite, the finding procedure can be cast as 
 \begin{align}
@@ -641,80 +613,64 @@ Now define an auxiliary matrix $X := S - \lambda I$. We have
    \text{subject to } &  X + \lambda I = S \\
    & X \succeq 0
 \end{align}
-It is obvious that the linear matrix equality constraint $X + \lambda I = S$ can be divided into several linear scalar equality constraints in \@ref(eq:app-sdpdef). For example, for the first element in $S$, we will have $X[0,0] + \lambda = S[0,0]$.
-
-In the code example, we consider $S \in \mathbb{S}_+^3$. Thereby $X + \lambda I = S$ will lead to $6$ linear equality constraints (We don't consider $X$ is a symmetric matrix here, since CVXPY will implicitly consider this. Thus, only the upper-triangular part of $X$ and $S$ are actually used in the equality construction.):
+It is obvious that the linear matrix equality constraint $X + \lambda I = S$ can be divided into several linear scalar equality constraints in \@ref(eq:app-sdpdef). For example, we consider $S \in \mathbb{S}_+^3$. Thereby $X + \lambda I = S$ will lead to $6$ linear equality constraints (We don't consider $X$ is a symmetric matrix here, since most solvers will implicitly consider this. Thus, only the upper-triangular part of $X$ and $S$ are actually used in the equality construction.):
 \begin{align}
-   & \left\langle \begin{bmatrix}
+   &  \begin{bmatrix}
       1 & 0 & 0 \\ 0 & 0 & 0 \\ 0 & 0 & 0
-   \end{bmatrix}, X \right\rangle + \lambda = S[0, 0],  
-   \left\langle \begin{bmatrix}
+   \end{bmatrix} \cdot X  + \lambda = S[0, 0],  
+    \begin{bmatrix}
       0 & 1 & 0 \\ 0 & 0 & 0 \\ 0 & 0 & 0
-   \end{bmatrix}, X \right\rangle = S[0, 1],
-   \left\langle \begin{bmatrix}
+   \end{bmatrix} \cdot X  = S[0, 1],
+    \begin{bmatrix}
       0 & 0 & 1 \\ 0 & 0 & 0 \\ 0 & 0 & 0
-   \end{bmatrix}, X \right\rangle = S[0, 2] \\
-   & \left\langle \begin{bmatrix}
+   \end{bmatrix} \cdot X  = S[0, 2] \\
+   &  \begin{bmatrix}
       0 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 0
-   \end{bmatrix}, X \right\rangle + \lambda = S[1, 1],
-   \left\langle \begin{bmatrix}
+   \end{bmatrix} \cdot X  + \lambda = S[1, 1],
+    \begin{bmatrix}
       0 & 0 & 0 \\ 0 & 0 & 1 \\ 0 & 0 & 0
-   \end{bmatrix}, X \right\rangle = S[1, 2], 
-   \left\langle \begin{bmatrix}
+   \end{bmatrix} \cdot X  = S[1, 2], 
+    \begin{bmatrix}
       0 & 0 & 0 \\ 0 & 0 & 0 \\ 0 & 0 & 1
-   \end{bmatrix}, X \right\rangle + \lambda = S[2, 2] 
+   \end{bmatrix} \cdot X  + \lambda = S[2, 2] 
 \end{align}
+Seems tedious? Fortunately, CVX provides a high-level API to handle these linear equality constraints: you just need to write down 
+
+```matlab
+X + lam * eye(3) == S; % linear equality constraints: X + lam *I = S
+```
+
+CVX will autometically convert this high-level constraint to \@ref(eq:app-sdpdef) and pass them to the underlying solver.
+
 To generate a ramdom $S \in \mathcal{S}_+^3$, you just need to assign three nonnegative eigenvalues to the program. After that, an random $S$ will be generated by $S = Q \ \text{diag}(\lambda_1, \lambda_2, \lambda_3) \ Q^T$, where $Q$ is random orthonormal matrix.  
 
+```matlab
+%% Define the SDP example setting
+lam_list = [0.7; 2.4; 3.7];
+S = generate_random_PD_matrix(lam_list); % get a PD matrix S
 
+%% Solve the SDP problem
+cvx_begin
+    variable X(3, 3) symmetric;
+    variable lam; 
+    maximize(lam); 
+    subject to
+        % here "==" should be read as "is in"
+        X == semidefinite(3); 
+        X + lam * eye(3) == S;
+cvx_end
 
-```python
-import cvxpy as cp
-import numpy as np
-from scipy.stats import ortho_group
-
-## Define the SDP example setting
-# this function help to generate PD matrix of size 3*3 
-# if you provide the eigenvalues [lam_1, lam_2, lam_3]
-def generate_random_PD_matrix(lam_list):
-    assert np.all(lam_list >= 0) # all eigenvalues >= 0
-    # S = Q @ D @ Q.T
-    D = np.diag(lam_list)
-    Q = ortho_group.rvs(3)
-    return Q @ D @ Q.T
-lam_list = np.array([0.5, 2.4, 3.7])
-S = generate_random_PD_matrix(lam_list) # get a PD matrix S
-
-## Step 1: define variables and parameters
-# get coefficients for equality constraints
-A_00 = np.array([[1, 0, 0], [0, 0, 0], [0, 0, 0]]) # tr(A_00 @ X) + lam = S_00
-A_01 = np.array([[0, 1, 0], [0, 0, 0], [0, 0, 0]]) # tr(A_01 @ X) = S_01
-A_02 = np.array([[0, 0, 1], [0, 0, 0], [0, 0, 0]]) # tr(A_02 @ X) = S_02
-A_11 = np.array([[0, 0, 0], [0, 1, 0], [0, 0, 0]]) # tr(A_11 @ X) + lam = S_11
-A_12 = np.array([[0, 0, 0], [0, 0, 1], [0, 0, 0]]) # tr(A_12 @ X) = S_12
-A_22 = np.array([[0, 0, 0], [0, 0, 0], [0, 0, 1]]) # tr(A_22 @ X) + lam = S_22
-
-## Step 2: define objective and constraints
-# define a PD matrix variable X of size 3*3
-X = cp.Variable((3, 3), symmetric=True)
-constraints = [X >> 0] # the operator >> denotes matrix inequality
-lam = cp.Variable(1)
-constraints += [
-    cp.trace(A_00 @ X) + lam == S[0,0],
-    cp.trace(A_01 @ X) == S[0,1],
-    cp.trace(A_02 @ X) == S[0,2],
-    cp.trace(A_11 @ X) + lam == S[1,1],
-    cp.trace(A_12 @ X) == S[1,2],
-    cp.trace(A_22 @ X) + lam == S[2,2],
-]
-obj = cp.Minimize(-lam)
-prob = cp.Problem(obj, constraints) # form the problem
-
-## Step 3: solve problem and get results
-prob.solve()  
-print("status: ", prob.status) # check whether the status is "optimal"
-print("optimal value: ", prob.value) # optimal objective
-print("optimal solution: ", lam.value) # optimal lam
+% this function help to generate PD matrix of size 3*3 
+% if you provide the eigenvalues [lam_1, lam_2, lam_3]
+function S = generate_random_PD_matrix(lam_list)
+    if ~all(lam_list >= 0) % all eigenvalues >= 0
+        error("All eigenvalues must be nonnegative.");
+    end
+    D = diag(lam_list);
+    % use QR factorization to generate a random orthonormal matrix Q
+    [Q, ~] = qr(rand(3, 3));
+    S =  Q * D * Q';
+end
 ```
 
 ---
