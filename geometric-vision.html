@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-08-25" />
+<meta name="date" content="2023-08-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -230,7 +230,13 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="7" data-path="geometric-vision.html"><a href="geometric-vision.html"><i class="fa fa-check"></i><b>7</b> Geometric Vision</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="geometric-vision.html"><a href="geometric-vision.html#d-rotations-and-poses"><i class="fa fa-check"></i><b>7.1</b> 3D Rotations and Poses</a></li>
+<li class="chapter" data-level="7.1" data-path="geometric-vision.html"><a href="geometric-vision.html#d-rotations-and-poses"><i class="fa fa-check"></i><b>7.1</b> 3D Rotations and Poses</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="geometric-vision.html"><a href="geometric-vision.html#rotation-matrices"><i class="fa fa-check"></i><b>7.1.1</b> Rotation matrices</a></li>
+<li class="chapter" data-level="7.1.2" data-path="geometric-vision.html"><a href="geometric-vision.html#coordinate-frame"><i class="fa fa-check"></i><b>7.1.2</b> Coordinate Frame</a></li>
+<li class="chapter" data-level="7.1.3" data-path="geometric-vision.html"><a href="geometric-vision.html#representations-of-the-rotations"><i class="fa fa-check"></i><b>7.1.3</b> Representations of the rotations</a></li>
+<li class="chapter" data-level="7.1.4" data-path="geometric-vision.html"><a href="geometric-vision.html#miscellaneous-topics-on-rotations"><i class="fa fa-check"></i><b>7.1.4</b> Miscellaneous topics on rotations</a></li>
+</ul></li>
 <li class="chapter" data-level="7.2" data-path="geometric-vision.html"><a href="geometric-vision.html#the-pinhole-camera-model"><i class="fa fa-check"></i><b>7.2</b> The Pinhole Camera Model</a></li>
 <li class="chapter" data-level="7.3" data-path="geometric-vision.html"><a href="geometric-vision.html#camera-pose-estimation"><i class="fa fa-check"></i><b>7.3</b> Camera Pose Estimation</a>
 <ul>
@@ -338,14 +344,421 @@ potentially plus some noise. In Chapter <a href="output-feedback.html#output-fee
 </ol>
 <div id="d-rotations-and-poses" class="section level2 hasAnchor" number="7.1">
 <h2><span class="header-section-number">7.1</span> 3D Rotations and Poses<a href="geometric-vision.html#d-rotations-and-poses" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="rotation-matrices" class="section level3 hasAnchor" number="7.1.1">
+<h3><span class="header-section-number">7.1.1</span> Rotation matrices<a href="geometric-vision.html#rotation-matrices" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The first part is a quick recap of the basics in linear algebra.</p>
+<div class="definitionbox">
+<div class="definition">
+<p><span id="def:orthogonalmatrix" class="definition"><strong>Definition 7.1  (Orthogonal Matrix) </strong></span>We call a <span class="math inline">\(n\times n\)</span> square matrix <span class="math inline">\(A\)</span> orthogonal if the column of <span class="math inline">\(A\)</span> is orthogonal to each other and all the column vectors have unit length. The set of all <span class="math inline">\(n\times n\)</span> orthogonal matrices is denoted as <span class="math inline">\(O(n)\)</span>.</p>
+</div>
+</div>
+<p>Below are some basic properties of orthogonal matrices:</p>
+<div class="theorembox">
+<div class="proposition">
+<p><span id="prp:propertyoforthogonal" class="proposition"><strong>Proposition 7.1  (Property of Orthogonal Matrix) </strong></span>Let <span class="math inline">\(A\)</span> be a <span class="math inline">\(n\times n\)</span> orthogonal matrix. Then:</p>
+<ol style="list-style-type: decimal">
+<li><p><span class="math inline">\(A^T = A^{-1}\)</span> and <span class="math inline">\(A^T\)</span> is also a orthogonal matrix.</p></li>
+<li><p>For every orthogonal matrices <span class="math inline">\(A,B\)</span>, <span class="math inline">\(AB\)</span> is also a orthogonal matrix.</p></li>
+<li><p><span class="math inline">\(\det(A) = \pm 1\)</span>.</p></li>
+<li><p><span class="math inline">\(A\)</span> preserves dot product, i.e. <span class="math inline">\(&lt;x,y&gt; = &lt;Ax,Ay&gt;\)</span>, thus preserves the length of a vector, i.e. <span class="math inline">\(\|Ax\|_2 = \|x\|_2\)</span>.</p></li>
+<li><p>All the eigenvalues of <span class="math inline">\(A\)</span> have modulus one.</p></li>
+</ol>
+</div>
+</div>
+<div class="proofbox">
+<div class="proof">
+<p><span id="unlabeled-div-10" class="proof"><em>Proof</em>. </span>We only offer the proof of the last property. Consider any eigenvalue <span class="math inline">\(\lambda\)</span> of <span class="math inline">\(A\)</span>, and <span class="math inline">\(x\)</span> be its eigenvector.
+We have <span class="math inline">\(&lt;x,x&gt; = &lt;A^TAx,x&gt;=&lt;Ax,Ax&gt; = |\lambda|^2&lt;x,x&gt;\)</span>, thus <span class="math inline">\(|\lambda|=1\)</span>.</p>
+</div>
+</div>
+<p>There are two types of orthogonal matrices, categorized by determinant <span class="math inline">\(1\)</span> and <span class="math inline">\(-1\)</span>. Those with determinant <span class="math inline">\(1\)</span> are called rotation matrices. The set of rotation matrices is denoted as <span class="math inline">\(SO(n)\)</span> (Special Orthogonal). In the world of robotics and most engineering fields, we care about <span class="math inline">\(SO(3)\)</span> the most. Below are some basic properties of <span class="math inline">\(3\times 3\)</span> rotation matrices:</p>
+<div class="theorembox">
+<div class="proposition">
+<p><span id="prp:propertyofrotation" class="proposition"><strong>Proposition 7.2  (Property of Rotation Matrix) </strong></span>Let <span class="math inline">\(A\)</span> be a <span class="math inline">\(3\times 3\)</span> orthogonal matrix. Then:</p>
+<ol style="list-style-type: decimal">
+<li><p><span class="math inline">\(\det(A) = \pm 1\)</span></p></li>
+<li><p>For every rotation matrices <span class="math inline">\(A,B\)</span>, <span class="math inline">\(A^T\)</span>,<span class="math inline">\(AB\)</span> are also rotation matrices.</p></li>
+<li><p><span class="math inline">\(A\)</span> always has an eigenvalue <span class="math inline">\(1\)</span>. If <span class="math inline">\(A\)</span> is not identity, <span class="math inline">\(A\)</span> either has two conjugate complex eigenvalues not equal to 1, or has two eigenvalues -1.</p></li>
+</ol>
+</div>
+</div>
+<div class="proofbox">
+<div class="proof">
+<p><span id="unlabeled-div-11" class="proof"><em>Proof</em>. </span>We can only prove the last property.</p>
+<p>From the property of orthogonal matrix, we know that all eigenvalues have modulus one. First, note that there must exist at least one real eigenvalue. Because eigenvalues with nonzero imaginary parts always come in pair and 3 is an odd number.</p>
+<p>Then there are two possible cases: (1) All the eigenvalues are real; (2) There is only one eigenvalue.</p>
+<p>For case one, note that the determinant of a matrix is the product of all eigenvalues, then rotation matrix can’t have all the eigenvalues -1.</p>
+<p>For case two. The product of the pairing complex eigenvalues is the square of the modulus of the eigenvalue, which is 1. So the real eigenlvalue left must be 1.</p>
+<p>Finally if all the eigenvalues of <span class="math inline">\(A\)</span> are 1, then <span class="math inline">\(A\)</span> must be identity.</p>
+</div>
+</div>
+</div>
+<div id="coordinate-frame" class="section level3 hasAnchor" number="7.1.2">
+<h3><span class="header-section-number">7.1.2</span> Coordinate Frame<a href="geometric-vision.html#coordinate-frame" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><em>Coordinate frames</em> are a set of orthogonal basis (containing three axes) attached to a certain body at a point. It serves as the tool to describe the position of points relative to that body. Conventionally, coordinate frames are right-handed. We will encounter different frames in applications, including: (1) Robot (robot frame “<span class="math inline">\(r\)</span>”), (2) Sensor on the robot (e.g. camera frame ‘<span class="math inline">\(c\)</span>’), (3) A fixed location in the world (world frame “<span class="math inline">\(w\)</span>”)</p>
+<p>It’s worth metion that, denote <span class="math inline">\(\vec{x},\vec{y},\vec{z}\)</span> as the three axes of the coordinate frame, then the right-handed property can be expressed as: <span class="math inline">\(\vec{x}\cdot(\vec{y}\times \vec{z}) = 1\)</span>, which is the same as <span class="math inline">\(\det ([\vec{x},\vec{y},\vec{z}]) = 1\)</span>. So the matrix <span class="math inline">\([\vec{x},\vec{y},\vec{z}]\)</span> is a rotation matrix.</p>
+<p>It’s natural for us to ask three questions: (1) How to express a point in a given frame? (2) How to represent a frame <span class="math inline">\(r\)</span> with respect to a frame <span class="math inline">\(w\)</span>? (3) How to translate the coordinate of a point in different frames?</p>
+<p><strong>(1) How to express a point in a given frame?</strong></p>
+<p>Let’s consider a reference frame <span class="math inline">\(r\)</span> and denote the the three axes attached to it as <span class="math inline">\(\vec{x^r},\vec{y^r},\vec{z^r}\)</span>. Then for any point <span class="math inline">\(p\)</span>, we care about the vector pointing from the origin of the frame to <span class="math inline">\(p\)</span>. We slightly abuse the notation and let that vector called <span class="math inline">\(p\)</span>.(Since we will only care about the vector) Then, we can express <span class="math inline">\(p\)</span> as the combination of the basis, i.e. <span class="math display">\[p = p^r_x \vec{x^r}+p^r_y\vec{y^r}+p^r_z\vec{z^r} = \begin{bmatrix} \vec{x^r},\vec{y^r},\vec{z^r}\end{bmatrix} \begin{bmatrix} p^r_x\\p^r_y\\p^r_z \end{bmatrix}\]</span> Thus we can fully describe point <span class="math inline">\(p\)</span> with three scalars <span class="math inline">\(p^r_x,p^r_y,p^r_z\)</span>, which is called the coordinates of <span class="math inline">\(p\)</span> with respect to the frame <span class="math inline">\(r\)</span>.</p>
+<p><strong>(2) How to represent a frame <span class="math inline">\(r\)</span> with respect to a frame <span class="math inline">\(w\)</span>?</strong></p>
+<p>Now we consider how to describe frame <span class="math inline">\(w\)</span> in frame <span class="math inline">\(r\)</span>. Let’s focus on the simple case where the origin of the two coordinate systems coincide. Then we can express the axes <span class="math inline">\(\vec{x^w},\vec{y^w},\vec{z^w}\)</span> in frame <span class="math inline">\(r\)</span> directly. For example, thanks to the orthogonality, we can get:<span class="math display">\[\vec{x^w} = &lt;\vec{x^w},\vec{x^r}&gt;\vec{x^r} +&lt;\vec{x^w},\vec{y^r}&gt;\vec{y^r} +  &lt;\vec{x^w},\vec{z^r}&gt;\vec{z^r} = \begin{bmatrix}
+    \vec{x^r},\vec{y^r},\vec{z^r}\end{bmatrix}\begin{bmatrix} &lt;\vec{x^w},\vec{x^r}&gt;\\ &lt;\vec{x^w},\vec{y^r}&gt;\\&lt;\vec{x^w},\vec{z^r}&gt;
+\end{bmatrix}\]</span> So we can get:
+<span class="math display">\[\begin{bmatrix}
+    \vec{x^w},\vec{y^w},\vec{z^w}
+\end{bmatrix} = \begin{bmatrix}
+    \vec{x^r},\vec{y^r},\vec{z^r}
+\end{bmatrix}\begin{bmatrix}
+    &amp;&lt;\vec{x^w},\vec{x^r}&gt; &amp;&lt;\vec{y^w},\vec{x^r}&gt; &amp;&lt;\vec{z^w},\vec{x^r}&gt;\\
+    &amp;&lt;\vec{x^w},\vec{y^r}&gt; &amp;&lt;\vec{y^w},\vec{y^r}&gt; &amp;&lt;\vec{z^w},\vec{y^r}&gt;\\
+    &amp;&lt;\vec{x^w},\vec{z^r}&gt; &amp;&lt;\vec{y^w},\vec{z^r}&gt; &amp;&lt;\vec{z^w},\vec{z^r}&gt;
+\end{bmatrix} = \begin{bmatrix}
+    \vec{x^r},\vec{y^r},\vec{z^r}
+\end{bmatrix}R^r_w\]</span></p>
+<p>Note that <span class="math inline">\(R^r_w = (\begin{bmatrix}  \vec{x^r},\vec{y^r},\vec{z^r} \end{bmatrix})^T\begin{bmatrix}  \vec{x^w},\vec{y^w},\vec{z^w} \end{bmatrix}\)</span> is a rotation matrix.</p>
+<div class="examplebox">
+<div class="example">
+<p><span id="exm:frametransexample" class="example"><strong>Example 7.1  (A simple example of translation between frames) </strong></span>If we for frame <span class="math inline">\(w\)</span> we have <span class="math display">\[\begin{bmatrix}
+    \vec{x^w},\vec{y^w},\vec{z^w}
+\end{bmatrix} = I_3\]</span>
+and for frame <span class="math inline">\(r\)</span> we have <span class="math display">\[\begin{bmatrix}
+    \vec{x^r},\vec{y^r},\vec{z^r}
+\end{bmatrix} = \begin{bmatrix}
+    &amp;\cos(\theta) &amp;-\sin(\theta) &amp;0\\
+    &amp;\sin(\theta) &amp;\cos(\theta)  &amp;0\\
+    &amp;0            &amp;0             &amp;1
+\end{bmatrix}\]</span></p>
+<p>Then we can have:</p>
+<p><span class="math display">\[\begin{align}
+\begin{bmatrix}
+    \vec{x^w},\vec{y^w},\vec{z^w}
+\end{bmatrix} =&amp; \begin{bmatrix}
+    \vec{x^r},\vec{y^r},\vec{z^r}
+\end{bmatrix}\begin{bmatrix}
+    &amp;&lt;\vec{x^w},\vec{x^r}&gt; &amp;&lt;\vec{y^w},\vec{x^r}&gt; &amp;&lt;\vec{z^w},\vec{x^r}&gt;\\
+    &amp;&lt;\vec{x^w},\vec{y^r}&gt; &amp;&lt;\vec{y^w},\vec{y^r}&gt; &amp;&lt;\vec{z^w},\vec{y^r}&gt;\\
+    &amp;&lt;\vec{x^w},\vec{z^r}&gt; &amp;&lt;\vec{y^w},\vec{z^r}&gt; &amp;&lt;\vec{z^w},\vec{z^r}&gt;
+\end{bmatrix} \\
+  =&amp; \begin{bmatrix}
+    \vec{x^r},\vec{y^r},\vec{z^r}
+\end{bmatrix}\begin{bmatrix}
+    &amp;\cos(\theta) &amp;\sin(\theta) &amp;0\\
+    &amp;-\sin(\theta) &amp;\cos(\theta) &amp;0\\
+    &amp;0 &amp;0 &amp;1
+\end{bmatrix}
+  \end{align}\]</span></p>
+<p>So we can get <span class="math inline">\(R_w^r = \begin{bmatrix}  &amp;\cos(\theta) &amp;\sin(\theta) &amp;0\\  &amp;-\sin(\theta) &amp;\cos(\theta) &amp;0\\  &amp;0 &amp;0 &amp;1 \end{bmatrix}\)</span></p>
+</div>
+</div>
+<p><strong>(3) How to translate the coordinate of a point in different frames?</strong></p>
+<p>First let us consider frame <span class="math inline">\(w\)</span> and <span class="math inline">\(r\)</span> with the same origin. Then for any point <span class="math inline">\(\vec{p}\)</span>, we will have:</p>
+<p><span class="math display">\[\begin{align}
+    &amp;\vec{p} = \begin{bmatrix} \vec{x^r},\vec{y^r},\vec{z^r}\end{bmatrix} \begin{bmatrix} p^r_x\\p^r_y\\p^r_z \end{bmatrix} = \begin{bmatrix} \vec{x^w},\vec{y^w},\vec{z^w}\end{bmatrix} \begin{bmatrix} p^w_x\\p^w_y\\p^w_z \end{bmatrix} \\
+    \Rightarrow&amp; \vec{p^r} = \begin{bmatrix} p^r_x\\p^r_y\\p^r_z \end{bmatrix} = \begin{bmatrix} \vec{x^r}^T\\ \vec{y^r}^T\\ \vec{z^r}^T\end{bmatrix} \begin{bmatrix} \vec{x^w},\vec{y^w},\vec{z^w}\end{bmatrix} \begin{bmatrix} p^w_x\\p^w_y\\p^w_z \end{bmatrix} = R^r_w \begin{bmatrix} p^w_x\\p^w_y\\p^w_z \end{bmatrix} = R^r_w\vec{p^w}
+\end{align}\]</span></p>
+<p>We can find that, we only need to multiply the matrix <span class="math inline">\(R^r_w\)</span> to translate the coordinate in <span class="math inline">\(w\)</span> frame to <span class="math inline">\(r\)</span> frame.</p>
+<div class="examplebox">
+<div class="example">
+<p><span id="exm:frametransexamplecont" class="example"><strong>Example 7.2  (A simple example of translation between frames (Cont.)) </strong></span>If we for frame <span class="math inline">\(w\)</span> we have <span class="math display">\[\begin{bmatrix}
+    \vec{x^w},\vec{y^w},\vec{z^w}
+\end{bmatrix} = I_3\]</span>
+and for frame <span class="math inline">\(r\)</span> we have <span class="math display">\[\begin{bmatrix}
+    \vec{x^r},\vec{y^r},\vec{z^r}
+\end{bmatrix} = \begin{bmatrix}
+    &amp;\cos(\theta) &amp;-\sin(\theta) &amp;0\\
+    &amp;\sin(\theta) &amp;\cos(\theta)  &amp;0\\
+    &amp;0            &amp;0             &amp;1
+\end{bmatrix}\]</span>
+Assume point <span class="math inline">\(p\)</span> has coordinates <span class="math inline">\(\vec{p^w} = \begin{bmatrix} \cos(\theta)\\\sin(\theta)\\0 \end{bmatrix}\)</span> in frame <span class="math inline">\(w\)</span>. Then we can have:
+<span class="math display">\[\vec{p^r} = R^r_w\vec{p^w} = \begin{bmatrix}
+    &amp;\cos(\theta) &amp;\sin(\theta) &amp;0\\
+    &amp;-\sin(\theta) &amp;\cos(\theta) &amp;0\\
+    &amp;0 &amp;0 &amp;1
+\end{bmatrix}\begin{bmatrix} \cos(\theta)\\\sin(\theta)\\0 \end{bmatrix} = \begin{bmatrix} 1\\0\\0 \end{bmatrix}\]</span></p>
+</div>
+</div>
+<p>What if the origin of the two frames are not the same? We may think of two ways to do so: (1) First do the translation, then do the rotation, (2) First do the rotation, then do the translation. The most natural way is (1). Here is a quick example:</p>
+<div class="examplebox">
+<div class="example">
+<p><span id="exm:translationex" class="example"><strong>Example 7.3  (A simple example with different origins) </strong></span></p>
+Suppose we have two frames: Frame 1 and Frame 2 as depicted below. All the coordinates are in frame 1. <span class="math display">\[
+    R_1^2 = \begin{bmatrix}&lt;\vec{x^1},\vec{x^2}&gt; &amp;&lt;\vec{y^1},\vec{x^2}&gt; \\
+    &lt;\vec{x^1},\vec{y^2}&gt; &amp;&lt;\vec{y^1},\vec{y^2}&gt; \end{bmatrix} = \begin{bmatrix} \frac{\sqrt{2}}{2} &amp;\frac{\sqrt{2}}{2} \\ -\frac{\sqrt{2}}{2} &amp;\frac{\sqrt{2}}{2}\end{bmatrix}\]</span> and <span class="math inline">\(t_1^2 = \begin{bmatrix} 0\\-2\end{bmatrix}\)</span>.
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:translation-example"></span>
+<img src="images/translation_example.png" alt="A simple example with different origins" width="100%" />
+<p class="caption">
+Figure 7.1: A simple example with different origins
+</p>
+</div>
+<p>We can see that, if we want to use method 1, we can just consecutively do the translation and the rotation. However, if we want to do it reversely, we must multiply the translation by the rotation matrix. Actually it’s easy to show this two methods are equivalent.</p>
+<p>In conclusion, the formula is as follows:
+<span class="math display">\[p^2 = R^2_1(p^1+t_1^2) = R^2_1p^1+R^2_1t_1^2\]</span></p>
+</div>
+</div>
+</div>
+<div id="representations-of-the-rotations" class="section level3 hasAnchor" number="7.1.3">
+<h3><span class="header-section-number">7.1.3</span> Representations of the rotations<a href="geometric-vision.html#representations-of-the-rotations" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Although rotation matrix is enough to characterize a rotation. But it’s not simple enough and not intuitive enough. For example, we can’t explicitly know the rotation angles from the rotation matrix. The rotation matrix has 9 elements, but there are many constraints. So is it possible for us to find a simpler representation for rotation?</p>
+<div id="euler-angles-representation" class="section level4 hasAnchor" number="7.1.3.1">
+<h4><span class="header-section-number">7.1.3.1</span> Euler angles representation<a href="geometric-vision.html#euler-angles-representation" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Intuitively, we can achieve any rotation by rotating along the x, y, z axes in turn. First let’s introduce some basic rotations along x,y,z axes.</p>
+<div class="theorembox">
+<div class="proposition">
+<p><span id="prp:basicrotation" class="proposition"><strong>Proposition 7.3  (Basic Rotations) </strong></span>Below are the basic rotation matrices along the x, y, z axes, all the rotations are counterclockwise.</p>
+<ol style="list-style-type: decimal">
+<li><p>Rotation along z axes, with angle <span class="math inline">\(\gamma\)</span> is:
+<span class="math display">\[\begin{bmatrix}
+    &amp;\cos(\gamma) &amp;\sin(\gamma) &amp;0\\
+    &amp;-\sin(\gamma) &amp;\cos(\gamma) &amp;0\\
+    &amp;0 &amp;0 &amp;1
+\end{bmatrix}\]</span></p></li>
+<li><p>Rotation along y axes, with angle <span class="math inline">\(\beta\)</span> is:
+<span class="math display">\[\begin{bmatrix}
+  &amp;\cos(\beta) &amp;0 &amp;-\sin(\beta)\\
+  &amp;0 &amp;1 &amp;0\\
+  &amp;\sin(\beta) &amp;0 &amp;\cos(\beta)
+\end{bmatrix}\]</span></p></li>
+<li><p>Rotation along x axes, with angle <span class="math inline">\(\alpha\)</span> is:
+<span class="math display">\[\begin{bmatrix}
+  &amp;1&amp;0&amp;0 \\
+  &amp;0 &amp;\cos(\alpha) &amp;\sin(\alpha)\\
+  &amp;0 &amp;-\sin(\alpha) &amp;\cos(\alpha)
+\end{bmatrix}\]</span></p></li>
+</ol>
+</div>
+</div>
+<p>Actually every rotation can be written into combination of no more than three basic rotations, with no two consecutive rotations along the same axis. A popular choice of the sequence is roll-pitch-yaw.</p>
+<div class="theorembox">
+<div class="proposition">
+<p><span id="prp:roll-pitch-yaw" class="proposition"><strong>Proposition 7.4  (Roll-pitch-yaw angle representation) </strong></span>Any rotation matrix <span class="math inline">\(R^w_r\)</span> can be written into combination of basic rotations in the following order:<span class="math display">\[R^w_r = R_z(\gamma)R_y(\beta)R_x(\alpha)\]</span>
+where <span class="math inline">\(\gamma\)</span> is called the yaw angle, <span class="math inline">\(\beta\)</span> is called the pitch angle, and <span class="math inline">\(\alpha\)</span> is called the roll angle.</p>
+</div>
+</div>
+<p>This representation is very intuitive, because it directly tells us the rotation angles. However, the calculation will include trigonometric functions. So it can be hard to calculate and analyze. Moreover, if you want to recover the Euler angles from
+rotation matrices, there may be problems in certain point. The example below shows the singularities.</p>
+<div class="examplebox">
+<div class="example">
+<p><span id="exm:singulareuler" class="example"><strong>Example 7.4  (Singularities for Euler angles) </strong></span>In formula <span class="math display">\[R = R_z(\gamma)R_y(\beta)R_x(\alpha)\]</span>
+consider <span class="math inline">\(\beta = \frac{\pi}{2}\)</span>. Then we will have:
+<span class="math display">\[R = R_z(\gamma)R_y(\frac{\pi}{2})R_x(\alpha) = \begin{bmatrix}
+    &amp;0 &amp;\sin(\alpha+\gamma) &amp;-\cos(\alpha+\gamma)\\
+    &amp;0 &amp;\cos(\alpha+\gamma)  &amp;\sin(\alpha+\gamma)\\
+    &amp;1            &amp;0             &amp;0
+\end{bmatrix}\]</span>
+So there are ambiguities in choosing <span class="math inline">\(\alpha,\gamma\)</span> for the same rotation matrices.</p>
+</div>
+</div>
+</div>
+<div id="axis-angle-representation" class="section level4 hasAnchor" number="7.1.3.2">
+<h4><span class="header-section-number">7.1.3.2</span> Axis-angle representation<a href="geometric-vision.html#axis-angle-representation" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Another intuitive representation is the axis-angle representation. Imagine a rotation in 3D space, it seems that all the rotations are rotation with respect to an axis (not necessary to be aligned with the x,y,z axes) for some angle. How to find the axis and the corresponding angle?</p>
+<p>Given rotation angle and axis, how can we get the rotation matrix? Next theorem will give us an explicit formula.</p>
+<div class="theorembox">
+<div class="theorem">
+<p><span id="thm:rodrigues" class="theorem"><strong>Theorem 7.1  (Rodrigues' rotation formula) </strong></span>Given a rotation angle <span class="math inline">\(\theta\)</span> and a rotation axis <span class="math inline">\(u\)</span> (expressed by a unit vector). The rotation matrix <span class="math inline">\(R\)</span> can be computed as: <span class="math display">\[R = \cos(\theta)I_3+\sin(\theta)[u]_\times+(1-\cos(\theta))uu^T\]</span>
+where <span class="math inline">\([u]_\times = \begin{bmatrix}  &amp;0 &amp;-u_z &amp;u_y\\  &amp;u_z &amp;0 &amp;-u_x\\  &amp;-u_y &amp;u_x &amp;0 \end{bmatrix}\)</span></p>
+</div>
+</div>
+<p>How can we do it reversely? Intuitively, axis of the rotation is the direction that the rotation preserves. Mathematically speaking, axis of rotation is in the direction of the eigenvector with respect to the eigenvalue of 1. From the discussion above, if rotation is not equal to identity, then there is a unique direction of rotation axis. So we can solve for the rotation axis by calculating <span class="math inline">\(u\)</span> satisfying:<span class="math display">\[Ru = u\]</span> To get the rotation angle, we notice that if we take trace of both of the sides of Rodrigues’ rotation formula, we can get:<span class="math display">\[\text{Tr}(R) = 2\cos(\theta) + 1\]</span> Note that if we treat <span class="math inline">\(\theta\)</span> as the minimal angle of the rotation, we can always restrict the <span class="math inline">\(\theta\in[0,\pi]\)</span> and thus <span class="math inline">\(\theta = \arccos(\frac{\text{Tr}(R) - 1}{2})\)</span>. However, then we will leave the rotation direction to the sign of axis <span class="math inline">\(u\)</span>. That is to say: <span class="math inline">\(R(u,\theta)^{-1} = R(-u,\theta)\)</span>. So we need to double check the two potential solutions to make sure which rotation is the one we want.</p>
+</div>
+<div id="quaternion-representation" class="section level4 hasAnchor" number="7.1.3.3">
+<h4><span class="header-section-number">7.1.3.3</span> Quaternion representation<a href="geometric-vision.html#quaternion-representation" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>W.R. Hamilton first introduced the definition of quaternion representation.</p>
+<div class="definitionbox">
+<div class="definition">
+<p><span id="def:quaternion" class="definition"><strong>Definition 7.2  (Quaternion) </strong></span>A quaternion is represented in the form <span class="math inline">\(\textbf{q} = \textbf{i}q_1 + \textbf{j}q_2 + \textbf{k}q_3 + q_4\)</span>, where <span class="math inline">\(q_1,q_2,q_3,q_4\)</span> are real numbers and <span class="math inline">\(\bf i,j,k\)</span> satisfying:
+<span class="math display">\[\begin{align}
+  &amp;\textbf{i}^2=\textbf{j}^2=\textbf{k}^2=-1\\
+  &amp;\textbf{ij} = -\textbf{ji} = \textbf{k} \quad \textbf{jk} = -\textbf{kj} = \textbf{i} \quad \textbf{ki} = -\textbf{ik} = \textbf{j}
+\end{align}\]</span></p>
+</div>
+</div>
+<p>We can also write the quaternion in the column vector form: <span class="math inline">\(\textbf{q} = \begin{bmatrix} q_1\\q_2\\q_3\\q_4 \end{bmatrix}\)</span>. We are particularly interested in <strong>unit quaternions</strong>, which means the column vector has unit length. Unit quaternions can represent rotations, actually we can get quaternions immediately from the axis-angle representation. The main idea is to use the axis-angle representation but in a more compact format. Concretely speaking, given rotation angle <span class="math inline">\(\theta\)</span> and rotation axis <span class="math inline">\(u\)</span>(in unit length), the corresponding unit quaternion is as follows: <span class="math display">\[q = \begin{bmatrix}u\sin(\frac{\theta}{2}) \\ \cos(\frac{\theta}{2})\end{bmatrix}\]</span></p>
+<p>The corresponding rotation matrix is:
+<span class="math display">\[R(q) = \begin{bmatrix} q_1^2 - q_2^2 - q_3^2 + q_4^2  &amp;2(q_1q_2-q_3q_4) &amp;2(q_1q_3 +q_2q_4)\\
+2(q_1q_2+q_3q_4) &amp; -q_1^2+q_2^2-q_3^2+q_4^2 &amp;2(q_2q_3 - q_1q_4)\\
+2(q_1q_3-q_2q_4) &amp;2(q_2q_3+q_1q_4) &amp;-q_1^2-q_2^2+q_3^2+q_4^2 \end{bmatrix}\]</span></p>
+<p>Quaternion representation doesn’t have singularities. But there is still a little ambiguity that <span class="math inline">\(q\)</span> and <span class="math inline">\(-q\)</span> always represent the same rotation, which means the quaternion is a double cover of the 3D rotation. Actually, quaternions also give us great convenience in calculation, because of its compact representation. For computational use, we care about: <strong>(1)How to compose rotations? (2) How to take inverse for quaternions (3) How to rotate a 3D vector using quaternions?</strong></p>
+<p><strong>(1)How to compose rotations? </strong></p>
+<p>Consider two quaternions <span class="math inline">\(q_a = q_{a,1}i +q_{a,2}j +q_{a,3}k +q_{a,4},\  q_b = q_{b,1}i +q_{b,2}j +q_{b,3}k +q_{b,4}\)</span>. Then the composition of the corresponding rotation is just the product of two quaternions. Explicitly,
+<span class="math display">\[\begin{align}
+q_c = q_a\otimes q_b =&amp; (q_{a,4}q_{b,1} -q_{a,3}q_{b,2} + q_{a,2}q_{b,3} + q_{a,1}q_{b,4})i \\
++&amp; (q_{a,3}q_{b,1} +q_{a,4}q_{b,2} - q_{a,1}q_{b,3} + q_{a,2}q_{b,4})j \\
++&amp; (-q_{a,2}q_{b,1} +q_{a,1}q_{b,2} + q_{a,4}q_{b,3} + q_{a,3}q_{b,4})k \\
++&amp; (-q_{a,1}q_{b,1} -q_{a,2}q_{b,2} - q_{a,3}q_{b,3} + q_{a,4}q_{b,4})
+\end{align}\]</span></p>
+<p>If we use vector to represent quaternion, we can claim the following formula:</p>
+<p><span class="math display">\[ q_c = \begin{bmatrix} q_{a,4} &amp; -q_{a,3} &amp; q_{a,2} &amp; q_{a,1}\\
+q_{a,3} &amp; q_{a,4} &amp;-q_{a,1} &amp;q_{a,2} \\
+-q_{a,2} &amp; q_{a,1} &amp; q_{a,4} &amp;q_{a,3} \\
+-q_{a,1} &amp; -q_{a,2} &amp; -q_{a,3} &amp;q_{a,4}\end{bmatrix} \begin{bmatrix} q_{b,1}\\q_{b,2}\\q_{b,3}\\q_{b,4}\end{bmatrix} \]</span> Similar formula can be derived for <span class="math inline">\(q_a\)</span>.</p>
+<p><strong>(2) How to take inverse for quaternions?</strong></p>
+<p>Assume that now we have the pose of frame <span class="math inline">\(r\)</span> with respect to a frame <span class="math inline">\(w\)</span>, i.e. we know <span class="math inline">\(q_r^w\)</span>. How can we get the opposite, i.e. the pose of frame <span class="math inline">\(w\)</span> with respect to frame <span class="math inline">\(r\)</span>? The answer is to take the inverse of the rotation. It’s easy to carry out using rotation matrix, but how shall we proceed using quaternions? Let’s remind ourselves that quaternion is nothing but rearranged axis-angle representation. So naturally the inverse is as follows:
+<span class="math display">\[q_w^r = \begin{bmatrix}-u_r^w\sin(\frac{\theta}{2}) \\ \cos(\frac{\theta}{2})\end{bmatrix} = (q_r^w)^{-1}\]</span>
+This process is also compatible with the quaternion product.</p>
+<p><strong>(3) How to rotate a 3D vector using quaternions?</strong></p>
+<p>One key question is, given coordinates in one frame, and the pose of that frame in another frame, how can we translate the coordinates? Assume there is a point <span class="math inline">\(p\)</span>, and we know its coordinates in frame <span class="math inline">\(r\)</span>, denoted as <span class="math inline">\(p^r\)</span>. Also we know the pose of frame <span class="math inline">\(r\)</span> in frame <span class="math inline">\(w\)</span>, denoted as <span class="math inline">\(q_r^w\)</span>. For simplicity, we assume that the two frame share the same origin. How can we get the coordinates of <span class="math inline">\(p\)</span> with respect to the frame <span class="math inline">\(w\)</span>, i.e. <span class="math inline">\(p^w\)</span>? We have the following formula:
+<span class="math display">\[p^w = (q^w_r)\otimes\begin{bmatrix} p^r\\1\end{bmatrix}\otimes(q^w_r)^{-1} = \begin{bmatrix} R^w_rp^r\\1\end{bmatrix}\]</span>
+i.e. we can compute the rotation by first stack an extra entry 1 at the end of <span class="math inline">\(p^r\)</span>, then let <span class="math inline">\(q^w_r\)</span> act ‘conjugately’ on it.</p>
+</div>
+</div>
+<div id="miscellaneous-topics-on-rotations" class="section level3 hasAnchor" number="7.1.4">
+<h3><span class="header-section-number">7.1.4</span> Miscellaneous topics on rotations<a href="geometric-vision.html#miscellaneous-topics-on-rotations" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="lie-group-structure-of-rotations" class="section level4 hasAnchor" number="7.1.4.1">
+<h4><span class="header-section-number">7.1.4.1</span> Lie group structure of rotations<a href="geometric-vision.html#lie-group-structure-of-rotations" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Actually, on one hand, the set of rotation matrices (<span class="math inline">\(SO(3)\)</span>) is closed under matrix multiplication (and some other properties), which gives rise to its algebraic structure (which is called ‘group’). On the other hand, the set of rotation matrices has its own topological structure (which is called ‘manifold’). Lie group is both group and smooth manifold, but we’ll not introduce Lie group formally.</p>
+<p>Geometrically, thanks to the quaternion representation, we can treat the group <span class="math inline">\(SO(3)\)</span> as a sphere in 4D, but due to <span class="math inline">\(R(q) = R(-q)\)</span>, we must image there are portals connecting the antipodal points. Locally we can just think it as a sphere. For a sphere, we can imagine that at each point there is a tangent space. The tangent space at the identity is called Lie algebra. Why identity? There is nothing special with identity, just because: (1) Every group has identity. (2) The tangent space at other points can be obtained from identity. Lie algebra is deeply connected with Lie group. Imagine the sphere case, the sphere itself is curved, but we can use coordinates to translate the sphere into a flat map. Lie algebra is a flat space which we can make use of to study about the complicated curved Lie group. We will have some intuition on it by examining <span class="math inline">\(SO(3)\)</span>.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:sphere"></span>
+<img src="images/sphere.png" alt="Sphere and tangent space" width="100%" />
+<p class="caption">
+Figure 7.2: Sphere and tangent space
+</p>
+</div>
+<p>Lie group <span class="math inline">\(SO(3)\)</span> is related to its Lie algebra <span class="math inline">\(\mathfrak{so}(3)\)</span>. We will state without proof that the Lie algebra <span class="math inline">\(\mathfrak{so}(3)\)</span> is the set of <span class="math inline">\(3\times 3\)</span> skew symmetric matrices.</p>
+<p><strong>Exponential Map and Logarithm Map:</strong></p>
+<p>Looking at the sphere in the picture, it seems natural for us to bridge the endpoint of the green curved line, which is still on the sphere, with the endpoint of the red line, which is in the tangent space. This retraction is called exponential map. For matrix Lie group (including <span class="math inline">\(SO(3)\)</span>), the exponential map coinsides with the matrix exponential.</p>
+<div class="definitionbox">
+<div class="definition">
+<p><span id="def:matrixexp" class="definition"><strong>Definition 7.3  (Matrix exponential) </strong></span>Given a <span class="math inline">\(n\times n\)</span> matrix <span class="math inline">\(A\)</span>, the matrix exponential of <span class="math inline">\(A\)</span> is defined as:
+<span class="math display">\[e^A = \sum_{p=0}^\infty \frac{A^p}{p!}\]</span>
+The matrix exponential is well defined, and every entry converges absolutely.</p>
+</div>
+</div>
+<p>We will check this on the <span class="math inline">\(SO(3)\)</span> case:
+::: {.theorembox}
+::: {.theorem #matrixexprotation name=“Matrix exponential for rotations”}
+The exponential map <span class="math inline">\(\text{exp:}\mathfrak{so}(3)\to SO(3)\)</span> is well-defined.
+:::
+:::</p>
+<div class="proofbox">
+<div class="proof">
+<p><span id="unlabeled-div-12" class="proof"><em>Proof</em>. </span>Consider a <span class="math inline">\(3\times 3\)</span> skew symmetric matrix <span class="math inline">\(A = \begin{bmatrix} 0 &amp;-c &amp;b\\c &amp;0 &amp;-a\\-b &amp;a &amp;0 \end{bmatrix}\)</span>, define <span class="math inline">\(w = \begin{bmatrix} a\\b\\c \end{bmatrix}, \hat{w} = w/\|w\|, \theta=\|w\|\)</span>. Then <span class="math inline">\(A = w_\times\)</span>. Consider <span class="math inline">\(\hat{w}_\times\)</span>, using the properties of the cross product, we have:<span class="math inline">\(\hat{w}^3_\times = -\hat{w}_\times\)</span>. Thus we can know that:
+<span class="math display">\[\begin{align}
+    \exp(A) &amp;= I + (1-\frac{\theta^3}{3!}+\frac{\theta^5}{5!}+\dots)\hat{w}_\times + (\frac{\theta^2}{2!}-\frac{\theta^4}{4!}+\frac{\theta^6}{6!})\hat{w}_\times^2\\
+    &amp;= I + \frac{\sin\theta}{\theta}A + \frac{1-\cos\theta}{\theta^2}A^2
+  \end{align}\]</span>
+which actually coincide with the Rodrigues’ formula. Thus <span class="math inline">\(\exp(A)\)</span> is a rotation matrix.</p>
+</div>
+</div>
+<p>Actually the exponential map for <span class="math inline">\(SO(3)\)</span> is surjective. From the derivation above, I believe we can see the similarity of this with the axis-angle representation. In order to map backwards, we want to recover the angle and the axis from the rotation matrix. There are infinitely many possible points due to the periodic property of trigonometric functions. So we may restrict the rotation angle <span class="math inline">\(\theta \in [0,\pi)\)</span>。 Then from the derivation of the axis-angle representation, we can get:
+<span class="math display">\[\begin{align}
+  \theta &amp;= \arccos(\frac{\text{Tr}(R) - 1}{2})
+\end{align}\]</span>
+Next is to recover the axis. Note that the whole space of <span class="math inline">\(n\times n\)</span> matrices is the direct sum of <span class="math inline">\(n\times n\)</span> symmetric matrices and <span class="math inline">\(n\times n\)</span> skew symmetric matrices. So we can decompose the rotation matrix into symmetric and skew symmetric parts. From the formula above, we can decompose as:
+<span class="math display">\[ \exp(A) = \underbrace{\frac{\sin\theta}{\theta}A}_{\text{skew symmetric}} + \underbrace{I + \frac{1-\cos\theta}{\theta^2}A^2}_{\text{symmetric}}
+\]</span>
+Thus we can recover the skew symmetric matrix <span class="math inline">\(A\)</span> (the axis) by taking the skew symmetric part of <span class="math inline">\(\exp(A)\)</span>. Concretely, we can get: <span class="math inline">\(A = \frac{\theta}{2\sin\theta}(R - R^T)\)</span>.</p>
+<p>Next we will give an example of how to use exponential map and logarithm map to do interpolation of rotations. Suppose we have two rotations <span class="math inline">\(R_1,R_2\)</span>, and we want to find a rotation <span class="math inline">\(R\)</span> that is in between. We can use the following formula:
+<span class="math display">\[R = R_1\exp(\lambda\log(R_1^TR_2))\]</span>
+where <span class="math inline">\(\lambda\in[0,1]\)</span>.</p>
+<!--
+<div class="figure" style="text-align: center">
+<img src="images/interpolation_exp.gif" alt="Interpolation using exponential map" width="100%" />
+<p class="caption">(\#fig:interpolation-exp)Interpolation using exponential map</p>
+</div>
+
+
+
+#### Distance of rotations:
+
+Then, we are willing to define a metric on it, i.e. how to measure the 'distance' of two rotations. Naturally we want to use the angle as the distance on a sphere, which is $d(q_1,q_2) = \text{arccos}(<q_1,q_2>)$. However, this is not well-defined due to the 'portal' of the quaternions. To tackle this problem, we need to find the nearest pair, so we add absolute to the inner product. In coordinate with the rotation angle, we will add a scalar 2.(Remember the angle in quaternion representation is devided by 2) Thus the distance we use is as follows:$$d(q_1,q_2) = 2\text{arccos}(|<q_1,q_2>|)$$. This is called the angular(geodesic) distance.
+
+
+#### Interpolation of rotations
+
+In this section, we will focus on how to interpolate rotations. The easiest way we can think of is to linearly interpolate between two quaternions and normalize. However, this will cause some problems because it's not constant speed. One of the most popular method to interpolate rotations is SLERP. SLERP is abbreviation for Spherical Linear Interpolation. The idea is to interpolate along the shortest arc on the sphere. The formula is as follows:
+
+$$\text{Slerp}(q_1,q_2;t) = q_1(q_1^{-1}q_2)^t$$
+
+First let
+-->
+</div>
+</div>
 </div>
 <div id="the-pinhole-camera-model" class="section level2 hasAnchor" number="7.2">
 <h2><span class="header-section-number">7.2</span> The Pinhole Camera Model<a href="geometric-vision.html#the-pinhole-camera-model" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Next let’s take a look at the pinhole camera model, which is the simplest one. In this model, the picture in 2D is the projection of the corresponding 3D points with respect to the optical center.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:pinhole-model"></span>
+<img src="images/pinhole_camera.png" alt="Pinhole Camera Model" width="100%" />
+<p class="caption">
+Figure 7.3: Pinhole Camera Model
+</p>
+</div>
+<p>Consider point <span class="math inline">\(p\)</span> in the camera frame. Suppose the focal length(i.e. the distance from the optical center to the image plane) is <span class="math inline">\(f\)</span>. Then the coordinates of the projection of <span class="math inline">\(p\)</span> is:
+<span class="math display">\[p_m^c = \begin{bmatrix} u_m^c\\v_m^c \end{bmatrix} = \begin{bmatrix} f\frac{p^c_x}{p^c_z}\\ f\frac{p^c_y}{p^c_z} \end{bmatrix}\]</span>
+The unit of these coordinates are meter. We would prefer to write the formula into a matrix form, but the barrier here is the quotient. In order to overcome this, we introduce <strong>homogeneous coordinates</strong>. In homogeneous coordinates system, if coordinates are multiplied by a non-zero scalar then the resulting coordinates represent the same point. We will add an extra entry to better represent this equivalence. Denote <span class="math display">\[\tilde{p^c} = \begin{bmatrix} p_x^c\\p_y^c\\p_z^c\\1 \end{bmatrix}\]</span>
+Then the equivalence can be expressed as <span class="math display">\[\forall k\neq0  \text{,}\quad \ \begin{bmatrix} p_x^c\\p_y^c\\p_z^c\\1 \end{bmatrix} \sim \begin{bmatrix} kp_x^c\\kp_y^c\\kp_z^c\\k \end{bmatrix}\]</span>
+With this notation, the projection equation can be written as: <span class="math display">\[p^c_z\begin{bmatrix} u_m^c\\v_m^c\\1 \end{bmatrix} = \begin{bmatrix} f &amp;0 &amp;0 \\ 0 &amp;f &amp;0\\ 0 &amp;0 &amp;1\end{bmatrix} \begin{bmatrix} 1 &amp;0 &amp;0 &amp;0 \\ 0 &amp;1 &amp;0 &amp;0\\ 0 &amp;0 &amp;1 &amp;0\end{bmatrix} \begin{bmatrix} p_x^c\\p_y^c\\p_z^c\\1 \end{bmatrix}\]</span></p>
+<p>Normally when we deal with points in a 2D picture, we will prefer the unit is in pixels instead of meters. Next we will show how to convert the coordinates into pixels. In convention, the origin of the pixel coordinates is at the top-left of the image. So that we can express the coordinates in pixel as follows:
+<span class="math display">\[\begin{bmatrix} u^I\\v^I\\1 \end{bmatrix} = \begin{bmatrix} s_x &amp;0 &amp;o_x \\ 0 &amp;s_y &amp;o_y\\ 0 &amp;0 &amp;1\end{bmatrix} \begin{bmatrix} u_m^c\\v_m^c\\1 \end{bmatrix}\]</span>
+where <span class="math inline">\(s_x\)</span> is the number of horizontal pixels per meter, <span class="math inline">\(s_y\)</span> is the number of vertical pixels per meter, and <span class="math inline">\(\begin{bmatrix} o_x\\o_y\end{bmatrix}\)</span> is the coordinates of the optical center.</p>
+<p>Combing the previous result, we can get:
+<span class="math display">\[\begin{align} p_z^c\begin{bmatrix} u^I\\v^I\\1 \end{bmatrix} =&amp; \begin{bmatrix} s_x &amp;0 &amp;o_x \\ 0 &amp;s_y &amp;o_y\\ 0 &amp;0 &amp;1\end{bmatrix} \begin{bmatrix} f &amp;0 &amp;0 \\ 0 &amp;f &amp;0\\ 0 &amp;0 &amp;1\end{bmatrix} \begin{bmatrix} 1 &amp;0 &amp;0 &amp;0 \\ 0 &amp;1 &amp;0 &amp;0\\ 0 &amp;0 &amp;1 &amp;0\end{bmatrix} \begin{bmatrix} p_x^c\\p_y^c\\p_z^c\\1 \end{bmatrix} \\
+=&amp;  \underbrace{\begin{bmatrix} s_xf &amp;0 &amp;o_x \\ 0 &amp;s_yf &amp;o_y\\ 0 &amp;0 &amp;1\end{bmatrix}}_{K} \begin{bmatrix} 1 &amp;0 &amp;0 &amp;0 \\ 0 &amp;1 &amp;0 &amp;0\\ 0 &amp;0 &amp;1 &amp;0\end{bmatrix} \begin{bmatrix} p_x^c\\p_y^c\\p_z^c\\1 \end{bmatrix}\end{align}\]</span>
+where <span class="math inline">\(K\)</span> is called intrinsic matrix.</p>
+<p>Notice that, in our derivation above, the homogeneous coordinates of <span class="math inline">\(p\)</span> is in the camera frame. However, it’s not always easy to know the coordinates in the camera frame. For example, sometimes we may have many different camera views, or the camera itself is moving. What we usually have is the coordinate of the 3D points in the world frame. Therefore we will add a procedure to transform the coordinates from world fram to the camera frame. From the previous section, we can know that we just need to do some rotations and translations. Therefore we can obtain the formula:
+<span class="math display">\[\begin{align} p_z^c\begin{bmatrix} u^I\\v^I\\1 \end{bmatrix}
+=&amp;  \begin{bmatrix} s_xf &amp;0 &amp;o_x \\ 0 &amp;s_yf &amp;o_y\\ 0 &amp;0 &amp;1\end{bmatrix} \begin{bmatrix} 1 &amp;0 &amp;0 &amp;0 \\ 0 &amp;1 &amp;0 &amp;0\\ 0 &amp;0 &amp;1 &amp;0\end{bmatrix} \begin{bmatrix} R_w^c &amp;t^c_w \\ 0 &amp;1 \end{bmatrix}\begin{bmatrix} p_x^w\\p_y^w\\p_z^w\\1 \end{bmatrix}\\
+=&amp; \begin{bmatrix} s_xf &amp;0 &amp;o_x \\ 0 &amp;s_yf &amp;o_y\\ 0 &amp;0 &amp;1\end{bmatrix} \begin{bmatrix} R_w^c &amp;t^c_w\end{bmatrix}\begin{bmatrix} p_x^w\\p_y^w\\p_z^w\\1 \end{bmatrix}
+\end{align}\]</span>
+where the matrix <span class="math inline">\(\begin{bmatrix} R_w^c &amp;t^c_w\end{bmatrix}\)</span> is called the extrinsic matrix.</p>
+<p>Some pinhole cameras will introduce significant distortion to images. For cameras with wide field of view (FOV), they often suffers from radial distortion. Radial distortion makes straight lines look curved in the image. The farther points are from the center of the image, the larger the radial distortion will be. Radial distortion is primarily dominated by low-order components. An easy model of the distortion (in camera frame) is:</p>
+<p><span class="math display">\[u^c = (1+K_1r^2+K_2r^4)u^c_{\text{distort}}\quad\quad v^c = (1+K_1r^2+K_2r^4)v^c_{\text{distort}}\]</span>
+where <span class="math inline">\((u^c,v^c)\)</span> is the undistorted image point, <span class="math inline">\((u^c_{\text{distort}},v^c_{\text{distort}})\)</span> is the distorted image point, <span class="math inline">\(r^2=(u^c_{\text{distort}})^2 +(v^c_{\text{distort}})^2\)</span>, and the <span class="math inline">\(K_n\)</span> is the n-th distortion coefficient.</p>
+<p>If we want to express in the image frame, we can obtain the following model:
+<span class="math display">\[u^I = (1+K_1r^2+K_2r^4)(u^I_{\text{distort}}-o_x)+o_x\quad\quad v^I = (1+K_1r^2+K_2r^4)(v^I_{\text{distort}}-o_y)+o_y\]</span>
+where <span class="math inline">\(r^2=(u^I_{\text{distort}}-o_x)^2 +(v^I_{\text{distort}}-o_y)^2\)</span>.</p>
+<p>It’s worth to mention that despite the radial distortion, there is another distortion called tangential distortion, which will not be elaborated here.</p>
+<p>We often assume that the intrinsics of the camera and he distortion coefficients are already known from the previous camera calibration process, i.e. we always assume that the camera is calibrated.</p>
+<p>There are many existing codes and toolbox by hand if we want to undistort the pictures. Such as OpenCV has undistort function, and Matlab has undistortImage function. They can take in distorted images and return the undistorted ones.</p>
 </div>
 <div id="camera-pose-estimation" class="section level2 hasAnchor" number="7.3">
 <h2><span class="header-section-number">7.3</span> Camera Pose Estimation<a href="geometric-vision.html#camera-pose-estimation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Suppose now we have a calibrated camera, but we don’t know the rotation and translation, i.e. the pose of the camera. We wish to find the extrinsics. Now what we have is a set of <span class="math inline">\(n\)</span> 3D points and their corresponding 2D image projections. We wish to estimate the pose of the camera from these corresponding points.</p>
 <div id="the-p3p-problem" class="section level3 hasAnchor" number="7.3.1">
 <h3><span class="header-section-number">7.3.1</span> The P3P Problem<a href="geometric-vision.html#the-p3p-problem" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Let’s start from something simple. Consider there are three points <span class="math inline">\(P_1^w,P_2^w,P_3^w\)</span> in the world frame, and their corresponding projection points on the image plane <span class="math inline">\(P^c_{m,1},P^c_{m,2},P^c_{m,3}\)</span>. The problem is: Can we found the coordinates of the points <span class="math inline">\(P_1,P_2,P_3\)</span> in the camera frame? We will introduce a direct way to tackle the problem, called Grunert’s method.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:p3p"></span>
+<img src="images/P3P.png" alt="P3P problem" width="100%" />
+<p class="caption">
+Figure 7.4: P3P problem
+</p>
+</div>
+<p>From the coordinates of <span class="math inline">\(P^c_{m,1},P^c_{m,2},P^c_{m,3}\)</span> in the image plane, we can calculate the angles between <span class="math inline">\(P_1,P_2,P_3\)</span>. Denote the angle between <span class="math inline">\(P_1,P_2\)</span> as <span class="math inline">\(\gamma\)</span>, the angle between <span class="math inline">\(P_2,P_3\)</span> as <span class="math inline">\(\beta\)</span>, and the angle between <span class="math inline">\(P_1,P_3\)</span> as <span class="math inline">\(\alpha\)</span>. Remember that if <span class="math inline">\(P^c_{m,i} = \begin{bmatrix}u_{m,i}^c\\v^c_{m,i}\\1\end{bmatrix}\)</span>, then the camera frame coordinates <span class="math inline">\(P^c_i = \frac{s_i}{\sqrt{1+(u_{m,i}^c)^2+(v_{m,i}^c)^2}}\begin{bmatrix}u_{m,i}^c\\v_{m,i}^c\\1\end{bmatrix}\)</span>. So what we have to do is to solve for <span class="math inline">\(s_i\)</span>, which is the distance from the origin to the point <span class="math inline">\(P_i\)</span>.</p>
+<p>Using law of cosines, we can obtain:</p>
+<p><span class="math display">\[\begin{align}
+  s_1^2 +s_2^2 - 2s_1s_2\cos\gamma = c^2\\
+  s_1^2 +s_3^2 - 2s_1s_3\cos\beta = b^2\\
+  s_2^2 +s_3^2 - 2s_2s_3\cos\alpha = a^2\\
+\end{align}\]</span></p>
+<p>Then if we let <span class="math inline">\(s_2 = us_1,s_3 = vs_1\)</span>, we can obtain:
+<span class="math display">\[\begin{align}
+  s_1^2 = \frac{c^2}{1+u^2-2u\cos\gamma}\\
+  s_1^2= \frac{b^2}{1+v^2-2v\cos\beta}\\
+  s_1^2= \frac{a^2}{v^2+u^2-2uv\cos\alpha}\\
+\end{align}\]</span>
+Then we can get:
+<span class="math display">\[
+u^2-\frac{c^2}{b^2} v^2+2 v \frac{c^2}{b^2} \cos \beta-2 u \cos \gamma+\frac{b^2-c^2}{b^2}=0
+\]</span>
+and
+<span class="math display">\[
+u^2+\frac{b^2-a^2}{b^2} v^2-2 u v \cos \alpha+\frac{2 a^2}{b^2} v \cos \beta-\frac{a^2}{b^2}=0
+\]</span>
+Then substituting the later equation back to the former one, we can express <span class="math inline">\(u\)</span> in terms of <span class="math inline">\(v\)</span>. Then plug this into the latter equality, we can finally get an equation:
+<span class="math display">\[
+A_4 v^4+A_3 v^3+A_2 v^2+A_1 v+A_0=0
+\]</span>
+where</p>
+<p><span class="math display">\[\begin{align}
+&amp; A_4=\left(\frac{a^2-c^2}{b^2}-1\right)^2-\frac{4 c^2}{b^2} \cos ^2 \alpha \\
+&amp; A_3=4\left[\frac{a^2-c^2}{b^2}\left(1-\frac{a^2-c^2}{b^2}\right) \cos \beta-\left(1-\frac{a^2+c^2}{b^2}\right) \cos \alpha \cos \gamma+2 \frac{c^2}{b^2} \cos ^2 \alpha \cos \beta\right] \\
+&amp; A_2=2[\left(\frac{a^2-c^2}{b^2}\right)^2-1+2\left(\frac{a^2-c^2}{b^2}\right)^2 \cos ^2 \beta+2\left(\frac{b^2-c^2}{b^2}\right) \cos ^2 \alpha \\
+&amp; -4\left(\frac{a^2+c^2}{b^2}\right) \cos \alpha \cos \beta \cos \gamma+2\left(\frac{b^2-a^2}{b^2}\right) \cos ^2 \gamma] \\
+&amp; A_1=4\left[-\left(\frac{a^2-c^2}{b^2}\right)\left(1+\frac{a^2-c^2}{b^2}\right) \cos \beta+\frac{2 a^2}{b^2} \cos ^2 \gamma \cos \beta-\left(1-\left(\frac{a^2+c^2}{b^2}\right)\right) \cos \alpha \cos \gamma\right] \\
+&amp; A_0=\left(1+\frac{a^2-c^2}{b^2}\right)^2-\frac{4 a^2}{b^2} \cos ^2 \gamma
+\end{align}\]</span></p>
+<p>From this equation, we can obtain up to four solutions. With each <span class="math inline">\(v\)</span> we can obtain the corresponding <span class="math inline">\(u\)</span> and thus all the other parameters. To eliminate the ambiguity, we can use a 4th point to confirm which one is the right solution.</p>
 </div>
 <div id="the-pnp-problem" class="section level3 hasAnchor" number="7.3.2">
 <h3><span class="header-section-number">7.3.2</span> The PnP Problem<a href="geometric-vision.html#the-pnp-problem" class="anchor-section" aria-label="Anchor link to header"></a></h3>

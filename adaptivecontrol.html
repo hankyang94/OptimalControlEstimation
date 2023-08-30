@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-08-25" />
+<meta name="date" content="2023-08-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -230,7 +230,13 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="7" data-path="geometric-vision.html"><a href="geometric-vision.html"><i class="fa fa-check"></i><b>7</b> Geometric Vision</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="geometric-vision.html"><a href="geometric-vision.html#d-rotations-and-poses"><i class="fa fa-check"></i><b>7.1</b> 3D Rotations and Poses</a></li>
+<li class="chapter" data-level="7.1" data-path="geometric-vision.html"><a href="geometric-vision.html#d-rotations-and-poses"><i class="fa fa-check"></i><b>7.1</b> 3D Rotations and Poses</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="geometric-vision.html"><a href="geometric-vision.html#rotation-matrices"><i class="fa fa-check"></i><b>7.1.1</b> Rotation matrices</a></li>
+<li class="chapter" data-level="7.1.2" data-path="geometric-vision.html"><a href="geometric-vision.html#coordinate-frame"><i class="fa fa-check"></i><b>7.1.2</b> Coordinate Frame</a></li>
+<li class="chapter" data-level="7.1.3" data-path="geometric-vision.html"><a href="geometric-vision.html#representations-of-the-rotations"><i class="fa fa-check"></i><b>7.1.3</b> Representations of the rotations</a></li>
+<li class="chapter" data-level="7.1.4" data-path="geometric-vision.html"><a href="geometric-vision.html#miscellaneous-topics-on-rotations"><i class="fa fa-check"></i><b>7.1.4</b> Miscellaneous topics on rotations</a></li>
+</ul></li>
 <li class="chapter" data-level="7.2" data-path="geometric-vision.html"><a href="geometric-vision.html#the-pinhole-camera-model"><i class="fa fa-check"></i><b>7.2</b> The Pinhole Camera Model</a></li>
 <li class="chapter" data-level="7.3" data-path="geometric-vision.html"><a href="geometric-vision.html#camera-pose-estimation"><i class="fa fa-check"></i><b>7.3</b> Camera Pose Estimation</a>
 <ul>
@@ -356,7 +362,7 @@ with <span class="math inline">\(\gamma &gt; 0\)</span> a positive constant, the
 \]</span></p>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-10" class="proof"><em>Proof</em>. </span>Let the state-space representation of <a href="adaptivecontrol.html#eq:acbasiclemmaephi">(8.1)</a> be
+<p><span id="unlabeled-div-13" class="proof"><em>Proof</em>. </span>Let the state-space representation of <a href="adaptivecontrol.html#eq:acbasiclemmaephi">(8.1)</a> be
 <span class="math display" id="eq:acbasiclemmastatespace">\[\begin{equation}
 \dot{x} = A x + b [k \phi^T v], \quad e = c^T x.
 \tag{8.3}
@@ -636,7 +642,7 @@ where <span class="math inline">\(\Gamma \in \mathbb{S}^m_{++}\)</span> is a con
 <p><span id="lem:skewsymmetricmanipulator" class="lemma"><strong>Lemma 8.2  </strong></span>For the manipulator dynamics <a href="adaptivecontrol.html#eq:ac-mrac-manipulator-dynamics">(8.21)</a>, there exists a way to define <span class="math inline">\(C\)</span> such that <span class="math inline">\(\dot{H} - 2C\)</span> is skew-symmetric.</p>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-11" class="proof"><em>Proof</em>. </span>See Section 9.1, page 399-402 in <span class="citation">(<a href="#ref-slotine91book-applied" role="doc-biblioref">Slotine, Li, et al. 1991</a>)</span>. You should also check if this is true for the planar two-link manipulator dynamics in Example <a href="adaptivecontrol.html#exm:planartwolinkmanipulator">8.1</a>.</p>
+<p><span id="unlabeled-div-14" class="proof"><em>Proof</em>. </span>See Section 9.1, page 399-402 in <span class="citation">(<a href="#ref-slotine91book-applied" role="doc-biblioref">Slotine, Li, et al. 1991</a>)</span>. You should also check if this is true for the planar two-link manipulator dynamics in Example <a href="adaptivecontrol.html#exm:planartwolinkmanipulator">8.1</a>.</p>
 </div>
 <p>With Lemma <a href="adaptivecontrol.html#lem:skewsymmetricmanipulator">8.2</a>, the time derivative of <span class="math inline">\(V\)</span> in <a href="adaptivecontrol.html#eq:ac-mrac-manipulator-controller-unknownparam-lyapunov">(8.25)</a> reads
 <span class="math display" id="eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative" id="eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative-3" id="eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative-2" id="eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative-1">\[\begin{align}
