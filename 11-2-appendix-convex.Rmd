@@ -673,6 +673,233 @@ function S = generate_random_PD_matrix(lam_list)
 end
 ```
 
+### CVXPY Introduction and Examples
+
+Apart from CVX MATLAB, we also have a Python package called CVXPY, which functions almost the same as CVX MATLAB. To define and solve a convex optimization problem CVXPY, basically, there are three steps (apart from importing necessary packages):
+
+- Step 1: Define parameters and variables in a certain type of convex problem. Here variables are what you are trying to optimize or "learn". Parameters are the "coefficients" of variables in the objective and constraints. 
+
+- Step 2: Define the objective function and constraints.
+
+- Step 3: Solve the problem and get the results.
+
+Here we provide the CVXPY codes for the above five convex optimization examples.
+
+#### LP
+
+```python
+import cvxpy as cp
+import numpy as np
+
+## Define the LP example setting
+c1 = 2
+c2 = -5
+l1 = 3
+l2 = 7
+
+## Step 1: define variables and parameters
+x = cp.Variable(2) # variable: x = [x1, x2]^T
+# parameters: c, A, b
+c = np.array([c1, c2]) 
+A = np.array([[1, 0], [-1, 0], [0, 1], [0, -1]])
+b = np.array([l1, l1, l2, l2])
+
+## Step 2: define objective and constraints
+obj = cp.Minimize(c.T @ x)
+constraints = [A @ x <= b]
+prob = cp.Problem(obj, constraints) # form the problem
+
+## Step 3: solve problem and get results
+prob.solve()  
+print("status: ", prob.status) # check whether the status is "optimal"
+print("optimal value: ", prob.value) # optimal objective
+print("optimal solution: ", x.value) # optimal x
+```
+
+#### QP
+
+```python
+import cvxpy as cp
+import numpy as np
+
+## Define the LP example setting
+p1 = 2
+p2 = 0.5
+p3 = 4
+q1 = -3
+q2 = -6.5
+l1 = 2
+l2 = 2.5
+# check if the generated P is positive semidefinite
+tmp1 = (p1 >= 0)
+tmp2 = (p1*p3 - 4*p2**2 >= 0)
+assert(tmp1 and tmp2, "P is not positve semidefinite!")
+
+## Step 1: define variables and parameters
+x = cp.Variable(2) # variable: x = [x1, x2]^T
+# parameters: P, q, G, h
+P = 2*np.array([[p1, p2], [p2, p3]])
+q = np.array([q1, q2]) 
+G = np.array([[1, 0], [-1, 0], [0, 1], [0, -1]])
+h = np.array([l1, l1, l2, l2])
+
+## Step 2: define the objective and constraints
+fx = 0.5 * cp.quad_form(x, P) + q.T @ x
+obj = cp.Minimize(fx)
+constraints = [G @ x <= h]
+prob = cp.Problem(obj, constraints) # form the problem
+
+## Step 3: solve the problem and get results
+prob.solve()  
+print("status: ", prob.status) # check whether the status is "optimal"
+print("optimal value: ", prob.value) # optimal objective
+print("optimal solution: ", x.value) # optimal x
+```
+
+#### QCQP
+
+```python
+import cvxpy as cp
+import numpy as np
+from numpy.linalg import cholesky, inv, norm
+
+## Define the QCQP example setting
+def if_ellipse(K, k, c):
+    # examine whether 0.5*x^T K x + k^T x + c <= 0 is a ellipse
+    # if K is not positive semidefinite, Cholesky will raise an error
+    L = cholesky(K) 
+    radius_square = 0.5 * norm(inv(L) @ k)**2 - c
+    return radius_square > 0
+K1 = np.eye(2)
+k1 = np.zeros(2)
+c1 = -0.5
+K2 = np.array([[1, 0], [0, 1]])
+k2 = np.array([2, 2])
+c2 = 3.5
+if not (if_ellipse(K1, k1, c1) and if_ellipse(K2, k2, c2)):
+    raise ValueError("The example setting is not correct")
+
+## Step 1: define variables and parameters
+P0 = np.array([[1,0,-1,0], [0,1,0,-1], [-1,0,1,0], [0,-1,0,1]])
+P1 = np.zeros((4,4))
+P1[:2, :2] = K1
+P2 = np.zeros((4,4))
+P2[2:, 2:] = K2
+q1 = np.concatenate([k1, np.zeros(2)])
+q2 = np.concatenate([np.zeros(2), k2])
+r1 = c1
+r2 = c2
+
+## Step 2: define objective and constraints
+x = cp.Variable(4) # variable: x = [y1, z1, y2, z2]^T
+fx = 0.5 * cp.quad_form(x, P0)
+obj = cp.Minimize(fx)
+con1 = (0.5 * cp.quad_form(x, P1) + q1.T @ x + r1 <= 0) # ellipse 1
+con2 = (0.5 * cp.quad_form(x, P2) + q2.T @ x + r2 <= 0) # ellipse 2
+constraints = [con1, con2]
+prob = cp.Problem(obj, constraints) # form the problem
+
+## Step 3: solve problem and get results
+prob.solve()  
+print("status: ", prob.status) # check whether the status is "optimal"
+print("optimal value: ", prob.value) # optimal objective
+print("optimal solution: ", x.value) # optimal x
+```
+
+#### SOCP
+
+```python
+import cvxpy as cp
+import numpy as np
+from scipy.stats import norm
+
+## Define the SOCP example setting
+# define bar_ai, bi (i = 1, 2, 3, 4)
+bar_a1 = np.array([1, 0])
+b1 = 1
+bar_a2 = np.array([0, 1])
+b2 = 1
+bar_a3 = np.array([-1, 0])
+b3 = 1
+bar_a4 = np.array([0, -1])
+b4 = 1
+sigma = 0.1 
+c = np.array([2, 3])
+p = 0.9 # p should be more than 0.5
+
+## Step 1: define variables and parameters
+Phi_inv = norm.ppf(p) # get Phi^{-1}(p)
+
+## Step 2: define objective and constraints
+x = cp.Variable(2) # variable: x = [x1, x2]^T
+obj = cp.Minimize(c.T @ x)
+# use cp.SOC(t, x) to create the SOC constraint ||x||_2 <= t
+constraints = [
+    cp.SOC(b1 - bar_a1.T @ x, sigma*Phi_inv*x),
+    cp.SOC(b2 - bar_a2.T @ x, sigma*Phi_inv*x),
+    cp.SOC(b3 - bar_a3.T @ x, sigma*Phi_inv*x),
+    cp.SOC(b4 - bar_a4.T @ x, sigma*Phi_inv*x),
+]
+prob = cp.Problem(obj, constraints) # form the problem
+
+## Step 3: solve problem and get results
+prob.solve()  
+print("status: ", prob.status) # check whether the status is "optimal"
+print("optimal value: ", prob.value) # optimal objective
+print("optimal solution: ", x.value) # optimal x
+```
+
+#### SDP
+
+```python
+import cvxpy as cp
+import numpy as np
+from scipy.stats import ortho_group
+
+## Define the SDP example setting
+# this function help to generate PD matrix of size 3*3 
+# if you provide the eigenvalues [lam_1, lam_2, lam_3]
+def generate_random_PD_matrix(lam_list):
+    assert np.all(lam_list >= 0) # all eigenvalues >= 0
+    # S = Q @ D @ Q.T
+    D = np.diag(lam_list)
+    Q = ortho_group.rvs(3)
+    return Q @ D @ Q.T
+lam_list = np.array([0.5, 2.4, 3.7])
+S = generate_random_PD_matrix(lam_list) # get a PD matrix S
+
+## Step 1: define variables and parameters
+# get coefficients for equality constraints
+A_00 = np.array([[1, 0, 0], [0, 0, 0], [0, 0, 0]]) # tr(A_00 @ X) + lam = S_00
+A_01 = np.array([[0, 1, 0], [0, 0, 0], [0, 0, 0]]) # tr(A_01 @ X) = S_01
+A_02 = np.array([[0, 0, 1], [0, 0, 0], [0, 0, 0]]) # tr(A_02 @ X) = S_02
+A_11 = np.array([[0, 0, 0], [0, 1, 0], [0, 0, 0]]) # tr(A_11 @ X) + lam = S_11
+A_12 = np.array([[0, 0, 0], [0, 0, 1], [0, 0, 0]]) # tr(A_12 @ X) = S_12
+A_22 = np.array([[0, 0, 0], [0, 0, 0], [0, 0, 1]]) # tr(A_22 @ X) + lam = S_22
+
+## Step 2: define objective and constraints
+# define a PD matrix variable X of size 3*3
+X = cp.Variable((3, 3), symmetric=True)
+constraints = [X >> 0] # the operator >> denotes matrix inequality
+lam = cp.Variable(1)
+constraints += [
+    cp.trace(A_00 @ X) + lam == S[0,0],
+    cp.trace(A_01 @ X) == S[0,1],
+    cp.trace(A_02 @ X) == S[0,2],
+    cp.trace(A_11 @ X) + lam == S[1,1],
+    cp.trace(A_12 @ X) == S[1,2],
+    cp.trace(A_22 @ X) + lam == S[2,2],
+]
+obj = cp.Minimize(-lam)
+prob = cp.Problem(obj, constraints) # form the problem
+
+## Step 3: solve problem and get results
+prob.solve()  
+print("status: ", prob.status) # check whether the status is "optimal"
+print("optimal value: ", prob.value) # optimal objective
+print("optimal solution: ", lam.value) # optimal lam
+```
+
 ---
 
 
