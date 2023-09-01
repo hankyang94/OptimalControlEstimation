@@ -151,7 +151,7 @@ arc=4pt}
 
 \title{Optimal Control and Estimation}
 \author{Heng Yang}
-\date{2023-08-30}
+\date{2023-09-01}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -5849,6 +5849,252 @@ To generate a ramdom \(S \in \mathcal{S}_+^3\), you just need to assign three no
 \NormalTok{    [}\VariableTok{Q}\OperatorTok{,} \OperatorTok{\textasciitilde{}}\NormalTok{] }\OperatorTok{=} \VariableTok{qr}\NormalTok{(}\VariableTok{rand}\NormalTok{(}\FloatTok{3}\OperatorTok{,} \FloatTok{3}\NormalTok{))}\OperatorTok{;}
     \VariableTok{S} \OperatorTok{=}  \VariableTok{Q} \OperatorTok{*} \VariableTok{D} \OperatorTok{*} \VariableTok{Q}\OperatorTok{\textquotesingle{};}
 \KeywordTok{end}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{cvxpy-introduction-and-examples}{%
+\subsection{CVXPY Introduction and Examples}\label{cvxpy-introduction-and-examples}}
+
+Apart from CVX MATLAB, we also have a Python package called CVXPY, which functions almost the same as CVX MATLAB. To define and solve a convex optimization problem CVXPY, basically, there are three steps (apart from importing necessary packages):
+
+\begin{itemize}
+\item
+  Step 1: Define parameters and variables in a certain type of convex problem. Here variables are what you are trying to optimize or ``learn''. Parameters are the ``coefficients'' of variables in the objective and constraints.
+\item
+  Step 2: Define the objective function and constraints.
+\item
+  Step 3: Solve the problem and get the results.
+\end{itemize}
+
+Here we provide the CVXPY codes for the above five convex optimization examples.
+
+\hypertarget{lp}{%
+\subsubsection{LP}\label{lp}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{import}\NormalTok{ cvxpy }\ImportTok{as}\NormalTok{ cp}
+\ImportTok{import}\NormalTok{ numpy }\ImportTok{as}\NormalTok{ np}
+
+\CommentTok{\#\# Define the LP example setting}
+\NormalTok{c1 }\OperatorTok{=} \DecValTok{2}
+\NormalTok{c2 }\OperatorTok{=} \OperatorTok{{-}}\DecValTok{5}
+\NormalTok{l1 }\OperatorTok{=} \DecValTok{3}
+\NormalTok{l2 }\OperatorTok{=} \DecValTok{7}
+
+\CommentTok{\#\# Step 1: define variables and parameters}
+\NormalTok{x }\OperatorTok{=}\NormalTok{ cp.Variable(}\DecValTok{2}\NormalTok{) }\CommentTok{\# variable: x = [x1, x2]\^{}T}
+\CommentTok{\# parameters: c, A, b}
+\NormalTok{c }\OperatorTok{=}\NormalTok{ np.array([c1, c2]) }
+\NormalTok{A }\OperatorTok{=}\NormalTok{ np.array([[}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\OperatorTok{{-}}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\OperatorTok{{-}}\DecValTok{1}\NormalTok{]])}
+\NormalTok{b }\OperatorTok{=}\NormalTok{ np.array([l1, l1, l2, l2])}
+
+\CommentTok{\#\# Step 2: define objective and constraints}
+\NormalTok{obj }\OperatorTok{=}\NormalTok{ cp.Minimize(c.T }\OperatorTok{@}\NormalTok{ x)}
+\NormalTok{constraints }\OperatorTok{=}\NormalTok{ [A }\OperatorTok{@}\NormalTok{ x }\OperatorTok{\textless{}=}\NormalTok{ b]}
+\NormalTok{prob }\OperatorTok{=}\NormalTok{ cp.Problem(obj, constraints) }\CommentTok{\# form the problem}
+
+\CommentTok{\#\# Step 3: solve problem and get results}
+\NormalTok{prob.solve()  }
+\BuiltInTok{print}\NormalTok{(}\StringTok{"status: "}\NormalTok{, prob.status) }\CommentTok{\# check whether the status is "optimal"}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"optimal value: "}\NormalTok{, prob.value) }\CommentTok{\# optimal objective}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"optimal solution: "}\NormalTok{, x.value) }\CommentTok{\# optimal x}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{qp}{%
+\subsubsection{QP}\label{qp}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{import}\NormalTok{ cvxpy }\ImportTok{as}\NormalTok{ cp}
+\ImportTok{import}\NormalTok{ numpy }\ImportTok{as}\NormalTok{ np}
+
+\CommentTok{\#\# Define the LP example setting}
+\NormalTok{p1 }\OperatorTok{=} \DecValTok{2}
+\NormalTok{p2 }\OperatorTok{=} \FloatTok{0.5}
+\NormalTok{p3 }\OperatorTok{=} \DecValTok{4}
+\NormalTok{q1 }\OperatorTok{=} \OperatorTok{{-}}\DecValTok{3}
+\NormalTok{q2 }\OperatorTok{=} \OperatorTok{{-}}\FloatTok{6.5}
+\NormalTok{l1 }\OperatorTok{=} \DecValTok{2}
+\NormalTok{l2 }\OperatorTok{=} \FloatTok{2.5}
+\CommentTok{\# check if the generated P is positive semidefinite}
+\NormalTok{tmp1 }\OperatorTok{=}\NormalTok{ (p1 }\OperatorTok{\textgreater{}=} \DecValTok{0}\NormalTok{)}
+\NormalTok{tmp2 }\OperatorTok{=}\NormalTok{ (p1}\OperatorTok{*}\NormalTok{p3 }\OperatorTok{{-}} \DecValTok{4}\OperatorTok{*}\NormalTok{p2}\OperatorTok{**}\DecValTok{2} \OperatorTok{\textgreater{}=} \DecValTok{0}\NormalTok{)}
+\ControlFlowTok{assert}\NormalTok{(tmp1 }\KeywordTok{and}\NormalTok{ tmp2, }\StringTok{"P is not positve semidefinite!"}\NormalTok{)}
+
+\CommentTok{\#\# Step 1: define variables and parameters}
+\NormalTok{x }\OperatorTok{=}\NormalTok{ cp.Variable(}\DecValTok{2}\NormalTok{) }\CommentTok{\# variable: x = [x1, x2]\^{}T}
+\CommentTok{\# parameters: P, q, G, h}
+\NormalTok{P }\OperatorTok{=} \DecValTok{2}\OperatorTok{*}\NormalTok{np.array([[p1, p2], [p2, p3]])}
+\NormalTok{q }\OperatorTok{=}\NormalTok{ np.array([q1, q2]) }
+\NormalTok{G }\OperatorTok{=}\NormalTok{ np.array([[}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\OperatorTok{{-}}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\OperatorTok{{-}}\DecValTok{1}\NormalTok{]])}
+\NormalTok{h }\OperatorTok{=}\NormalTok{ np.array([l1, l1, l2, l2])}
+
+\CommentTok{\#\# Step 2: define the objective and constraints}
+\NormalTok{fx }\OperatorTok{=} \FloatTok{0.5} \OperatorTok{*}\NormalTok{ cp.quad\_form(x, P) }\OperatorTok{+}\NormalTok{ q.T }\OperatorTok{@}\NormalTok{ x}
+\NormalTok{obj }\OperatorTok{=}\NormalTok{ cp.Minimize(fx)}
+\NormalTok{constraints }\OperatorTok{=}\NormalTok{ [G }\OperatorTok{@}\NormalTok{ x }\OperatorTok{\textless{}=}\NormalTok{ h]}
+\NormalTok{prob }\OperatorTok{=}\NormalTok{ cp.Problem(obj, constraints) }\CommentTok{\# form the problem}
+
+\CommentTok{\#\# Step 3: solve the problem and get results}
+\NormalTok{prob.solve()  }
+\BuiltInTok{print}\NormalTok{(}\StringTok{"status: "}\NormalTok{, prob.status) }\CommentTok{\# check whether the status is "optimal"}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"optimal value: "}\NormalTok{, prob.value) }\CommentTok{\# optimal objective}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"optimal solution: "}\NormalTok{, x.value) }\CommentTok{\# optimal x}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{qcqp}{%
+\subsubsection{QCQP}\label{qcqp}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{import}\NormalTok{ cvxpy }\ImportTok{as}\NormalTok{ cp}
+\ImportTok{import}\NormalTok{ numpy }\ImportTok{as}\NormalTok{ np}
+\ImportTok{from}\NormalTok{ numpy.linalg }\ImportTok{import}\NormalTok{ cholesky, inv, norm}
+
+\CommentTok{\#\# Define the QCQP example setting}
+\KeywordTok{def}\NormalTok{ if\_ellipse(K, k, c):}
+    \CommentTok{\# examine whether 0.5*x\^{}T K x + k\^{}T x + c \textless{}= 0 is a ellipse}
+    \CommentTok{\# if K is not positive semidefinite, Cholesky will raise an error}
+\NormalTok{    L }\OperatorTok{=}\NormalTok{ cholesky(K) }
+\NormalTok{    radius\_square }\OperatorTok{=} \FloatTok{0.5} \OperatorTok{*}\NormalTok{ norm(inv(L) }\OperatorTok{@}\NormalTok{ k)}\OperatorTok{**}\DecValTok{2} \OperatorTok{{-}}\NormalTok{ c}
+    \ControlFlowTok{return}\NormalTok{ radius\_square }\OperatorTok{\textgreater{}} \DecValTok{0}
+\NormalTok{K1 }\OperatorTok{=}\NormalTok{ np.eye(}\DecValTok{2}\NormalTok{)}
+\NormalTok{k1 }\OperatorTok{=}\NormalTok{ np.zeros(}\DecValTok{2}\NormalTok{)}
+\NormalTok{c1 }\OperatorTok{=} \OperatorTok{{-}}\FloatTok{0.5}
+\NormalTok{K2 }\OperatorTok{=}\NormalTok{ np.array([[}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{]])}
+\NormalTok{k2 }\OperatorTok{=}\NormalTok{ np.array([}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{])}
+\NormalTok{c2 }\OperatorTok{=} \FloatTok{3.5}
+\ControlFlowTok{if} \KeywordTok{not}\NormalTok{ (if\_ellipse(K1, k1, c1) }\KeywordTok{and}\NormalTok{ if\_ellipse(K2, k2, c2)):}
+    \ControlFlowTok{raise} \PreprocessorTok{ValueError}\NormalTok{(}\StringTok{"The example setting is not correct"}\NormalTok{)}
+
+\CommentTok{\#\# Step 1: define variables and parameters}
+\NormalTok{P0 }\OperatorTok{=}\NormalTok{ np.array([[}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\OperatorTok{{-}}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\OperatorTok{{-}}\DecValTok{1}\NormalTok{], [}\OperatorTok{{-}}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{,}\OperatorTok{{-}}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{]])}
+\NormalTok{P1 }\OperatorTok{=}\NormalTok{ np.zeros((}\DecValTok{4}\NormalTok{,}\DecValTok{4}\NormalTok{))}
+\NormalTok{P1[:}\DecValTok{2}\NormalTok{, :}\DecValTok{2}\NormalTok{] }\OperatorTok{=}\NormalTok{ K1}
+\NormalTok{P2 }\OperatorTok{=}\NormalTok{ np.zeros((}\DecValTok{4}\NormalTok{,}\DecValTok{4}\NormalTok{))}
+\NormalTok{P2[}\DecValTok{2}\NormalTok{:, }\DecValTok{2}\NormalTok{:] }\OperatorTok{=}\NormalTok{ K2}
+\NormalTok{q1 }\OperatorTok{=}\NormalTok{ np.concatenate([k1, np.zeros(}\DecValTok{2}\NormalTok{)])}
+\NormalTok{q2 }\OperatorTok{=}\NormalTok{ np.concatenate([np.zeros(}\DecValTok{2}\NormalTok{), k2])}
+\NormalTok{r1 }\OperatorTok{=}\NormalTok{ c1}
+\NormalTok{r2 }\OperatorTok{=}\NormalTok{ c2}
+
+\CommentTok{\#\# Step 2: define objective and constraints}
+\NormalTok{x }\OperatorTok{=}\NormalTok{ cp.Variable(}\DecValTok{4}\NormalTok{) }\CommentTok{\# variable: x = [y1, z1, y2, z2]\^{}T}
+\NormalTok{fx }\OperatorTok{=} \FloatTok{0.5} \OperatorTok{*}\NormalTok{ cp.quad\_form(x, P0)}
+\NormalTok{obj }\OperatorTok{=}\NormalTok{ cp.Minimize(fx)}
+\NormalTok{con1 }\OperatorTok{=}\NormalTok{ (}\FloatTok{0.5} \OperatorTok{*}\NormalTok{ cp.quad\_form(x, P1) }\OperatorTok{+}\NormalTok{ q1.T }\OperatorTok{@}\NormalTok{ x }\OperatorTok{+}\NormalTok{ r1 }\OperatorTok{\textless{}=} \DecValTok{0}\NormalTok{) }\CommentTok{\# ellipse 1}
+\NormalTok{con2 }\OperatorTok{=}\NormalTok{ (}\FloatTok{0.5} \OperatorTok{*}\NormalTok{ cp.quad\_form(x, P2) }\OperatorTok{+}\NormalTok{ q2.T }\OperatorTok{@}\NormalTok{ x }\OperatorTok{+}\NormalTok{ r2 }\OperatorTok{\textless{}=} \DecValTok{0}\NormalTok{) }\CommentTok{\# ellipse 2}
+\NormalTok{constraints }\OperatorTok{=}\NormalTok{ [con1, con2]}
+\NormalTok{prob }\OperatorTok{=}\NormalTok{ cp.Problem(obj, constraints) }\CommentTok{\# form the problem}
+
+\CommentTok{\#\# Step 3: solve problem and get results}
+\NormalTok{prob.solve()  }
+\BuiltInTok{print}\NormalTok{(}\StringTok{"status: "}\NormalTok{, prob.status) }\CommentTok{\# check whether the status is "optimal"}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"optimal value: "}\NormalTok{, prob.value) }\CommentTok{\# optimal objective}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"optimal solution: "}\NormalTok{, x.value) }\CommentTok{\# optimal x}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{socp}{%
+\subsubsection{SOCP}\label{socp}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{import}\NormalTok{ cvxpy }\ImportTok{as}\NormalTok{ cp}
+\ImportTok{import}\NormalTok{ numpy }\ImportTok{as}\NormalTok{ np}
+\ImportTok{from}\NormalTok{ scipy.stats }\ImportTok{import}\NormalTok{ norm}
+
+\CommentTok{\#\# Define the SOCP example setting}
+\CommentTok{\# define bar\_ai, bi (i = 1, 2, 3, 4)}
+\NormalTok{bar\_a1 }\OperatorTok{=}\NormalTok{ np.array([}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{])}
+\NormalTok{b1 }\OperatorTok{=} \DecValTok{1}
+\NormalTok{bar\_a2 }\OperatorTok{=}\NormalTok{ np.array([}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{])}
+\NormalTok{b2 }\OperatorTok{=} \DecValTok{1}
+\NormalTok{bar\_a3 }\OperatorTok{=}\NormalTok{ np.array([}\OperatorTok{{-}}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{])}
+\NormalTok{b3 }\OperatorTok{=} \DecValTok{1}
+\NormalTok{bar\_a4 }\OperatorTok{=}\NormalTok{ np.array([}\DecValTok{0}\NormalTok{, }\OperatorTok{{-}}\DecValTok{1}\NormalTok{])}
+\NormalTok{b4 }\OperatorTok{=} \DecValTok{1}
+\NormalTok{sigma }\OperatorTok{=} \FloatTok{0.1} 
+\NormalTok{c }\OperatorTok{=}\NormalTok{ np.array([}\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{])}
+\NormalTok{p }\OperatorTok{=} \FloatTok{0.9} \CommentTok{\# p should be more than 0.5}
+
+\CommentTok{\#\# Step 1: define variables and parameters}
+\NormalTok{Phi\_inv }\OperatorTok{=}\NormalTok{ norm.ppf(p) }\CommentTok{\# get Phi\^{}\{{-}1\}(p)}
+
+\CommentTok{\#\# Step 2: define objective and constraints}
+\NormalTok{x }\OperatorTok{=}\NormalTok{ cp.Variable(}\DecValTok{2}\NormalTok{) }\CommentTok{\# variable: x = [x1, x2]\^{}T}
+\NormalTok{obj }\OperatorTok{=}\NormalTok{ cp.Minimize(c.T }\OperatorTok{@}\NormalTok{ x)}
+\CommentTok{\# use cp.SOC(t, x) to create the SOC constraint ||x||\_2 \textless{}= t}
+\NormalTok{constraints }\OperatorTok{=}\NormalTok{ [}
+\NormalTok{    cp.SOC(b1 }\OperatorTok{{-}}\NormalTok{ bar\_a1.T }\OperatorTok{@}\NormalTok{ x, sigma}\OperatorTok{*}\NormalTok{Phi\_inv}\OperatorTok{*}\NormalTok{x),}
+\NormalTok{    cp.SOC(b2 }\OperatorTok{{-}}\NormalTok{ bar\_a2.T }\OperatorTok{@}\NormalTok{ x, sigma}\OperatorTok{*}\NormalTok{Phi\_inv}\OperatorTok{*}\NormalTok{x),}
+\NormalTok{    cp.SOC(b3 }\OperatorTok{{-}}\NormalTok{ bar\_a3.T }\OperatorTok{@}\NormalTok{ x, sigma}\OperatorTok{*}\NormalTok{Phi\_inv}\OperatorTok{*}\NormalTok{x),}
+\NormalTok{    cp.SOC(b4 }\OperatorTok{{-}}\NormalTok{ bar\_a4.T }\OperatorTok{@}\NormalTok{ x, sigma}\OperatorTok{*}\NormalTok{Phi\_inv}\OperatorTok{*}\NormalTok{x),}
+\NormalTok{]}
+\NormalTok{prob }\OperatorTok{=}\NormalTok{ cp.Problem(obj, constraints) }\CommentTok{\# form the problem}
+
+\CommentTok{\#\# Step 3: solve problem and get results}
+\NormalTok{prob.solve()  }
+\BuiltInTok{print}\NormalTok{(}\StringTok{"status: "}\NormalTok{, prob.status) }\CommentTok{\# check whether the status is "optimal"}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"optimal value: "}\NormalTok{, prob.value) }\CommentTok{\# optimal objective}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"optimal solution: "}\NormalTok{, x.value) }\CommentTok{\# optimal x}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{sdp}{%
+\subsubsection{SDP}\label{sdp}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{import}\NormalTok{ cvxpy }\ImportTok{as}\NormalTok{ cp}
+\ImportTok{import}\NormalTok{ numpy }\ImportTok{as}\NormalTok{ np}
+\ImportTok{from}\NormalTok{ scipy.stats }\ImportTok{import}\NormalTok{ ortho\_group}
+
+\CommentTok{\#\# Define the SDP example setting}
+\CommentTok{\# this function help to generate PD matrix of size 3*3 }
+\CommentTok{\# if you provide the eigenvalues [lam\_1, lam\_2, lam\_3]}
+\KeywordTok{def}\NormalTok{ generate\_random\_PD\_matrix(lam\_list):}
+    \ControlFlowTok{assert}\NormalTok{ np.}\BuiltInTok{all}\NormalTok{(lam\_list }\OperatorTok{\textgreater{}=} \DecValTok{0}\NormalTok{) }\CommentTok{\# all eigenvalues \textgreater{}= 0}
+    \CommentTok{\# S = Q @ D @ Q.T}
+\NormalTok{    D }\OperatorTok{=}\NormalTok{ np.diag(lam\_list)}
+\NormalTok{    Q }\OperatorTok{=}\NormalTok{ ortho\_group.rvs(}\DecValTok{3}\NormalTok{)}
+    \ControlFlowTok{return}\NormalTok{ Q }\OperatorTok{@}\NormalTok{ D }\OperatorTok{@}\NormalTok{ Q.T}
+\NormalTok{lam\_list }\OperatorTok{=}\NormalTok{ np.array([}\FloatTok{0.5}\NormalTok{, }\FloatTok{2.4}\NormalTok{, }\FloatTok{3.7}\NormalTok{])}
+\NormalTok{S }\OperatorTok{=}\NormalTok{ generate\_random\_PD\_matrix(lam\_list) }\CommentTok{\# get a PD matrix S}
+
+\CommentTok{\#\# Step 1: define variables and parameters}
+\CommentTok{\# get coefficients for equality constraints}
+\NormalTok{A\_00 }\OperatorTok{=}\NormalTok{ np.array([[}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{]]) }\CommentTok{\# tr(A\_00 @ X) + lam = S\_00}
+\NormalTok{A\_01 }\OperatorTok{=}\NormalTok{ np.array([[}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{]]) }\CommentTok{\# tr(A\_01 @ X) = S\_01}
+\NormalTok{A\_02 }\OperatorTok{=}\NormalTok{ np.array([[}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{]]) }\CommentTok{\# tr(A\_02 @ X) = S\_02}
+\NormalTok{A\_11 }\OperatorTok{=}\NormalTok{ np.array([[}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{]]) }\CommentTok{\# tr(A\_11 @ X) + lam = S\_11}
+\NormalTok{A\_12 }\OperatorTok{=}\NormalTok{ np.array([[}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{]]) }\CommentTok{\# tr(A\_12 @ X) = S\_12}
+\NormalTok{A\_22 }\OperatorTok{=}\NormalTok{ np.array([[}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{]]) }\CommentTok{\# tr(A\_22 @ X) + lam = S\_22}
+
+\CommentTok{\#\# Step 2: define objective and constraints}
+\CommentTok{\# define a PD matrix variable X of size 3*3}
+\NormalTok{X }\OperatorTok{=}\NormalTok{ cp.Variable((}\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{), symmetric}\OperatorTok{=}\VariableTok{True}\NormalTok{)}
+\NormalTok{constraints }\OperatorTok{=}\NormalTok{ [X }\OperatorTok{\textgreater{}\textgreater{}} \DecValTok{0}\NormalTok{] }\CommentTok{\# the operator \textgreater{}\textgreater{} denotes matrix inequality}
+\NormalTok{lam }\OperatorTok{=}\NormalTok{ cp.Variable(}\DecValTok{1}\NormalTok{)}
+\NormalTok{constraints }\OperatorTok{+=}\NormalTok{ [}
+\NormalTok{    cp.trace(A\_00 }\OperatorTok{@}\NormalTok{ X) }\OperatorTok{+}\NormalTok{ lam }\OperatorTok{==}\NormalTok{ S[}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{],}
+\NormalTok{    cp.trace(A\_01 }\OperatorTok{@}\NormalTok{ X) }\OperatorTok{==}\NormalTok{ S[}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{],}
+\NormalTok{    cp.trace(A\_02 }\OperatorTok{@}\NormalTok{ X) }\OperatorTok{==}\NormalTok{ S[}\DecValTok{0}\NormalTok{,}\DecValTok{2}\NormalTok{],}
+\NormalTok{    cp.trace(A\_11 }\OperatorTok{@}\NormalTok{ X) }\OperatorTok{+}\NormalTok{ lam }\OperatorTok{==}\NormalTok{ S[}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{],}
+\NormalTok{    cp.trace(A\_12 }\OperatorTok{@}\NormalTok{ X) }\OperatorTok{==}\NormalTok{ S[}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{],}
+\NormalTok{    cp.trace(A\_22 }\OperatorTok{@}\NormalTok{ X) }\OperatorTok{+}\NormalTok{ lam }\OperatorTok{==}\NormalTok{ S[}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{],}
+\NormalTok{]}
+\NormalTok{obj }\OperatorTok{=}\NormalTok{ cp.Minimize(}\OperatorTok{{-}}\NormalTok{lam)}
+\NormalTok{prob }\OperatorTok{=}\NormalTok{ cp.Problem(obj, constraints) }\CommentTok{\# form the problem}
+
+\CommentTok{\#\# Step 3: solve problem and get results}
+\NormalTok{prob.solve()  }
+\BuiltInTok{print}\NormalTok{(}\StringTok{"status: "}\NormalTok{, prob.status) }\CommentTok{\# check whether the status is "optimal"}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"optimal value: "}\NormalTok{, prob.value) }\CommentTok{\# optimal objective}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"optimal solution: "}\NormalTok{, lam.value) }\CommentTok{\# optimal lam}
 \end{Highlighting}
 \end{Shaded}
 
