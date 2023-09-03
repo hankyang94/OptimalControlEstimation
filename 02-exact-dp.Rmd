@@ -468,7 +468,7 @@ Let us use an example to appreciate this algorithm.
 ::: {.example #gridworld name="Shortest Path in Grid World"}
 Consider the following $10 \times 10$ grid world, where the top-right cell is the goal location, and the dark blue colored cells are obstacles. 
 
-```{r grid-world, out.width='40%', fig.show='hold', fig.cap='Grid World.', fig.align='center', echo=FALSE}
+```{r grid-world, out.width='50%', fig.show='hold', fig.cap='Grid World with Obstacles.', fig.align='center', echo=FALSE}
 knitr::include_graphics('images/grid-world-obstacle.png')
 ```
 
@@ -478,7 +478,7 @@ To do so, we set the state space of the system as
 $$
 \mathbb{X} = \left\{ \begin{bmatrix} r \\ c \end{bmatrix} \middle\vert r,c \in \{ 1,\dots,10 \} \right\}
 $$
-where $r$ is the row index (from bottom to top) and $c$ is the column index (from left to right). The control space is moving left, right, up, down, or do nothing:
+where $r$ is the row index (from top to bottom) and $c$ is the column index (from left to right). The control space is moving left, right, up, down, or do nothing:
 $$
 \mathbb{U} = \left\{ 
     \begin{bmatrix} 1 \\ 0 \end{bmatrix},
@@ -490,9 +490,33 @@ $$
 $$
 The system dynamics is deterministic 
 $$
-x' = x + u.
+x' = \begin{cases}
+x + u & \text{if } x + u \text{ is inside the grid} \\
+x & \text{otherwise}
+\end{cases}.
+$$
+We then design the following running cost function $g$
+$$
+g(x,u) = \begin{cases}
+0 & \text{if } x = [1,10]^T \text{ is the target} \\
+20 & \text{if } x \text{ is an obstacle} \\
+1 & \text{otherwise}
+\end{cases}.
+$$
+Note that $g(x,u)$ defined above does not even satisfy $g \in [0,1]$. We then use value iteration to solve the optimal control problem with $\gamma = 1$
+$$
+J(x_0) = \min_{\pi} \sum_{k=0}^{\infty} g(x_k,\pi(x_k)).
 $$
 
+The [Matlab script](https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/grid_world_value_iteration.m) of value iteration converges in $27$ iterations, and we obtain the optimal cost-to-go in Fig. \@ref(fig:grid-world-solution).
+
+Starting from the cell $[8,5]^T$, the red line in Fig. \@ref(fig:grid-world-solution) plots the optimal trajectory that clearly avoids the obstacles.
+
+Feel free to play with the size of the grid and the number of obstacles.
+
+```{r grid-world-solution, out.width='50%', fig.show='hold', fig.cap='Optimal cost-to-go and an optimal trajectory.', fig.align='center', echo=FALSE}
+knitr::include_graphics('images/grid-world-solution.png')
+```
 :::
 :::
 
