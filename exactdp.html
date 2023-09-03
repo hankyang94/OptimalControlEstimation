@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-09-01" />
+<meta name="date" content="2023-09-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -175,7 +175,11 @@ div.csl-indent {
 <li class="chapter" data-level="2.1.1" data-path="exactdp.html"><a href="exactdp.html#infinite-horizon-lqr"><i class="fa fa-check"></i><b>2.1.1</b> Infinite-Horizon LQR</a></li>
 <li class="chapter" data-level="2.1.2" data-path="exactdp.html"><a href="exactdp.html#lqr-with-constraints"><i class="fa fa-check"></i><b>2.1.2</b> LQR with Constraints</a></li>
 </ul></li>
-<li class="chapter" data-level="2.2" data-path="exactdp.html"><a href="exactdp.html#finite-states-and-finite-controls"><i class="fa fa-check"></i><b>2.2</b> Finite States and Finite Controls</a></li>
+<li class="chapter" data-level="2.2" data-path="exactdp.html"><a href="exactdp.html#markov-decision-process"><i class="fa fa-check"></i><b>2.2</b> Markov Decision Process</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="exactdp.html"><a href="exactdp.html#bellman-optimality-equations"><i class="fa fa-check"></i><b>2.2.1</b> Bellman Optimality Equations</a></li>
+<li class="chapter" data-level="2.2.2" data-path="exactdp.html"><a href="exactdp.html#value-iteration"><i class="fa fa-check"></i><b>2.2.2</b> Value Iteration</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="approximatedp.html"><a href="approximatedp.html"><i class="fa fa-check"></i><b>3</b> Approximate Dynamic Programming</a>
 <ul>
@@ -258,6 +262,7 @@ div.csl-indent {
 <li class="chapter" data-level="8.2" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#certainty-equivalent-adaptive-control"><i class="fa fa-check"></i><b>8.2</b> Certainty-Equivalent Adaptive Control</a></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="psets.html"><a href="psets.html"><i class="fa fa-check"></i><b>9</b> Problem Sets</a></li>
+<li class="chapter" data-level="" data-path="acknowledgement.html"><a href="acknowledgement.html"><i class="fa fa-check"></i>Acknowledgement</a></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
 <li class="chapter" data-level="A" data-path="app-lti-system-theory.html"><a href="app-lti-system-theory.html"><i class="fa fa-check"></i><b>A</b> Linear System Theory</a>
 <ul>
@@ -552,20 +557,252 @@ Figure 2.2: LQR stabilization of a simple pendulum.
 <p>Let’s explore LQR with constraints in Exercise <a href="psets.html#exr:lqrconstraints">9.1</a></p>
 </div>
 </div>
-<div id="finite-states-and-finite-controls" class="section level2 hasAnchor" number="2.2">
-<h2><span class="header-section-number">2.2</span> Finite States and Finite Controls<a href="exactdp.html#finite-states-and-finite-controls" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>In Section <a href="exactdp.html#lqr">2.1</a>, we see that linear dynamics and quadratic costs leads to exact dynamic programming.</p>
+<div id="markov-decision-process" class="section level2 hasAnchor" number="2.2">
+<h2><span class="header-section-number">2.2</span> Markov Decision Process<a href="exactdp.html#markov-decision-process" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In Section <a href="exactdp.html#lqr">2.1</a>, we see that linear dynamics and quadratic costs leads to exact dynamic programming. We now introduce another setup where the number of states and controls is finite (as opposed to the LQR case where <span class="math inline">\(x_k\)</span> and <span class="math inline">\(u_k\)</span> live in continuous spaces). We will see that we can execute DP exactly in this setup as well.</p>
+<p>Optimal control in the case of finite states and controls is typically introduced in the framework of a <em>Markov Decision Process</em> (MDP, which is common in Reinforcement Learning).
+There are many variations of a MDP, and here we only focus on the discounted infinite-horizon MDP. For a more complete treatment of MDPs, I suggest checking out <a href="https://shamulent.github.io/CS_Stat184_Fall23.html">this course at Harvard</a>.</p>
+<p>Formally, a discounted infinite-horizon MDP <span class="math inline">\(\mathcal{M} = (\mathbb{X},\mathbb{U},P,g,\gamma,\sigma)\)</span> is specified by</p>
+<ul>
+<li><p>a state space <span class="math inline">\(\mathbb{X}\)</span> that is finite with size <span class="math inline">\(|\mathbb{X}|\)</span></p></li>
+<li><p>a control space <span class="math inline">\(\mathbb{U}\)</span> that is finite with size <span class="math inline">\(|\mathbb{U}|\)</span></p></li>
+<li><p>a transition function <span class="math inline">\(P: \mathbb{X} \times \mathbb{U} \rightarrow \Delta(\mathbb{X})\)</span>, where <span class="math inline">\(\Delta(\mathbb{X})\)</span> is the space of probability distributions over <span class="math inline">\(\mathbb{X}\)</span>; specifically, <span class="math inline">\(P(x&#39; \mid x, u)\)</span> is the probability of transitioning into state <span class="math inline">\(x&#39;\)</span> from state <span class="math inline">\(x\)</span> using control <span class="math inline">\(u\)</span>. If the system is deterministic, then <span class="math inline">\(P(x&#39; \mid x, u)\)</span> is nonzero only for a single next state <span class="math inline">\(x&#39;\)</span></p></li>
+<li><p>a cost function <span class="math inline">\(g: \mathbb{X} \times \mathbb{U} \rightarrow [0,1]\)</span>; <span class="math inline">\(g(x,u)\)</span> is the cost of taking the control <span class="math inline">\(u\)</span> at state <span class="math inline">\(x\)</span></p></li>
+<li><p>a discount factor <span class="math inline">\(\gamma \in [0,1)\)</span></p></li>
+<li><p>an initial state distribution <span class="math inline">\(\sigma \in \Delta(\mathbb{X})\)</span> that specifies how the initial state <span class="math inline">\(x_0\)</span> is generated; in many cases we will assume <span class="math inline">\(x_0\)</span> is fixed and <span class="math inline">\(\sigma\)</span> is a distribution supported only on <span class="math inline">\(x_0\)</span>.</p></li>
+</ul>
+<p>In an MDP, the system starts at some state <span class="math inline">\(x_0 \sim \sigma\)</span>. At each step <span class="math inline">\(k = 0,1,2,\dots\)</span>, the system decides a control <span class="math inline">\(u_k \in \mathbb{U}\)</span> and incurs a cost <span class="math inline">\(g(s_k,u_k)\)</span>. The control <span class="math inline">\(u_k\)</span> brings the system into a new state <span class="math inline">\(x_{k+1} \sim P(\cdot \mid x_k, u_k)\)</span>, at which the controller decides a new control <span class="math inline">\(u_{k+1}\)</span>. This process continues forever.</p>
+<p><strong>Controller (policy)</strong>. In general, a time-varying controller <span class="math inline">\(\pi = (\pi_0,\dots,\pi_k,\dots)\)</span> is a mapping from all previous states and controls to a distribution over current controls. The mapping <span class="math inline">\(\pi_k\)</span> at timestep <span class="math inline">\(k\)</span> is
+<span class="math display">\[
+\pi_k: (x_0,u_0,x_1,u_1,\dots,x_k) \mapsto u_k \sim q_k \in \Delta(\mathbb{U}).
+\]</span>
+Note that <span class="math inline">\(u_k\)</span> can be randomized and it is drawn from a distribution <span class="math inline">\(q_k\)</span> supported on the set of controls <span class="math inline">\(\mathbb{U}\)</span>.
+A <em>stationary</em> controller (policy) <span class="math inline">\(\pi: \mathbb{X} \rightarrow \Delta(\mathbb{U})\)</span> specifies a decison-making strategy that is purely based on the current state <span class="math inline">\(x_k\)</span>. A <em>deterministic</em> and stationary controller <span class="math inline">\(\pi: \mathbb{X} \rightarrow \mathbb{U}\)</span> excutes a deterministic control <span class="math inline">\(u_k\)</span> at each step.</p>
+<p><strong>Cost-to-go and <span class="math inline">\(Q\)</span>-value</strong>. Given a controller <span class="math inline">\(\pi\)</span> and an initial state <span class="math inline">\(x_0\)</span>, we associate with it the following discounted infinite-horizon cost
+<span class="math display" id="eq:mdp-cost-policy">\[\begin{equation}
+J_\pi(x_0) = \mathbb{E} \left\{ \sum_{k=0}^{\infty} \gamma^k g(x_k, u_k^{\pi}) \right\},
+\tag{2.15}
+\end{equation}\]</span>
+where the expectation is taken over the randomness of the transition <span class="math inline">\(P\)</span> and the controller <span class="math inline">\(\pi\)</span>. Note that we have used <span class="math inline">\(u^{\pi}_k\)</span> to denote the control at step <span class="math inline">\(k\)</span> by following the controller <span class="math inline">\(\pi\)</span>. Similarly, we define the <span class="math inline">\(Q\)</span>-value function as
+<span class="math display" id="eq:mdp-Q-value">\[\begin{equation}
+Q_\pi(x_0,u_0) = \mathbb{E} \left\{  g(x_0,u_0) + \sum_{k=1}^{\infty} \gamma^k g(x_k,u_k^{\pi}) \right\}.
+\tag{2.16}
+\end{equation}\]</span>
+The difference between <span class="math inline">\(Q_\pi(x_0,u_0)\)</span> and <span class="math inline">\(J_\pi(x_0)\)</span> is that at step zero, <span class="math inline">\(J_\pi(x_0)\)</span> follows the controller <span class="math inline">\(\pi\)</span> while <span class="math inline">\(Q_\pi(x_0,u_0)\)</span> assumes the control <span class="math inline">\(u_0\)</span> is given. By the assumption that <span class="math inline">\(g(x_k,u_k) \in [0,1]\)</span>, we have
+<span class="math display">\[
+0 \leq J_\pi(x_0), Q_\pi(x_0,u_0) \leq \sum_{k=0}^{\infty} \gamma^k = \frac{1}{1-\gamma}, \quad \forall \pi.
+\]</span></p>
+<p>Our goal is to find the best controller that minimizes the cost function
+<span class="math display" id="eq:mdp-objective">\[\begin{equation}
+\pi^\star \in \arg\min_{\pi \in \Pi} J_\pi(x_0)
+\tag{2.17}
+\end{equation}\]</span>
+for a given initial state <span class="math inline">\(x_0\)</span>, where <span class="math inline">\(\Pi\)</span> is the space of all non-stationary and randomized controllers.</p>
+<p>A remarkable property of MDPs is that there exists an optimal controller that is stationary and deterministic.</p>
+<div class="theorembox">
+<div class="theorem">
+<p><span id="thm:optimalmdppolicystationary" class="theorem"><strong>Theorem 2.1  (Deterministic and Stationary Optimal Policy) </strong></span>Let <span class="math inline">\(\Pi\)</span> be the space of all non-stationary and randomized policies. Define
+<span class="math display">\[
+J^\star_\pi(x) = \min_{\pi \in \Pi} J_\pi(x), \quad Q^\star_\pi(x,u) = \min_{\pi \in \Pi } Q_\pi(x,u).
+\]</span>
+There exists a deterministic and stationary policy <span class="math inline">\(\pi^\star\)</span> such that for all <span class="math inline">\(x \in \mathbb{X}\)</span> and <span class="math inline">\(u \in \mathbb{U}\)</span>,
+<span class="math display">\[
+J_{\pi^\star}(x) = J^\star(x), \quad Q_{\pi^\star}(x,u) = Q^\star(x,u).
+\]</span>
+We call such a policy <span class="math inline">\(\pi\)</span> an optimal policy.</p>
+</div>
+</div>
+<div class="proofbox">
+<div class="proof">
+<p><span id="unlabeled-div-4" class="proof"><em>Proof</em>. </span>See Theorem 1.7 in <span class="citation">(<a href="#ref-agarwal22book-reinforcement" role="doc-biblioref">Agarwal et al. 2022</a>)</span>.</p>
+</div>
+</div>
+<p>This Theorem shows that we can restrict ourselves to stationary and deterministic policies without losing performance.</p>
+<p>In the next, we show how to characterize the optimal policy and value function.</p>
+<div id="bellman-optimality-equations" class="section level3 hasAnchor" number="2.2.1">
+<h3><span class="header-section-number">2.2.1</span> Bellman Optimality Equations<a href="exactdp.html#bellman-optimality-equations" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We now restrict ourselves to stationary policies. We first introduce the Bellman Consistency Equations for stationary policies.</p>
+<div class="theorembox">
+<div class="lemma">
+<p><span id="lem:mdpbellmanconsistency" class="lemma"><strong>Lemma 2.1  (Bellman Consistency Equations) </strong></span>Let <span class="math inline">\(\pi\)</span> be a stationary policy. Then <span class="math inline">\(J_\pi\)</span> and <span class="math inline">\(Q_\pi\)</span> satisfy the following Bellman consistency equations
+<span class="math display" id="eq:bellman-consistency-2" id="eq:bellman-consistency-1">\[\begin{align}
+J_\pi(x) &amp;= \mathbb{E}_{u \sim \pi(\cdot \mid x)} Q_\pi(x,u), \tag{2.18} \\
+Q_\pi(x,u) &amp;=g(x,u) + \gamma \mathbb{E}_{x&#39; \sim P(\cdot \mid x,u)} J_\pi(x&#39;). \tag{2.19}
+\end{align}\]</span></p>
+</div>
+</div>
+<div class="proofbox">
+<div class="proof">
+<p><span id="unlabeled-div-5" class="proof"><em>Proof</em>. </span>By the definition of the cost-to-go function in <a href="exactdp.html#eq:mdp-cost-policy">(2.15)</a>, we have
+<span class="math display">\[
+J_\pi(x_0) = \mathbb{E}\left\{ \sum_{k=0}^{\infty} \gamma^k g(x_k, \pi(x_k))  \right\} = \mathbb{E}_{u_0 \sim \pi(\cdot \mid x_0)} \underbrace{\mathbb{E} \left\{ g(x_0,u_0) + \sum_{k=1}^{\infty} \gamma^k g(x_k,\pi(x_k)) \right\}}_{Q_\pi(x_0,u_0)}.
+\]</span>
+<!-- By the definition of the $Q$-value function \@ref(eq:mdp-Q-value), we have
+$$
+Q_\pi(x_0,\pi(x_0)) = \mathbb{E} \left\{ g(x_0,\pi(x_0)) + \sum_{k=1}^{\infty} \gamma^k g(x_k,\pi(x_k)) \right\} = \mathbb{E} \left\{ \sum_{k=0}^{\infty} \gamma^k g(x_k, \pi(x_k)) \right\} = J_\pi(x_0).
+$$ -->
+The above equation holds for any <span class="math inline">\(x_0\)</span>, proving <a href="exactdp.html#eq:bellman-consistency-1">(2.18)</a>.</p>
+<p>To show <a href="exactdp.html#eq:bellman-consistency-2">(2.19)</a>, we recall the definition of the <span class="math inline">\(Q\)</span>-value function <a href="exactdp.html#eq:mdp-Q-value">(2.16)</a>
+<span class="math display" id="eq:bellman-constency-proof-1">\[\begin{align}
+Q_\pi(x_0,u_0) &amp; = \mathbb{E} \left\{ g(x_0,u_0) + \sum_{k=1}^{\infty} \gamma^k g(x_k,\pi(x_k)) \right\}  \\
+&amp;=  g(x_0,u_0) + \gamma \mathbb{E} \left\{ \sum_{k=1}^{\infty} \gamma^{k-1} g(x_k,\pi(x_k)) \right\} \tag{2.20}
+\end{align}\]</span>
+Now observe that the expectation of the second term in <a href="exactdp.html#eq:bellman-constency-proof-1">(2.20)</a> is taken over both the randomness of <span class="math inline">\(x_1\)</span> and the randomness of the policy after <span class="math inline">\(x_1\)</span> is reached. Therefore,
+<span class="math display">\[
+\mathbb{E} \left\{ \sum_{k=1}^{\infty} \gamma^{k-1} g(x_k,\pi(x_k)) \right\} = \mathbb{E}_{x_1 \sim P(\cdot \mid x_0,u_0)} \underbrace{\left\{ \mathbb{E} \left\{ \sum_{k=1}^{\infty} \gamma^{k-1} g(x_1,\pi(x_1)) \right\} \right\}}_{J_\pi(x_1)}.
+\]</span>
+Plugging the above equation back to <a href="exactdp.html#eq:bellman-constency-proof-1">(2.20)</a>, we obtain the desired result in <a href="exactdp.html#eq:bellman-consistency-2">(2.19)</a>.</p>
+</div>
+</div>
+<p><strong>Matrix Representation</strong>. It is useful to think of <span class="math inline">\(P,g,J_\pi,Q_\pi\)</span> as matrices. In particular, the transition function <span class="math inline">\(P\)</span> can be considered as a matrix of dimension <span class="math inline">\(|\mathbb{X}||\mathbb{U}| \times \mathbb{X}\)</span>, where
+<span class="math display">\[
+P_{(x,u),x&#39;} = P(x&#39; \mid x,u)
+\]</span>
+is the entry of <span class="math inline">\(P\)</span> at the row <span class="math inline">\((x,u)\)</span> (there are <span class="math inline">\(|\mathbb{X}||\mathbb{U}|\)</span> such rows) and column <span class="math inline">\(x&#39;\)</span> (there are <span class="math inline">\(|\mathbb{X}|\)</span> such columns). The running cost <span class="math inline">\(g\)</span> is vector of <span class="math inline">\(|\mathbb{X}||\mathbb{U}|\)</span> entries. The cost-to-go <span class="math inline">\(J_\pi(x)\)</span> is a vector of <span class="math inline">\(|\mathbb{X}|\)</span> entries. The <span class="math inline">\(Q\)</span>-value function <span class="math inline">\(Q_\pi(x,u)\)</span> is a vector of <span class="math inline">\(|\mathbb{X}||\mathbb{U}|\)</span> entries. We also introduce <span class="math inline">\(P^{\pi}\)</span> with dimension <span class="math inline">\(|\mathbb{X}||\mathbb{U}| \times |\mathbb{X}||\mathbb{U}|\)</span> as the transition matrix induced by a stationary policy <span class="math inline">\(\pi\)</span>. In particular,
+<span class="math display">\[
+P^\pi_{(x,u),(x&#39;,u&#39;)} = P(x&#39; \mid x,u) \pi(u&#39;\mid x&#39;).
+\]</span>
+In words, <span class="math inline">\(P^\pi_{(x,u),(x&#39;,u&#39;)}\)</span> is the probability that <span class="math inline">\((x&#39;,u&#39;)\)</span> follows <span class="math inline">\((x,u)\)</span>.</p>
+<p>With the matrix representation, we can compactly write the Bellman consistency equation <a href="exactdp.html#eq:bellman-consistency-2">(2.19)</a> as
+<span class="math display" id="eq:bellman-consistency-2-matrix">\[\begin{equation}
+Q_\pi = g + \gamma P J_\pi.
+\tag{2.21}
+\end{equation}\]</span>
+We can also combine <a href="exactdp.html#eq:bellman-consistency-1">(2.18)</a> and <a href="exactdp.html#eq:bellman-consistency-2">(2.19)</a> together and write
+<span class="math display">\[
+Q_\pi(x,u) = g(x,u) + \gamma \mathbb{E}_{x&#39; \sim P(\cdot \mid x,u)} \left\{ \mathbb{E}_{u&#39; \sim \pi(\cdot \mid x&#39;)} Q_\pi(x&#39;,u&#39;) \right\} = g(x,u) + \gamma \mathbb{E}_{(x&#39;,u&#39;) \sim P^\pi(\cdot \mid (x,u))} Q_\pi(x&#39;,u&#39;),
+\]</span>
+which, using matrix representation, becomes
+<span class="math display" id="eq:bellman-consistency-2-matrix-2">\[\begin{equation}
+Q_\pi = g + \gamma P^\pi Q_\pi.
+\tag{2.22}
+\end{equation}\]</span>
+Equation <a href="exactdp.html#eq:bellman-consistency-2-matrix-2">(2.22)</a> immediately yields
+<span class="math display" id="eq:bellman-consistency-Qpi-linearsystem">\[\begin{equation}
+Q_\pi = (I - \gamma P^\pi)^{-1} g,
+\tag{2.23}
+\end{equation}\]</span>
+that is, the <span class="math inline">\(Q\)</span>-value function associated with a stationary policy <span class="math inline">\(\pi\)</span> can be simply computed from solving a linear system as in <a href="exactdp.html#eq:bellman-consistency-Qpi-linearsystem">(2.23)</a>.<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a></p>
+<p>Lemma <a href="exactdp.html#lem:mdpbellmanconsistency">2.1</a>, together with the equivalent matrix equations <a href="exactdp.html#eq:bellman-consistency-2-matrix">(2.21)</a> and <a href="exactdp.html#eq:bellman-consistency-2-matrix-2">(2.22)</a>, provide the conditions that <span class="math inline">\(J_\pi\)</span> and <span class="math inline">\(Q_\pi\)</span>, induced by any stationary policy <span class="math inline">\(\pi\)</span>, need to satisfy. In the next, we describe the conditions that characterize the optimal policy.</p>
+<div class="theorembox">
+<div class="theorem">
+<p><span id="thm:mdpbellmanoptimality" class="theorem"><strong>Theorem 2.2  (Bellman Optimality Equations) </strong></span>A vector <span class="math inline">\(Q \in \mathbb{R}^{|\mathbb{X}||\mathbb{U}|}\)</span> is said to satisfy the Bellman optimality equation if
+<span class="math display" id="eq:bellman-optimality-equation">\[\begin{equation}
+Q(x,u) = g(x,u) + \gamma \mathbb{E}_{x&#39; \sim P(\cdot \mid x,u)} \left\{ \min_{u&#39; \in \mathbb{U}} Q(x&#39;,u&#39;) \right\}, \quad \forall (x,u) \in \mathbb{X} \times \mathbb{U}.
+\tag{2.24}
+\end{equation}\]</span></p>
+<p>A vector <span class="math inline">\(Q^\star\)</span> is the optimal <span class="math inline">\(Q\)</span>-value function if and only if it satisfies <a href="exactdp.html#eq:bellman-optimality-equation">(2.24)</a>. Moreover, the deterministic policy defined by
+<span class="math display">\[
+\pi^\star(x) \in \arg\min_{u \in \mathbb{U}} Q^\star(x,u)
+\]</span>
+with ties broken arbitrarily is an optimal policy.</p>
+</div>
+</div>
+<div class="proofbox">
+<div class="proof">
+<p><span id="unlabeled-div-6" class="proof"><em>Proof</em>. </span>See Theorem 1.8 in <span class="citation">(<a href="#ref-agarwal22book-reinforcement" role="doc-biblioref">Agarwal et al. 2022</a>)</span>.</p>
+</div>
+</div>
+<p>We now make a few definitions to interpret Theorem <a href="exactdp.html#thm:mdpbellmanoptimality">2.2</a>. For any vector <span class="math inline">\(Q \in \mathbb{R}^{|\mathbb{X}||\mathbb{U}|}\)</span>, define the greedy policy as
+<span class="math display" id="eq:def-pi-Q">\[\begin{equation}
+\pi_{Q}(x) \in \arg\min_{u \in \mathbb{U}} Q(x,u)
+\tag{2.25}
+\end{equation}\]</span>
+with ties broken arbitrarily. With this notation, by Theorem <a href="exactdp.html#thm:mdpbellmanoptimality">2.2</a>, the optimal policy is
+<span class="math display">\[
+\pi^\star = \pi_{Q^\star},
+\]</span>
+where <span class="math inline">\(Q^\star\)</span> is the optimal <span class="math inline">\(Q\)</span>-value function. Similarly, let us define
+<span class="math display">\[
+J_Q(x) = \min_{u \in \mathbb{U}} Q(x,u).
+\]</span>
+Note that <span class="math inline">\(J_Q\)</span> has dimension <span class="math inline">\(|\mathbb{X}|\)</span>. With these notations, the <em>Bellman optimality operator</em> is defined as
+<span class="math display" id="eq:bellman-optimality-operator">\[\begin{equation}
+\mathcal{T}Q = g + \gamma P J_Q,
+\tag{2.26}
+\end{equation}\]</span>
+which is nothing but a matrix representation of the right-hand side of <a href="exactdp.html#eq:bellman-optimality-equation">(2.24)</a>. This allows us to concisely write the Bellman optimality equation <a href="exactdp.html#eq:bellman-optimality-equation">(2.24)</a> as
+<span class="math display" id="eq:mdp-fixed-point">\[\begin{equation}
+Q = \mathcal{T}Q.
+\tag{2.27}
+\end{equation}\]</span>
+Therefore, an equivalent way to interpret Theorem <a href="exactdp.html#thm:mdpbellmanoptimality">2.2</a> is that <span class="math inline">\(Q = Q^\star\)</span> if and only if <span class="math inline">\(Q\)</span> is a fixed point to the Bellman optimality operator <span class="math inline">\(\mathcal{T}\)</span>.</p>
+</div>
+<div id="value-iteration" class="section level3 hasAnchor" number="2.2.2">
+<h3><span class="header-section-number">2.2.2</span> Value Iteration<a href="exactdp.html#value-iteration" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Intepreting the optimal <span class="math inline">\(Q\)</span>-value function as the fixed point to the Bellman optimality operator <a href="exactdp.html#eq:mdp-fixed-point">(2.27)</a> leads us to a natural algorithm for solving the optimal control problem.</p>
+<p>We start with <span class="math inline">\(Q^{(0)}\)</span> being an all-zero vector and then at iteration <span class="math inline">\(t\)</span>, we perform
+<span class="math display">\[
+Q^{(t+1)} \leftarrow \mathcal{T} Q^{(t)},
+\]</span>
+with <span class="math inline">\(\mathcal{T}\)</span> defined in <a href="exactdp.html#eq:bellman-optimality-operator">(2.26)</a>. Let us observe the simplicity of this algorithm: at each iteration, one only needs to perform <span class="math inline">\(\min_{u \in \mathbb{U}} Q^{(t)}(x,u)\)</span>, which is very efficient when <span class="math inline">\(|\mathbb{U}|\)</span> is not too large.</p>
+<p>The next theorem states this simple algorithm converges to the optimal value function.</p>
+<div class="theorembox">
+<div class="theorem">
+<p><span id="thm:valueiteration" class="theorem"><strong>Theorem 2.3  (Value Iteration) </strong></span>Set <span class="math inline">\(Q^{(0)} = 0\)</span>. For <span class="math inline">\(t=0,\dots\)</span>, perform
+<span class="math display">\[
+Q^{(t+1)} \leftarrow \mathcal{T} Q^{(t)}.
+\]</span>
+Let <span class="math inline">\(\pi^{(k)} = \pi_{Q^{(k)}}\)</span> (see the definition in <a href="exactdp.html#eq:def-pi-Q">(2.25)</a>). For <span class="math inline">\(t \geq \frac{\log \frac{2}{(1-\gamma)^2 \epsilon}}{1-\gamma}\)</span>, we have
+<span class="math display">\[
+J^{\pi^{(t)}} \leq J^\star + \epsilon \mathbb{1},
+\]</span>
+where <span class="math inline">\(\mathbb{1}\)</span> is the all-ones vector.</p>
+</div>
+</div>
+<p>Essentially, the value function obtained from value iteration converges to the optimal cost-to-go.</p>
+<p>Let us use an example to appreciate this algorithm.</p>
+<div class="examplebox">
+<div class="example">
+<p><span id="exm:gridworld" class="example"><strong>Example 2.2  (Shortest Path in Grid World) </strong></span>Consider the following <span class="math inline">\(10 \times 10\)</span> grid world, where the top-right cell is the goal location, and the dark blue colored cells are obstacles.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:grid-world"></span>
+<img src="images/grid-world-obstacle.png" alt="Grid World." width="40%" />
+<p class="caption">
+Figure 2.3: Grid World.
+</p>
+</div>
+<p>We want to find the shortest path from a given cell to the target cell, while not hitting obstacles.</p>
+<p>To do so, we set the state space of the system as
+<span class="math display">\[
+\mathbb{X} = \left\{ \begin{bmatrix} r \\ c \end{bmatrix} \middle\vert r,c \in \{ 1,\dots,10 \} \right\}
+\]</span>
+where <span class="math inline">\(r\)</span> is the row index (from bottom to top) and <span class="math inline">\(c\)</span> is the column index (from left to right). The control space is moving left, right, up, down, or do nothing:
+<span class="math display">\[
+\mathbb{U} = \left\{
+    \begin{bmatrix} 1 \\ 0 \end{bmatrix},
+    \begin{bmatrix} -1 \\ 0 \end{bmatrix},
+    \begin{bmatrix} 0 \\ 1 \end{bmatrix},
+    \begin{bmatrix} 0 \\ -1 \end{bmatrix},
+    \begin{bmatrix} 0 \\ 0 \end{bmatrix}
+    \right\}.
+\]</span>
+The system dynamics is deterministic
+<span class="math display">\[
+x&#39; = x + u.
+\]</span></p>
+</div>
+</div>
 
+</div>
 </div>
 </div>
 <h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-agarwal22book-reinforcement" class="csl-entry">
+Agarwal, Alekh, Nan Jiang, Sham M Kakade, and Wen Sun. 2022. <span>“Reinforcement Learning: Theory and Algorithms.”</span> <em>CS Dept., UW Seattle, Seattle, WA, USA, Tech. Rep</em> 32.
+</div>
 <div id="ref-arnold84ieee-generalized" class="csl-entry">
 Arnold, William F, and Alan J Laub. 1984. <span>“Generalized Eigenproblem Algorithms and Software for Algebraic Riccati Equations.”</span> <em>Proceedings of the IEEE</em> 72 (12): 1746–54.
 </div>
 <div id="ref-bertsekas12book-dpocI" class="csl-entry">
 Bertsekas, Dimitri. 2012. <em>Dynamic Programming and Optimal Control: Volume i</em>. Vol. 1. Athena scientific.
 </div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="3">
+<li id="fn3"><p>One can show that the matrix <span class="math inline">\(I - \gamma P^\pi\)</span> is indeed invertible, see Corollary 1.5 in <span class="citation">(<a href="#ref-agarwal22book-reinforcement" role="doc-biblioref">Agarwal et al. 2022</a>)</span>.<a href="exactdp.html#fnref3" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
             </section>
 

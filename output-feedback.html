@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-09-01" />
+<meta name="date" content="2023-09-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -175,7 +175,11 @@ div.csl-indent {
 <li class="chapter" data-level="2.1.1" data-path="exactdp.html"><a href="exactdp.html#infinite-horizon-lqr"><i class="fa fa-check"></i><b>2.1.1</b> Infinite-Horizon LQR</a></li>
 <li class="chapter" data-level="2.1.2" data-path="exactdp.html"><a href="exactdp.html#lqr-with-constraints"><i class="fa fa-check"></i><b>2.1.2</b> LQR with Constraints</a></li>
 </ul></li>
-<li class="chapter" data-level="2.2" data-path="exactdp.html"><a href="exactdp.html#finite-states-and-finite-controls"><i class="fa fa-check"></i><b>2.2</b> Finite States and Finite Controls</a></li>
+<li class="chapter" data-level="2.2" data-path="exactdp.html"><a href="exactdp.html#markov-decision-process"><i class="fa fa-check"></i><b>2.2</b> Markov Decision Process</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="exactdp.html"><a href="exactdp.html#bellman-optimality-equations"><i class="fa fa-check"></i><b>2.2.1</b> Bellman Optimality Equations</a></li>
+<li class="chapter" data-level="2.2.2" data-path="exactdp.html"><a href="exactdp.html#value-iteration"><i class="fa fa-check"></i><b>2.2.2</b> Value Iteration</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="approximatedp.html"><a href="approximatedp.html"><i class="fa fa-check"></i><b>3</b> Approximate Dynamic Programming</a>
 <ul>
@@ -258,6 +262,7 @@ div.csl-indent {
 <li class="chapter" data-level="8.2" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#certainty-equivalent-adaptive-control"><i class="fa fa-check"></i><b>8.2</b> Certainty-Equivalent Adaptive Control</a></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="psets.html"><a href="psets.html"><i class="fa fa-check"></i><b>9</b> Problem Sets</a></li>
+<li class="chapter" data-level="" data-path="acknowledgement.html"><a href="acknowledgement.html"><i class="fa fa-check"></i>Acknowledgement</a></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
 <li class="chapter" data-level="A" data-path="app-lti-system-theory.html"><a href="app-lti-system-theory.html"><i class="fa fa-check"></i><b>A</b> Linear System Theory</a>
 <ul>
@@ -363,7 +368,7 @@ where <span class="math inline">\(x(t) \in \mathbb{X} \subseteq \mathbb{R}^n\)</
 <span class="math display">\[
 \forall \tilde{u}: [0,+\infty) \rightarrow \mathbb{R}^m,\forall t \in [0,+\infty), u_{[0,t]} = \tilde{u}_{[0,t]} \Rightarrow  \mathcal{F}_u (\cdot,t) = \mathcal{F}_{\tilde{u}}(\cdot,t).
 \]</span></p></li>
-<li><p>For any <span class="math inline">\(u \in \mathcal{U}\)</span>, any <span class="math inline">\(z_0 \in \mathbb{R}^l\)</span>, and any <span class="math inline">\(x_0 \in \mathcal{X}_0\)</span> such that <span class="math inline">\(\sigma^+_{\mathbb{X}}(x_0;u) = +\infty\)</span>, any solution <span class="math inline">\(Z(z_0;t;u,y_{x_0,u})\)</span><a href="#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a> to
+<li><p>For any <span class="math inline">\(u \in \mathcal{U}\)</span>, any <span class="math inline">\(z_0 \in \mathbb{R}^l\)</span>, and any <span class="math inline">\(x_0 \in \mathcal{X}_0\)</span> such that <span class="math inline">\(\sigma^+_{\mathbb{X}}(x_0;u) = +\infty\)</span>, any solution <span class="math inline">\(Z(z_0;t;u,y_{x_0,u})\)</span><a href="#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a> to
 <span class="math display" id="eq:observer-definition-1">\[\begin{equation}
 \dot{z} = \mathcal{F}(z,u,y_{x_0,u})
 \tag{6.2}
@@ -380,7 +385,7 @@ with
 \end{equation}\]</span>
 In words, (i) the state observer maintains an internal state (or latent state) <span class="math inline">\(z \in \mathbb{R}^l\)</span> that evolves according to the latent dynamics <span class="math inline">\(\mathcal{F}\)</span> in <a href="output-feedback.html#eq:observer-definition-1">(6.2)</a>, where <span class="math inline">\(u\)</span> and <span class="math inline">\(y_{x_0,u}\)</span> are inputs; (ii) an estimated state can be reconstructed from the internal state using <span class="math inline">\(\mathcal{T}_u\)</span> as in <a href="output-feedback.html#eq:observer-definition-3">(6.4)</a>; and (iii) the error between the estimated state and the true state (defined by a proper distance function <span class="math inline">\(\Vert \cdot \Vert\)</span> on <span class="math inline">\(\mathbb{X}\)</span>) converges to zero.</p></li>
 </ol>
-<p>If <span class="math inline">\(\mathcal{T}_u\)</span> is the same for any <span class="math inline">\(u \in \mathcal{U}\)</span> and is also time independent, then we say <span class="math inline">\(\mathcal{T}\)</span> is <em>stationary</em>.<a href="#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a> In this case, we can simply write the observer <a href="output-feedback.html#eq:observer-definition-1">(6.2)</a> and <a href="output-feedback.html#eq:observer-definition-3">(6.4)</a> as
+<p>If <span class="math inline">\(\mathcal{T}_u\)</span> is the same for any <span class="math inline">\(u \in \mathcal{U}\)</span> and is also time independent, then we say <span class="math inline">\(\mathcal{T}\)</span> is <em>stationary</em>.<a href="#fn9" class="footnote-ref" id="fnref9"><sup>9</sup></a> In this case, we can simply write the observer <a href="output-feedback.html#eq:observer-definition-1">(6.2)</a> and <a href="output-feedback.html#eq:observer-definition-3">(6.4)</a> as
 <span class="math display" id="eq:observer-definition-simple">\[\begin{equation}
 \begin{split}
 \dot{z} &amp;= \mathcal{F}(z,u,y) \\
@@ -415,11 +420,11 @@ Note that the observer <a href="output-feedback.html#eq:meta-observer-zeta-hat">
 <p>Now suppose for any <span class="math inline">\(u \in \mathcal{U}\)</span>, there exists a continuous function (i.e., coordinate transformation) <span class="math inline">\(T_u: \mathbb{R}^n \times \mathbb{R} \rightarrow \mathbb{R}^p\)</span> and a subset <span class="math inline">\(\mathcal{X}\)</span> of <span class="math inline">\(\mathbb{X}\)</span> such that</p>
 <ol style="list-style-type: decimal">
 <li><p>For any <span class="math inline">\(x_0 \in \mathcal{X}_0\)</span> such that <span class="math inline">\(\sigma^+_{\mathbb{X}}(x_0;u) = + \infty\)</span>, <span class="math inline">\(X(x_0;\cdot;u)\)</span> remains in <span class="math inline">\(\mathcal{X}\)</span></p></li>
-<li><p>There exists a concave <span class="math inline">\(\mathcal{K}\)</span><a href="#fn9" class="footnote-ref" id="fnref9"><sup>9</sup></a> function <span class="math inline">\(\rho\)</span> and a positive number <span class="math inline">\(\bar{t}\)</span> such that
+<li><p>There exists a concave <span class="math inline">\(\mathcal{K}\)</span><a href="#fn10" class="footnote-ref" id="fnref10"><sup>10</sup></a> function <span class="math inline">\(\rho\)</span> and a positive number <span class="math inline">\(\bar{t}\)</span> such that
 <span class="math display">\[
 \Vert x_a - x_b \Vert \leq \rho (| T_u(x_a,t) - T_u(x_b,t) |), \quad \forall x_a,x_b \in \mathcal{X}, t \geq \bar{t},
 \]</span>
-i.e., <span class="math inline">\(x \mapsto T_u(x,t)\)</span> becomes injective on <span class="math inline">\(\mathcal{X}\)</span>,<a href="#fn10" class="footnote-ref" id="fnref10"><sup>10</sup></a> uniformly in time and space, after a certain time <span class="math inline">\(\bar{t}\)</span>.</p></li>
+i.e., <span class="math inline">\(x \mapsto T_u(x,t)\)</span> becomes injective on <span class="math inline">\(\mathcal{X}\)</span>,<a href="#fn11" class="footnote-ref" id="fnref11"><sup>11</sup></a> uniformly in time and space, after a certain time <span class="math inline">\(\bar{t}\)</span>.</p></li>
 <li><p><span class="math inline">\(T_u\)</span> transforms the system <a href="output-feedback.html#eq:output-feedback-system">(6.1)</a> into the system <a href="output-feedback.html#eq:meta-observer-zeta">(6.7)</a>, i.e., for all <span class="math inline">\(x \in \mathcal{X}\)</span> and all <span class="math inline">\(t \geq 0\)</span>, we have
 <span class="math display" id="eq:meta-observer-transform">\[\begin{equation}
 L_{(f,1)} T_u(x,t) = F(T_u(x,t),u,h(x,u)), \quad h(x,u) = H(T_u(x,t),u),
@@ -442,7 +447,7 @@ Moreover, denoting <span class="math inline">\(\mathcal{T}\)</span> the family o
 </div>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-7" class="proof"><em>Proof</em>. </span>See Theorem 1.1 in <span class="citation">(<a href="#ref-bernard19book-observer" role="doc-biblioref">Bernard 2019</a>)</span>.</p>
+<p><span id="unlabeled-div-10" class="proof"><em>Proof</em>. </span>See Theorem 1.1 in <span class="citation">(<a href="#ref-bernard19book-observer" role="doc-biblioref">Bernard 2019</a>)</span>.</p>
 </div>
 <p>A simpler version of Theorem <a href="output-feedback.html#thm:observerdesignmeta">6.1</a> where the coordinate transformation <span class="math inline">\(T_u\)</span> is stationary and fixed for all <span class="math inline">\(u\)</span> is stated below as a corollary.</p>
 <div class="theorembox">
@@ -528,7 +533,7 @@ is an observer for <a href="output-feedback.html#eq:Luenberger-linear-template">
 </div>
 <div class="proofbox">
 <div class="proof">
-<p><span id="unlabeled-div-8" class="proof"><em>Proof</em>. </span>Define <span class="math inline">\(e(t) = \xi(t) - \hat{\xi}(t)\)</span>. In that case,
+<p><span id="unlabeled-div-11" class="proof"><em>Proof</em>. </span>Define <span class="math inline">\(e(t) = \xi(t) - \hat{\xi}(t)\)</span>. In that case,
 <span class="math display" id="eq:Luenberger-error">\[\begin{equation}
     \dot{e}(t) = [A - KC] e(t)
     \tag{6.12}
@@ -566,7 +571,7 @@ x = \begin{bmatrix}
 \end{equation}\]</span>
 where <span class="math inline">\(\theta\)</span> the angular position of the pendulum from the vertical line, <span class="math inline">\(m &gt; 0\)</span> the mass of the pendulum, <span class="math inline">\(l &gt; 0\)</span> the length, <span class="math inline">\(g\)</span> the gravitational constant, <span class="math inline">\(b &gt; 0\)</span> the dampling coefficient, and <span class="math inline">\(u\)</span> the control input (torque).</p>
 <p>We assume we can only observe the angular position of the pendulum in <a href="output-feedback.html#eq:kbobserver-pendulum">(6.13)</a>, e.g., using a camera, but not the angular velocity. Our goal is to construct an observer that can provide a full state estimation.</p>
-<p>We first note that the pendulum dynamics <a href="output-feedback.html#eq:kbobserver-pendulum">(6.13)</a> can actually be written in the (linear) Luenberger template <a href="output-feedback.html#eq:Luenberger-linear-template">(6.10)</a> as<a href="#fn11" class="footnote-ref" id="fnref11"><sup>11</sup></a>
+<p>We first note that the pendulum dynamics <a href="output-feedback.html#eq:kbobserver-pendulum">(6.13)</a> can actually be written in the (linear) Luenberger template <a href="output-feedback.html#eq:Luenberger-linear-template">(6.10)</a> as<a href="#fn12" class="footnote-ref" id="fnref12"><sup>12</sup></a>
 <span class="math display" id="eq:pendulum-Luenberger-Linear">\[\begin{equation}
 \begin{split}
 \dot{x} &amp; = \underbrace{\begin{bmatrix}
@@ -958,7 +963,7 @@ T(x) = \int_{-\infty}^0 e^{-A\tau} B(h(X(x,\tau))) d\tau.
 </div>
 </div>
 <div class="remark">
-<p><span id="unlabeled-div-9" class="remark"><em>Remark</em>. </span>The function <span class="math inline">\(T\)</span> in Theorem <a href="output-feedback.html#thm:kklautonomous">6.4</a> takes complex numbers. To simulate the observer
+<p><span id="unlabeled-div-12" class="remark"><em>Remark</em>. </span>The function <span class="math inline">\(T\)</span> in Theorem <a href="output-feedback.html#thm:kklautonomous">6.4</a> takes complex numbers. To simulate the observer
 <span class="math display">\[
 \dot{\hat{\xi}} = A \hat{\xi} + B(y),
 \]</span>
@@ -1230,12 +1235,12 @@ Niazi, Muhammad Umar B, John Cao, Xudong Sun, Amritam Das, and Karl Henrik Johan
 </div>
 <div class="footnotes">
 <hr />
-<ol start="7">
-<li id="fn7"><p>We say “any solution” because there may be several solutions to the observer <a href="output-feedback.html#eq:observer-definition-1">(6.2)</a> due to <span class="math inline">\(\mathcal{F}\)</span> only being continuous. This is not a problem as long as any such solution satisfies the required convergence property.<a href="output-feedback.html#fnref7" class="footnote-back">↩︎</a></p></li>
-<li id="fn8"><p>The time dependence of <span class="math inline">\(\mathcal{T}_u\)</span> enables us to cover the case where the knowledge of the <span class="math inline">\(u\)</span> and <span class="math inline">\(y_{x_0,u}\)</span> is used to construct the estimate from the observer state. In particular, using the output sometimes can reduce the dimension of the observer state (and thus alleviate the computations), thus obtaining a reduced-order observer. For example, see <span class="citation">(<a href="#ref-karagiannis05cdc-nonlinear" role="doc-biblioref">Karagiannis and Astolfi 2005</a>)</span> and <span class="citation">(<a href="#ref-astolfi03tac-immersion" role="doc-biblioref">Astolfi and Ortega 2003</a>)</span>.<a href="output-feedback.html#fnref8" class="footnote-back">↩︎</a></p></li>
-<li id="fn9"><p>A function <span class="math inline">\(\rho: \mathbb{R}_+ \rightarrow \mathbb{R}_+\)</span> is a <span class="math inline">\(\mathcal{K}\)</span> function if <span class="math inline">\(\rho(0) = 0\)</span>, <span class="math inline">\(\rho\)</span> is continuous, and <span class="math inline">\(\rho\)</span> is increasing.<a href="output-feedback.html#fnref9" class="footnote-back">↩︎</a></p></li>
-<li id="fn10"><p>An injective function is a function <span class="math inline">\(f\)</span> that maps distinct elements of its domain to distinct elements. That is, <span class="math inline">\(f(x_a) = f(x_b)\)</span> implies <span class="math inline">\(x_a = x_b\)</span>, or equivalently, <span class="math inline">\(x_a \neq x_b\)</span> implies <span class="math inline">\(f(x_a) \neq f(x_b)\)</span>.<a href="output-feedback.html#fnref10" class="footnote-back">↩︎</a></p></li>
-<li id="fn11"><p>I have to say I was a bit surprised when I arrived at this formulation.<a href="output-feedback.html#fnref11" class="footnote-back">↩︎</a></p></li>
+<ol start="8">
+<li id="fn8"><p>We say “any solution” because there may be several solutions to the observer <a href="output-feedback.html#eq:observer-definition-1">(6.2)</a> due to <span class="math inline">\(\mathcal{F}\)</span> only being continuous. This is not a problem as long as any such solution satisfies the required convergence property.<a href="output-feedback.html#fnref8" class="footnote-back">↩︎</a></p></li>
+<li id="fn9"><p>The time dependence of <span class="math inline">\(\mathcal{T}_u\)</span> enables us to cover the case where the knowledge of the <span class="math inline">\(u\)</span> and <span class="math inline">\(y_{x_0,u}\)</span> is used to construct the estimate from the observer state. In particular, using the output sometimes can reduce the dimension of the observer state (and thus alleviate the computations), thus obtaining a reduced-order observer. For example, see <span class="citation">(<a href="#ref-karagiannis05cdc-nonlinear" role="doc-biblioref">Karagiannis and Astolfi 2005</a>)</span> and <span class="citation">(<a href="#ref-astolfi03tac-immersion" role="doc-biblioref">Astolfi and Ortega 2003</a>)</span>.<a href="output-feedback.html#fnref9" class="footnote-back">↩︎</a></p></li>
+<li id="fn10"><p>A function <span class="math inline">\(\rho: \mathbb{R}_+ \rightarrow \mathbb{R}_+\)</span> is a <span class="math inline">\(\mathcal{K}\)</span> function if <span class="math inline">\(\rho(0) = 0\)</span>, <span class="math inline">\(\rho\)</span> is continuous, and <span class="math inline">\(\rho\)</span> is increasing.<a href="output-feedback.html#fnref10" class="footnote-back">↩︎</a></p></li>
+<li id="fn11"><p>An injective function is a function <span class="math inline">\(f\)</span> that maps distinct elements of its domain to distinct elements. That is, <span class="math inline">\(f(x_a) = f(x_b)\)</span> implies <span class="math inline">\(x_a = x_b\)</span>, or equivalently, <span class="math inline">\(x_a \neq x_b\)</span> implies <span class="math inline">\(f(x_a) \neq f(x_b)\)</span>.<a href="output-feedback.html#fnref11" class="footnote-back">↩︎</a></p></li>
+<li id="fn12"><p>I have to say I was a bit surprised when I arrived at this formulation.<a href="output-feedback.html#fnref12" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
             </section>

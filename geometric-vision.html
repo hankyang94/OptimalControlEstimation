@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-09-01" />
+<meta name="date" content="2023-09-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -175,7 +175,11 @@ div.csl-indent {
 <li class="chapter" data-level="2.1.1" data-path="exactdp.html"><a href="exactdp.html#infinite-horizon-lqr"><i class="fa fa-check"></i><b>2.1.1</b> Infinite-Horizon LQR</a></li>
 <li class="chapter" data-level="2.1.2" data-path="exactdp.html"><a href="exactdp.html#lqr-with-constraints"><i class="fa fa-check"></i><b>2.1.2</b> LQR with Constraints</a></li>
 </ul></li>
-<li class="chapter" data-level="2.2" data-path="exactdp.html"><a href="exactdp.html#finite-states-and-finite-controls"><i class="fa fa-check"></i><b>2.2</b> Finite States and Finite Controls</a></li>
+<li class="chapter" data-level="2.2" data-path="exactdp.html"><a href="exactdp.html#markov-decision-process"><i class="fa fa-check"></i><b>2.2</b> Markov Decision Process</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="exactdp.html"><a href="exactdp.html#bellman-optimality-equations"><i class="fa fa-check"></i><b>2.2.1</b> Bellman Optimality Equations</a></li>
+<li class="chapter" data-level="2.2.2" data-path="exactdp.html"><a href="exactdp.html#value-iteration"><i class="fa fa-check"></i><b>2.2.2</b> Value Iteration</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="approximatedp.html"><a href="approximatedp.html"><i class="fa fa-check"></i><b>3</b> Approximate Dynamic Programming</a>
 <ul>
@@ -258,6 +262,7 @@ div.csl-indent {
 <li class="chapter" data-level="8.2" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#certainty-equivalent-adaptive-control"><i class="fa fa-check"></i><b>8.2</b> Certainty-Equivalent Adaptive Control</a></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="psets.html"><a href="psets.html"><i class="fa fa-check"></i><b>9</b> Problem Sets</a></li>
+<li class="chapter" data-level="" data-path="acknowledgement.html"><a href="acknowledgement.html"><i class="fa fa-check"></i>Acknowledgement</a></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
 <li class="chapter" data-level="A" data-path="app-lti-system-theory.html"><a href="app-lti-system-theory.html"><i class="fa fa-check"></i><b>A</b> Linear System Theory</a>
 <ul>
@@ -368,7 +373,7 @@ potentially plus some noise. In Chapter <a href="output-feedback.html#output-fee
 </div>
 <div class="proofbox">
 <div class="proof">
-<p><span id="unlabeled-div-10" class="proof"><em>Proof</em>. </span>We only offer the proof of the last property. Consider any eigenvalue <span class="math inline">\(\lambda\)</span> of <span class="math inline">\(A\)</span>, and <span class="math inline">\(x\)</span> be its eigenvector.
+<p><span id="unlabeled-div-13" class="proof"><em>Proof</em>. </span>We only offer the proof of the last property. Consider any eigenvalue <span class="math inline">\(\lambda\)</span> of <span class="math inline">\(A\)</span>, and <span class="math inline">\(x\)</span> be its eigenvector.
 We have <span class="math inline">\(&lt;x,x&gt; = &lt;A^TAx,x&gt;=&lt;Ax,Ax&gt; = |\lambda|^2&lt;x,x&gt;\)</span>, thus <span class="math inline">\(|\lambda|=1\)</span>.</p>
 </div>
 </div>
@@ -385,7 +390,7 @@ We have <span class="math inline">\(&lt;x,x&gt; = &lt;A^TAx,x&gt;=&lt;Ax,Ax&gt; 
 </div>
 <div class="proofbox">
 <div class="proof">
-<p><span id="unlabeled-div-11" class="proof"><em>Proof</em>. </span>We can only prove the last property.</p>
+<p><span id="unlabeled-div-14" class="proof"><em>Proof</em>. </span>We can only prove the last property.</p>
 <p>From the property of orthogonal matrix, we know that all eigenvalues have modulus one. First, note that there must exist at least one real eigenvalue. Because eigenvalues with nonzero imaginary parts always come in pair and 3 is an odd number.</p>
 <p>Then there are two possible cases: (1) All the eigenvalues are real; (2) There is only one eigenvalue.</p>
 <p>For case one, note that the determinant of a matrix is the product of all eigenvalues, then rotation matrix can’t have all the eigenvalues -1.</p>
@@ -633,7 +638,7 @@ The exponential map <span class="math inline">\(\text{exp:}\mathfrak{so}(3)\to S
 :::</p>
 <div class="proofbox">
 <div class="proof">
-<p><span id="unlabeled-div-12" class="proof"><em>Proof</em>. </span>Consider a <span class="math inline">\(3\times 3\)</span> skew symmetric matrix <span class="math inline">\(A = \begin{bmatrix} 0 &amp;-c &amp;b\\c &amp;0 &amp;-a\\-b &amp;a &amp;0 \end{bmatrix}\)</span>, define <span class="math inline">\(w = \begin{bmatrix} a\\b\\c \end{bmatrix}, \hat{w} = w/\|w\|, \theta=\|w\|\)</span>. Then <span class="math inline">\(A = w_\times\)</span>. Consider <span class="math inline">\(\hat{w}_\times\)</span>, using the properties of the cross product, we have:<span class="math inline">\(\hat{w}^3_\times = -\hat{w}_\times\)</span>. Thus we can know that:
+<p><span id="unlabeled-div-15" class="proof"><em>Proof</em>. </span>Consider a <span class="math inline">\(3\times 3\)</span> skew symmetric matrix <span class="math inline">\(A = \begin{bmatrix} 0 &amp;-c &amp;b\\c &amp;0 &amp;-a\\-b &amp;a &amp;0 \end{bmatrix}\)</span>, define <span class="math inline">\(w = \begin{bmatrix} a\\b\\c \end{bmatrix}, \hat{w} = w/\|w\|, \theta=\|w\|\)</span>. Then <span class="math inline">\(A = w_\times\)</span>. Consider <span class="math inline">\(\hat{w}_\times\)</span>, using the properties of the cross product, we have:<span class="math inline">\(\hat{w}^3_\times = -\hat{w}_\times\)</span>. Thus we can know that:
 <span class="math display">\[\begin{align}
     \exp(A) &amp;= I + (1-\frac{\theta^3}{3!}+\frac{\theta^5}{5!}+\dots)\hat{w}_\times + (\frac{\theta^2}{2!}-\frac{\theta^4}{4!}+\frac{\theta^6}{6!})\hat{w}_\times^2\\
     &amp;= I + \frac{\sin\theta}{\theta}A + \frac{1-\cos\theta}{\theta^2}A^2

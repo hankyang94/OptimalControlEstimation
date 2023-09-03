@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-09-01" />
+<meta name="date" content="2023-09-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -175,7 +175,11 @@ div.csl-indent {
 <li class="chapter" data-level="2.1.1" data-path="exactdp.html"><a href="exactdp.html#infinite-horizon-lqr"><i class="fa fa-check"></i><b>2.1.1</b> Infinite-Horizon LQR</a></li>
 <li class="chapter" data-level="2.1.2" data-path="exactdp.html"><a href="exactdp.html#lqr-with-constraints"><i class="fa fa-check"></i><b>2.1.2</b> LQR with Constraints</a></li>
 </ul></li>
-<li class="chapter" data-level="2.2" data-path="exactdp.html"><a href="exactdp.html#finite-states-and-finite-controls"><i class="fa fa-check"></i><b>2.2</b> Finite States and Finite Controls</a></li>
+<li class="chapter" data-level="2.2" data-path="exactdp.html"><a href="exactdp.html#markov-decision-process"><i class="fa fa-check"></i><b>2.2</b> Markov Decision Process</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="exactdp.html"><a href="exactdp.html#bellman-optimality-equations"><i class="fa fa-check"></i><b>2.2.1</b> Bellman Optimality Equations</a></li>
+<li class="chapter" data-level="2.2.2" data-path="exactdp.html"><a href="exactdp.html#value-iteration"><i class="fa fa-check"></i><b>2.2.2</b> Value Iteration</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="approximatedp.html"><a href="approximatedp.html"><i class="fa fa-check"></i><b>3</b> Approximate Dynamic Programming</a>
 <ul>
@@ -258,6 +262,7 @@ div.csl-indent {
 <li class="chapter" data-level="8.2" data-path="adaptivecontrol.html"><a href="adaptivecontrol.html#certainty-equivalent-adaptive-control"><i class="fa fa-check"></i><b>8.2</b> Certainty-Equivalent Adaptive Control</a></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="psets.html"><a href="psets.html"><i class="fa fa-check"></i><b>9</b> Problem Sets</a></li>
+<li class="chapter" data-level="" data-path="acknowledgement.html"><a href="acknowledgement.html"><i class="fa fa-check"></i>Acknowledgement</a></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
 <li class="chapter" data-level="A" data-path="app-lti-system-theory.html"><a href="app-lti-system-theory.html"><i class="fa fa-check"></i><b>A</b> Linear System Theory</a>
 <ul>
@@ -350,7 +355,7 @@ where</p>
 <li><p><span class="math inline">\(f: \mathbb{R}^{n} \times \mathbb{R}^m \rightarrow \mathbb{R}^n\)</span> models the system dynamics, and</p></li>
 <li><p><span class="math inline">\(x_0 \in \mathbb{R}^n\)</span> is the initial state of the system.</p></li>
 </ul>
-<p>We assume the admissible control functions <span class="math inline">\(\{u(t) \mid u(t) \in \mathbb{U}, t\in [0,T] \}\)</span>, also called control trajectories, must be <em>piecewise continuous</em>.<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a> For any control trajectory, we assume the system <a href="continuous-time-optimal-control.html#eq:ct-optimal-control-system">(4.1)</a> has a unique solution <span class="math inline">\(\{x(t)\mid t \in [0,T] \}\)</span>, called the state trajectory.</p>
+<p>We assume the admissible control functions <span class="math inline">\(\{u(t) \mid u(t) \in \mathbb{U}, t\in [0,T] \}\)</span>, also called control trajectories, must be <em>piecewise continuous</em>.<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a> For any control trajectory, we assume the system <a href="continuous-time-optimal-control.html#eq:ct-optimal-control-system">(4.1)</a> has a unique solution <span class="math inline">\(\{x(t)\mid t \in [0,T] \}\)</span>, called the state trajectory.</p>
 <p>We now state the continuous-time optimal control problem.</p>
 <div class="definitionbox">
 <div class="definition">
@@ -425,7 +430,7 @@ Then <span class="math inline">\(V(t,x)\)</span> is equal to the optimal cost-to
 </div>
 <div class="proofbox">
 <div class="proof">
-<p><span id="unlabeled-div-5" class="proof"><em>Proof</em>. </span>Let <span class="math inline">\(\{\hat{u}(t) \mid t \in [0,T] \}\)</span> be any admissible control trajectory and let <span class="math inline">\(\hat{x}(t)\)</span> be the resulting state trajectory. From the “<span class="math inline">\(\min\)</span>” in <a href="continuous-time-optimal-control.html#eq:hjb-eqution-formal-1">(4.6)</a>, we know
+<p><span id="unlabeled-div-8" class="proof"><em>Proof</em>. </span>Let <span class="math inline">\(\{\hat{u}(t) \mid t \in [0,T] \}\)</span> be any admissible control trajectory and let <span class="math inline">\(\hat{x}(t)\)</span> be the resulting state trajectory. From the “<span class="math inline">\(\min\)</span>” in <a href="continuous-time-optimal-control.html#eq:hjb-eqution-formal-1">(4.6)</a>, we know
 <span class="math display">\[
 0 \leq g(\hat{x},\hat{u}) + \nabla_t V(t,\hat{x}) + \nabla_x V(t,\hat{x})^T f(\hat{x},\hat{u}) = g(\hat{x},\hat{u}) + \frac{d}{dt} V(t,\hat{x}).
 \]</span>
@@ -699,8 +704,8 @@ Bertsekas, Dimitri. 2012. <em>Dynamic Programming and Optimal Control: Volume i<
 </div>
 <div class="footnotes">
 <hr />
-<ol start="3">
-<li id="fn3"><p>Even though we write <span class="math inline">\(dx_i(t)/dt\)</span> in the system <a href="continuous-time-optimal-control.html#eq:ct-optimal-control-system">(4.1)</a>, we allow <span class="math inline">\(x(t)\)</span> to be only directionally differentiable at a finite number of points to account for the possible discontinuity of <span class="math inline">\(u(t)\)</span>.<a href="continuous-time-optimal-control.html#fnref3" class="footnote-back">↩︎</a></p></li>
+<ol start="4">
+<li id="fn4"><p>Even though we write <span class="math inline">\(dx_i(t)/dt\)</span> in the system <a href="continuous-time-optimal-control.html#eq:ct-optimal-control-system">(4.1)</a>, we allow <span class="math inline">\(x(t)\)</span> to be only directionally differentiable at a finite number of points to account for the possible discontinuity of <span class="math inline">\(u(t)\)</span>.<a href="continuous-time-optimal-control.html#fnref4" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
             </section>
