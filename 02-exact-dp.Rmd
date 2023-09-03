@@ -242,6 +242,269 @@ knitr::include_graphics('images/pendulum-stabilization-lqr.png')
 
 Let's explore LQR with constraints in Exercise \@ref(exr:lqrconstraints)
 
-## Finite States and Finite Controls 
+## Markov Decision Process
 
-In Section \@ref(lqr), we see that linear dynamics and quadratic costs leads to exact dynamic programming. 
+In Section \@ref(lqr), we see that linear dynamics and quadratic costs leads to exact dynamic programming. We now introduce another setup where the number of states and controls is finite (as opposed to the LQR case where $x_k$ and $u_k$ live in continuous spaces). We will see that we can execute DP exactly in this setup as well.
+
+Optimal control in the case of finite states and controls is typically introduced in the framework of a _Markov Decision Process_ (MDP, which is common in Reinforcement Learning).
+There are many variations of a MDP, and here we only focus on the discounted infinite-horizon MDP. For a more complete treatment of MDPs, I suggest checking out [this course at Harvard](https://shamulent.github.io/CS_Stat184_Fall23.html).
+
+Formally, a discounted infinite-horizon MDP $\mathcal{M} = (\mathbb{X},\mathbb{U},P,g,\gamma,\sigma)$ is specified by
+
+- a state space $\mathbb{X}$ that is finite with size $|\mathbb{X}|$
+
+- a control space $\mathbb{U}$ that is finite with size $|\mathbb{U}|$
+
+- a transition function $P: \mathbb{X} \times \mathbb{U} \rightarrow \Delta(\mathbb{X})$, where $\Delta(\mathbb{X})$ is the space of probability distributions over $\mathbb{X}$; specifically, $P(x' \mid x, u)$ is the probability of transitioning into state $x'$ from state $x$ using control $u$. If the system is deterministic, then $P(x' \mid x, u)$ is nonzero only for a single next state $x'$
+
+- a cost function $g: \mathbb{X} \times \mathbb{U} \rightarrow [0,1]$; $g(x,u)$ is the cost of taking the control $u$ at state $x$
+
+- a discount factor $\gamma \in [0,1)$
+
+- an initial state distribution $\sigma \in \Delta(\mathbb{X})$ that specifies how the initial state $x_0$ is generated; in many cases we will assume $x_0$ is fixed and $\sigma$ is a distribution supported only on $x_0$.
+
+In an MDP, the system starts at some state $x_0 \sim \sigma$. At each step $k = 0,1,2,\dots$, the system decides a control $u_k \in \mathbb{U}$ and incurs a cost $g(s_k,u_k)$. The control $u_k$ brings the system into a new state $x_{k+1} \sim P(\cdot \mid x_k, u_k)$, at which the controller decides a new control $u_{k+1}$. This process continues forever.
+
+**Controller (policy)**. In general, a time-varying controller $\pi = (\pi_0,\dots,\pi_k,\dots)$ is a mapping from all previous states and controls to a distribution over current controls. The mapping $\pi_k$ at timestep $k$ is
+$$
+\pi_k: (x_0,u_0,x_1,u_1,\dots,x_k) \mapsto u_k \sim q_k \in \Delta(\mathbb{U}).
+$$
+Note that $u_k$ can be randomized and it is drawn from a distribution $q_k$ supported on the set of controls $\mathbb{U}$.
+A _stationary_ controller (policy) $\pi: \mathbb{X} \rightarrow \Delta(\mathbb{U})$ specifies a decison-making strategy that is purely based on the current state $x_k$. A _deterministic_ and stationary controller $\pi: \mathbb{X} \rightarrow \mathbb{U}$ excutes a deterministic control $u_k$ at each step. 
+
+**Cost-to-go and $Q$-value**. Given a controller $\pi$ and an initial state $x_0$, we associate with it the following discounted infinite-horizon cost
+\begin{equation}
+J_\pi(x_0) = \mathbb{E} \left\{ \sum_{k=0}^{\infty} \gamma^k g(x_k, u_k^{\pi}) \right\},
+(\#eq:mdp-cost-policy)
+\end{equation}
+where the expectation is taken over the randomness of the transition $P$ and the controller $\pi$. Note that we have used $u^{\pi}_k$ to denote the control at step $k$ by following the controller $\pi$. Similarly, we define the $Q$-value function as 
+\begin{equation}
+Q_\pi(x_0,u_0) = \mathbb{E} \left\{  g(x_0,u_0) + \sum_{k=1}^{\infty} \gamma^k g(x_k,u_k^{\pi}) \right\}.
+(\#eq:mdp-Q-value)
+\end{equation}
+The difference between $Q_\pi(x_0,u_0)$ and $J_\pi(x_0)$ is that at step zero, $J_\pi(x_0)$ follows the controller $\pi$ while $Q_\pi(x_0,u_0)$ assumes the control $u_0$ is given. By the assumption that $g(x_k,u_k) \in [0,1]$, we have 
+$$
+0 \leq J_\pi(x_0), Q_\pi(x_0,u_0) \leq \sum_{k=0}^{\infty} \gamma^k = \frac{1}{1-\gamma}, \quad \forall \pi.
+$$
+
+Our goal is to find the best controller that minimizes the cost function
+\begin{equation}
+\pi^\star \in \arg\min_{\pi \in \Pi} J_\pi(x_0)
+(\#eq:mdp-objective)
+\end{equation}
+for a given initial state $x_0$, where $\Pi$ is the space of all non-stationary and randomized controllers. 
+
+A remarkable property of MDPs is that there exists an optimal controller that is stationary and deterministic.
+
+::: {.theorembox}
+::: {.theorem #optimalmdppolicystationary name="Deterministic and Stationary Optimal Policy"}
+Let $\Pi$ be the space of all non-stationary and randomized policies. Define 
+$$
+J^\star_\pi(x) = \min_{\pi \in \Pi} J_\pi(x), \quad Q^\star_\pi(x,u) = \min_{\pi \in \Pi } Q_\pi(x,u).
+$$
+There exists a deterministic and stationary policy $\pi^\star$ such that for all $x \in \mathbb{X}$ and $u \in \mathbb{U}$,
+$$
+J_{\pi^\star}(x) = J^\star(x), \quad Q_{\pi^\star}(x,u) = Q^\star(x,u).
+$$
+We call such a policy $\pi$ an optimal policy.
+:::
+:::
+::: {.proofbox}
+::: {.proof}
+See Theorem 1.7 in [@agarwal22book-reinforcement].
+:::
+:::
+
+This Theorem shows that we can restrict ourselves to stationary and deterministic policies without losing performance.
+
+In the next, we show how to characterize the optimal policy and value function.
+
+### Bellman Optimality Equations
+
+We now restrict ourselves to stationary policies. We first introduce the Bellman Consistency Equations for stationary policies.
+
+::: {.theorembox}
+::: {.lemma #mdpbellmanconsistency name="Bellman Consistency Equations"}
+Let $\pi$ be a stationary policy. Then $J_\pi$ and $Q_\pi$ satisfy the following Bellman consistency equations
+\begin{align}
+J_\pi(x) &= \mathbb{E}_{u \sim \pi(\cdot \mid x)} Q_\pi(x,u), (\#eq:bellman-consistency-1) \\
+Q_\pi(x,u) &=g(x,u) + \gamma \mathbb{E}_{x' \sim P(\cdot \mid x,u)} J_\pi(x'). (\#eq:bellman-consistency-2)
+\end{align} 
+:::
+:::
+::: {.proofbox}
+::: {.proof}
+By the definition of the cost-to-go function in \@ref(eq:mdp-cost-policy), we have
+$$
+J_\pi(x_0) = \mathbb{E}\left\{ \sum_{k=0}^{\infty} \gamma^k g(x_k, \pi(x_k))  \right\} = \mathbb{E}_{u_0 \sim \pi(\cdot \mid x_0)} \underbrace{\mathbb{E} \left\{ g(x_0,u_0) + \sum_{k=1}^{\infty} \gamma^k g(x_k,\pi(x_k)) \right\}}_{Q_\pi(x_0,u_0)}.
+$$
+<!-- By the definition of the $Q$-value function \@ref(eq:mdp-Q-value), we have
+$$
+Q_\pi(x_0,\pi(x_0)) = \mathbb{E} \left\{ g(x_0,\pi(x_0)) + \sum_{k=1}^{\infty} \gamma^k g(x_k,\pi(x_k)) \right\} = \mathbb{E} \left\{ \sum_{k=0}^{\infty} \gamma^k g(x_k, \pi(x_k)) \right\} = J_\pi(x_0).
+$$ -->
+The above equation holds for any $x_0$, proving \@ref(eq:bellman-consistency-1).
+
+To show \@ref(eq:bellman-consistency-2), we recall the definition of the $Q$-value function \@ref(eq:mdp-Q-value)
+\begin{align}
+Q_\pi(x_0,u_0) & = \mathbb{E} \left\{ g(x_0,u_0) + \sum_{k=1}^{\infty} \gamma^k g(x_k,\pi(x_k)) \right\}  \\
+&=  g(x_0,u_0) + \gamma \mathbb{E} \left\{ \sum_{k=1}^{\infty} \gamma^{k-1} g(x_k,\pi(x_k)) \right\} (\#eq:bellman-constency-proof-1)
+\end{align}
+Now observe that the expectation of the second term in \@ref(eq:bellman-constency-proof-1) is taken over both the randomness of $x_1$ and the randomness of the policy after $x_1$ is reached. Therefore, 
+$$
+\mathbb{E} \left\{ \sum_{k=1}^{\infty} \gamma^{k-1} g(x_k,\pi(x_k)) \right\} = \mathbb{E}_{x_1 \sim P(\cdot \mid x_0,u_0)} \underbrace{\left\{ \mathbb{E} \left\{ \sum_{k=1}^{\infty} \gamma^{k-1} g(x_1,\pi(x_1)) \right\} \right\}}_{J_\pi(x_1)}.
+$$
+Plugging the above equation back to \@ref(eq:bellman-constency-proof-1), we obtain the desired result in \@ref(eq:bellman-consistency-2).
+:::
+:::
+
+**Matrix Representation**. It is useful to think of $P,g,J_\pi,Q_\pi$ as matrices. In particular, the transition function $P$ can be considered as a matrix of dimension $|\mathbb{X}||\mathbb{U}| \times \mathbb{X}$, where
+$$
+P_{(x,u),x'} = P(x' \mid x,u)
+$$
+is the entry of $P$ at the row $(x,u)$ (there are $|\mathbb{X}||\mathbb{U}|$ such rows) and column $x'$ (there are $|\mathbb{X}|$ such columns). The running cost $g$ is vector of $|\mathbb{X}||\mathbb{U}|$ entries. The cost-to-go $J_\pi(x)$ is a vector of $|\mathbb{X}|$ entries. The $Q$-value function $Q_\pi(x,u)$ is a vector of $|\mathbb{X}||\mathbb{U}|$ entries. We also introduce $P^{\pi}$ with dimension $|\mathbb{X}||\mathbb{U}| \times |\mathbb{X}||\mathbb{U}|$ as the transition matrix induced by a stationary policy $\pi$. In particular,
+$$
+P^\pi_{(x,u),(x',u')} = P(x' \mid x,u) \pi(u'\mid x').
+$$
+In words, $P^\pi_{(x,u),(x',u')}$ is the probability that $(x',u')$ follows $(x,u)$.
+
+With the matrix representation, we can compactly write the Bellman consistency equation \@ref(eq:bellman-consistency-2) as 
+\begin{equation}
+Q_\pi = g + \gamma P J_\pi.
+(\#eq:bellman-consistency-2-matrix)
+\end{equation}
+We can also combine \@ref(eq:bellman-consistency-1) and \@ref(eq:bellman-consistency-2) together and write
+$$
+Q_\pi(x,u) = g(x,u) + \gamma \mathbb{E}_{x' \sim P(\cdot \mid x,u)} \left\{ \mathbb{E}_{u' \sim \pi(\cdot \mid x')} Q_\pi(x',u') \right\} = g(x,u) + \gamma \mathbb{E}_{(x',u') \sim P^\pi(\cdot \mid (x,u))} Q_\pi(x',u'),
+$$
+which, using matrix representation, becomes
+\begin{equation}
+Q_\pi = g + \gamma P^\pi Q_\pi.
+(\#eq:bellman-consistency-2-matrix-2)
+\end{equation}
+Equation \@ref(eq:bellman-consistency-2-matrix-2) immediately yields
+\begin{equation}
+Q_\pi = (I - \gamma P^\pi)^{-1} g,
+(\#eq:bellman-consistency-Qpi-linearsystem)
+\end{equation}
+that is, the $Q$-value function associated with a stationary policy $\pi$ can be simply computed from solving a linear system as in \@ref(eq:bellman-consistency-Qpi-linearsystem).^[One can show that the matrix $I - \gamma P^\pi$ is indeed invertible, see Corollary 1.5 in [@agarwal22book-reinforcement].]
+
+Lemma \@ref(lem:mdpbellmanconsistency), together with the equivalent matrix equations \@ref(eq:bellman-consistency-2-matrix) and \@ref(eq:bellman-consistency-2-matrix-2), provide the conditions that $J_\pi$ and $Q_\pi$, induced by any stationary policy $\pi$, need to satisfy. In the next, we describe the conditions that characterize the optimal policy.
+
+::: {.theorembox}
+::: {.theorem #mdpbellmanoptimality name="Bellman Optimality Equations"}
+A vector $Q \in \mathbb{R}^{|\mathbb{X}||\mathbb{U}|}$ is said to satisfy the Bellman optimality equation if
+\begin{equation}
+Q(x,u) = g(x,u) + \gamma \mathbb{E}_{x' \sim P(\cdot \mid x,u)} \left\{ \min_{u' \in \mathbb{U}} Q(x',u') \right\}, \quad \forall (x,u) \in \mathbb{X} \times \mathbb{U}.
+(\#eq:bellman-optimality-equation)
+\end{equation}
+
+A vector $Q^\star$ is the optimal $Q$-value function if and only if it satisfies \@ref(eq:bellman-optimality-equation). Moreover, the deterministic policy defined by
+$$
+\pi^\star(x) \in \arg\min_{u \in \mathbb{U}} Q^\star(x,u)
+$$
+with ties broken arbitrarily is an optimal policy.
+:::
+:::
+::: {.proofbox}
+::: {.proof}
+See Theorem 1.8 in [@agarwal22book-reinforcement].
+:::
+:::
+
+We now make a few definitions to interpret Theorem \@ref(thm:mdpbellmanoptimality). For any vector $Q \in \mathbb{R}^{|\mathbb{X}||\mathbb{U}|}$, define the greedy policy as
+\begin{equation}
+\pi_{Q}(x) \in \arg\min_{u \in \mathbb{U}} Q(x,u)
+(\#eq:def-pi-Q)
+\end{equation}
+with ties broken arbitrarily. With this notation, by Theorem \@ref(thm:mdpbellmanoptimality), the optimal policy is
+$$
+\pi^\star = \pi_{Q^\star},
+$$
+where $Q^\star$ is the optimal $Q$-value function. Similarly, let us define 
+$$
+J_Q(x) = \min_{u \in \mathbb{U}} Q(x,u).
+$$
+Note that $J_Q$ has dimension $|\mathbb{X}|$. With these notations, the _Bellman optimality operator_ is defined as
+\begin{equation}
+\mathcal{T}Q = g + \gamma P J_Q,
+(\#eq:bellman-optimality-operator)
+\end{equation}
+which is nothing but a matrix representation of the right-hand side of \@ref(eq:bellman-optimality-equation). This allows us to concisely write the Bellman optimality equation \@ref(eq:bellman-optimality-equation) as
+\begin{equation}
+Q = \mathcal{T}Q.
+(\#eq:mdp-fixed-point)
+\end{equation}
+Therefore, an equivalent way to interpret Theorem \@ref(thm:mdpbellmanoptimality) is that $Q = Q^\star$ if and only if $Q$ is a fixed point to the Bellman optimality operator $\mathcal{T}$. 
+
+### Value Iteration
+Intepreting the optimal $Q$-value function as the fixed point to the Bellman optimality operator \@ref(eq:mdp-fixed-point) leads us to a natural algorithm for solving the optimal control problem. 
+
+We start with $Q^{(0)}$ being an all-zero vector and then at iteration $t$, we perform
+$$
+Q^{(t+1)} \leftarrow \mathcal{T} Q^{(t)},
+$$
+with $\mathcal{T}$ defined in \@ref(eq:bellman-optimality-operator). Let us observe the simplicity of this algorithm: at each iteration, one only needs to perform $\min_{u \in \mathbb{U}} Q^{(t)}(x,u)$, which is very efficient when $|\mathbb{U}|$ is not too large. 
+
+The next theorem states this simple algorithm converges to the optimal value function.
+
+::: {.theorembox}
+::: {.theorem #valueiteration name="Value Iteration"}
+Set $Q^{(0)} = 0$. For $t=0,\dots$, perform
+$$
+Q^{(t+1)} \leftarrow \mathcal{T} Q^{(t)}.
+$$
+Let $\pi^{(k)} = \pi_{Q^{(k)}}$ (see the definition in \@ref(eq:def-pi-Q)). For $t \geq \frac{\log \frac{2}{(1-\gamma)^2 \epsilon}}{1-\gamma}$, we have 
+$$
+J^{\pi^{(t)}} \leq J^\star + \epsilon \mathbb{1},
+$$
+where $\mathbb{1}$ is the all-ones vector.
+:::
+:::
+Essentially, the value function obtained from value iteration converges to the optimal cost-to-go.
+
+Let us use an example to appreciate this algorithm.
+
+::: {.examplebox}
+::: {.example #gridworld name="Shortest Path in Grid World"}
+Consider the following $10 \times 10$ grid world, where the top-right cell is the goal location, and the dark blue colored cells are obstacles. 
+
+```{r grid-world, out.width='40%', fig.show='hold', fig.cap='Grid World.', fig.align='center', echo=FALSE}
+knitr::include_graphics('images/grid-world-obstacle.png')
+```
+
+We want to find the shortest path from a given cell to the target cell, while not hitting obstacles. 
+
+To do so, we set the state space of the system as 
+$$
+\mathbb{X} = \left\{ \begin{bmatrix} r \\ c \end{bmatrix} \middle\vert r,c \in \{ 1,\dots,10 \} \right\}
+$$
+where $r$ is the row index (from bottom to top) and $c$ is the column index (from left to right). The control space is moving left, right, up, down, or do nothing:
+$$
+\mathbb{U} = \left\{ 
+    \begin{bmatrix} 1 \\ 0 \end{bmatrix},
+    \begin{bmatrix} -1 \\ 0 \end{bmatrix},
+    \begin{bmatrix} 0 \\ 1 \end{bmatrix},
+    \begin{bmatrix} 0 \\ -1 \end{bmatrix},
+    \begin{bmatrix} 0 \\ 0 \end{bmatrix}
+    \right\}.
+$$
+The system dynamics is deterministic 
+$$
+x' = x + u.
+$$
+
+:::
+:::
+
+
+
+
+
+
+
+
+
+
+
+
+

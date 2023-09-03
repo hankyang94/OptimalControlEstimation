@@ -28,5 +28,3 @@ This is the textbook for Harvard ES/AM 158: Introduction to Optimal Control and 
 
 [**Syllabus**](https://docs.google.com/document/d/1q8_jB5dLx9jHOBi3DQ48Vv2E243ocGCGm_H0mJuOojM/edit?usp=sharing)
 
-
-#### Acknowledgment {-}

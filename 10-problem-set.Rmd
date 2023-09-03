@@ -26,6 +26,9 @@ d. Increase $N$ and decrease $dt$, plot $J(x_0)$ for different pairs of $(N,dt)$
 e. (Bonus) Can you write down the KKT optimality conditions of \@ref(eq:lqr-constraints) and explain what you have observed from the numerical experiment? (Hint: KKT optimality conditions can be found in Theorem \@ref(thm:KKT).)
 :::
 
+
 ::: {.exercise #lqrmanifold name="LQR on A Manifold"}
-LQR [@saccon13tac-lie] [@teng22cdc-lie]
+LQR on manifolds [@saccon13tac-lie] and [@teng22cdc-lie].
 :::
+
+# Acknowledgement {-}
