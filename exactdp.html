@@ -756,9 +756,9 @@ where <span class="math inline">\(\mathbb{1}\)</span> is the all-ones vector.</p
 <div class="example">
 <p><span id="exm:gridworld" class="example"><strong>Example 2.2  (Shortest Path in Grid World) </strong></span>Consider the following <span class="math inline">\(10 \times 10\)</span> grid world, where the top-right cell is the goal location, and the dark blue colored cells are obstacles.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:grid-world"></span>
-<img src="images/grid-world-obstacle.png" alt="Grid World." width="40%" />
+<img src="images/grid-world-obstacle.png" alt="Grid World with Obstacles." width="50%" />
 <p class="caption">
-Figure 2.3: Grid World.
+Figure 2.3: Grid World with Obstacles.
 </p>
 </div>
 <p>We want to find the shortest path from a given cell to the target cell, while not hitting obstacles.</p>
@@ -766,7 +766,7 @@ Figure 2.3: Grid World.
 <span class="math display">\[
 \mathbb{X} = \left\{ \begin{bmatrix} r \\ c \end{bmatrix} \middle\vert r,c \in \{ 1,\dots,10 \} \right\}
 \]</span>
-where <span class="math inline">\(r\)</span> is the row index (from bottom to top) and <span class="math inline">\(c\)</span> is the column index (from left to right). The control space is moving left, right, up, down, or do nothing:
+where <span class="math inline">\(r\)</span> is the row index (from top to bottom) and <span class="math inline">\(c\)</span> is the column index (from left to right). The control space is moving left, right, up, down, or do nothing:
 <span class="math display">\[
 \mathbb{U} = \left\{
     \begin{bmatrix} 1 \\ 0 \end{bmatrix},
@@ -778,8 +778,32 @@ where <span class="math inline">\(r\)</span> is the row index (from bottom to to
 \]</span>
 The system dynamics is deterministic
 <span class="math display">\[
-x&#39; = x + u.
+x&#39; = \begin{cases}
+x + u &amp; \text{if } x + u \text{ is inside the grid} \\
+x &amp; \text{otherwise}
+\end{cases}.
+\]</span>
+We then design the following running cost function <span class="math inline">\(g\)</span>
+<span class="math display">\[
+g(x,u) = \begin{cases}
+0 &amp; \text{if } x = [1,10]^T \text{ is the target} \\
+20 &amp; \text{if } x \text{ is an obstacle} \\
+1 &amp; \text{otherwise}
+\end{cases}.
+\]</span>
+Note that <span class="math inline">\(g(x,u)\)</span> defined above does not even satisfy <span class="math inline">\(g \in [0,1]\)</span>. We then use value iteration to solve the optimal control problem with <span class="math inline">\(\gamma = 1\)</span>
+<span class="math display">\[
+J(x_0) = \min_{\pi} \sum_{k=0}^{\infty} g(x_k,\pi(x_k)).
 \]</span></p>
+<p>The <a href="https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/grid_world_value_iteration.m">Matlab script</a> of value iteration converges in <span class="math inline">\(27\)</span> iterations, and we obtain the optimal cost-to-go in Fig. <a href="exactdp.html#fig:grid-world-solution">2.4</a>.</p>
+<p>Starting from the cell <span class="math inline">\([8,5]^T\)</span>, the red line in Fig. <a href="exactdp.html#fig:grid-world-solution">2.4</a> plots the optimal trajectory that clearly avoids the obstacles.</p>
+<p>Feel free to play with the size of the grid and the number of obstacles.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:grid-world-solution"></span>
+<img src="images/grid-world-solution.png" alt="Optimal cost-to-go and an optimal trajectory." width="50%" />
+<p class="caption">
+Figure 2.4: Optimal cost-to-go and an optimal trajectory.
+</p>
+</div>
 </div>
 </div>
 
