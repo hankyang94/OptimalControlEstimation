@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-09-03" />
+<meta name="date" content="2023-09-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -179,6 +179,7 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="2.2.1" data-path="exactdp.html"><a href="exactdp.html#bellman-optimality-equations"><i class="fa fa-check"></i><b>2.2.1</b> Bellman Optimality Equations</a></li>
 <li class="chapter" data-level="2.2.2" data-path="exactdp.html"><a href="exactdp.html#value-iteration"><i class="fa fa-check"></i><b>2.2.2</b> Value Iteration</a></li>
+<li class="chapter" data-level="2.2.3" data-path="exactdp.html"><a href="exactdp.html#value-iteration-with-barycentric-interpolation"><i class="fa fa-check"></i><b>2.2.3</b> Value Iteration with Barycentric Interpolation</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="approximatedp.html"><a href="approximatedp.html"><i class="fa fa-check"></i><b>3</b> Approximate Dynamic Programming</a>
@@ -510,12 +511,13 @@ Figure 2.1: A Simple Pendulum.
 </p>
 </div>
 <p>Let us first shift the dynamics so that “<span class="math inline">\(0\)</span>” is the upright position. This can be done by defining a new variable <span class="math inline">\(z = x - x_d = [\theta - \pi, \dot{\theta}]^T\)</span>, which leads to
-<span class="math display">\[
+<span class="math display" id="eq:pendulum-dynamics-z-coordinate">\[\begin{equation}
 \dot{z} = \dot{x} = f(x,u) = f(z + x_d,u) = \begin{bmatrix}
 z_2 \\
 \frac{1}{ml^2} \left( u - b z_2 + mgl \sin z_1  \right)
 \end{bmatrix} = f&#39;(z,u).
-\]</span>
+\tag{2.15}
+\end{equation}\]</span>
 We then linearize the nonlinear dynamics <span class="math inline">\(\dot{z} = f&#39;(z,u)\)</span> at the point <span class="math inline">\(z^\star = 0, u^\star = 0\)</span>:
 <span class="math display">\[\begin{align}
 \dot{z} &amp; \approx f&#39;(z^\star,u^\star) + \left( \frac{\partial f&#39;}{\partial z} \right)_{z^\star,u^\star} (z - z^\star) + \left( \frac{\partial f&#39;}{\partial u} \right)_{z^\star,u^\star} (u - u^\star) \\
@@ -581,12 +583,12 @@ A <em>stationary</em> controller (policy) <span class="math inline">\(\pi: \math
 <p><strong>Cost-to-go and <span class="math inline">\(Q\)</span>-value</strong>. Given a controller <span class="math inline">\(\pi\)</span> and an initial state <span class="math inline">\(x_0\)</span>, we associate with it the following discounted infinite-horizon cost
 <span class="math display" id="eq:mdp-cost-policy">\[\begin{equation}
 J_\pi(x_0) = \mathbb{E} \left\{ \sum_{k=0}^{\infty} \gamma^k g(x_k, u_k^{\pi}) \right\},
-\tag{2.15}
+\tag{2.16}
 \end{equation}\]</span>
 where the expectation is taken over the randomness of the transition <span class="math inline">\(P\)</span> and the controller <span class="math inline">\(\pi\)</span>. Note that we have used <span class="math inline">\(u^{\pi}_k\)</span> to denote the control at step <span class="math inline">\(k\)</span> by following the controller <span class="math inline">\(\pi\)</span>. Similarly, we define the <span class="math inline">\(Q\)</span>-value function as
 <span class="math display" id="eq:mdp-Q-value">\[\begin{equation}
 Q_\pi(x_0,u_0) = \mathbb{E} \left\{  g(x_0,u_0) + \sum_{k=1}^{\infty} \gamma^k g(x_k,u_k^{\pi}) \right\}.
-\tag{2.16}
+\tag{2.17}
 \end{equation}\]</span>
 The difference between <span class="math inline">\(Q_\pi(x_0,u_0)\)</span> and <span class="math inline">\(J_\pi(x_0)\)</span> is that at step zero, <span class="math inline">\(J_\pi(x_0)\)</span> follows the controller <span class="math inline">\(\pi\)</span> while <span class="math inline">\(Q_\pi(x_0,u_0)\)</span> assumes the control <span class="math inline">\(u_0\)</span> is given. By the assumption that <span class="math inline">\(g(x_k,u_k) \in [0,1]\)</span>, we have
 <span class="math display">\[
@@ -595,7 +597,7 @@ The difference between <span class="math inline">\(Q_\pi(x_0,u_0)\)</span> and <
 <p>Our goal is to find the best controller that minimizes the cost function
 <span class="math display" id="eq:mdp-objective">\[\begin{equation}
 \pi^\star \in \arg\min_{\pi \in \Pi} J_\pi(x_0)
-\tag{2.17}
+\tag{2.18}
 \end{equation}\]</span>
 for a given initial state <span class="math inline">\(x_0\)</span>, where <span class="math inline">\(\Pi\)</span> is the space of all non-stationary and randomized controllers.</p>
 <p>A remarkable property of MDPs is that there exists an optimal controller that is stationary and deterministic.</p>
@@ -626,14 +628,14 @@ We call such a policy <span class="math inline">\(\pi\)</span> an optimal policy
 <div class="lemma">
 <p><span id="lem:mdpbellmanconsistency" class="lemma"><strong>Lemma 2.1  (Bellman Consistency Equations) </strong></span>Let <span class="math inline">\(\pi\)</span> be a stationary policy. Then <span class="math inline">\(J_\pi\)</span> and <span class="math inline">\(Q_\pi\)</span> satisfy the following Bellman consistency equations
 <span class="math display" id="eq:bellman-consistency-2" id="eq:bellman-consistency-1">\[\begin{align}
-J_\pi(x) &amp;= \mathbb{E}_{u \sim \pi(\cdot \mid x)} Q_\pi(x,u), \tag{2.18} \\
-Q_\pi(x,u) &amp;=g(x,u) + \gamma \mathbb{E}_{x&#39; \sim P(\cdot \mid x,u)} J_\pi(x&#39;). \tag{2.19}
+J_\pi(x) &amp;= \mathbb{E}_{u \sim \pi(\cdot \mid x)} Q_\pi(x,u), \tag{2.19} \\
+Q_\pi(x,u) &amp;=g(x,u) + \gamma \mathbb{E}_{x&#39; \sim P(\cdot \mid x,u)} J_\pi(x&#39;). \tag{2.20}
 \end{align}\]</span></p>
 </div>
 </div>
 <div class="proofbox">
 <div class="proof">
-<p><span id="unlabeled-div-5" class="proof"><em>Proof</em>. </span>By the definition of the cost-to-go function in <a href="exactdp.html#eq:mdp-cost-policy">(2.15)</a>, we have
+<p><span id="unlabeled-div-5" class="proof"><em>Proof</em>. </span>By the definition of the cost-to-go function in <a href="exactdp.html#eq:mdp-cost-policy">(2.16)</a>, we have
 <span class="math display">\[
 J_\pi(x_0) = \mathbb{E}\left\{ \sum_{k=0}^{\infty} \gamma^k g(x_k, \pi(x_k))  \right\} = \mathbb{E}_{u_0 \sim \pi(\cdot \mid x_0)} \underbrace{\mathbb{E} \left\{ g(x_0,u_0) + \sum_{k=1}^{\infty} \gamma^k g(x_k,\pi(x_k)) \right\}}_{Q_\pi(x_0,u_0)}.
 \]</span>
@@ -641,17 +643,17 @@ J_\pi(x_0) = \mathbb{E}\left\{ \sum_{k=0}^{\infty} \gamma^k g(x_k, \pi(x_k))  \r
 $$
 Q_\pi(x_0,\pi(x_0)) = \mathbb{E} \left\{ g(x_0,\pi(x_0)) + \sum_{k=1}^{\infty} \gamma^k g(x_k,\pi(x_k)) \right\} = \mathbb{E} \left\{ \sum_{k=0}^{\infty} \gamma^k g(x_k, \pi(x_k)) \right\} = J_\pi(x_0).
 $$ -->
-The above equation holds for any <span class="math inline">\(x_0\)</span>, proving <a href="exactdp.html#eq:bellman-consistency-1">(2.18)</a>.</p>
-<p>To show <a href="exactdp.html#eq:bellman-consistency-2">(2.19)</a>, we recall the definition of the <span class="math inline">\(Q\)</span>-value function <a href="exactdp.html#eq:mdp-Q-value">(2.16)</a>
+The above equation holds for any <span class="math inline">\(x_0\)</span>, proving <a href="exactdp.html#eq:bellman-consistency-1">(2.19)</a>.</p>
+<p>To show <a href="exactdp.html#eq:bellman-consistency-2">(2.20)</a>, we recall the definition of the <span class="math inline">\(Q\)</span>-value function <a href="exactdp.html#eq:mdp-Q-value">(2.17)</a>
 <span class="math display" id="eq:bellman-constency-proof-1">\[\begin{align}
 Q_\pi(x_0,u_0) &amp; = \mathbb{E} \left\{ g(x_0,u_0) + \sum_{k=1}^{\infty} \gamma^k g(x_k,\pi(x_k)) \right\}  \\
-&amp;=  g(x_0,u_0) + \gamma \mathbb{E} \left\{ \sum_{k=1}^{\infty} \gamma^{k-1} g(x_k,\pi(x_k)) \right\} \tag{2.20}
+&amp;=  g(x_0,u_0) + \gamma \mathbb{E} \left\{ \sum_{k=1}^{\infty} \gamma^{k-1} g(x_k,\pi(x_k)) \right\} \tag{2.21}
 \end{align}\]</span>
-Now observe that the expectation of the second term in <a href="exactdp.html#eq:bellman-constency-proof-1">(2.20)</a> is taken over both the randomness of <span class="math inline">\(x_1\)</span> and the randomness of the policy after <span class="math inline">\(x_1\)</span> is reached. Therefore,
+Now observe that the expectation of the second term in <a href="exactdp.html#eq:bellman-constency-proof-1">(2.21)</a> is taken over both the randomness of <span class="math inline">\(x_1\)</span> and the randomness of the policy after <span class="math inline">\(x_1\)</span> is reached. Therefore,
 <span class="math display">\[
 \mathbb{E} \left\{ \sum_{k=1}^{\infty} \gamma^{k-1} g(x_k,\pi(x_k)) \right\} = \mathbb{E}_{x_1 \sim P(\cdot \mid x_0,u_0)} \underbrace{\left\{ \mathbb{E} \left\{ \sum_{k=1}^{\infty} \gamma^{k-1} g(x_1,\pi(x_1)) \right\} \right\}}_{J_\pi(x_1)}.
 \]</span>
-Plugging the above equation back to <a href="exactdp.html#eq:bellman-constency-proof-1">(2.20)</a>, we obtain the desired result in <a href="exactdp.html#eq:bellman-consistency-2">(2.19)</a>.</p>
+Plugging the above equation back to <a href="exactdp.html#eq:bellman-constency-proof-1">(2.21)</a>, we obtain the desired result in <a href="exactdp.html#eq:bellman-consistency-2">(2.20)</a>.</p>
 </div>
 </div>
 <p><strong>Matrix Representation</strong>. It is useful to think of <span class="math inline">\(P,g,J_\pi,Q_\pi\)</span> as matrices. In particular, the transition function <span class="math inline">\(P\)</span> can be considered as a matrix of dimension <span class="math inline">\(|\mathbb{X}||\mathbb{U}| \times \mathbb{X}\)</span>, where
@@ -663,35 +665,35 @@ is the entry of <span class="math inline">\(P\)</span> at the row <span class="m
 P^\pi_{(x,u),(x&#39;,u&#39;)} = P(x&#39; \mid x,u) \pi(u&#39;\mid x&#39;).
 \]</span>
 In words, <span class="math inline">\(P^\pi_{(x,u),(x&#39;,u&#39;)}\)</span> is the probability that <span class="math inline">\((x&#39;,u&#39;)\)</span> follows <span class="math inline">\((x,u)\)</span>.</p>
-<p>With the matrix representation, we can compactly write the Bellman consistency equation <a href="exactdp.html#eq:bellman-consistency-2">(2.19)</a> as
+<p>With the matrix representation, we can compactly write the Bellman consistency equation <a href="exactdp.html#eq:bellman-consistency-2">(2.20)</a> as
 <span class="math display" id="eq:bellman-consistency-2-matrix">\[\begin{equation}
 Q_\pi = g + \gamma P J_\pi.
-\tag{2.21}
+\tag{2.22}
 \end{equation}\]</span>
-We can also combine <a href="exactdp.html#eq:bellman-consistency-1">(2.18)</a> and <a href="exactdp.html#eq:bellman-consistency-2">(2.19)</a> together and write
+We can also combine <a href="exactdp.html#eq:bellman-consistency-1">(2.19)</a> and <a href="exactdp.html#eq:bellman-consistency-2">(2.20)</a> together and write
 <span class="math display">\[
 Q_\pi(x,u) = g(x,u) + \gamma \mathbb{E}_{x&#39; \sim P(\cdot \mid x,u)} \left\{ \mathbb{E}_{u&#39; \sim \pi(\cdot \mid x&#39;)} Q_\pi(x&#39;,u&#39;) \right\} = g(x,u) + \gamma \mathbb{E}_{(x&#39;,u&#39;) \sim P^\pi(\cdot \mid (x,u))} Q_\pi(x&#39;,u&#39;),
 \]</span>
 which, using matrix representation, becomes
 <span class="math display" id="eq:bellman-consistency-2-matrix-2">\[\begin{equation}
 Q_\pi = g + \gamma P^\pi Q_\pi.
-\tag{2.22}
-\end{equation}\]</span>
-Equation <a href="exactdp.html#eq:bellman-consistency-2-matrix-2">(2.22)</a> immediately yields
-<span class="math display" id="eq:bellman-consistency-Qpi-linearsystem">\[\begin{equation}
-Q_\pi = (I - \gamma P^\pi)^{-1} g,
 \tag{2.23}
 \end{equation}\]</span>
-that is, the <span class="math inline">\(Q\)</span>-value function associated with a stationary policy <span class="math inline">\(\pi\)</span> can be simply computed from solving a linear system as in <a href="exactdp.html#eq:bellman-consistency-Qpi-linearsystem">(2.23)</a>.<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a></p>
-<p>Lemma <a href="exactdp.html#lem:mdpbellmanconsistency">2.1</a>, together with the equivalent matrix equations <a href="exactdp.html#eq:bellman-consistency-2-matrix">(2.21)</a> and <a href="exactdp.html#eq:bellman-consistency-2-matrix-2">(2.22)</a>, provide the conditions that <span class="math inline">\(J_\pi\)</span> and <span class="math inline">\(Q_\pi\)</span>, induced by any stationary policy <span class="math inline">\(\pi\)</span>, need to satisfy. In the next, we describe the conditions that characterize the optimal policy.</p>
+Equation <a href="exactdp.html#eq:bellman-consistency-2-matrix-2">(2.23)</a> immediately yields
+<span class="math display" id="eq:bellman-consistency-Qpi-linearsystem">\[\begin{equation}
+Q_\pi = (I - \gamma P^\pi)^{-1} g,
+\tag{2.24}
+\end{equation}\]</span>
+that is, the <span class="math inline">\(Q\)</span>-value function associated with a stationary policy <span class="math inline">\(\pi\)</span> can be simply computed from solving a linear system as in <a href="exactdp.html#eq:bellman-consistency-Qpi-linearsystem">(2.24)</a>.<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a></p>
+<p>Lemma <a href="exactdp.html#lem:mdpbellmanconsistency">2.1</a>, together with the equivalent matrix equations <a href="exactdp.html#eq:bellman-consistency-2-matrix">(2.22)</a> and <a href="exactdp.html#eq:bellman-consistency-2-matrix-2">(2.23)</a>, provide the conditions that <span class="math inline">\(J_\pi\)</span> and <span class="math inline">\(Q_\pi\)</span>, induced by any stationary policy <span class="math inline">\(\pi\)</span>, need to satisfy. In the next, we describe the conditions that characterize the optimal policy.</p>
 <div class="theorembox">
 <div class="theorem">
 <p><span id="thm:mdpbellmanoptimality" class="theorem"><strong>Theorem 2.2  (Bellman Optimality Equations) </strong></span>A vector <span class="math inline">\(Q \in \mathbb{R}^{|\mathbb{X}||\mathbb{U}|}\)</span> is said to satisfy the Bellman optimality equation if
 <span class="math display" id="eq:bellman-optimality-equation">\[\begin{equation}
 Q(x,u) = g(x,u) + \gamma \mathbb{E}_{x&#39; \sim P(\cdot \mid x,u)} \left\{ \min_{u&#39; \in \mathbb{U}} Q(x&#39;,u&#39;) \right\}, \quad \forall (x,u) \in \mathbb{X} \times \mathbb{U}.
-\tag{2.24}
+\tag{2.25}
 \end{equation}\]</span></p>
-<p>A vector <span class="math inline">\(Q^\star\)</span> is the optimal <span class="math inline">\(Q\)</span>-value function if and only if it satisfies <a href="exactdp.html#eq:bellman-optimality-equation">(2.24)</a>. Moreover, the deterministic policy defined by
+<p>A vector <span class="math inline">\(Q^\star\)</span> is the optimal <span class="math inline">\(Q\)</span>-value function if and only if it satisfies <a href="exactdp.html#eq:bellman-optimality-equation">(2.25)</a>. Moreover, the deterministic policy defined by
 <span class="math display">\[
 \pi^\star(x) \in \arg\min_{u \in \mathbb{U}} Q^\star(x,u)
 \]</span>
@@ -706,7 +708,7 @@ with ties broken arbitrarily is an optimal policy.</p>
 <p>We now make a few definitions to interpret Theorem <a href="exactdp.html#thm:mdpbellmanoptimality">2.2</a>. For any vector <span class="math inline">\(Q \in \mathbb{R}^{|\mathbb{X}||\mathbb{U}|}\)</span>, define the greedy policy as
 <span class="math display" id="eq:def-pi-Q">\[\begin{equation}
 \pi_{Q}(x) \in \arg\min_{u \in \mathbb{U}} Q(x,u)
-\tag{2.25}
+\tag{2.26}
 \end{equation}\]</span>
 with ties broken arbitrarily. With this notation, by Theorem <a href="exactdp.html#thm:mdpbellmanoptimality">2.2</a>, the optimal policy is
 <span class="math display">\[
@@ -719,23 +721,23 @@ J_Q(x) = \min_{u \in \mathbb{U}} Q(x,u).
 Note that <span class="math inline">\(J_Q\)</span> has dimension <span class="math inline">\(|\mathbb{X}|\)</span>. With these notations, the <em>Bellman optimality operator</em> is defined as
 <span class="math display" id="eq:bellman-optimality-operator">\[\begin{equation}
 \mathcal{T}Q = g + \gamma P J_Q,
-\tag{2.26}
+\tag{2.27}
 \end{equation}\]</span>
-which is nothing but a matrix representation of the right-hand side of <a href="exactdp.html#eq:bellman-optimality-equation">(2.24)</a>. This allows us to concisely write the Bellman optimality equation <a href="exactdp.html#eq:bellman-optimality-equation">(2.24)</a> as
+which is nothing but a matrix representation of the right-hand side of <a href="exactdp.html#eq:bellman-optimality-equation">(2.25)</a>. This allows us to concisely write the Bellman optimality equation <a href="exactdp.html#eq:bellman-optimality-equation">(2.25)</a> as
 <span class="math display" id="eq:mdp-fixed-point">\[\begin{equation}
 Q = \mathcal{T}Q.
-\tag{2.27}
+\tag{2.28}
 \end{equation}\]</span>
 Therefore, an equivalent way to interpret Theorem <a href="exactdp.html#thm:mdpbellmanoptimality">2.2</a> is that <span class="math inline">\(Q = Q^\star\)</span> if and only if <span class="math inline">\(Q\)</span> is a fixed point to the Bellman optimality operator <span class="math inline">\(\mathcal{T}\)</span>.</p>
 </div>
 <div id="value-iteration" class="section level3 hasAnchor" number="2.2.2">
 <h3><span class="header-section-number">2.2.2</span> Value Iteration<a href="exactdp.html#value-iteration" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>Intepreting the optimal <span class="math inline">\(Q\)</span>-value function as the fixed point to the Bellman optimality operator <a href="exactdp.html#eq:mdp-fixed-point">(2.27)</a> leads us to a natural algorithm for solving the optimal control problem.</p>
+<p>Intepreting the optimal <span class="math inline">\(Q\)</span>-value function as the fixed point to the Bellman optimality operator <a href="exactdp.html#eq:mdp-fixed-point">(2.28)</a> leads us to a natural algorithm for solving the optimal control problem.</p>
 <p>We start with <span class="math inline">\(Q^{(0)}\)</span> being an all-zero vector and then at iteration <span class="math inline">\(t\)</span>, we perform
 <span class="math display">\[
 Q^{(t+1)} \leftarrow \mathcal{T} Q^{(t)},
 \]</span>
-with <span class="math inline">\(\mathcal{T}\)</span> defined in <a href="exactdp.html#eq:bellman-optimality-operator">(2.26)</a>. Let us observe the simplicity of this algorithm: at each iteration, one only needs to perform <span class="math inline">\(\min_{u \in \mathbb{U}} Q^{(t)}(x,u)\)</span>, which is very efficient when <span class="math inline">\(|\mathbb{U}|\)</span> is not too large.</p>
+with <span class="math inline">\(\mathcal{T}\)</span> defined in <a href="exactdp.html#eq:bellman-optimality-operator">(2.27)</a>. Let us observe the simplicity of this algorithm: at each iteration, one only needs to perform <span class="math inline">\(\min_{u \in \mathbb{U}} Q^{(t)}(x,u)\)</span>, which is very efficient when <span class="math inline">\(|\mathbb{U}|\)</span> is not too large.</p>
 <p>The next theorem states this simple algorithm converges to the optimal value function.</p>
 <div class="theorembox">
 <div class="theorem">
@@ -743,7 +745,7 @@ with <span class="math inline">\(\mathcal{T}\)</span> defined in <a href="exactd
 <span class="math display">\[
 Q^{(t+1)} \leftarrow \mathcal{T} Q^{(t)}.
 \]</span>
-Let <span class="math inline">\(\pi^{(k)} = \pi_{Q^{(k)}}\)</span> (see the definition in <a href="exactdp.html#eq:def-pi-Q">(2.25)</a>). For <span class="math inline">\(t \geq \frac{\log \frac{2}{(1-\gamma)^2 \epsilon}}{1-\gamma}\)</span>, we have
+Let <span class="math inline">\(\pi^{(k)} = \pi_{Q^{(k)}}\)</span> (see the definition in <a href="exactdp.html#eq:def-pi-Q">(2.26)</a>). For <span class="math inline">\(t \geq \frac{\log \frac{2}{(1-\gamma)^2 \epsilon}}{1-\gamma}\)</span>, we have
 <span class="math display">\[
 J^{\pi^{(t)}} \leq J^\star + \epsilon \mathbb{1},
 \]</span>
@@ -804,6 +806,75 @@ J(x_0) = \min_{\pi} \sum_{k=0}^{\infty} g(x_k,\pi(x_k)).
 Figure 2.4: Optimal cost-to-go and an optimal trajectory.
 </p>
 </div>
+</div>
+</div>
+<p>Example <a href="exactdp.html#exm:gridworld">2.2</a> shows the simplicity and power of value iteration. However, the states and controls in the grid world are naturally discrete and finite. Is it possible to apply value iteration to optimal control problems where the states and controls live in continuous spaces?</p>
+</div>
+<div id="value-iteration-with-barycentric-interpolation" class="section level3 hasAnchor" number="2.2.3">
+<h3><span class="header-section-number">2.2.3</span> Value Iteration with Barycentric Interpolation<a href="exactdp.html#value-iteration-with-barycentric-interpolation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Let us consider the discrete-time dynamics
+<span class="math display">\[
+x_{k+1} = f(x_k, u_k)
+\]</span>
+where both <span class="math inline">\(x_k\)</span> and <span class="math inline">\(u_k\)</span> live in a continuous space, say <span class="math inline">\(\mathbb{R}^{n}\)</span> and <span class="math inline">\(\mathbb{R}^m\)</span>, respectively.</p>
+<p>A natural idea to apply value iteration is to discretize the state space and control space. For example, suppose <span class="math inline">\(x \in \mathbb{R}^2\)</span> and we have discretized <span class="math inline">\(\mathbb{R}^2\)</span> using <span class="math inline">\(N\)</span> points
+<span class="math display">\[
+\mathcal{S} = \{s_1,\dots,s_N\}
+\]</span>
+that lie on a 2D grid, as shown in Fig. <a href="exactdp.html#fig:barycentric-interpolation">2.5</a>. Assume <span class="math inline">\(x_k \in \mathcal{S}\)</span> lies on the mesh grid, the next state <span class="math inline">\(x_{k+1} = f(x_k,u_k)\)</span> will, however, most likely not lie exactly on one of the grid points.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:barycentric-interpolation"></span>
+<img src="images/barycentric-coordinate.png" alt="Barycentric Interpolation." width="50%" />
+<p class="caption">
+Figure 2.5: Barycentric Interpolation.
+</p>
+</div>
+<p>Nevertheless, <span class="math inline">\(x_{k+1}\)</span> will lie inside a triangle with vertices <span class="math inline">\(s_p, s_q, s_m\)</span>. We will now try to write <span class="math inline">\(x_{k+1}\)</span> using the vertices, that is, to find three numbers <span class="math inline">\(\lambda_p, \lambda_q, \lambda_m\)</span> such that
+<span class="math display">\[
+\lambda_p, \lambda_q, \lambda_m \geq 0, \quad \lambda_p + \lambda_q + \lambda_m = 1, \quad x_{k+1} = \lambda_p s_p + \lambda_q s_q + \lambda_m s_m.
+\]</span>
+<span class="math inline">\(\lambda_p,\lambda_q,\lambda_m\)</span> are called the barycentric coordinates of <span class="math inline">\(x_{k+1}\)</span> in the triangle formed by <span class="math inline">\(s_p,s_q,s_m\)</span>. With the barycentric coordinates, we will assign the transition matrix
+<span class="math display">\[
+P(x_{k+1}=s_p \mid x_k,u_k) = \lambda_p, \quad P(x_{k+1}=s_q \mid x_k,u_k) = \lambda_q, \quad P(x_{k+1}=s_m \mid x_k,u_k) = \lambda_m.
+\]</span></p>
+<p>Let us apply value iteration with barycentric interpolation to the simple pendulum.</p>
+<div class="examplebox">
+<div class="example">
+<p><span id="exm:pendulumvalueiterationbarycentric" class="example"><strong>Example 2.3  (Value Iteration with Barycentric Interpolation on A Simple Pendulum) </strong></span>Consider the continuous-time pendulum dynamics in <a href="exactdp.html#eq:pendulum-dynamics-z-coordinate">(2.15)</a> that is already shifted such that <span class="math inline">\(z=0\)</span> corresponds to the upright position. With time discretization <span class="math inline">\(h\)</span>, we can write the discrete-time dynamics as
+<span class="math display">\[
+z_{k+1} = \dot{z}_k \cdot h + z_k = f&#39;(z_k,u_k) \cdot h + z_k.
+\]</span>
+We are interested in solving the optimal control problem
+<span class="math display">\[
+J(z_0) = \min_{u_k} \left\{ \sum_{k=0}^{\infty} \gamma^k g(x_k,u_k) \right\},
+\]</span>
+where the running cost is simply
+<span class="math display">\[
+g(x_k,u_k) = x_k^T x_k + u_k^2.
+\]</span></p>
+<p>We will use the parameters <span class="math inline">\(m=1,g=9.8,l=1,b=0.1\)</span>, and assume the control is bounded in <span class="math inline">\([-4.9,4.9]\)</span>.</p>
+<p>We want to compute the optimal cost-to-go in the range <span class="math inline">\(z_1 \in [-\pi,\pi]\)</span> and <span class="math inline">\(z_2 \in [-\pi,\pi]\)</span>. We discretize both <span class="math inline">\(z_1\)</span> and <span class="math inline">\(z_2\)</span> using <span class="math inline">\(N\)</span> points, leading to <span class="math inline">\(N^2\)</span> points in the state space. We also discretize <span class="math inline">\(u\)</span> using <span class="math inline">\(N\)</span> points.</p>
+<p>Applying value iteration with <span class="math inline">\(\gamma=0.9\)</span> and <span class="math inline">\(N=50\)</span>, we obtain the optimal cost-to-go in Fig. <a href="exactdp.html#fig:pendulum-VI-J-9">2.6</a>. The value iteration converges in <span class="math inline">\(277\)</span> iterations.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:pendulum-VI-J-9"></span>
+<img src="images/pendulum-VI-J-0.9-1.png" alt="Optimal cost-to-go with discount factor 0.9." width="50%" /><img src="images/pendulum-VI-J-0.9-2.png" alt="Optimal cost-to-go with discount factor 0.9." width="50%" />
+<p class="caption">
+Figure 2.6: Optimal cost-to-go with discount factor 0.9.
+</p>
+</div>
+<p>Applying value iteration with <span class="math inline">\(\gamma=0.99\)</span> and <span class="math inline">\(N=50\)</span>, we obtain the optimal cost-to-go in Fig. <a href="exactdp.html#fig:pendulum-VI-J-99">2.7</a>. The value iteration converges in <span class="math inline">\(2910\)</span> iterations.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:pendulum-VI-J-99"></span>
+<img src="images/pendulum-VI-J-0.99-1.png" alt="Optimal cost-to-go with discount factor 0.99." width="50%" /><img src="images/pendulum-VI-J-0.99-2.png" alt="Optimal cost-to-go with discount factor 0.99." width="50%" />
+<p class="caption">
+Figure 2.7: Optimal cost-to-go with discount factor 0.99.
+</p>
+</div>
+<p>Applying value iteration with <span class="math inline">\(\gamma=0.999\)</span> and <span class="math inline">\(N=50\)</span>, we obtain the optimal cost-to-go in Fig. <a href="exactdp.html#fig:pendulum-VI-J-999">2.8</a>. The value iteration converges in <span class="math inline">\(28850\)</span> iterations.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:pendulum-VI-J-999"></span>
+<img src="images/pendulum-VI-J-0.999-1.png" alt="Optimal cost-to-go with discount factor 0.999." width="50%" /><img src="images/pendulum-VI-J-0.999-2.png" alt="Optimal cost-to-go with discount factor 0.999." width="50%" />
+<p class="caption">
+Figure 2.8: Optimal cost-to-go with discount factor 0.999.
+</p>
+</div>
+<p>You can find the Matlab code <a href="https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/pendulum_value_iteration_barycentric.m">here</a>.</p>
 </div>
 </div>
 
