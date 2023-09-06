@@ -5491,52 +5491,6 @@ Here we provide the CVXPY codes for the above five convex optimization examples.
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{algebraic-techniques-and-sum-of-squares}{%
-\chapter{Algebraic Techniques and Sum-of-Squares}\label{algebraic-techniques-and-sum-of-squares}}
-
-\hypertarget{algebra}{%
-\section{Algebra}\label{algebra}}
-
-\hypertarget{polynomials}{%
-\subsection{Polynomials}\label{polynomials}}
-
-\begin{definition}[Monomial,Polynomial]
-\protect\hypertarget{def:monomial}{}\label{def:monomial}A \textbf{monomial} in \(x_1,\cdots,x_n\) is a product of the form \(x_1^{\alpha_1}\cdot x_2^{\alpha_2}\cdots x_n^{\alpha_n}\). The \textbf{total degree} of the monomial is \(\alpha_1+\cdots+\alpha_n\).
-
-A \textbf{polynomial} \(f\) in \(x_1,\cdots,x_n\) with coefficients in \(\mathbb{R}\) is a finite linear combination (with coefficients in \(\mathbb{R}\)) of monomials. We will write a polynomial \(f\) in the form: \(\Sigma_\alpha a_\alpha x^\alpha\). where the sum is over a finite number of n-tuples \(\alpha = (\alpha_1,\cdots,\alpha_n)\). The set of all polynomials in \(x_1,\cdots,x_n\) with coefficients in \(\mathbb{R}\) is denoted \(\mathbb{R}[x_1,\cdots,x_n]\)
-\end{definition}
-
-\begin{definition}[Affine Variety]
-\protect\hypertarget{def:affinevariety}{}\label{def:affinevariety}Let \(f_1,\cdots,f_s\in\mathbb{R}[x_1,\cdots,x_n]\), we set \[V(f_1,\cdots,f_s) = \{(a_1,\cdots,a_n)\in\mathbb{R}^n|f_i(a_1,\cdots a_n)=0 \quad \forall i\leq i\leq s\}\] We call \(V(f_1,\cdots,f_s)\) the \textbf{affine variety} defined bt \(f_1,\cdots,f_s\)
-\end{definition}
-
-\begin{definition}[Ideal]
-\protect\hypertarget{def:ideal}{}\label{def:ideal}A subset \(I\subset \mathbb{R}[x_1,\cdots,x_n]\) is an ideal if it satisfies:
-(i) Contains additive identity: \(0\in I\)
-(ii) Closed under addition: For all \(f,g\in I\), \(f+g\in I\)
-(iii) Absorption of multiplication: If \(f\in I\) and \(h\in \mathbb{R}[x_1,\cdots,x_n]\), then \(hf\in I\)
-\end{definition}
-
-\begin{definition}[Sum of squares,Quadratic Module and Preordering]
-\protect\hypertarget{def:sosquadpreorder}{}\label{def:sosquadpreorder}\leavevmode
-
-\begin{verbatim}
-Sum of squares
-\end{verbatim}
-
-\end{definition}
-
-\hypertarget{representation-of-nonnegative-polynomial-univariate-case}{%
-\subsection{Representation of nonnegative polynomial: Univariate case}\label{representation-of-nonnegative-polynomial-univariate-case}}
-
-\begin{theorem}[Global version]
-\protect\hypertarget{thm:uniglobal}{}\label{thm:uniglobal}A polynomial \(p\in\mathbb{R}[x]\) of even degree is nonnegative if and only if it can be written as a sum of squares of other polynomials, i.e., \(p(x) = \Sigma^k_{i=1}[h_i(x)]^2\), with \(h_i\in R[x], i = 1,\cdots, k\).
-\end{theorem}
-
-\begin{theorem}[Compact interval version]
-\protect\hypertarget{thm:unifiniteinterval}{}\label{thm:unifiniteinterval}A polynomial \(p\in\mathbb{R}[x]\) of even degree is nonnegative if and only if it can be written as a sum of squares of other polynomials, i.e., \(p(x) = \Sigma^k_{i=1}[h_i(x)]^2\), with \(h_i\in R[x], i = 1,\cdots, k\).
-\end{theorem}
-
 \hypertarget{app-lti-system-theory}{%
 \chapter{Linear System Theory}\label{app-lti-system-theory}}
 
@@ -6595,14 +6549,14 @@ The following statements are equivalent \citep{zhou1996book-robust}:
 
 \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
 
-\hypertarget{algebraic-techniques-and-sum-of-squares-1}{%
-\chapter{Algebraic Techniques and Sum-of-Squares}\label{algebraic-techniques-and-sum-of-squares-1}}
+\hypertarget{algebraic-techniques-and-sum-of-squares}{%
+\chapter{Algebraic Techniques and Sum-of-Squares}\label{algebraic-techniques-and-sum-of-squares}}
 
-\hypertarget{algebra-1}{%
-\section{Algebra}\label{algebra-1}}
+\hypertarget{algebra}{%
+\section{Algebra}\label{algebra}}
 
-\hypertarget{polynomials-1}{%
-\subsection{Polynomials}\label{polynomials-1}}
+\hypertarget{polynomials}{%
+\subsection{Polynomials}\label{polynomials}}
 
 \begin{definition}[Monomial,Polynomial]
 \protect\hypertarget{def:monomial}{}\label{def:monomial}A \textbf{monomial} in \(x_1,\cdots,x_n\) is a product of the form \(x_1^{\alpha_1}\cdot x_2^{\alpha_2}\cdots x_n^{\alpha_n}\). The \textbf{total degree} of the monomial is \(\alpha_1+\cdots+\alpha_n\).
@@ -6630,8 +6584,8 @@ Sum of squares
 
 \end{definition}
 
-\hypertarget{representation-of-nonnegative-polynomial-univariate-case-1}{%
-\subsection{Representation of nonnegative polynomial: Univariate case}\label{representation-of-nonnegative-polynomial-univariate-case-1}}
+\hypertarget{representation-of-nonnegative-polynomial-univariate-case}{%
+\subsection{Representation of nonnegative polynomial: Univariate case}\label{representation-of-nonnegative-polynomial-univariate-case}}
 
 \begin{theorem}[Global version]
 \protect\hypertarget{thm:uniglobal}{}\label{thm:uniglobal}A polynomial \(p\in\mathbb{R}[x]\) of even degree is nonnegative if and only if it can be written as a sum of squares of other polynomials, i.e., \(p(x) = \Sigma^k_{i=1}[h_i(x)]^2\), with \(h_i\in R[x], i = 1,\cdots, k\).
