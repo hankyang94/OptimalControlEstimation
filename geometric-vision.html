@@ -638,20 +638,13 @@ Figure 7.2: Sphere and tangent space
 </div>
 <p>Lie group <span class="math inline">\(SO(3)\)</span> is related to its Lie algebra <span class="math inline">\(\mathfrak{so}(3)\)</span>. We will state without proof that the Lie algebra <span class="math inline">\(\mathfrak{so}(3)\)</span> is the set of <span class="math inline">\(3\times 3\)</span> skew symmetric matrices.</p>
 <p><strong>Exponential Map and Logarithm Map:</strong></p>
-<p>Looking at the sphere in the picture, it seems natural for us to bridge the endpoint of the green curved line, which is still on the sphere, with the endpoint of the red line, which is in the tangent space. This retraction is called exponential map. For matrix Lie group (including <span class="math inline">\(SO(3)\)</span>), the exponential map coinsides with the matrix exponential.</p>
-<div class="definitionbox">
-<div class="definition">
-<p><span id="def:matrixexp" class="definition"><strong>Definition 7.3  (Matrix exponential) </strong></span>Given a <span class="math inline">\(n\times n\)</span> matrix <span class="math inline">\(A\)</span>, the matrix exponential of <span class="math inline">\(A\)</span> is defined as:
-<span class="math display">\[e^A = \sum_{p=0}^\infty \frac{A^p}{p!}\]</span>
-The matrix exponential is well defined, and every entry converges absolutely.</p>
+<p>Looking at the sphere in the picture, it seems natural for us to bridge the endpoint of the green curved line, which is still on the sphere, with the endpoint of the red line, which is in the tangent space. This retraction is called exponential map. For matrix Lie group (including <span class="math inline">\(SO(3)\)</span>), the exponential map coinsides with the matrix exponential (See <a href="linear-algebra-and-differential-equations.html#linear-algebra">A.1</a>.)</p>
+<p>We will check this on the <span class="math inline">\(SO(3)\)</span> case:</p>
+<div class="theorembox">
+<div class="theorem">
+<p><span id="thm:matrixexprotation" class="theorem"><strong>Theorem 7.2  (Matrix exponential for rotations) </strong></span>The exponential map <span class="math inline">\(\text{exp:}\mathfrak{so}(3)\to SO(3)\)</span> is well-defined.</p>
 </div>
 </div>
-<p>We will check this on the <span class="math inline">\(SO(3)\)</span> case:
-::: {.theorembox}
-::: {.theorem #matrixexprotation name=“Matrix exponential for rotations”}
-The exponential map <span class="math inline">\(\text{exp:}\mathfrak{so}(3)\to SO(3)\)</span> is well-defined.
-:::
-:::</p>
 <div class="proofbox">
 <div class="proof">
 <p><span id="unlabeled-div-15" class="proof"><em>Proof</em>. </span>Consider a <span class="math inline">\(3\times 3\)</span> skew symmetric matrix <span class="math inline">\(A = \begin{bmatrix} 0 &amp;-c &amp;b\\c &amp;0 &amp;-a\\-b &amp;a &amp;0 \end{bmatrix}\)</span>, define <span class="math inline">\(w = \begin{bmatrix} a\\b\\c \end{bmatrix}, \hat{w} = w/\|w\|, \theta=\|w\|\)</span>. Then <span class="math inline">\(A = w_\times\)</span>. Consider <span class="math inline">\(\hat{w}_\times\)</span>, using the properties of the cross product, we have:<span class="math inline">\(\hat{w}^3_\times = -\hat{w}_\times\)</span>. Thus we can know that:

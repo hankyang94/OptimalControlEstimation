@@ -3867,20 +3867,13 @@ Lie group \(SO(3)\) is related to its Lie algebra \(\mathfrak{so}(3)\). We will 
 
 \textbf{Exponential Map and Logarithm Map:}
 
-Looking at the sphere in the picture, it seems natural for us to bridge the endpoint of the green curved line, which is still on the sphere, with the endpoint of the red line, which is in the tangent space. This retraction is called exponential map. For matrix Lie group (including \(SO(3)\)), the exponential map coinsides with the matrix exponential.
-
-\begin{definition}[Matrix exponential]
-\protect\hypertarget{def:matrixexp}{}\label{def:matrixexp}Given a \(n\times n\) matrix \(A\), the matrix exponential of \(A\) is defined as:
-\[e^A = \sum_{p=0}^\infty \frac{A^p}{p!}\]
-The matrix exponential is well defined, and every entry converges absolutely.
-\end{definition}
+Looking at the sphere in the picture, it seems natural for us to bridge the endpoint of the green curved line, which is still on the sphere, with the endpoint of the red line, which is in the tangent space. This retraction is called exponential map. For matrix Lie group (including \(SO(3)\)), the exponential map coinsides with the matrix exponential (See \ref{linear-algebra}.)
 
 We will check this on the \(SO(3)\) case:
-::: \{.theorembox\}
-::: \{.theorem \#matrixexprotation name=``Matrix exponential for rotations''\}
-The exponential map \(\text{exp:}\mathfrak{so}(3)\to SO(3)\) is well-defined.
-:::
-:::
+
+\begin{theorem}[Matrix exponential for rotations]
+\protect\hypertarget{thm:matrixexprotation}{}\label{thm:matrixexprotation}The exponential map \(\text{exp:}\mathfrak{so}(3)\to SO(3)\) is well-defined.
+\end{theorem}
 
 \begin{proof}
 Consider a \(3\times 3\) skew symmetric matrix \(A = \begin{bmatrix} 0 &-c &b\\c &0 &-a\\-b &a &0 \end{bmatrix}\), define \(w = \begin{bmatrix} a\\b\\c \end{bmatrix}, \hat{w} = w/\|w\|, \theta=\|w\|\). Then \(A = w_\times\). Consider \(\hat{w}_\times\), using the properties of the cross product, we have:\(\hat{w}^3_\times = -\hat{w}_\times\). Thus we can know that:
