@@ -53,6 +53,35 @@ Some important examples include:
 
 
 ## Solving an Ordinary Differential Equation
+A **differential equation** is an equation with a function and its derivatives. Compared to **partial differential equation (PDE)** that consists of partial derivatives, throughout this textbook we will mainly focus on **ordinary differential equations (ODEs)**, including but not limited to, the solutions, convergence and stability analysis.
+
+An example of ODE looks like this:
+
+\begin{equation}
+x+\frac{dx}{dt}=5t,\quad t\in[0,T].
+(\#eq:app-ode-example)
+\end{equation}
+
+
+::: {.definitionbox}
+::: {.definition #ode name="Ordinary Differential Equation"}
+  In general, an ODE of **order $k$**, or, a $k$-th order ODE, is in the form of
+  $$ F(t, x, x^\prime, \ldots, x^{(k)})=0.$$
+  Further, if $F$ is linear in $x,x',\ldots,x^{(k)}$, we call it a **linear ODE**. If a linear ODE with $F=x^{(k)} + \sum_{i=0}^{k-1}a_i(t)x^{(i)}$ that does not independently relate to $t$, we call it **homogeneous**. Note that $x(t)\equiv 0$ will always be a trivial solution for homogeneous ODE.
+:::
+:::
+
+For example, the equation \@ref(eq:app-ode-example) is a linear ODE but not homogeneous.
+
+The solution, a function $x=x(t)$ is not unique in general, and additional conditions are required. For example, we can have one of the following conditions for the above ODE:
+
+- Initial condition, e.g., $x(0)=0$ gives the constraint that the function at initial time $t=0$ starts at zero point.
+
+- End-point condition, e.g., $x(T)=0$ implies that the dynamics should end at zero.
+
+- (Initial) velocity condition, e.g., $\frac{dx}{dt}|_{t=0}=0$ suggests that at the start time the "slope"/"velocity" of $x$ is zero.
+
+For higher-order ODEs, the conditions may be much more complicated to guarantee uniqueness.
 
 ### Separation of Variables
 
