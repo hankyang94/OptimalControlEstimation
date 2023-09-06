@@ -400,6 +400,27 @@ div.csl-indent {
 </div>
 <div id="solving-an-ordinary-differential-equation" class="section level2 hasAnchor" number="10.2">
 <h2><span class="header-section-number">A.2</span> Solving an Ordinary Differential Equation<a href="linear-algebra-and-differential-equations.html#solving-an-ordinary-differential-equation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>A <strong>differential equation</strong> is an equation with a function and its derivatives. Compared to <strong>partial differential equation (PDE)</strong> that consists of partial derivatives, throughout this textbook we will mainly focus on <strong>ordinary differential equations (ODEs)</strong>, including but not limited to, the solutions, convergence and stability analysis.</p>
+<p>An example of ODE looks like this:</p>
+<p><span class="math display" id="eq:app-ode-example">\[\begin{equation}
+x+\frac{dx}{dt}=5t,\quad t\in[0,T].
+\tag{A.1}
+\end{equation}\]</span></p>
+<div class="definitionbox">
+<div class="definition">
+<p><span id="def:ode" class="definition"><strong>Definition A.3  (Ordinary Differential Equation) </strong></span>In general, an ODE of <strong>order <span class="math inline">\(k\)</span></strong>, or, a <span class="math inline">\(k\)</span>-th order ODE, is in the form of
+<span class="math display">\[ F(t, x, x^\prime, \ldots, x^{(k)})=0.\]</span>
+Further, if <span class="math inline">\(F\)</span> is linear in <span class="math inline">\(x,x&#39;,\ldots,x^{(k)}\)</span>, we call it a <strong>linear ODE</strong>. If a linear ODE with <span class="math inline">\(F=x^{(k)} + \sum_{i=0}^{k-1}a_i(t)x^{(i)}\)</span> that does not independently relate to <span class="math inline">\(t\)</span>, we call it <strong>homogeneous</strong>. Note that <span class="math inline">\(x(t)\equiv 0\)</span> will always be a trivial solution for homogeneous ODE.</p>
+</div>
+</div>
+<p>For example, the equation <a href="linear-algebra-and-differential-equations.html#eq:app-ode-example">(A.1)</a> is a linear ODE but not homogeneous.</p>
+<p>The solution, a function <span class="math inline">\(x=x(t)\)</span> is not unique in general, and additional conditions are required. For example, we can have one of the following conditions for the above ODE:</p>
+<ul>
+<li><p>Initial condition, e.g., <span class="math inline">\(x(0)=0\)</span> gives the constraint that the function at initial time <span class="math inline">\(t=0\)</span> starts at zero point.</p></li>
+<li><p>End-point condition, e.g., <span class="math inline">\(x(T)=0\)</span> implies that the dynamics should end at zero.</p></li>
+<li><p>(Initial) velocity condition, e.g., <span class="math inline">\(\frac{dx}{dt}|_{t=0}=0\)</span> suggests that at the start time the “slope”/“velocity” of <span class="math inline">\(x\)</span> is zero.</p></li>
+</ul>
+<p>For higher-order ODEs, the conditions may be much more complicated to guarantee uniqueness.</p>
 <div id="separation-of-variables" class="section level3 hasAnchor" number="10.2.1">
 <h3><span class="header-section-number">A.2.1</span> Separation of Variables<a href="linear-algebra-and-differential-equations.html#separation-of-variables" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 </div>

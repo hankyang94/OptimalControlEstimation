@@ -4538,6 +4538,36 @@ Some important examples include:
 \hypertarget{solving-an-ordinary-differential-equation}{%
 \section{Solving an Ordinary Differential Equation}\label{solving-an-ordinary-differential-equation}}
 
+A \textbf{differential equation} is an equation with a function and its derivatives. Compared to \textbf{partial differential equation (PDE)} that consists of partial derivatives, throughout this textbook we will mainly focus on \textbf{ordinary differential equations (ODEs)}, including but not limited to, the solutions, convergence and stability analysis.
+
+An example of ODE looks like this:
+
+\begin{equation}
+x+\frac{dx}{dt}=5t,\quad t\in[0,T].
+\label{eq:app-ode-example}
+\end{equation}
+
+\begin{definition}[Ordinary Differential Equation]
+\protect\hypertarget{def:ode}{}\label{def:ode}In general, an ODE of \textbf{order \(k\)}, or, a \(k\)-th order ODE, is in the form of
+\[ F(t, x, x^\prime, \ldots, x^{(k)})=0.\]
+Further, if \(F\) is linear in \(x,x',\ldots,x^{(k)}\), we call it a \textbf{linear ODE}. If a linear ODE with \(F=x^{(k)} + \sum_{i=0}^{k-1}a_i(t)x^{(i)}\) that does not independently relate to \(t\), we call it \textbf{homogeneous}. Note that \(x(t)\equiv 0\) will always be a trivial solution for homogeneous ODE.
+\end{definition}
+
+For example, the equation \eqref{eq:app-ode-example} is a linear ODE but not homogeneous.
+
+The solution, a function \(x=x(t)\) is not unique in general, and additional conditions are required. For example, we can have one of the following conditions for the above ODE:
+
+\begin{itemize}
+\item
+  Initial condition, e.g., \(x(0)=0\) gives the constraint that the function at initial time \(t=0\) starts at zero point.
+\item
+  End-point condition, e.g., \(x(T)=0\) implies that the dynamics should end at zero.
+\item
+  (Initial) velocity condition, e.g., \(\frac{dx}{dt}|_{t=0}=0\) suggests that at the start time the ``slope''/``velocity'' of \(x\) is zero.
+\end{itemize}
+
+For higher-order ODEs, the conditions may be much more complicated to guarantee uniqueness.
+
 \hypertarget{separation-of-variables}{%
 \subsection{Separation of Variables}\label{separation-of-variables}}
 
