@@ -167,6 +167,7 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="1.1" data-path="formulation.html"><a href="formulation.html#the-basic-problem"><i class="fa fa-check"></i><b>1.1</b> The Basic Problem</a></li>
 <li class="chapter" data-level="1.2" data-path="formulation.html"><a href="formulation.html#dynamic-programming-and-principle-of-optimality"><i class="fa fa-check"></i><b>1.2</b> Dynamic Programming and Principle of Optimality</a></li>
+<li class="chapter" data-level="1.3" data-path="formulation.html"><a href="formulation.html#infinite-horizon-formulation"><i class="fa fa-check"></i><b>1.3</b> Infinite-horizon Formulation</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="exactdp.html"><a href="exactdp.html"><i class="fa fa-check"></i><b>2</b> Exact Dynamic Programming</a>
 <ul>
@@ -175,7 +176,7 @@ div.csl-indent {
 <li class="chapter" data-level="2.1.1" data-path="exactdp.html"><a href="exactdp.html#infinite-horizon-lqr"><i class="fa fa-check"></i><b>2.1.1</b> Infinite-Horizon LQR</a></li>
 <li class="chapter" data-level="2.1.2" data-path="exactdp.html"><a href="exactdp.html#lqr-with-constraints"><i class="fa fa-check"></i><b>2.1.2</b> LQR with Constraints</a></li>
 </ul></li>
-<li class="chapter" data-level="2.2" data-path="exactdp.html"><a href="exactdp.html#markov-decision-process"><i class="fa fa-check"></i><b>2.2</b> Markov Decision Process</a>
+<li class="chapter" data-level="2.2" data-path="exactdp.html"><a href="exactdp.html#mdp-exact-dp"><i class="fa fa-check"></i><b>2.2</b> Markov Decision Process</a>
 <ul>
 <li class="chapter" data-level="2.2.1" data-path="exactdp.html"><a href="exactdp.html#bellman-optimality-equations"><i class="fa fa-check"></i><b>2.2.1</b> Bellman Optimality Equations</a></li>
 <li class="chapter" data-level="2.2.2" data-path="exactdp.html"><a href="exactdp.html#value-iteration"><i class="fa fa-check"></i><b>2.2.2</b> Value Iteration</a></li>
@@ -434,7 +435,7 @@ Then the truncated policy <span class="math inline">\(\{\mu^\star_i,\mu^\star_{i
 <div class="theorem">
 <p><span id="thm:dynamicprogramming" class="theorem"><strong>Theorem 1.2  (Dynamic Programming) </strong></span>The optimal value function <span class="math inline">\(J^\star(x_0)\)</span> of the optimal control problem <a href="formulation.html#def:basicproblem">1.1</a> (starting from any given initial condition <span class="math inline">\(x_0\)</span>) is equal to <span class="math inline">\(J_0(x_0)\)</span>, which can be computed backwards and recursively as
 <span class="math display" id="eq:dpbackwardrecursion">\[\begin{align}
-J_N(X_N) &amp;= g_N(x_N) \\
+J_N(x_N) &amp;= g_N(x_N) \\
 J_k(x_k) &amp;= \min_{u_k \in \mathbb{U}} \displaystyle \mathbb{E}_{w_k \sim P_k(\cdot \mid x_k, u_k)} \displaystyle \left\{ g_k(x_k,u_k) + J_{k+1}(f_k(x_k,u_k,w_k) ) \right\}, \ k=N-1,\dots,1,0.
 \tag{1.5}
 \end{align}\]</span>
@@ -479,6 +480,55 @@ J_{N-1}(x_{N-1}) = \min_{u_{N-1} \in \mathbb{U}} \mathbb{E}_{w_{N-1}} \left\{ g_
 </ul>
 <p>Due to these challenges, only in a very limited amount of cases will we be able to perform <em>exact dynamic programming</em>. For example, when the state space <span class="math inline">\(\mathbb{X}\)</span> and control space <span class="math inline">\(\mathbb{U}\)</span> are discrete, we can design efficient algorithms for exact DP. For another example, when the dynamics <span class="math inline">\(f_k\)</span> is linear and the cost <span class="math inline">\(g_k\)</span> is quadratic, we will also be able to compute <span class="math inline">\(J_k(x_k)\)</span> in closed form (though this sounds a bit surprising!). We will study these problems in more details in Chapter <a href="exactdp.html#exactdp">2</a>.</p>
 <p>For general optimal control problems with continuous state space and control space (and most problems we care about in robotics), unfortunately, we will have to resort to <em>approximate dynamic programming</em>, basically variations of the DP algorithm <a href="formulation.html#eq:dpbackwardrecursion">(1.5)</a> where approximate value functions <span class="math inline">\(J_k(x_k)\)</span> and/or control policies <span class="math inline">\(\mu_k(x_k)\)</span> are used (e.g., with neural networks and machine learning).<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> We will introduce several popular approximation schemes in Chapter <a href="approximatedp.html#approximatedp">3</a>. We will see that, although exact DP is not possible anymore, the Bellman principle of optimality still remains one of the most important guidelines for designing approximation algorithms. Efficient algorithms for approximate dynamic programming, preferrably with performance guarantees, still remain an active area of research.</p>
+</div>
+<div id="infinite-horizon-formulation" class="section level2 hasAnchor" number="1.3">
+<h2><span class="header-section-number">1.3</span> Infinite-horizon Formulation<a href="formulation.html#infinite-horizon-formulation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>So far we are focusing on problems with a finite horizon <span class="math inline">\(N\)</span>, what if the horizon <span class="math inline">\(N\)</span> tends to infinity?</p>
+<p>In particular, consider the controller <span class="math inline">\(\pi\)</span> now contains an infinite sequence of functions
+<span class="math display">\[
+\pi = \{ \mu_0,\dots \}
+\]</span>
+and let us try to find the best policy that minimizes the cost-to-go starting from <span class="math inline">\(x_0\)</span> subject to the same dynamics as in <a href="formulation.html#eq:discrete-time-dynamics">(1.1)</a> (with <span class="math inline">\(N\)</span> tends to infinity and <span class="math inline">\(f_k \equiv f\)</span>)
+<span class="math display" id="eq:cost-to-go-infinite">\[\begin{equation}
+J_{\pi}(x_0) = \mathbb{E} \left\{ \sum_{k=0}^{\infty} g(x_k, \mu_k(x_k)) \right\}
+\tag{1.16},
+\end{equation}\]</span>
+where the expectation is taken over the (infinite number of) disturbances <span class="math inline">\(\{w_0,\dots \}\)</span>.</p>
+<p>We can write <a href="formulation.html#eq:cost-to-go-infinite">(1.16)</a> equivalently as
+<span class="math display">\[
+J_{\pi}(x_0) = \lim_{N \rightarrow \infty} J_\pi^N(x_0),
+\]</span>
+where, with a slight abuse of notation, <span class="math inline">\(J_\pi^N(x_0)\)</span> is <a href="formulation.html#eq:expected-cost">(1.4)</a> with <span class="math inline">\(g_N(x_N)\)</span> set to zero.</p>
+<p>Now we invoke the dynamic programming algorithm in Theorem <a href="formulation.html#thm:dynamicprogramming">1.2</a>. We will first set <span class="math inline">\(J_N(x_N) = g_N(x_N)=0\)</span>, and then compute backwards in time
+<span class="math display">\[
+J_k(x_k) = \min_{u_k \in \mathbb{U}} \mathbb{E}_{w_k} \left\{ g(x_k,u_k) + J_{k+1}(f(x_k,u_k,w_k)) \right\}, \quad k=N-1,\dots,0.
+\]</span>
+To make our presentation easier later, the above DP iterations are equivalent to
+<span class="math display" id="eq:dp-infinite-reversed">\[\begin{align}
+J_0(x_0) &amp;= 0 \\
+J_{k+1}(x_{k+1}) &amp;= \min_{u_k \in \mathbb{U}} \mathbb{E}_{w_k} \left\{ g(x_k,u_k) + J_k(f(x_k,u_k,w_k))  \right\}, \quad k=0,\dots,N, \tag{1.17}
+\end{align}\]</span>
+where I have done nothing but reversed the time indexing.</p>
+<p>Observe that when <span class="math inline">\(N \rightarrow \infty\)</span>, <a href="formulation.html#eq:dp-infinite-reversed">(1.17)</a> performs the recursion an infinite number of times.</p>
+<p>We may want to conjecture three natural consequences of the infinite-horizon solution:</p>
+<ol style="list-style-type: decimal">
+<li><p>The optimal infinite-horizon cost is the limit of the corresponding <span class="math inline">\(N\)</span>-stage optimal cost as <span class="math inline">\(N \rightarrow \infty\)</span>, i.e.,
+<span class="math display">\[
+J^\star(x) = \lim_{N \rightarrow \infty} J_N(x_N),
+\]</span>
+where <span class="math inline">\(J_N(x_N)\)</span> is computed from DP <a href="formulation.html#eq:dp-infinite-reversed">(1.17)</a>.</p></li>
+<li><p>Bacause <span class="math inline">\(J^\star\)</span> is the result of DP <a href="formulation.html#eq:dp-infinite-reversed">(1.17)</a> when <span class="math inline">\(N\)</span> tends to infinity, if the DP algorithm converges to <span class="math inline">\(J^\star\)</span>, then <span class="math inline">\(J^\star\)</span> should satisfy
+<span class="math display" id="eq:bellman-optimality-equation-infinite-horizon">\[\begin{equation}
+J^\star(x) = \min_{u \in \mathbb{U}} \mathbb{E}_w \left\{ g(x,u) + J^\star(f(x,u,w)) \right\}, \quad \forall x
+\tag{1.18}
+\end{equation}\]</span>
+Note that <a href="formulation.html#eq:bellman-optimality-equation-infinite-horizon">(1.18)</a> is an <em>equation</em> that <span class="math inline">\(J^\star(x)\)</span> should satisfy for all <span class="math inline">\(x\)</span>. In fact, this is called the <em>Bellman Optimality Equation</em>.</p></li>
+<li><p>If <span class="math inline">\(\mu(x)\)</span> satisfies the Bellman equation <a href="formulation.html#eq:bellman-optimality-equation-infinite-horizon">(1.18)</a>, i.e., <span class="math inline">\(u = \mu(x)\)</span> minimizes the right-hand side of <a href="formulation.html#eq:bellman-optimality-equation-infinite-horizon">(1.18)</a> for any <span class="math inline">\(x\)</span>, then the policy <span class="math inline">\(\pi = \{\mu,\mu,\dots \}\)</span> should be optimal. This is saying, the optimal policy is time-invariant.</p></li>
+</ol>
+<p>In fact, all of our conjectures above are true, for most infinite-horizon problems. For example, in Chapter <a href="exactdp.html#mdp-exact-dp">2.2</a>, we will investigate the Markov Decision Process (MDP) formulation, under which the above conjectures all hold. However, one should know that there also exist many infinite-horizon problems where our conjectures will fail, and there are many mathematical subtleties in rigorously proving the conjectures.</p>
+<p>The reader should see why it can be more convenient to study the infinite-horizon formulation: (i) the optimal cost-to-go is only a function of the state <span class="math inline">\(x\)</span>, but not a function of timestep <span class="math inline">\(k\)</span>; (ii) the optimal policy is time-invariant and easier to implement.</p>
+<p><strong>Value Iteration</strong>. The Bellman optimality equation <a href="formulation.html#eq:bellman-optimality-equation-infinite-horizon">(1.18)</a> also suggests a natural algorithm for computing <span class="math inline">\(J^\star(x)\)</span>. We start with <span class="math inline">\(J(x)\)</span> being all zero, and then iteratively update <span class="math inline">\(J(x)\)</span> by performing the right-hand side of <a href="formulation.html#eq:bellman-optimality-equation-infinite-horizon">(1.18)</a>. This is the famous <em>value iteration</em> algorithm. We will study it in Chapter <a href="exactdp.html#mdp-exact-dp">2.2</a>.</p>
+<p>As practitioners, we may simply execute the dynamic programming (value iteration) algoithm without carefully checking if our problem satisfies the assumptions. If the algorithm converges, oftentimes the problem indeed satisfies the assumptions. Otherwise, the algorithm may fail to converge, as we will see in Example <a href="exactdp.html#exm:pendulumvalueiterationbarycentric">2.3</a>.</p>
 
 </div>
 </div>

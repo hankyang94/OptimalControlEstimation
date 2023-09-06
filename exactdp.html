@@ -167,6 +167,7 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="1.1" data-path="formulation.html"><a href="formulation.html#the-basic-problem"><i class="fa fa-check"></i><b>1.1</b> The Basic Problem</a></li>
 <li class="chapter" data-level="1.2" data-path="formulation.html"><a href="formulation.html#dynamic-programming-and-principle-of-optimality"><i class="fa fa-check"></i><b>1.2</b> Dynamic Programming and Principle of Optimality</a></li>
+<li class="chapter" data-level="1.3" data-path="formulation.html"><a href="formulation.html#infinite-horizon-formulation"><i class="fa fa-check"></i><b>1.3</b> Infinite-horizon Formulation</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="exactdp.html"><a href="exactdp.html"><i class="fa fa-check"></i><b>2</b> Exact Dynamic Programming</a>
 <ul>
@@ -175,7 +176,7 @@ div.csl-indent {
 <li class="chapter" data-level="2.1.1" data-path="exactdp.html"><a href="exactdp.html#infinite-horizon-lqr"><i class="fa fa-check"></i><b>2.1.1</b> Infinite-Horizon LQR</a></li>
 <li class="chapter" data-level="2.1.2" data-path="exactdp.html"><a href="exactdp.html#lqr-with-constraints"><i class="fa fa-check"></i><b>2.1.2</b> LQR with Constraints</a></li>
 </ul></li>
-<li class="chapter" data-level="2.2" data-path="exactdp.html"><a href="exactdp.html#markov-decision-process"><i class="fa fa-check"></i><b>2.2</b> Markov Decision Process</a>
+<li class="chapter" data-level="2.2" data-path="exactdp.html"><a href="exactdp.html#mdp-exact-dp"><i class="fa fa-check"></i><b>2.2</b> Markov Decision Process</a>
 <ul>
 <li class="chapter" data-level="2.2.1" data-path="exactdp.html"><a href="exactdp.html#bellman-optimality-equations"><i class="fa fa-check"></i><b>2.2.1</b> Bellman Optimality Equations</a></li>
 <li class="chapter" data-level="2.2.2" data-path="exactdp.html"><a href="exactdp.html#value-iteration"><i class="fa fa-check"></i><b>2.2.2</b> Value Iteration</a></li>
@@ -574,8 +575,8 @@ Figure 2.2: LQR stabilization of a simple pendulum.
 <p>Let’s explore LQR with constraints in Exercise <a href="psets.html#exr:lqrconstraints">9.1</a></p>
 </div>
 </div>
-<div id="markov-decision-process" class="section level2 hasAnchor" number="2.2">
-<h2><span class="header-section-number">2.2</span> Markov Decision Process<a href="exactdp.html#markov-decision-process" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="mdp-exact-dp" class="section level2 hasAnchor" number="2.2">
+<h2><span class="header-section-number">2.2</span> Markov Decision Process<a href="exactdp.html#mdp-exact-dp" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>In Section <a href="exactdp.html#lqr">2.1</a>, we see that linear dynamics and quadratic costs leads to exact dynamic programming. We now introduce another setup where the number of states and controls is finite (as opposed to the LQR case where <span class="math inline">\(x_k\)</span> and <span class="math inline">\(u_k\)</span> live in continuous spaces). We will see that we can execute DP exactly in this setup as well.</p>
 <p>Optimal control in the case of finite states and controls is typically introduced in the framework of a <em>Markov Decision Process</em> (MDP, which is common in Reinforcement Learning).
 There are many variations of a MDP, and here we only focus on the discounted infinite-horizon MDP. For a more complete treatment of MDPs, I suggest checking out <a href="https://shamulent.github.io/CS_Stat184_Fall23.html">this course at Harvard</a>.</p>
