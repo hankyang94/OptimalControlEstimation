@@ -1,0 +1,49 @@
+# Algebraic Techniques and Sum-of-Squares
+
+## Algebra
+
+### Polynomials
+
+::: {.definitionbox}
+::: {.definition #monomial name="Monomial,Polynomial"}
+  A **monomial** in $x_1,\cdots,x_n$ is a product of the form $x_1^{\alpha_1}\cdot x_2^{\alpha_2}\cdots x_n^{\alpha_n}$. The **total degree** of the monomial is $\alpha_1+\cdots+\alpha_n$.
+  
+  A **polynomial** $f$ in $x_1,\cdots,x_n$ with coefficients in $\mathbb{R}$ is a finite linear combination (with coefficients in $\mathbb{R}$) of monomials. We will write a polynomial $f$ in the form: $\Sigma_\alpha a_\alpha x^\alpha$. where the sum is over a finite number of n-tuples $\alpha = (\alpha_1,\cdots,\alpha_n)$. The set of all polynomials in $x_1,\cdots,x_n$ with coefficients in $\mathbb{R}$ is denoted $\mathbb{R}[x_1,\cdots,x_n]$
+:::
+:::
+
+
+::: {.definitionbox}
+::: {.definition #affinevariety name="Affine Variety"}
+  Let $f_1,\cdots,f_s\in\mathbb{R}[x_1,\cdots,x_n]$, we set $$V(f_1,\cdots,f_s) = \{(a_1,\cdots,a_n)\in\mathbb{R}^n|f_i(a_1,\cdots a_n)=0 \quad \forall i\leq i\leq s\}$$ We call $V(f_1,\cdots,f_s)$ the **affine variety** defined bt $f_1,\cdots,f_s$
+:::
+:::
+
+::: {.definitionbox}
+::: {.definition #ideal name="Ideal"}
+  A subset $I\subset \mathbb{R}[x_1,\cdots,x_n]$ is an ideal if it satisfies:
+  (i) Contains additive identity: $0\in I$
+  (ii) Closed under addition: For all $f,g\in I$, $f+g\in I$
+  (iii) Absorption of multiplication: If $f\in I$ and $h\in \mathbb{R}[x_1,\cdots,x_n]$, then $hf\in I$
+:::
+:::
+
+::: {.definitionbox}
+::: {.definition #sosquadpreorder name="Sum of squares,Quadratic Module and Preordering"}
+	Sum of squares
+:::
+:::
+
+### Representation of nonnegative polynomial: Univariate case
+
+::: {.theorembox}
+::: {.theorem #uniglobal name="Global version"}
+  A polynomial $p\in\mathbb{R}[x]$ of even degree is nonnegative if and only if it can be written as a sum of squares of other polynomials, i.e., $p(x) = \Sigma^k_{i=1}[h_i(x)]^2$, with $h_i\in R[x], i = 1,\cdots, k$.
+:::
+:::
+
+::: {.theorembox}
+::: {.theorem #unifiniteinterval name="Compact interval version"}
+  A polynomial $p\in\mathbb{R}[x]$ of even degree is nonnegative if and only if it can be written as a sum of squares of other polynomials, i.e., $p(x) = \Sigma^k_{i=1}[h_i(x)]^2$, with $h_i\in R[x], i = 1,\cdots, k$.
+:::
+:::

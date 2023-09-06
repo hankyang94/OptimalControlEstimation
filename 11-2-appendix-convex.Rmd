@@ -899,34 +899,3 @@ print("status: ", prob.status) # check whether the status is "optimal"
 print("optimal value: ", prob.value) # optimal objective
 print("optimal solution: ", lam.value) # optimal lam
 ```
-
----
-
-
-
-
-# The Kalman-Yakubovich Lemma 
-
-::: {.lemma #KalmanYakubovich name="Kalman-Yakubovich"}
-Consider a controllable linear time-invariant system 
-$$
-\dot{x} = A x + b u \\
-y = c^T x.
-$$
-The transfer function 
-$$
-h(p) = c^T (p I - A)^{-1} b 
-$$
-is strictly positive real (SPR) if and only if there exist positive definite matrices $P$ and $Q$ such that 
-$$
-A^T P + P A = - Q \\
-Pb = c.
-$$
-:::
-
-
-
-# Feedback Linearization {#feedbacklinearization}
-
-
-# Sliding Control {#slidingcontrol}

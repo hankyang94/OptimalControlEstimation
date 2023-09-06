@@ -1,0 +1,63 @@
+# Linear Algebra and Differential Equations
+In this Chapter, we provide basic concepts in linear algebra and ordinary differential equations (ODE), which can be a cheatsheet for readers.
+
+## Linear Algebra {#linear-algebra}
+Most of the linear algebraic concepts used in this textbook are provided in this section.
+
+### Matrix Exponential
+
+::: {.definitionbox}
+::: {.definition #matrixexp name="Matrix exponential"}
+  Given a $n\times n$ matrix $A$, the matrix exponential of $A$, denoted as $e^A$, is defined as:
+  $$e^A = \sum_{p=0}^\infty \frac{A^p}{p!}.$$
+:::
+:::
+Note that the matrix exponential is well defined, and every entry converges absolutely. We show some special cases of matrix exponential.
+
+1. Diagonal matrix. Note that if $A=\text{diag}(a_1,a_2,\ldots,a_n)$, then $A^p=\text{diag}(a_1^p,a_2^p,\ldots,a_n^p)$, and $e^A=\text{diag}(e^{a_1},e^{a_2},\ldots,e^{a_n})$.
+
+2. Diagonalizable matrix:
+
+::: {.definitionbox}
+::: {.definition #diagonaliable name="Diagonablizable matrix"}
+A square matrix $A$ is said to be **diagonalizable** or **non-defective**, if there exists an invertible matrix $P$, such that $P^{-1}AP$ is a diagonal matrix. In words, after change of coordination, the matrix becomes diagonal. If a matrix is not diagonalizable, it is **defective**. 
+:::
+:::
+
+With diagonalization $A=PDP^{-1}$ where $D$ is a diagonal matrix (e.g. symmetric matrix is diagonalizable), we have $e^A=Pe^DP^{-1}.$ Specifically if $U$ consists of eigenvectors of $A$ and $D$ is the spectrum, then matrix exponential is the same as taking exponents of eigenvalues of $A$ while keeping the eigenbasis invariant.
+
+3. Exchangable matrices. If $A_1$ and $A_2$ are exchangeable, that is, $A_1A_2=A_2A_1$, then $e^{A_1+A_2}=e^{A_1}e^{A_2}$ (exercise!).
+
+4. Nilpotent matrix. If $N$ is a nilpotent matrix, which means that $N^K=0$ for some integer $K$, then $e^N=I+N+\frac12N^2+\ldots+\frac1{(K-1)!}N^{K-1}.$
+
+5. Any matrix with Jordan canonical form (*This is out of scope of this textbook. We leave it for readers with interest). Any matrix $A$ can be decomposed as $P(D+N)P^{-1}$, where $D$ is diagonal and exchangeable with the nilpotent matrix $N$. Then based on the above discussions, $e^A=P(e^De^N)P^{-1}$.
+
+6. Projection matrix $A^2=A$. Then $e^A=I+(e-1)A$ (exercise!).
+
+### Gradients
+
+In matrix calculus, index may not be consistent in different references. It should be noted that in neural network literature, gradients may have a transpose on our results here.
+
+For any function $f(X):\mathbb{R}^{m\times n}\rightarrow \mathbb{R}$ of an $m$-by-$n$ matrix $X$ (if $n=1$ then it is a vector), the gradient $\nabla f(X)$ is another $m$-by-$n$ matrix with the $(i,j)$-th entry $\frac{\partial f(X)}{\partial X_{ij}}$.
+
+For any function $f(x):\mathbb{R}^{m}\rightarrow \mathbb{R}^n$ that maps an $m$-dimensional vector $x$ to $n$-dimensional space, $\nabla f(x)$ is an $m$-by-$n$ matrix with the $(i,j)$-th entry $\frac{\partial (f(x))_j}{\partial x_i}$.
+
+Some important examples include:
+
+- Vector inner-product. $\nabla(a^\top x)=a$.
+
+- Quadratic form $\nabla(x^\top Ax) = (A+A^\top)x$.
+
+- Composition. Suppose $f(y):\mathbb{R}^{n}\rightarrow \mathbb{R}^k$ and $g(x):\mathbb{R}^{m}\rightarrow \mathbb{R}^n$, then $\nabla f(g(x))$ is an $m$-by-$k$ matrix $\nabla g(x) \nabla f(y=g(x))$. 
+
+
+
+## Solving an Ordinary Differential Equation
+
+### Separation of Variables
+
+### First-order Linear ODE
+
+### Gronwall Inequality
+
+### Matlab 
