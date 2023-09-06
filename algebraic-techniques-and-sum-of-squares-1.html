@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>References | Optimal Control and Estimation</title>
+  <title>E Algebraic Techniques and Sum-of-Squares | Optimal Control and Estimation</title>
   <meta name="description" content="Lecture notes for Harvard ES/AM 158 Introduction to Optimal Control and Estimation." />
   <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="References | Optimal Control and Estimation" />
+  <meta property="og:title" content="E Algebraic Techniques and Sum-of-Squares | Optimal Control and Estimation" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Lecture notes for Harvard ES/AM 158 Introduction to Optimal Control and Estimation." />
   <meta name="github-repo" content="hankyang94/OptimalControlEstimation" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="References | Optimal Control and Estimation" />
+  <meta name="twitter:title" content="E Algebraic Techniques and Sum-of-Squares | Optimal Control and Estimation" />
   
   <meta name="twitter:description" content="Lecture notes for Harvard ES/AM 158 Introduction to Optimal Control and Estimation." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="slidingcontrol.html"/>
-
+<link rel="prev" href="app-lti-system-theory.html"/>
+<link rel="next" href="the-kalman-yakubovich-lemma.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -361,141 +361,61 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="references" class="section level1 unnumbered hasAnchor">
-<h1>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-
-<div id="refs" class="references csl-bib-body hanging-indent">
-<div class="csl-entry">
-Agarwal, Alekh, Nan Jiang, Sham M Kakade, and Wen Sun. 2022. <span>“Reinforcement Learning: Theory and Algorithms.”</span> <em>CS Dept., UW Seattle, Seattle, WA, USA, Tech. Rep</em> 32.
+<div id="algebraic-techniques-and-sum-of-squares-1" class="section level1 hasAnchor" number="14">
+<h1><span class="header-section-number">E</span> Algebraic Techniques and Sum-of-Squares<a href="algebraic-techniques-and-sum-of-squares-1.html#algebraic-techniques-and-sum-of-squares-1" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="algebra-1" class="section level2 hasAnchor" number="14.1">
+<h2><span class="header-section-number">E.1</span> Algebra<a href="algebraic-techniques-and-sum-of-squares-1.html#algebra-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="polynomials-1" class="section level3 hasAnchor" number="14.1.1">
+<h3><span class="header-section-number">E.1.1</span> Polynomials<a href="algebraic-techniques-and-sum-of-squares-1.html#polynomials-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="definitionbox">
+<div class="definition">
+<p><span id="def:monomial" class="definition"><strong>Definition C.1  (Monomial,Polynomial) </strong></span>A <strong>monomial</strong> in <span class="math inline">\(x_1,\cdots,x_n\)</span> is a product of the form <span class="math inline">\(x_1^{\alpha_1}\cdot x_2^{\alpha_2}\cdots x_n^{\alpha_n}\)</span>. The <strong>total degree</strong> of the monomial is <span class="math inline">\(\alpha_1+\cdots+\alpha_n\)</span>.</p>
+<p>A <strong>polynomial</strong> <span class="math inline">\(f\)</span> in <span class="math inline">\(x_1,\cdots,x_n\)</span> with coefficients in <span class="math inline">\(\mathbb{R}\)</span> is a finite linear combination (with coefficients in <span class="math inline">\(\mathbb{R}\)</span>) of monomials. We will write a polynomial <span class="math inline">\(f\)</span> in the form: <span class="math inline">\(\Sigma_\alpha a_\alpha x^\alpha\)</span>. where the sum is over a finite number of n-tuples <span class="math inline">\(\alpha = (\alpha_1,\cdots,\alpha_n)\)</span>. The set of all polynomials in <span class="math inline">\(x_1,\cdots,x_n\)</span> with coefficients in <span class="math inline">\(\mathbb{R}\)</span> is denoted <span class="math inline">\(\mathbb{R}[x_1,\cdots,x_n]\)</span></p>
 </div>
-<div class="csl-entry">
-Andrieu, Vincent, and Laurent Praly. 2006. <span>“On the Existence of a Kazantzis–Kravaris/Luenberger Observer.”</span> <em>SIAM Journal on Control and Optimization</em> 45 (2): 432–56.
 </div>
-<div class="csl-entry">
-Arnold, William F, and Alan J Laub. 1984. <span>“Generalized Eigenproblem Algorithms and Software for Algebraic Riccati Equations.”</span> <em>Proceedings of the IEEE</em> 72 (12): 1746–54.
+<div class="definitionbox">
+<div class="definition">
+<p><span id="def:affinevariety" class="definition"><strong>Definition C.2  (Affine Variety) </strong></span>Let <span class="math inline">\(f_1,\cdots,f_s\in\mathbb{R}[x_1,\cdots,x_n]\)</span>, we set <span class="math display">\[V(f_1,\cdots,f_s) = \{(a_1,\cdots,a_n)\in\mathbb{R}^n|f_i(a_1,\cdots a_n)=0 \quad \forall i\leq i\leq s\}\]</span> We call <span class="math inline">\(V(f_1,\cdots,f_s)\)</span> the <strong>affine variety</strong> defined bt <span class="math inline">\(f_1,\cdots,f_s\)</span></p>
 </div>
-<div class="csl-entry">
-Astolfi, Alessandro, and Romeo Ortega. 2003. <span>“Immersion and Invariance: A New Tool for Stabilization and Adaptive Control of Nonlinear Systems.”</span> <em>IEEE Transactions on Automatic Control</em> 48 (4): 590–606.
 </div>
-<div class="csl-entry">
-Bernard, Pauline. 2019. <em>Observer Design for Nonlinear Systems</em>. Vol. 479. Springer.
+<div class="definitionbox">
+<div class="definition">
+<p><span id="def:ideal" class="definition"><strong>Definition C.3  (Ideal) </strong></span>A subset <span class="math inline">\(I\subset \mathbb{R}[x_1,\cdots,x_n]\)</span> is an ideal if it satisfies:
+(i) Contains additive identity: <span class="math inline">\(0\in I\)</span>
+(ii) Closed under addition: For all <span class="math inline">\(f,g\in I\)</span>, <span class="math inline">\(f+g\in I\)</span>
+(iii) Absorption of multiplication: If <span class="math inline">\(f\in I\)</span> and <span class="math inline">\(h\in \mathbb{R}[x_1,\cdots,x_n]\)</span>, then <span class="math inline">\(hf\in I\)</span></p>
 </div>
-<div class="csl-entry">
-Bernard, Pauline, Vincent Andrieu, and Daniele Astolfi. 2022. <span>“Observer Design for Continuous-Time Dynamical Systems.”</span> <em>Annual Reviews in Control</em>.
 </div>
-<div class="csl-entry">
-Bertsekas, Dimitri. 2012. <em>Dynamic Programming and Optimal Control: Volume i</em>. Vol. 1. Athena scientific.
+<div class="definitionbox">
+<div class="definition">
+<p><span id="def:sosquadpreorder" class="definition"><strong>Definition C.4  (Sum of squares,Quadratic Module and Preordering) </strong></span></p>
+<pre><code>Sum of squares</code></pre>
 </div>
-<div class="csl-entry">
-Besançon, Gildas, Guy Bornard, and Hassan Hammouri. 1996. <span>“Observer Synthesis for a Class of Nonlinear Control Systems.”</span> <em>European Journal of Control</em> 2 (3): 176–92.
 </div>
-<div class="csl-entry">
-Blekherman, Grigoriy, Pablo A Parrilo, and Rekha R Thomas. 2012. <em>Semidefinite Optimization and Convex Algebraic Geometry</em>. SIAM.
 </div>
-<div class="csl-entry">
-Chen, Chi-Tsong. 1984. <em>Linear System Theory and Design</em>. Saunders college publishing.
+<div id="representation-of-nonnegative-polynomial-univariate-case-1" class="section level3 hasAnchor" number="14.1.2">
+<h3><span class="header-section-number">E.1.2</span> Representation of nonnegative polynomial: Univariate case<a href="algebraic-techniques-and-sum-of-squares-1.html#representation-of-nonnegative-polynomial-univariate-case-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="theorembox">
+<div class="theorem">
+<p><span id="thm:uniglobal" class="theorem"><strong>Theorem C.1  (Global version) </strong></span>A polynomial <span class="math inline">\(p\in\mathbb{R}[x]\)</span> of even degree is nonnegative if and only if it can be written as a sum of squares of other polynomials, i.e., <span class="math inline">\(p(x) = \Sigma^k_{i=1}[h_i(x)]^2\)</span>, with <span class="math inline">\(h_i\in R[x], i = 1,\cdots, k\)</span>.</p>
 </div>
-<div class="csl-entry">
-Davison, E., and W. Wonham. 1968. <span>“On Pole Assignment in Multivariable Linear Systems.”</span> <em>IEEE Transactions on Automatic Control</em> 13 (6): 747–48. <a href="https://doi.org/10.1109/TAC.1968.1099056">https://doi.org/10.1109/TAC.1968.1099056</a>.
 </div>
-<div class="csl-entry">
-Dawson, Charles, Sicun Gao, and Chuchu Fan. 2023. <span>“Safe Control with Learned Certificates: A Survey of Neural Lyapunov, Barrier, and Contraction Methods for Robotics and Control.”</span> <em>IEEE Transactions on Robotics</em>.
-</div>
-<div class="csl-entry">
-Ebenbauer, Christian, Jonathan Renz, and F Allgower. 2005. <span>“Polynomial Feedback and Observer Design Using Nonquadratic Lyapunov Functions.”</span> In <em>Proceedings of the 44th IEEE Conference on Decision and Control</em>, 7587–92. IEEE.
-</div>
-<div class="csl-entry">
-Hammouri, Hassan, and Jesus de Leon Morales. 1990. <span>“Observer Synthesis for State-Affine Systems.”</span> In <em>29th IEEE Conference on Decision and Control</em>, 784–85. IEEE.
-</div>
-<div class="csl-entry">
-Janny, Steeven, Vincent Andrieu, Madiha Nadri, and Christian Wolf. 2021. <span>“Deep Kkl: Data-Driven Output Prediction for Non-Linear Systems.”</span> In <em>2021 60th IEEE Conference on Decision and Control (CDC)</em>, 4376–81. IEEE.
-</div>
-<div class="csl-entry">
-Kalman, Rudolph E, and Richard S Bucy. 1961. <span>“New Results in Linear Filtering and Prediction Theory.”</span>
-</div>
-<div class="csl-entry">
-Karagiannis, Dimitrios, and Alessandro Astolfi. 2005. <span>“Nonlinear Observer Design Using Invariant Manifolds and Applications.”</span> In <em>Proceedings of the 44th IEEE Conference on Decision and Control</em>, 7775–80. IEEE.
-</div>
-<div class="csl-entry">
-Kazantzis, Nikolaos, and Costas Kravaris. 1998. <span>“Nonlinear Observer Design Using Lyapunov’s Auxiliary Theorem.”</span> <em>Systems &amp; Control Letters</em> 34 (5): 241–47.
-</div>
-<div class="csl-entry">
-Lasserre, Jean B. 2001. <span>“Global Optimization with Polynomials and the Problem of Moments.”</span> <em>SIAM Journal on Optimization</em> 11 (3): 796–817.
-</div>
-<div class="csl-entry">
-Lasserre, Jean Bernard. 2009. <em>Moments, Positive Polynomials and Their Applications</em>. Vol. 1. World Scientific.
-</div>
-<div class="csl-entry">
-Luenberger, David G. 1964. <span>“Observing the State of a Linear System.”</span> <em>IEEE Transactions on Military Electronics</em> 8 (2): 74–80.
-</div>
-<div class="csl-entry">
-Magron, Victor, and Jie Wang. 2023. <em>Sparse Polynomial Optimization: Theory and Practice</em>. World Scientific.
-</div>
-<div class="csl-entry">
-Miao, Keyan, and Konstantinos Gatsis. 2023. <span>“Learning Robust State Observers Using Neural ODEs.”</span> In <em>Learning for Dynamics and Control Conference</em>, 208–19. PMLR.
-</div>
-<div class="csl-entry">
-Murray, Riley, Venkat Chandrasekaran, and Adam Wierman. 2021. <span>“Signomial and Polynomial Optimization via Relative Entropy and Partial Dualization.”</span> <em>Mathematical Programming Computation</em> 13: 257–95.
-</div>
-<div class="csl-entry">
-Niazi, Muhammad Umar B, John Cao, Xudong Sun, Amritam Das, and Karl Henrik Johansson. 2023. <span>“Learning-Based Design of Luenberger Observers for Autonomous Nonlinear Systems.”</span> In <em>2023 American Control Conference (ACC)</em>, 3048–55. IEEE.
-</div>
-<div class="csl-entry">
-Nie, Jiawang. 2023. <em>Moment and Polynomial Optimization</em>. SIAM.
-</div>
-<div class="csl-entry">
-Saccon, Alessandro, John Hauser, and A Pedro Aguiar. 2013. <span>“Optimal Control on Lie Groups: The Projection Operator Approach.”</span> <em>IEEE Transactions on Automatic Control</em> 58 (9): 2230–45.
-</div>
-<div class="csl-entry">
-Slotine, Jean-Jacques E, Weiping Li, et al. 1991. <em>Applied Nonlinear Control</em>. Vol. 199. 1. Prentice hall Englewood Cliffs, NJ.
-</div>
-<div class="csl-entry">
-Teng, Sangli, William Clark, Anthony Bloch, Ram Vasudevan, and Maani Ghaffari. 2022. <span>“Lie Algebraic Cost Function Design for Control on Lie Groups.”</span> In <em>2022 IEEE 61st Conference on Decision and Control (CDC)</em>, 1867–74. IEEE.
-</div>
-<div class="csl-entry">
-Vinograd, Robert Èlyukimovich. 1957. <span>“Inapplicability of the Method of Characteristic Exponents to the Study of Non-Linear Differential Equations.”</span> <em>Matematicheskii Sbornik</em> 83 (4): 431–38.
-</div>
-<div class="csl-entry">
-Wang, Jie. 2022. <span>“Nonnegative Polynomials and Circuit Polynomials.”</span> <em>SIAM Journal on Applied Algebra and Geometry</em> 6 (2): 111–33.
-</div>
-<div class="csl-entry">
-Yang, Heng, and Luca Carlone. 2022. <span>“Certifiably Optimal Outlier-Robust Geometric Perception: Semidefinite Relaxations and Scalable Global Optimization.”</span> <em>IEEE Transactions on Pattern Analysis and Machine Intelligence</em> 45 (3): 2816–34.
-</div>
-<div class="csl-entry">
-Yang, Heng, Ling Liang, Luca Carlone, and Kim-Chuan Toh. 2022. <span>“An Inexact Projected Gradient Method with Rounding and Lifting by Nonlinear Programming for Solving Rank-One Semidefinite Relaxation of Polynomial Optimization.”</span> <em>Mathematical Programming</em>, 1–64.
-</div>
-<div class="csl-entry">
-Zhou, Kemin, JC Doyle, and Keither Glover. 1996. <span>“Robust and Optimal Control.”</span> <em>Control Engineering Practice</em> 4 (8): 1189–90.
-</div>
+<div class="theorembox">
+<div class="theorem">
+<p><span id="thm:unifiniteinterval" class="theorem"><strong>Theorem C.2  (Compact interval version) </strong></span>A polynomial <span class="math inline">\(p\in\mathbb{R}[x]\)</span> of even degree is nonnegative if and only if it can be written as a sum of squares of other polynomials, i.e., <span class="math inline">\(p(x) = \Sigma^k_{i=1}[h_i(x)]^2\)</span>, with <span class="math inline">\(h_i\in R[x], i = 1,\cdots, k\)</span>.</p>
 </div>
 </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+</div>
+</div>
+</div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="slidingcontrol.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="app-lti-system-theory.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="the-kalman-yakubovich-lemma.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -526,7 +446,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/hankyang94/OptimalControlEstimation/blob/main/12-references.Rmd",
+"link": "https://github.com/hankyang94/OptimalControlEstimation/blob/main/11-4-appendix-algebraic-techniques-and-sos.Rmd",
 "text": "Edit"
 },
 "history": {

@@ -151,7 +151,7 @@ arc=4pt}
 
 \title{Optimal Control and Estimation}
 \author{Heng Yang}
-\date{2023-09-04}
+\date{2023-09-06}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -4475,6 +4475,1068 @@ We assume \(Q_k\succeq 0\) for \(k=0,\dots,N\) and \(R_k \succ 0\) for all \(k=0
 \appendix}
 
 
+\hypertarget{linear-algebra-and-differential-equations}{%
+\chapter{Linear Algebra and Differential Equations}\label{linear-algebra-and-differential-equations}}
+
+In this Chapter, we provide basic concepts in linear algebra and ordinary differential equations (ODE), which can be a cheatsheet for readers.
+
+\hypertarget{linear-algebra}{%
+\section{Linear Algebra}\label{linear-algebra}}
+
+Most of the linear algebraic concepts used in this textbook are provided in this section.
+
+\hypertarget{matrix-exponential}{%
+\subsection{Matrix Exponential}\label{matrix-exponential}}
+
+\begin{definition}[Matrix exponential]
+\protect\hypertarget{def:matrixexp}{}\label{def:matrixexp}Given a \(n\times n\) matrix \(A\), the matrix exponential of \(A\), denoted as \(e^A\), is defined as:
+\[e^A = \sum_{p=0}^\infty \frac{A^p}{p!}.\]
+\end{definition}
+
+Note that the matrix exponential is well defined, and every entry converges absolutely. We show some special cases of matrix exponential.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Diagonal matrix. Note that if \(A=\text{diag}(a_1,a_2,\ldots,a_n)\), then \(A^p=\text{diag}(a_1^p,a_2^p,\ldots,a_n^p)\), and \(e^A=\text{diag}(e^{a_1},e^{a_2},\ldots,e^{a_n})\).
+\item
+  Diagonalizable matrix:
+\end{enumerate}
+
+\begin{definition}[Diagonablizable matrix]
+\protect\hypertarget{def:diagonaliable}{}\label{def:diagonaliable}A square matrix \(A\) is said to be \textbf{diagonalizable} or \textbf{non-defective}, if there exists an invertible matrix \(P\), such that \(P^{-1}AP\) is a diagonal matrix. In words, after change of coordination, the matrix becomes diagonal. If a matrix is not diagonalizable, it is \textbf{defective}.
+\end{definition}
+
+With diagonalization \(A=PDP^{-1}\) where \(D\) is a diagonal matrix (e.g.~symmetric matrix is diagonalizable), we have \(e^A=Pe^DP^{-1}.\) Specifically if \(U\) consists of eigenvectors of \(A\) and \(D\) is the spectrum, then matrix exponential is the same as taking exponents of eigenvalues of \(A\) while keeping the eigenbasis invariant.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\item
+  Exchangable matrices. If \(A_1\) and \(A_2\) are exchangeable, that is, \(A_1A_2=A_2A_1\), then \(e^{A_1+A_2}=e^{A_1}e^{A_2}\) (exercise!).
+\item
+  Nilpotent matrix. If \(N\) is a nilpotent matrix, which means that \(N^K=0\) for some integer \(K\), then \(e^N=I+N+\frac12N^2+\ldots+\frac1{(K-1)!}N^{K-1}.\)
+\item
+  Any matrix with Jordan canonical form (*This is out of scope of this textbook. We leave it for readers with interest). Any matrix \(A\) can be decomposed as \(P(D+N)P^{-1}\), where \(D\) is diagonal and exchangeable with the nilpotent matrix \(N\). Then based on the above discussions, \(e^A=P(e^De^N)P^{-1}\).
+\item
+  Projection matrix \(A^2=A\). Then \(e^A=I+(e-1)A\) (exercise!).
+\end{enumerate}
+
+\hypertarget{gradients}{%
+\subsection{Gradients}\label{gradients}}
+
+In matrix calculus, index may not be consistent in different references. It should be noted that in neural network literature, gradients may have a transpose on our results here.
+
+For any function \(f(X):\mathbb{R}^{m\times n}\rightarrow \mathbb{R}\) of an \(m\)-by-\(n\) matrix \(X\) (if \(n=1\) then it is a vector), the gradient \(\nabla f(X)\) is another \(m\)-by-\(n\) matrix with the \((i,j)\)-th entry \(\frac{\partial f(X)}{\partial X_{ij}}\).
+
+For any function \(f(x):\mathbb{R}^{m}\rightarrow \mathbb{R}^n\) that maps an \(m\)-dimensional vector \(x\) to \(n\)-dimensional space, \(\nabla f(x)\) is an \(m\)-by-\(n\) matrix with the \((i,j)\)-th entry \(\frac{\partial (f(x))_j}{\partial x_i}\).
+
+Some important examples include:
+
+\begin{itemize}
+\item
+  Vector inner-product. \(\nabla(a^\top x)=a\).
+\item
+  Quadratic form \(\nabla(x^\top Ax) = (A+A^\top)x\).
+\item
+  Composition. Suppose \(f(y):\mathbb{R}^{n}\rightarrow \mathbb{R}^k\) and \(g(x):\mathbb{R}^{m}\rightarrow \mathbb{R}^n\), then \(\nabla f(g(x))\) is an \(m\)-by-\(k\) matrix \(\nabla g(x) \nabla f(y=g(x))\).
+\end{itemize}
+
+\hypertarget{solving-an-ordinary-differential-equation}{%
+\section{Solving an Ordinary Differential Equation}\label{solving-an-ordinary-differential-equation}}
+
+\hypertarget{separation-of-variables}{%
+\subsection{Separation of Variables}\label{separation-of-variables}}
+
+\hypertarget{first-order-linear-ode}{%
+\subsection{First-order Linear ODE}\label{first-order-linear-ode}}
+
+\hypertarget{gronwall-inequality}{%
+\subsection{Gronwall Inequality}\label{gronwall-inequality}}
+
+\hypertarget{matlab}{%
+\subsection{Matlab}\label{matlab}}
+
+\hypertarget{appconvex}{%
+\chapter{Convex Analysis and Optimization}\label{appconvex}}
+
+\hypertarget{appconvex-theory}{%
+\section{Theory}\label{appconvex-theory}}
+
+\hypertarget{sets}{%
+\subsection{Sets}\label{sets}}
+
+Convex set is one of the most important concepts in convex optimization. Checking convexity of sets is crucial to determining whether a problem is a convex problem. Here we will present some definitions of some set notations in convex optimization.
+
+\begin{definition}[Affine set]
+\protect\hypertarget{def:affineset}{}\label{def:affineset}A set \(C\subset \mathbb{R}^n\) is affine if the line through any two distinct points in \(C\) lies in \(C\), i.e., if for any \(x_1,x_2 \in C\) and any \(\theta \in \mathbb{R}\), we have \(\theta x_1 + (1-\theta)x_2 \in C\).
+\end{definition}
+
+\begin{definition}[Convex set]
+\protect\hypertarget{def:convexset}{}\label{def:convexset}A set \(C\subset \mathbb{R}^n\) is convex if the line segment between any two distinct points in \(C\) lies in \(C\), i.e., if for any \(x_1,x_2 \in C\) and any \(\theta \in [0,1]\), we have \(\theta x_1 + (1-\theta)x_2 \in C\).
+\end{definition}
+
+\begin{definition}[Cone]
+\protect\hypertarget{def:cone}{}\label{def:cone}A set \(C\subset \mathbb{R}^n\) is a cone if for any \(x\in C\) and any \(\theta\geq 0\), we have \(\theta x \in C\).
+\end{definition}
+
+\begin{definition}[Convex Cone]
+\protect\hypertarget{def:convexcone}{}\label{def:convexcone}A set \(C\subset \mathbb{R}^n\) is a convex cone if \(C\) is convex and a cone.
+\end{definition}
+
+Below are some important examples of convex sets:
+
+\begin{definition}[Hyperplane]
+\protect\hypertarget{def:hyperplane}{}\label{def:hyperplane}A hyperplane is a set of the form \[\{x|a^Tx = b\}\]
+\end{definition}
+
+\begin{definition}[Halfspaces]
+\protect\hypertarget{def:halfspaces}{}\label{def:halfspaces}A (closed) halfspace is a set of the form \[\{x|a^Tx \leq b\}\]
+\end{definition}
+
+\begin{definition}[Balls]
+\protect\hypertarget{def:balls}{}\label{def:balls}A ball is a set of the form \[B(x,r) = \{y|\|y-x\|_2 \leq r\} = \{x+ru|\|u\|_2\leq 1\}\]
+where \(r >0\).
+\end{definition}
+
+\begin{definition}[Ellipsoids]
+\protect\hypertarget{def:ellipsoids}{}\label{def:ellipsoids}A ellipsoid is a set of the form \[\mathcal{E} = \{y|(y-x)^TP^{-1}(y-x)\leq 1\}\]
+where \(P\) is symmetric and positive definite.
+\end{definition}
+
+\begin{definition}[Polyhedra]
+\protect\hypertarget{def:polyhedra}{}\label{def:polyhedra}A polyhedra is defined as the solution set of a finite number of linear equalities
+and inequalities: \[\mathcal{P} = \{x|a_j^Tx\leq b_j, j=1,...,m, c_k^Tx=d_k,k=1,...,p\}\]
+\end{definition}
+
+\begin{definition}[Norm ball]
+\protect\hypertarget{def:normball}{}\label{def:normball}A norm ball \(B\) of radius \(r\) and a center \(x_c\) associated with the norm \(\|\cdot\|\) is defined as: \[B = \{x|\|x-x_c\|\leq r\}\]
+\end{definition}
+
+\begin{definition}[Norm cone]
+\protect\hypertarget{def:normcone}{}\label{def:normcone}A norm cone \(C\) associated with the norm \(\|\cdot\|\) is defined as: \[C = \{(x,t)|\|x\|\leq t\}\subset \mathbb{R}^{n+1}\]
+\end{definition}
+
+Simplexes are important family of polyhedra. Suppose the \(k+1\) points \(v_0,...,v_k\in \mathbb{R}^n\) are affinely independent, which means \(v_1-v_0,...,v_k-v_0\) are linearly independent.
+
+\begin{definition}[Simplex]
+\protect\hypertarget{def:simplex}{}\label{def:simplex}A simplex \(C\) defined by points \(v_0,...,v_k\) is: \[C = \textbf{conv}\{v_0,...,v_k\} = \{\theta_0v_0 + ... \theta_kv_k|\theta \succeq 0, \textbf{1}^T\theta = 1\}\]
+\end{definition}
+
+Extremely important examples of convex sets are positive semidefinite cones:
+
+\begin{definition}[Symmetric,positive semidefinite,positive definite matrices]
+\protect\hypertarget{def:symmetricmatrices}{}\label{def:symmetricmatrices}\leavevmode
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Symmetric matrices: \(\textbf{S}^n = \{X\in\mathbb{R}^{n\times n}| X=X^T\}\)
+\item
+  Symmetric Positive Semidefinite matrices: \(\textbf{S}_+^n = \{X\in\textbf{S}^n| X\succeq0\}\)
+\item
+  Symmetric Positive definite matrices: \(\textbf{S}_{++}^n = \{X\in\textbf{S}^n| X\succ0\}\)
+\end{enumerate}
+
+\end{definition}
+
+In most scenarios, the set we encounter is more complicated. In general it is extermely hard to determine whether a set in convex or not. But if the set is `generated' by some convex sets, we can easily determine its convexity. So let's focus on operations that preserve convexity:
+
+\begin{proposition}
+\protect\hypertarget{prp:operationpreserveconvexity}{}\label{prp:operationpreserveconvexity}
+
+Assume \(S\) is convex, \(S_\alpha,\alpha\in\mathcal{A}\) is a family of convex sets. Following operations on convex sets will preserve convexity:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Intersection: \(\bigcap_{\alpha\in\mathcal{A}}S_\alpha\) is convex.
+\item
+  Image under affine function: A function \(f:\mathbb{R}^n\to\mathbb{R}^m\) is affine if it has the form \(f(x) = Ax+b\). The image of \(S\) under affine function \(f\) is convex. I.e. \(f(S) = \{f(x)|x\in S\}\) is convex
+\item
+  Image under perspective function: We define the perspective function \(P:\mathbb{R}^{n+1}\), with domain \(\textbf{dom}P = \mathbb{R}^n\times \mathbb{R}_{++}\)(where \(\mathbb{R}_{++}=\{x\in \mathbb{R}|x>0\}\)) as \(P(z,t) = z/t\). The image of \(S\) under perspective function is convex.
+\item
+  Image under linear-fractional function: We define linear fractional function \(f:\mathbb{R}^n\to\mathbb{R}^m\) as:\(f(x) = (Ax+b)/(c^Tx+d)\) with \(\textbf{dom}f = \{x|c^Tx+d>0\|\). The image of \(S\) under linear fractional functions is convex.
+\end{enumerate}
+
+\end{proposition}
+
+In some cases, the restrictions of \textbf{interior} is too strict. For example, imagine a plane in \(\mathbb{R}^3\). The interior of the plane is \(\emptyset\). But intuitively many property should be extended to this kind of situation. Because the points in the plane also lies `inside' the convex set. Thus, we will define \textbf{relative interior}. First we will define \textbf{affine hull}.
+
+\begin{definition}[Affine hull]
+\protect\hypertarget{def:affinehull}{}\label{def:affinehull}The affine hull of a set \(S\) is the smallest affine set that contains \(S\), which can be written as:
+\[\text{aff}(S) = \{\sum_{i=1}^k\alpha_ix_i|k>0,x_i\in S,\alpha_i\in\mathbb{R},\sum_{i=1}^k\alpha_i=1\}\]
+\end{definition}
+
+\begin{definition}[Relative Interior]
+\protect\hypertarget{def:relint}{}\label{def:relint}The relative interior of a set \(S\) (denoted \(\text{relint}(S)\)) is defined as its interior within the affine hull of \(S\). I.e.
+\[\text{relint}(S):=\{x\in S: \text{there exists } \epsilon>0 \text{ such that }N_\epsilon \cap \text{aff}(S)\subset S\}\]
+where \(N_\epsilon(x)\) is a ball of radius \(\epsilon\) centered on \(x\).
+\end{definition}
+
+\hypertarget{appconvex-theory-convexfunction}{%
+\subsection{Convex function}\label{appconvex-theory-convexfunction}}
+
+In this section, let's define convex functions:
+
+\begin{definition}[Convex function]
+\protect\hypertarget{def:defcvxfunc}{}\label{def:defcvxfunc}A function \(f:\mathbb{R}^n\to\mathbb{R}\) is \textbf{convex} if \(\textbf{dom}\ f\) is convex and \(\forall x,y\in \textbf{dom}\ f\) and with \(\theta \in [0,1]\), we have:\[f(\theta x +(1-\theta)y)\leq \theta f(x) + (1-\theta)f(y)\]
+The function is \textbf{strictly convex} if the inequality holds whenever \(x\neq y\) and \(\theta\in (0,1)\).
+\end{definition}
+
+If a function is differentiable, it will be easier for us to check its convexity:
+
+\begin{proposition}[Conditions for Convex function]
+\protect\hypertarget{prp:decidecvx}{}\label{prp:decidecvx}1.(First order condition) Suppose \(f\) is differentiable, then \(f\) is convex if and only if \(\textbf{dom} f\) is convex and \(\forall x,y\in \textbf{dom} f\), \[f(y)\geq f(x) +\nabla f(x)^T(y-x)\]
+2.(Second order conditions) Suppose \(f\) is twice differentiable, then \(f\) is convex if and only if \(\textbf{dom} f\) is convex and \(\forall x\in \textbf{dom} f\), \[\nabla^2 f(x) \succeq \textbf{0}\]
+\end{proposition}
+
+For the same purpose, some operations that preserve the convexity of the convex functions are presented here:
+
+\begin{proposition}[Operations that preserve convexity]
+\protect\hypertarget{prp:preservecvx}{}\label{prp:preservecvx}Let \(f:\mathbb{R}^n\to\mathbb{R}\) be a convex function and \(g_1,...,g_n\) be convex functions. The following operations will preserve convexity of the function:
+
+1.(Nonnegative weighted sum): A nonnegative weighted sum of convex functions: \[f = \omega_1f_1 + ... +\omega_mf_m\]
+
+2.(Composition with an affine mapping) Suppose \(A\in \mathbb{R}^{n\times m}\) and \(b\in \mathbb{R}^n\), then \(g(x) = f(Ax+b)\) is convex.
+
+3.(Pointwise maximum and supremum) \(g(x) = \max\{g_1(x),...,g_n(x)\}\) is convex. If \(h(x,y)\) is convex in \(x\) for each \(y\in\mathcal{A}\), then \(\sup_{y\in\mathcal{A}} h(x,y)\) is also convex in \(x\).
+
+4.(Minimization) If \(h(x,y)\) is convex in \((x,y)\), and \(C\) is a convex nonempty set, then \(\inf_{x\in C} h(x,y)\) is convex in \(x\).
+
+5.(Perspective of a function) The perspective of \(f\) is the function \(h:\mathbb{R}^{n+1}\to\mathbb{R}\) defined by: \(h(x,t) = tf(x/t)\) with domain \(\textbf{dom}\ h=\{(x,t)|x/t\in\textbf{dom} f,t>0\}\). And \(h\) is convex.
+\end{proposition}
+
+\hypertarget{lagrange-dual}{%
+\subsection{Lagrange dual}\label{lagrange-dual}}
+
+We consider an optimization problem in the standard form (without assuming convexity of anything):
+\begin{equation}
+\begin{aligned}
+p^* = \quad \min_{x} \quad & f_0(x)\\
+\textrm{s.t.} \quad & f_i(x)\leq 0\quad i=1...,m\\
+  & h_i(x) = 0\quad i=1,...,p   \\
+\end{aligned}
+\end{equation}
+
+\begin{definition}[Lagrange dual function]
+\protect\hypertarget{def:defdualfunc}{}\label{def:defdualfunc}The Lagrangian related to the problem above is defined as: \[L(x,\lambda,\nu)=f_0(x)+\sum_{i=1}^m\lambda_if_i(x)+\sum_{i=1}^p\nu_ih_i(x)\]
+The Lagrange dual function is defined as: \[g(\lambda,\nu) = \inf_{x\in\mathcal{D}}L(x,\lambda,\nu)\]
+\end{definition}
+
+When the Lagrangian is unbounded below in \(x\), the dual function takes on the value \(-\infty\). Note that since the Lagrange dual function is a pointwise infimum of a family of affine functions of \((\lambda,\nu)\), so it's concave. The Lagrange dual function will give us lower bounds of the optimal value of the original problem: \[g(\lambda,\nu)\leq p^*\]. We can see that, the dual function can give a nontrivial lower bound only when \(\lambda\succeq 0\). Thus we can solve the following dual problem to get the best lower bound.
+
+\begin{definition}[Lagrange dual problem]
+\protect\hypertarget{def:defdualprob}{}\label{def:defdualprob}The lagrangian dual problem is defined as follows:
+\begin{equation}
+  \begin{aligned}
+  d^* = \quad \max_{\lambda,\nu} \quad & g(\lambda,\nu)\\
+  \textrm{s.t.} \quad & \lambda\succeq 0
+  \end{aligned}
+  \end{equation}
+This is a convex optimization problem.
+\end{definition}
+
+We can easily see that \[d^*\leq p^*\] always hold. This property is called \textbf{weak duality}. If \[d^*=p^*\], it's called \textbf{strong duality}. Strong duality does not hold in general, but it usually holfs for convex problems. We can find conditions that guarantee strong duality in convex problems, which are called constrained qualifications. Slater's constraint qualification is a useful one.
+
+\begin{theorem}[Slater's constraint qualification]
+\protect\hypertarget{thm:slater}{}\label{thm:slater}Strong duality holds for a convex problem
+\begin{equation}
+  \begin{aligned}
+  p^* = \quad \min_{x} \quad & f_0(x)\\
+  \textrm{s.t.} \quad & f_i(x)\leq 0\quad i=1...,m\\
+    & Ax=b   \\
+  \end{aligned}
+ \end{equation}
+if it is strictly feasible, i.e.
+\[\exists x\in\textbf{relint}\mathcal{D}:\quad f_i(x)<0,\quad i=1...m,\quad Ax=b\]
+And the linear inequalities do not need to hold with strict inequality.
+\end{theorem}
+
+\hypertarget{appconvex-theory-kkt}{%
+\subsection{KKT condition}\label{appconvex-theory-kkt}}
+
+Note that if strong duality holds, denote \(x^*\) to be primal optimal, and \((\lambda^*,\nu^*)\) to be dual optimal. Then:
+
+\begin{equation}
+  \begin{aligned}
+  f_0(x^*) = g(\lambda^*,\nu^*) = & \inf_x(f_0(x)+\sum_{i=1}^m\lambda_i^*f_i(x)+\sum_{i=1}^p\nu_i^*h_i(x))\\
+ \leq & f_0(x^*)+\sum_{i=1}^m\lambda_i^*f_i(x)+\sum_{i=1}^p\nu_i^*h_i(x)\\
+ \leq & f_0(x^*)\\
+  \end{aligned}
+  \end{equation}
+
+from this, combining \(\lambda^*\geq 0\) and \(f_i(x^*)\leq 0\), we can know that: \(\lambda_i^*f_i(x^*)=0\quad i=1\cdots m\). This means for \(\lambda_i^*\) and \(f_i(x^*)\), one of them must be zero, which is known as complementary slackness).
+
+Thus we arrived at the following four conditions, which are called KKT conditions.
+
+\begin{theorem}[Karush-Kuhn-Tucker(KKT) Conditions]
+\protect\hypertarget{thm:KKT}{}\label{thm:KKT}
+
+The following four conditions are called KKT conditions (for a problem with differentiable \(f_i,h_i\))
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Primal feasible: \(f_i(x) \leq 0,i,\cdots ,m,\ h_i(x) = 0,i=1,\cdots ,p\)
+\item
+  Dual feasible: \(\lambda\succeq0\)
+\item
+  Complementary slackness: \(\lambda_if_i(x)=0,i=1,\cdots,m\)
+\item
+  Gradient of Lagrangian with respect to \(x\) vanishes:\(\nabla f_0(x)+\sum_{i=1}^m\lambda_i\nabla f_i(x)+\sum_{i=1}^p\nu_i\nabla h_i(x) = 0\)
+\end{enumerate}
+
+\end{theorem}
+
+From the discussion above, we know that if strong duality holds and \(x,\lambda,\nu\) are optimal, then they must satisfy the KKT conditions.
+
+Also if \(x,\lambda,\nu\) satisfy KKT for a convex problem, then they are optimal. However, the converse is not generally true, since KKT condition implies strong duality. If Slater's condition is satisfied, then \(x\) is optimal if and only if there exist \(\lambda,\nu\) that satisfy KKT conditions. Sometimes, by solving the KKT system, we can derive the closed-form solution of a optimization directly. Also, sometimes we will use the residual of the KKT system as the termination condition.
+
+In general, \(f_i,h_i\) may not be differentiable. There are also KKT conditions for them, which will include knowledge of subdifferential and will not be included here.
+
+\hypertarget{appconvex-practice}{%
+\section{Practice}\label{appconvex-practice}}
+
+\hypertarget{cvx-introduction}{%
+\subsection{CVX Introduction}\label{cvx-introduction}}
+
+In the last section, we have learned basic concepts and theorems in convex optimization. In this section, on the other hand, we will introduce you how to model basic convex optimization problems with CVX, an easy-to-use MATLAB package. To install CVX, please refer to this \href{http://cvxr.com/cvx/doc/install.html}{page}. Note that every time you what to use the CVX package, you should add it to your MATLAB path. For example, if I install CVX package in the parent directory of my current directory with default directory name \texttt{cvx}, the following line should be added before your CVX codes:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\VariableTok{addpath}\NormalTok{(}\VariableTok{genpath}\NormalTok{(}\StringTok{"../cvx/"}\NormalTok{))}\OperatorTok{;}
+\end{Highlighting}
+\end{Shaded}
+
+With CVX, it is incredibly easy for us to define and solve a convex optimization problem. You just need to:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  define the variables.
+\item
+  define the objective function you want to minimize or maximize.
+\item
+  define the constraints.
+\end{enumerate}
+
+After running your codes, the optimal objective value is stored in the variable \texttt{cvx\_optval}, and the problem status is stored in the variable \texttt{cvx\_status} (when your problem is well-defined, this variable's value will be \texttt{Solved}). The optimal solutions will be stored in the variables you define.
+
+Throughout this section, we will study five types of convex optimization problems: linear programming (LP), quadratic programming (QP), (convex) quadratically constrained quadratic programming (QCQP), second-order cone programming (SOCP), and semidefinite programming (SDP). Given two types of optimization problems \(A\) and \(B\), we say \(A < B\) if \(A\) can always be converted to \(B\) while the inverse is not true. Under this notation, we have
+\begin{equation*}
+   \text{LP} < \text{QP} < \text{QCQP} < \text{SOCP} < \text{SDP}
+\end{equation*}
+
+\hypertarget{linear-programming-lp}{%
+\subsection{Linear Programming (LP)}\label{linear-programming-lp}}
+
+\textbf{Definition.} An LP has the following form:
+\begin{equation}
+   \label{eq:app-lpdef}
+   \begin{aligned}
+      \min_{x \in \mathbb{R}^n} & \ c^T x \\
+      \text{subject to } & A x \le b  
+   \end{aligned}
+\end{equation}
+where \(x\) is the variable, \(A \in \mathbb{R}^{m\times n}, b \in \mathbb{R}^m\), and \(c \in \mathbb{R}^n\) are the parameters. Note that the constraint \(A x \le b\) already incorporates linear equality constraints. To see this, consider the constraint \(A' x = b'\), we can reformulate it as \(A x \le b\) by
+\begin{equation*}
+   \begin{bmatrix}
+      A' \\ -A'
+   \end{bmatrix} x \le \begin{bmatrix}
+      b' \\ -b'
+   \end{bmatrix}
+\end{equation*}
+
+\textbf{Example.} Consider the problem of minimizing a linear function \(c_1 x_1 + c_2 x_2\) over a rectangle \([-l_1, l_1] \times [-l_2, l_2]\). We can convert it to the standard LP form in \eqref{eq:app-lpdef} by simply setting \(c\) as \([c_1, \ c_2]^T\) and the linear inequality constraint as
+\begin{equation*}
+   \begin{bmatrix}
+      1 & 0 \\ -1 & 0 \\ 0 & 1 \\ 0 & -1
+   \end{bmatrix} \begin{bmatrix}
+      x_1 \\ x_2
+   \end{bmatrix} \le \begin{bmatrix}
+      l_1 \\ l_1 \\ l_2 \\ l_2
+   \end{bmatrix}
+\end{equation*}
+
+Corresponding CVX codes are shown below:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\%\% Define the LP example setting}
+\VariableTok{c1} \OperatorTok{=} \FloatTok{2}\OperatorTok{;}
+\VariableTok{c2} \OperatorTok{=} \OperatorTok{{-}}\FloatTok{5}\OperatorTok{;}
+\VariableTok{l1} \OperatorTok{=} \FloatTok{3}\OperatorTok{;}
+\VariableTok{l2} \OperatorTok{=} \FloatTok{7}\OperatorTok{;}
+\CommentTok{\% parameters: c, A, b}
+\VariableTok{c} \OperatorTok{=}\NormalTok{ [}\VariableTok{c1}\OperatorTok{;} \VariableTok{c2}\NormalTok{]}\OperatorTok{;}
+\VariableTok{A} \OperatorTok{=}\NormalTok{ [}\FloatTok{1}\OperatorTok{,} \FloatTok{0}\OperatorTok{;} \OperatorTok{{-}}\FloatTok{1}\OperatorTok{,} \FloatTok{0}\OperatorTok{;} \FloatTok{0}\OperatorTok{,} \FloatTok{1}\OperatorTok{;} \FloatTok{0}\OperatorTok{,} \OperatorTok{{-}}\FloatTok{1}\NormalTok{]}\OperatorTok{;}
+\VariableTok{b} \OperatorTok{=}\NormalTok{ [}\VariableTok{l1}\OperatorTok{;} \VariableTok{l1}\OperatorTok{;} \VariableTok{l2}\OperatorTok{;} \VariableTok{l2}\NormalTok{]}\OperatorTok{;}
+
+\CommentTok{\%\% solve LP}
+\VariableTok{cvx\_begin}
+    \VariableTok{variable} \VariableTok{x}\NormalTok{(}\FloatTok{2}\NormalTok{)}\OperatorTok{;} \CommentTok{\% define variables [x1, x2]}
+    \VariableTok{minimize}\NormalTok{(}\VariableTok{c}\OperatorTok{\textquotesingle{}} \OperatorTok{*} \VariableTok{x}\NormalTok{)}\OperatorTok{;} \CommentTok{\% define the objective}
+    \VariableTok{subject} \VariableTok{to}
+        \VariableTok{A} \OperatorTok{*} \VariableTok{x} \OperatorTok{\textless{}=} \VariableTok{b}\OperatorTok{;} \CommentTok{\% define the linear constraint}
+\VariableTok{cvx\_end}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{quadratic-programming-qp}{%
+\subsection{Quadratic Programming (QP)}\label{quadratic-programming-qp}}
+
+\textbf{Definition.} A QP has the following form:
+\begin{align}
+   \label{eq:app-qpdef}
+   \min_{x \in \mathbb{R}^n} \ & \frac{1}{2} x^T P x + q^T x \\
+   \text{subject to } & Gx \le h \\
+   & Ax = b
+\end{align}
+where \(P \in \mathcal{S}_+^n, q\in \mathbb{R}^n, G \in \mathbb{R}^{m \times n}, h\in \mathbb{R}^m, A \in \mathbb{R}^{p \times n}, b \in \mathbb{R}^p\). Here \(\mathcal{S}_+^n\) denotes the set of positive semidefinite matrices of size \(n\times n\). Obviously, if we set \(P\) as zero, QP will degenerate to LP.
+
+\textbf{Example.} Consider the problem of minimizing a quadratic function
+\begin{equation*}
+   f(x_1, x_2) = p_1 x_1^2 + 2p_2 x_1 x_2 + p_3 x_2^2 + q_1 x_1 + q_2 x_2
+\end{equation*}
+over a rectangle \([-l_1, l_1] \times [-l_2, l_2]\). Since \(P = 2 \begin{bmatrix}  p_1 & p_2 \\ p_2 & p_3 \end{bmatrix} \succeq 0\), the following two conditions must hold:
+\begin{equation*}
+   \begin{cases}
+      p_1 \ge 0 \\
+      p_1 p_3 - 4 p_2^2 \ge 0
+   \end{cases}
+\end{equation*}
+Same as in the LP example, \(G\) and \(h\) can be expressed as:
+\begin{equation*}
+   \begin{bmatrix}
+      1 & 0 \\ -1 & 0 \\ 0 & 1 \\ 0 & -1
+   \end{bmatrix} \begin{bmatrix}
+      x_1 \\ x_2
+   \end{bmatrix} \le \begin{bmatrix}
+      l_1 \\ l_1 \\ l_2 \\ l_2
+   \end{bmatrix}
+\end{equation*}
+
+Corresponding CVX codes are shown below:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\%\% Define the QP example setting}
+\VariableTok{p1} \OperatorTok{=} \FloatTok{2}\OperatorTok{;}
+\VariableTok{p2} \OperatorTok{=} \FloatTok{0.5}\OperatorTok{;}
+\VariableTok{p3} \OperatorTok{=} \FloatTok{4}\OperatorTok{;}
+\VariableTok{q1} \OperatorTok{=} \OperatorTok{{-}}\FloatTok{3}\OperatorTok{;}
+\VariableTok{q2} \OperatorTok{=} \OperatorTok{{-}}\FloatTok{6.5}\OperatorTok{;}
+\VariableTok{l1} \OperatorTok{=} \FloatTok{2}\OperatorTok{;}
+\VariableTok{l2} \OperatorTok{=} \FloatTok{2.5}\OperatorTok{;}
+\CommentTok{\% check if the generated P is positive semidefinite}
+\VariableTok{tmp1} \OperatorTok{=}\NormalTok{ (}\VariableTok{p1} \OperatorTok{\textgreater{}=} \FloatTok{0}\NormalTok{)}\OperatorTok{;}
+\VariableTok{tmp2} \OperatorTok{=}\NormalTok{ (}\VariableTok{p1}\OperatorTok{*}\VariableTok{p3} \OperatorTok{{-}} \FloatTok{4}\OperatorTok{*}\VariableTok{p2}\OperatorTok{\^{}}\FloatTok{2} \OperatorTok{\textgreater{}=} \FloatTok{0}\NormalTok{)}\OperatorTok{;}
+\KeywordTok{if} \OperatorTok{\textasciitilde{}}\NormalTok{(}\VariableTok{tmp1} \OperatorTok{\&\&} \VariableTok{tmp2}\NormalTok{)}
+    \VariableTok{error}\NormalTok{(}\StringTok{"P is not positve semidefinite!"}\NormalTok{)}\OperatorTok{;}
+\KeywordTok{end}
+\CommentTok{\% parameters: P, q, G, h}
+\VariableTok{P} \OperatorTok{=} \FloatTok{2} \OperatorTok{*}\NormalTok{ [}\VariableTok{p1}\OperatorTok{,} \VariableTok{p2}\OperatorTok{;} \VariableTok{p2}\OperatorTok{,} \VariableTok{p3}\NormalTok{]}\OperatorTok{;}
+\VariableTok{q} \OperatorTok{=}\NormalTok{ [}\VariableTok{q1}\OperatorTok{;} \VariableTok{q2}\NormalTok{]}\OperatorTok{;}
+\VariableTok{G} \OperatorTok{=}\NormalTok{ [}\FloatTok{1}\OperatorTok{,} \FloatTok{0}\OperatorTok{;} \OperatorTok{{-}}\FloatTok{1}\OperatorTok{,} \FloatTok{0}\OperatorTok{;} \FloatTok{0}\OperatorTok{,} \FloatTok{1}\OperatorTok{;} \FloatTok{0}\OperatorTok{,} \OperatorTok{{-}}\FloatTok{1}\NormalTok{]}\OperatorTok{;}
+\VariableTok{h} \OperatorTok{=}\NormalTok{ [}\VariableTok{l1}\OperatorTok{;} \VariableTok{l1}\OperatorTok{;} \VariableTok{l2}\OperatorTok{;} \VariableTok{l2}\NormalTok{]}\OperatorTok{;}
+
+\CommentTok{\%\% Solve the QP problem}
+\VariableTok{cvx\_begin}
+    \VariableTok{variable} \VariableTok{x}\NormalTok{(}\FloatTok{2}\NormalTok{)}\OperatorTok{;} \CommentTok{\% define variables [x1; x2]}
+    \CommentTok{\% define the objective, where quad\_form(x, P) = x\textquotesingle{}*P*x}
+    \VariableTok{obj} \OperatorTok{=} \FloatTok{0.5} \OperatorTok{*} \VariableTok{quad\_form}\NormalTok{(}\VariableTok{x}\OperatorTok{,} \VariableTok{P}\NormalTok{) }\OperatorTok{+} \VariableTok{q}\OperatorTok{\textquotesingle{}} \OperatorTok{*} \VariableTok{x}\OperatorTok{;} 
+    \VariableTok{minimize}\NormalTok{(}\VariableTok{obj}\NormalTok{)}\OperatorTok{;} 
+    \VariableTok{subject} \VariableTok{to}
+        \VariableTok{G} \OperatorTok{*} \VariableTok{x} \OperatorTok{\textless{}=} \VariableTok{h}\OperatorTok{;} \CommentTok{\% define the linear constraint}
+\VariableTok{cvx\_end}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{quadratically-constrained-quadratic-programming-qcqp}{%
+\subsection{Quadratically Constrained Quadratic Programming (QCQP)}\label{quadratically-constrained-quadratic-programming-qcqp}}
+
+\textbf{Definition.} An (convex) QCQP has the following form:
+\begin{align}
+   \label{eq:app-qcqpdef}
+   \min_{x \in \mathbb{R}^n} \ & \frac{1}{2} x^T P_0 x + q_0^T x \\
+   \text{subject to } & \frac{1}{2} x^T P_i x + q_i^T x + r_i \le 0, \ i = 1 \dots m \\
+   & Ax = b
+\end{align}
+where \(P_i \in \mathcal{S}_+^n, i = 0 \dots m\), \(q_i \in \mathbb{R}^n, i = 0 \dots m\), \(A \in \mathbb{R}^{p \times n}\), and \(b \in \mathbb{R}^p\). Note that in other literature, you may find a more general form of QCQP: they don't require \(P_i\)'s to be positive semidefinite. Yet in this case, the problem is non-convex and beyond our scope.
+
+\textbf{Example.} We study the problem of getting the minimum distance between two ellipses. By convention, when the ellipses overlap, we set the minimum distance as \(0\). This problem can be exactly solved by (convex) QCQP.
+Consider two ellipses of the following form:
+\begin{equation*}
+   \begin{cases}
+      \frac{1}{2} \begin{bmatrix} y_1 \\ z_1 \end{bmatrix}^T K_1 \begin{bmatrix} y_1 \\ z_1 \end{bmatrix}
+      + k_1^T \begin{bmatrix} y_1 \\ z_1 \end{bmatrix} + c_1 \le 0 \\ 
+      \frac{1}{2} \begin{bmatrix} y_2 \\ z_2 \end{bmatrix}^T K_2 \begin{bmatrix} y_2 \\ z_2 \end{bmatrix}
+      + k_2^T \begin{bmatrix} y_2 \\ z_2 \end{bmatrix} + c_2 \le 0 \\ 
+   \end{cases}
+\end{equation*}
+where \([y_1, z_1]^T\) and \([y_2, z_2]^T\) are arbitrary points inside the two ellipses respectively. Also, two ensure the ellipses are well defined, we should enforce the following properties in \((K_i, k_i, c_i), i = 1, 2\): (1) \(K_i \succ 0\); (2) Let \(K_i = L_i L_i^T\) be the Cholesky decomposition of \(K_i\). Then, ellipse \(i\) can be rewritten as:
+\begin{equation*}
+   \frac{1}{2} \parallel L_i^T \begin{bmatrix} y_i \\ z_i \end{bmatrix} - L_i^{-1} k_i \parallel^2 \le 
+   \frac{1}{2} \parallel L_i^{-1} k_i \parallel^2 - c_i
+\end{equation*}
+Thus,
+\begin{equation*}
+   \frac{1}{2} \parallel L_i^{-1} k_i \parallel^2 - c_i > 0
+\end{equation*}
+With these two assumptions, we want to minimize:
+\begin{equation*}
+   \frac{1}{2} (y_1 - y_2)^2 + (z_1 - z_2)^2
+\end{equation*}
+
+Now, we construct \(P, q, r\)'s in QCQP with the above parameters. Define the variable \(x\) as \([y_1, z_1, y_2, z_2]\).
+
+\begin{enumerate}
+\def\labelenumi{(\arabic{enumi})}
+\item
+  \(P_0\) can be obtained from:
+  \begin{equation*}
+     \frac{1}{2} (y_1 - y_2)^2 + (z_1 - z_2)^2 = \frac{1}{2} \begin{bmatrix}
+    y_1 \\ z_1 \\ y_2 \\ z_2
+     \end{bmatrix}^T \begin{bmatrix}
+    1 & 0 & -1 & 0 \\ 0 & 1 & 0 & -1 \\ -1 & 0 & 1 & 0 \\ 0 & -1 & 0 & 1
+     \end{bmatrix} \begin{bmatrix}
+    y_1 \\ z_1 \\ y_2 \\ z_2
+     \end{bmatrix}
+  \end{equation*}
+\item
+  \(P_1, q_1, r_1\) can be obtained from:
+  \begin{equation*}
+     \frac{1}{2} \begin{bmatrix} y_1 \\ z_1 \end{bmatrix}^T K_1 \begin{bmatrix} y_1 \\ z_1 \end{bmatrix}
+    + k_1^T \begin{bmatrix} y_1 \\ z_1 \end{bmatrix} + c_1 
+     = \frac{1}{2} x^T \begin{bmatrix}
+    K_1 & O \\ O & O
+     \end{bmatrix} + \begin{bmatrix}
+    k_1 \\ O 
+     \end{bmatrix}^T x + c_1 \le 0
+  \end{equation*}
+\item
+  \(P_2, q_2, r_2\) can be obtained from:
+  \begin{equation*}
+     \frac{1}{2} \begin{bmatrix} y_2 \\ z_2 \end{bmatrix}^T K_2 \begin{bmatrix} y_2 \\ z_2 \end{bmatrix}
+    + k_2^T \begin{bmatrix} y_2 \\ z_2 \end{bmatrix} + c_2
+     = \frac{1}{2} x^T \begin{bmatrix}
+    O & O \\ O & K_2
+     \end{bmatrix} + \begin{bmatrix}
+    O \\ k_2
+     \end{bmatrix}^T x + c_2 \le 0
+  \end{equation*}
+\end{enumerate}
+
+The corresponding codes are shown below. In this example, we test the minimum distance between a circle \(y_1^2 + z_1^2 \le 1\) and another circle \((y_2 - 2)^2 + (z_2 - 2)^2 \le 1\). You can check whether the result from QCQP aligns with your manual calculation.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\%\% Define the QCQP example setting}
+\VariableTok{K1} \OperatorTok{=} \VariableTok{eye}\NormalTok{(}\FloatTok{2}\NormalTok{)}\OperatorTok{;}
+\VariableTok{k1} \OperatorTok{=} \VariableTok{zeros}\NormalTok{(}\FloatTok{2}\OperatorTok{,} \FloatTok{1}\NormalTok{)}\OperatorTok{;}
+\VariableTok{c1} \OperatorTok{=} \OperatorTok{{-}}\FloatTok{0.5}\OperatorTok{;}
+\VariableTok{K2} \OperatorTok{=} \VariableTok{eye}\NormalTok{(}\FloatTok{2}\NormalTok{)}\OperatorTok{;}
+\VariableTok{k2} \OperatorTok{=}\NormalTok{ [}\FloatTok{2}\OperatorTok{;} \FloatTok{2}\NormalTok{]}\OperatorTok{;}
+\VariableTok{c2} \OperatorTok{=} \FloatTok{3.5}\OperatorTok{;}
+\KeywordTok{if} \OperatorTok{\textasciitilde{}}\NormalTok{(}\VariableTok{if\_ellipse}\NormalTok{(}\VariableTok{K1}\OperatorTok{,} \VariableTok{k1}\OperatorTok{,} \VariableTok{c1}\NormalTok{) }\OperatorTok{\&\&} \VariableTok{if\_ellipse}\NormalTok{(}\VariableTok{K2}\OperatorTok{,} \VariableTok{k2}\OperatorTok{,} \VariableTok{c2}\NormalTok{))}
+    \VariableTok{error}\NormalTok{(}\StringTok{"The example setting is not correct"}\NormalTok{)}\OperatorTok{;}
+\KeywordTok{end}
+\CommentTok{\% define parameters P0, P1, P2, q1, q2, r1, r2}
+\VariableTok{P0} \OperatorTok{=}\NormalTok{ [}\FloatTok{1}\OperatorTok{,}\FloatTok{0}\OperatorTok{,{-}}\FloatTok{1}\OperatorTok{,}\FloatTok{0}\OperatorTok{;} \FloatTok{0}\OperatorTok{,}\FloatTok{1}\OperatorTok{,}\FloatTok{0}\OperatorTok{,{-}}\FloatTok{1}\OperatorTok{;} \OperatorTok{{-}}\FloatTok{1}\OperatorTok{,}\FloatTok{0}\OperatorTok{,}\FloatTok{1}\OperatorTok{,}\FloatTok{0}\OperatorTok{;} \FloatTok{0}\OperatorTok{,{-}}\FloatTok{1}\OperatorTok{,}\FloatTok{0}\OperatorTok{,}\FloatTok{1}\NormalTok{]}\OperatorTok{;}
+\VariableTok{P1} \OperatorTok{=} \VariableTok{zeros}\NormalTok{(}\FloatTok{4}\OperatorTok{,} \FloatTok{4}\NormalTok{)}\OperatorTok{;}
+\VariableTok{P1}\NormalTok{(}\FloatTok{1}\OperatorTok{:}\FloatTok{2}\OperatorTok{,} \FloatTok{1}\OperatorTok{:}\FloatTok{2}\NormalTok{) }\OperatorTok{=} \VariableTok{K1}\OperatorTok{;}
+\VariableTok{P2} \OperatorTok{=} \VariableTok{zeros}\NormalTok{(}\FloatTok{4}\OperatorTok{,} \FloatTok{4}\NormalTok{)}\OperatorTok{;}
+\VariableTok{P2}\NormalTok{(}\FloatTok{3}\OperatorTok{:}\FloatTok{4}\OperatorTok{,} \FloatTok{3}\OperatorTok{:}\FloatTok{4}\NormalTok{) }\OperatorTok{=} \VariableTok{K2}\OperatorTok{;}
+\VariableTok{q1} \OperatorTok{=}\NormalTok{ [}\VariableTok{k1}\OperatorTok{;} \VariableTok{zeros}\NormalTok{(}\FloatTok{2}\OperatorTok{,} \FloatTok{1}\NormalTok{)]}\OperatorTok{;}
+\VariableTok{q2} \OperatorTok{=}\NormalTok{ [}\VariableTok{zeros}\NormalTok{(}\FloatTok{2}\OperatorTok{,} \FloatTok{1}\NormalTok{)}\OperatorTok{;} \VariableTok{k2}\NormalTok{]}\OperatorTok{;}
+\VariableTok{r1} \OperatorTok{=} \VariableTok{c1}\OperatorTok{;}
+\VariableTok{r2} \OperatorTok{=} \VariableTok{c2}\OperatorTok{;}
+
+\CommentTok{\%\% Solve the QCQP problem}
+\VariableTok{cvx\_begin}
+    \VariableTok{variable} \VariableTok{x}\NormalTok{(}\FloatTok{4}\NormalTok{)}\OperatorTok{;} \CommentTok{\% define variables [y1; z1; y2; z2]}
+    \CommentTok{\% define the objective, where quad\_form(x, P) = x\textquotesingle{}*P*x}
+    \VariableTok{obj} \OperatorTok{=} \FloatTok{0.5} \OperatorTok{*} \VariableTok{quad\_form}\NormalTok{(}\VariableTok{x}\OperatorTok{,} \VariableTok{P0}\NormalTok{)}\OperatorTok{;} 
+    \VariableTok{minimize}\NormalTok{(}\VariableTok{obj}\NormalTok{)}\OperatorTok{;} 
+    \VariableTok{subject} \VariableTok{to}
+        \FloatTok{0.5} \OperatorTok{*} \VariableTok{quad\_form}\NormalTok{(}\VariableTok{x}\OperatorTok{,} \VariableTok{P1}\NormalTok{) }\OperatorTok{+} \VariableTok{q1}\OperatorTok{\textquotesingle{}} \OperatorTok{*} \VariableTok{x} \OperatorTok{+} \VariableTok{r1} \OperatorTok{\textless{}=} \FloatTok{0}\OperatorTok{;}
+        \FloatTok{0.5} \OperatorTok{*} \VariableTok{quad\_form}\NormalTok{(}\VariableTok{x}\OperatorTok{,} \VariableTok{P2}\NormalTok{) }\OperatorTok{+} \VariableTok{q2}\OperatorTok{\textquotesingle{}} \OperatorTok{*} \VariableTok{x} \OperatorTok{+} \VariableTok{r2} \OperatorTok{\textless{}=} \FloatTok{0}\OperatorTok{;}
+\VariableTok{cvx\_end}
+
+\CommentTok{\%\% detect whether (K, k, c) generates a ellipse}
+\KeywordTok{function} \VariableTok{flag} \OperatorTok{=} \VariableTok{if\_ellipse}\NormalTok{(}\VariableTok{K}\OperatorTok{,} \VariableTok{k}\OperatorTok{,} \VariableTok{c}\NormalTok{)}
+    \VariableTok{L} \OperatorTok{=} \VariableTok{chol}\NormalTok{(}\VariableTok{K}\NormalTok{)}\OperatorTok{;}
+    \VariableTok{radius\_square} \OperatorTok{=} \FloatTok{0.5} \OperatorTok{*} \VariableTok{norm}\NormalTok{(}\VariableTok{L} \OperatorTok{\textbackslash{}} \VariableTok{k}\NormalTok{)}\OperatorTok{\^{}}\FloatTok{2} \OperatorTok{{-}} \VariableTok{c}\OperatorTok{;} \CommentTok{\% L \textbackslash{} k = inv(L) * k}
+    \VariableTok{flag} \OperatorTok{=}\NormalTok{ (}\VariableTok{radius\_square} \OperatorTok{\textgreater{}} \FloatTok{0}\NormalTok{)}\OperatorTok{;}
+\KeywordTok{end}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{second-order-cone-programming-socp}{%
+\subsection{Second-Order Cone Programming (SOCP)}\label{second-order-cone-programming-socp}}
+
+\textbf{Definition.} An SOCP has the following form:
+\begin{align}
+   \label{eq:app-socpdef}
+   \min_{x \in \mathbb{R}^n} \ & f^T x \\
+   \text{subject to } & || A_i x + b_i ||_2 \le c_i^T x + d_i, \ i = 1 \dots m \\
+   & Fx = g
+\end{align}
+where \(f \in \mathbb{R}^n, A_i \in \mathbb{R}^{n_i \times n}, b_i \in \mathbb{R}^{n_i}, c_i \in \mathbb{R}^n, d_i \in \mathbb{R}, F \in \mathbb{R}^{p \times n}\), and \(g \in \mathbb{R}^p\).
+
+\textbf{Example.} We consider the problem of stochastic linear programming:
+\begin{align}
+   \min_x \ & c^T x \\
+   \text{subject to } & \mathbb{P}(a_i^T x \le b_i) \ge p, \ i = 1 \dots m \\
+   & a_i \sim \mathcal{N}(\bar{a}_i, \Sigma_i), \ i = 1 \dots m
+\end{align}
+Here \(p\) should be more than \(0.5\). We show that this problem can be converted to a SOCP:
+
+Since \(a_i \sim \mathcal{N}(\bar{a}_i, \Sigma_i)\), then \((a_i^T x - b_i) \sim \mathcal{N}(\bar{a}_i^T x - b_i, x^T \Sigma_i x)\). Standardize it:
+\begin{equation*}
+   t := ||\Sigma_i^{\frac{1}{2}} x||_2^{-1} \left\{ (a_i^T x - b_i) - (\bar{a}_i^T x - b_i) \right\} \sim \mathcal{N}(0, 1)
+\end{equation*}
+Then,
+\begin{align}
+   \mathbb{P}(a_i^T x \le b_i) & = \mathbb{P}(a_i^T x - b_i \le 0) \\
+   & = \mathbb{P}(t \le -||\Sigma_i^{\frac{1}{2}} x||_2^{-1}(\bar{a}_i^T x - b_i)) \\
+   & = \Phi(-||\Sigma_i^{\frac{1}{2}} x||_2^{-1}(\bar{a}_i^T x - b_i))
+\end{align}
+Here \(\Phi(\cdot)\) is the cumulative distribution function of the standard normal distribution:
+\begin{equation*}
+   \Phi(\xi) = \int_{-\infty}^{\xi} e^{-\frac{1}{2} t^2} \ dt
+\end{equation*}
+Thus,
+\begin{align}
+   & \mathbb{P}(a_i^T x \le b_i) \ge p \\
+   \Longleftrightarrow & \Phi(-||\Sigma_i^{\frac{1}{2}} x||_2^{-1}(\bar{a}_i^T x - b_i)) \ge p \\
+   \Longleftrightarrow & -||\Sigma_i^{\frac{1}{2}} x||_2^{-1}(\bar{a}_i^T x - b_i) \ge \Phi^{-1}(p) \\
+   \Longleftrightarrow & \Phi^{-1}(p) ||\Sigma_i^{\frac{1}{2}} x||_2 \le b_i - \bar{a}_i^T x
+\end{align}
+which is exactly the same as inequality constraints in SOCP formulation. (You can see why we enforce \(p > 0.5\) here: otherwise \(\Phi^{-1}(p)\) will be negative and the constraint with not be an second-order cone.)
+
+In the following code example, we set up four inequality constraints and let \(\bar{a}_i^T x \le b_i, \ i = 1 \dots 4\) form an square located at the origin of size \(2\). Then, for convenience, we set \(\Sigma_i \equiv \sigma^2 I\).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\%\% Define the SOCP example setting}
+\VariableTok{bar\_a1} \OperatorTok{=}\NormalTok{ [}\FloatTok{1}\OperatorTok{;} \FloatTok{0}\NormalTok{]}\OperatorTok{;}
+\VariableTok{b1} \OperatorTok{=} \FloatTok{1}\OperatorTok{;}
+\VariableTok{bar\_a2} \OperatorTok{=}\NormalTok{ [}\FloatTok{0}\OperatorTok{;} \FloatTok{1}\NormalTok{]}\OperatorTok{;}
+\VariableTok{b2} \OperatorTok{=} \FloatTok{1}\OperatorTok{;}
+\VariableTok{bar\_a3} \OperatorTok{=}\NormalTok{ [}\OperatorTok{{-}}\FloatTok{1}\OperatorTok{;} \FloatTok{0}\NormalTok{]}\OperatorTok{;}
+\VariableTok{b3} \OperatorTok{=} \FloatTok{1}\OperatorTok{;}
+\VariableTok{bar\_a4} \OperatorTok{=}\NormalTok{ [}\FloatTok{0}\OperatorTok{;} \OperatorTok{{-}}\FloatTok{1}\NormalTok{]}\OperatorTok{;}
+\VariableTok{b4} \OperatorTok{=} \FloatTok{1}\OperatorTok{;}
+\VariableTok{sigma} \OperatorTok{=} \FloatTok{0.1}\OperatorTok{;} 
+\VariableTok{c} \OperatorTok{=}\NormalTok{ [}\FloatTok{2}\OperatorTok{;} \FloatTok{3}\NormalTok{]}\OperatorTok{;}
+\VariableTok{p} \OperatorTok{=} \FloatTok{0.9}\OperatorTok{;} \CommentTok{\% p should be more than 0.5}
+\VariableTok{Phi\_inv} \OperatorTok{=} \VariableTok{norminv}\NormalTok{(}\VariableTok{p}\NormalTok{)}\OperatorTok{;} \CommentTok{\% get Phi\^{}\{{-}1\}(p)}
+
+\CommentTok{\%\% Solve the SOCP problem}
+\VariableTok{cvx\_begin}
+    \VariableTok{variable} \VariableTok{x}\NormalTok{(}\FloatTok{2}\NormalTok{)}\OperatorTok{;} \CommentTok{\% define variables [x1; x2]}
+    \VariableTok{minimize}\NormalTok{(}\VariableTok{c}\OperatorTok{\textquotesingle{}} \OperatorTok{*} \VariableTok{x}\NormalTok{)}\OperatorTok{;} 
+    \VariableTok{subject} \VariableTok{to}
+        \VariableTok{sigma}\OperatorTok{*}\VariableTok{Phi\_inv} \OperatorTok{*} \VariableTok{norm}\NormalTok{(}\VariableTok{x}\NormalTok{) }\OperatorTok{\textless{}=} \VariableTok{b1} \OperatorTok{{-}} \VariableTok{bar\_a1}\OperatorTok{\textquotesingle{}} \OperatorTok{*} \VariableTok{x}\OperatorTok{;}
+        \VariableTok{sigma}\OperatorTok{*}\VariableTok{Phi\_inv} \OperatorTok{*} \VariableTok{norm}\NormalTok{(}\VariableTok{x}\NormalTok{) }\OperatorTok{\textless{}=} \VariableTok{b2} \OperatorTok{{-}} \VariableTok{bar\_a2}\OperatorTok{\textquotesingle{}} \OperatorTok{*} \VariableTok{x}\OperatorTok{;}
+        \VariableTok{sigma}\OperatorTok{*}\VariableTok{Phi\_inv} \OperatorTok{*} \VariableTok{norm}\NormalTok{(}\VariableTok{x}\NormalTok{) }\OperatorTok{\textless{}=} \VariableTok{b3} \OperatorTok{{-}} \VariableTok{bar\_a3}\OperatorTok{\textquotesingle{}} \OperatorTok{*} \VariableTok{x}\OperatorTok{;}
+        \VariableTok{sigma}\OperatorTok{*}\VariableTok{Phi\_inv} \OperatorTok{*} \VariableTok{norm}\NormalTok{(}\VariableTok{x}\NormalTok{) }\OperatorTok{\textless{}=} \VariableTok{b4} \OperatorTok{{-}} \VariableTok{bar\_a4}\OperatorTok{\textquotesingle{}} \OperatorTok{*} \VariableTok{x}\OperatorTok{;}
+\VariableTok{cvx\_end}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{semidefinite-programming-sdp}{%
+\subsection{Semidefinite Programming (SDP)}\label{semidefinite-programming-sdp}}
+
+\textbf{Definition.} An SDP has the following form:
+\begin{align}
+   \label{eq:app-sdpdef}
+   \min_{X_i, x_i} \ & \sum_{i=1}^{n_s} C_i \cdot X_i + \sum_{i=1}^{n_u} c_i \cdot x_i \\
+   \text{subject to } & \sum_{i=1}^{n_s} A_{i,j} \cdot X_i + \sum_{i=1}^{n_u} a_{i,j} \cdot x_i = b_j, \quad j = 1 \dots m \\
+   & X_i \in \mathcal{S}_+^{D_i}, \quad i = 1 \dots n_s \\
+   & x_i \in \mathbb{R}^{d_i}, \quad i = 1 \dots n_u  
+\end{align}
+where \(C_i, A_{i, j} \in \mathbb{R}^{D_i \times D_i}\), \(c_i, a_{i, j} \in \mathbb{R}^{d_i}\), and \(\cdot\) means element-wise product. For two square matrices \(A, B\), the dot product \(A \cdot B\) is equal to \(\text{tr}(A B)\); for two vectors \(a, b\), the dot product \(a \cdot b\) is the same as inner product \(a^T b\).
+
+Note that actually there are many ``standard'' forms of SDP. For example, in the convex optimization theory part, you may find an SDP that looks like:
+\begin{align}
+   \min_X \ & C \cdot X \\
+   \text{subject to } & A \cdot X = b \\
+   & X \succeq 0
+\end{align}
+It is convenient for us to analyze the theoretical properties of SDP with this form. Also, in SDP solvers' User Guide, you may see more complex SDP forms which involve more general convex cones. For example, see \href{https://docs.mosek.com/10.0/toolbox/tutorial-sdo-shared.html\#doc-tutorial-sdo}{MOSEK's MATLAB API docs}. Here we turn to use the form of \eqref{eq:app-sdpdef} for two reasons: (1) it is general enough: our SDP example below can be converted to this form (also, SDPs from sum-of-squares programming in this book are exactly of the form \eqref{eq:app-sdpdef}); (2) it is more readable than more complex forms.
+
+\textbf{Example.} We consider the problem of finding the minimum eigenvalue for a positive semidefinite matrix \(S\). We will show that this problem can be converted to \eqref{eq:app-sdpdef}. Since \(S\) is positive semidefinite, the finding procedure can be cast as
+\begin{align}
+    \max_\lambda & \ \lambda \\
+    \text{subject to } & S - \lambda I \succeq 0
+\end{align}
+Now define an auxiliary matrix \(X := S - \lambda I\). We have
+\begin{align}
+    \min_{\lambda, X} & \ -\lambda \\
+   \text{subject to } &  X + \lambda I = S \\
+   & X \succeq 0
+\end{align}
+It is obvious that the linear matrix equality constraint \(X + \lambda I = S\) can be divided into several linear scalar equality constraints in \eqref{eq:app-sdpdef}. For example, we consider \(S \in \mathbb{S}_+^3\). Thereby \(X + \lambda I = S\) will lead to \(6\) linear equality constraints (We don't consider \(X\) is a symmetric matrix here, since most solvers will implicitly consider this. Thus, only the upper-triangular part of \(X\) and \(S\) are actually used in the equality construction.):
+\begin{align}
+   &  \begin{bmatrix}
+      1 & 0 & 0 \\ 0 & 0 & 0 \\ 0 & 0 & 0
+   \end{bmatrix} \cdot X  + \lambda = S[0, 0],  
+    \begin{bmatrix}
+      0 & 1 & 0 \\ 0 & 0 & 0 \\ 0 & 0 & 0
+   \end{bmatrix} \cdot X  = S[0, 1],
+    \begin{bmatrix}
+      0 & 0 & 1 \\ 0 & 0 & 0 \\ 0 & 0 & 0
+   \end{bmatrix} \cdot X  = S[0, 2] \\
+   &  \begin{bmatrix}
+      0 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 0
+   \end{bmatrix} \cdot X  + \lambda = S[1, 1],
+    \begin{bmatrix}
+      0 & 0 & 0 \\ 0 & 0 & 1 \\ 0 & 0 & 0
+   \end{bmatrix} \cdot X  = S[1, 2], 
+    \begin{bmatrix}
+      0 & 0 & 0 \\ 0 & 0 & 0 \\ 0 & 0 & 1
+   \end{bmatrix} \cdot X  + \lambda = S[2, 2] 
+\end{align}
+Seems tedious? Fortunately, CVX provides a high-level API to handle these linear equality constraints: you just need to write down
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\VariableTok{X} \OperatorTok{+} \VariableTok{lam} \OperatorTok{*} \VariableTok{eye}\NormalTok{(}\FloatTok{3}\NormalTok{) }\OperatorTok{==} \VariableTok{S}\OperatorTok{;} \CommentTok{\% linear equality constraints: X + lam *I = S}
+\end{Highlighting}
+\end{Shaded}
+
+CVX will autometically convert this high-level constraint to \eqref{eq:app-sdpdef} and pass them to the underlying solver.
+
+To generate a ramdom \(S \in \mathcal{S}_+^3\), you just need to assign three nonnegative eigenvalues to the program. After that, an random \(S\) will be generated by \(S = Q \ \text{diag}(\lambda_1, \lambda_2, \lambda_3) \ Q^T\), where \(Q\) is random orthonormal matrix.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\%\% Define the SDP example setting}
+\VariableTok{lam\_list} \OperatorTok{=}\NormalTok{ [}\FloatTok{0.7}\OperatorTok{;} \FloatTok{2.4}\OperatorTok{;} \FloatTok{3.7}\NormalTok{]}\OperatorTok{;}
+\VariableTok{S} \OperatorTok{=} \VariableTok{generate\_random\_PD\_matrix}\NormalTok{(}\VariableTok{lam\_list}\NormalTok{)}\OperatorTok{;} \CommentTok{\% get a PD matrix S}
+
+\CommentTok{\%\% Solve the SDP problem}
+\VariableTok{cvx\_begin}
+    \VariableTok{variable} \VariableTok{X}\NormalTok{(}\FloatTok{3}\OperatorTok{,} \FloatTok{3}\NormalTok{) }\VariableTok{symmetric}\OperatorTok{;}
+    \VariableTok{variable} \VariableTok{lam}\OperatorTok{;} 
+    \VariableTok{maximize}\NormalTok{(}\VariableTok{lam}\NormalTok{)}\OperatorTok{;} 
+    \VariableTok{subject} \VariableTok{to}
+        \CommentTok{\% here "==" should be read as "is in"}
+        \VariableTok{X} \OperatorTok{==} \VariableTok{semidefinite}\NormalTok{(}\FloatTok{3}\NormalTok{)}\OperatorTok{;} 
+        \VariableTok{X} \OperatorTok{+} \VariableTok{lam} \OperatorTok{*} \VariableTok{eye}\NormalTok{(}\FloatTok{3}\NormalTok{) }\OperatorTok{==} \VariableTok{S}\OperatorTok{;}
+\VariableTok{cvx\_end}
+
+\CommentTok{\% this function help to generate PD matrix of size 3*3 }
+\CommentTok{\% if you provide the eigenvalues [lam\_1, lam\_2, lam\_3]}
+\KeywordTok{function} \VariableTok{S} \OperatorTok{=} \VariableTok{generate\_random\_PD\_matrix}\NormalTok{(}\VariableTok{lam\_list}\NormalTok{)}
+    \KeywordTok{if} \OperatorTok{\textasciitilde{}}\VariableTok{all}\NormalTok{(}\VariableTok{lam\_list} \OperatorTok{\textgreater{}=} \FloatTok{0}\NormalTok{) }\CommentTok{\% all eigenvalues \textgreater{}= 0}
+        \VariableTok{error}\NormalTok{(}\StringTok{"All eigenvalues must be nonnegative."}\NormalTok{)}\OperatorTok{;}
+    \KeywordTok{end}
+    \VariableTok{D} \OperatorTok{=} \VariableTok{diag}\NormalTok{(}\VariableTok{lam\_list}\NormalTok{)}\OperatorTok{;}
+    \CommentTok{\% use QR factorization to generate a random orthonormal matrix Q}
+\NormalTok{    [}\VariableTok{Q}\OperatorTok{,} \OperatorTok{\textasciitilde{}}\NormalTok{] }\OperatorTok{=} \VariableTok{qr}\NormalTok{(}\VariableTok{rand}\NormalTok{(}\FloatTok{3}\OperatorTok{,} \FloatTok{3}\NormalTok{))}\OperatorTok{;}
+    \VariableTok{S} \OperatorTok{=}  \VariableTok{Q} \OperatorTok{*} \VariableTok{D} \OperatorTok{*} \VariableTok{Q}\OperatorTok{\textquotesingle{};}
+\KeywordTok{end}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{cvxpy-introduction-and-examples}{%
+\subsection{CVXPY Introduction and Examples}\label{cvxpy-introduction-and-examples}}
+
+Apart from CVX MATLAB, we also have a Python package called CVXPY, which functions almost the same as CVX MATLAB. To define and solve a convex optimization problem CVXPY, basically, there are three steps (apart from importing necessary packages):
+
+\begin{itemize}
+\item
+  Step 1: Define parameters and variables in a certain type of convex problem. Here variables are what you are trying to optimize or ``learn''. Parameters are the ``coefficients'' of variables in the objective and constraints.
+\item
+  Step 2: Define the objective function and constraints.
+\item
+  Step 3: Solve the problem and get the results.
+\end{itemize}
+
+Here we provide the CVXPY codes for the above five convex optimization examples.
+
+\hypertarget{lp}{%
+\subsubsection{LP}\label{lp}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{import}\NormalTok{ cvxpy }\ImportTok{as}\NormalTok{ cp}
+\ImportTok{import}\NormalTok{ numpy }\ImportTok{as}\NormalTok{ np}
+
+\CommentTok{\#\# Define the LP example setting}
+\NormalTok{c1 }\OperatorTok{=} \DecValTok{2}
+\NormalTok{c2 }\OperatorTok{=} \OperatorTok{{-}}\DecValTok{5}
+\NormalTok{l1 }\OperatorTok{=} \DecValTok{3}
+\NormalTok{l2 }\OperatorTok{=} \DecValTok{7}
+
+\CommentTok{\#\# Step 1: define variables and parameters}
+\NormalTok{x }\OperatorTok{=}\NormalTok{ cp.Variable(}\DecValTok{2}\NormalTok{) }\CommentTok{\# variable: x = [x1, x2]\^{}T}
+\CommentTok{\# parameters: c, A, b}
+\NormalTok{c }\OperatorTok{=}\NormalTok{ np.array([c1, c2]) }
+\NormalTok{A }\OperatorTok{=}\NormalTok{ np.array([[}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\OperatorTok{{-}}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\OperatorTok{{-}}\DecValTok{1}\NormalTok{]])}
+\NormalTok{b }\OperatorTok{=}\NormalTok{ np.array([l1, l1, l2, l2])}
+
+\CommentTok{\#\# Step 2: define objective and constraints}
+\NormalTok{obj }\OperatorTok{=}\NormalTok{ cp.Minimize(c.T }\OperatorTok{@}\NormalTok{ x)}
+\NormalTok{constraints }\OperatorTok{=}\NormalTok{ [A }\OperatorTok{@}\NormalTok{ x }\OperatorTok{\textless{}=}\NormalTok{ b]}
+\NormalTok{prob }\OperatorTok{=}\NormalTok{ cp.Problem(obj, constraints) }\CommentTok{\# form the problem}
+
+\CommentTok{\#\# Step 3: solve problem and get results}
+\NormalTok{prob.solve()  }
+\BuiltInTok{print}\NormalTok{(}\StringTok{"status: "}\NormalTok{, prob.status) }\CommentTok{\# check whether the status is "optimal"}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"optimal value: "}\NormalTok{, prob.value) }\CommentTok{\# optimal objective}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"optimal solution: "}\NormalTok{, x.value) }\CommentTok{\# optimal x}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{qp}{%
+\subsubsection{QP}\label{qp}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{import}\NormalTok{ cvxpy }\ImportTok{as}\NormalTok{ cp}
+\ImportTok{import}\NormalTok{ numpy }\ImportTok{as}\NormalTok{ np}
+
+\CommentTok{\#\# Define the LP example setting}
+\NormalTok{p1 }\OperatorTok{=} \DecValTok{2}
+\NormalTok{p2 }\OperatorTok{=} \FloatTok{0.5}
+\NormalTok{p3 }\OperatorTok{=} \DecValTok{4}
+\NormalTok{q1 }\OperatorTok{=} \OperatorTok{{-}}\DecValTok{3}
+\NormalTok{q2 }\OperatorTok{=} \OperatorTok{{-}}\FloatTok{6.5}
+\NormalTok{l1 }\OperatorTok{=} \DecValTok{2}
+\NormalTok{l2 }\OperatorTok{=} \FloatTok{2.5}
+\CommentTok{\# check if the generated P is positive semidefinite}
+\NormalTok{tmp1 }\OperatorTok{=}\NormalTok{ (p1 }\OperatorTok{\textgreater{}=} \DecValTok{0}\NormalTok{)}
+\NormalTok{tmp2 }\OperatorTok{=}\NormalTok{ (p1}\OperatorTok{*}\NormalTok{p3 }\OperatorTok{{-}} \DecValTok{4}\OperatorTok{*}\NormalTok{p2}\OperatorTok{**}\DecValTok{2} \OperatorTok{\textgreater{}=} \DecValTok{0}\NormalTok{)}
+\ControlFlowTok{assert}\NormalTok{(tmp1 }\KeywordTok{and}\NormalTok{ tmp2, }\StringTok{"P is not positve semidefinite!"}\NormalTok{)}
+
+\CommentTok{\#\# Step 1: define variables and parameters}
+\NormalTok{x }\OperatorTok{=}\NormalTok{ cp.Variable(}\DecValTok{2}\NormalTok{) }\CommentTok{\# variable: x = [x1, x2]\^{}T}
+\CommentTok{\# parameters: P, q, G, h}
+\NormalTok{P }\OperatorTok{=} \DecValTok{2}\OperatorTok{*}\NormalTok{np.array([[p1, p2], [p2, p3]])}
+\NormalTok{q }\OperatorTok{=}\NormalTok{ np.array([q1, q2]) }
+\NormalTok{G }\OperatorTok{=}\NormalTok{ np.array([[}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\OperatorTok{{-}}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\OperatorTok{{-}}\DecValTok{1}\NormalTok{]])}
+\NormalTok{h }\OperatorTok{=}\NormalTok{ np.array([l1, l1, l2, l2])}
+
+\CommentTok{\#\# Step 2: define the objective and constraints}
+\NormalTok{fx }\OperatorTok{=} \FloatTok{0.5} \OperatorTok{*}\NormalTok{ cp.quad\_form(x, P) }\OperatorTok{+}\NormalTok{ q.T }\OperatorTok{@}\NormalTok{ x}
+\NormalTok{obj }\OperatorTok{=}\NormalTok{ cp.Minimize(fx)}
+\NormalTok{constraints }\OperatorTok{=}\NormalTok{ [G }\OperatorTok{@}\NormalTok{ x }\OperatorTok{\textless{}=}\NormalTok{ h]}
+\NormalTok{prob }\OperatorTok{=}\NormalTok{ cp.Problem(obj, constraints) }\CommentTok{\# form the problem}
+
+\CommentTok{\#\# Step 3: solve the problem and get results}
+\NormalTok{prob.solve()  }
+\BuiltInTok{print}\NormalTok{(}\StringTok{"status: "}\NormalTok{, prob.status) }\CommentTok{\# check whether the status is "optimal"}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"optimal value: "}\NormalTok{, prob.value) }\CommentTok{\# optimal objective}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"optimal solution: "}\NormalTok{, x.value) }\CommentTok{\# optimal x}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{qcqp}{%
+\subsubsection{QCQP}\label{qcqp}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{import}\NormalTok{ cvxpy }\ImportTok{as}\NormalTok{ cp}
+\ImportTok{import}\NormalTok{ numpy }\ImportTok{as}\NormalTok{ np}
+\ImportTok{from}\NormalTok{ numpy.linalg }\ImportTok{import}\NormalTok{ cholesky, inv, norm}
+
+\CommentTok{\#\# Define the QCQP example setting}
+\KeywordTok{def}\NormalTok{ if\_ellipse(K, k, c):}
+    \CommentTok{\# examine whether 0.5*x\^{}T K x + k\^{}T x + c \textless{}= 0 is a ellipse}
+    \CommentTok{\# if K is not positive semidefinite, Cholesky will raise an error}
+\NormalTok{    L }\OperatorTok{=}\NormalTok{ cholesky(K) }
+\NormalTok{    radius\_square }\OperatorTok{=} \FloatTok{0.5} \OperatorTok{*}\NormalTok{ norm(inv(L) }\OperatorTok{@}\NormalTok{ k)}\OperatorTok{**}\DecValTok{2} \OperatorTok{{-}}\NormalTok{ c}
+    \ControlFlowTok{return}\NormalTok{ radius\_square }\OperatorTok{\textgreater{}} \DecValTok{0}
+\NormalTok{K1 }\OperatorTok{=}\NormalTok{ np.eye(}\DecValTok{2}\NormalTok{)}
+\NormalTok{k1 }\OperatorTok{=}\NormalTok{ np.zeros(}\DecValTok{2}\NormalTok{)}
+\NormalTok{c1 }\OperatorTok{=} \OperatorTok{{-}}\FloatTok{0.5}
+\NormalTok{K2 }\OperatorTok{=}\NormalTok{ np.array([[}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{]])}
+\NormalTok{k2 }\OperatorTok{=}\NormalTok{ np.array([}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{])}
+\NormalTok{c2 }\OperatorTok{=} \FloatTok{3.5}
+\ControlFlowTok{if} \KeywordTok{not}\NormalTok{ (if\_ellipse(K1, k1, c1) }\KeywordTok{and}\NormalTok{ if\_ellipse(K2, k2, c2)):}
+    \ControlFlowTok{raise} \PreprocessorTok{ValueError}\NormalTok{(}\StringTok{"The example setting is not correct"}\NormalTok{)}
+
+\CommentTok{\#\# Step 1: define variables and parameters}
+\NormalTok{P0 }\OperatorTok{=}\NormalTok{ np.array([[}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\OperatorTok{{-}}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\OperatorTok{{-}}\DecValTok{1}\NormalTok{], [}\OperatorTok{{-}}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{,}\OperatorTok{{-}}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{]])}
+\NormalTok{P1 }\OperatorTok{=}\NormalTok{ np.zeros((}\DecValTok{4}\NormalTok{,}\DecValTok{4}\NormalTok{))}
+\NormalTok{P1[:}\DecValTok{2}\NormalTok{, :}\DecValTok{2}\NormalTok{] }\OperatorTok{=}\NormalTok{ K1}
+\NormalTok{P2 }\OperatorTok{=}\NormalTok{ np.zeros((}\DecValTok{4}\NormalTok{,}\DecValTok{4}\NormalTok{))}
+\NormalTok{P2[}\DecValTok{2}\NormalTok{:, }\DecValTok{2}\NormalTok{:] }\OperatorTok{=}\NormalTok{ K2}
+\NormalTok{q1 }\OperatorTok{=}\NormalTok{ np.concatenate([k1, np.zeros(}\DecValTok{2}\NormalTok{)])}
+\NormalTok{q2 }\OperatorTok{=}\NormalTok{ np.concatenate([np.zeros(}\DecValTok{2}\NormalTok{), k2])}
+\NormalTok{r1 }\OperatorTok{=}\NormalTok{ c1}
+\NormalTok{r2 }\OperatorTok{=}\NormalTok{ c2}
+
+\CommentTok{\#\# Step 2: define objective and constraints}
+\NormalTok{x }\OperatorTok{=}\NormalTok{ cp.Variable(}\DecValTok{4}\NormalTok{) }\CommentTok{\# variable: x = [y1, z1, y2, z2]\^{}T}
+\NormalTok{fx }\OperatorTok{=} \FloatTok{0.5} \OperatorTok{*}\NormalTok{ cp.quad\_form(x, P0)}
+\NormalTok{obj }\OperatorTok{=}\NormalTok{ cp.Minimize(fx)}
+\NormalTok{con1 }\OperatorTok{=}\NormalTok{ (}\FloatTok{0.5} \OperatorTok{*}\NormalTok{ cp.quad\_form(x, P1) }\OperatorTok{+}\NormalTok{ q1.T }\OperatorTok{@}\NormalTok{ x }\OperatorTok{+}\NormalTok{ r1 }\OperatorTok{\textless{}=} \DecValTok{0}\NormalTok{) }\CommentTok{\# ellipse 1}
+\NormalTok{con2 }\OperatorTok{=}\NormalTok{ (}\FloatTok{0.5} \OperatorTok{*}\NormalTok{ cp.quad\_form(x, P2) }\OperatorTok{+}\NormalTok{ q2.T }\OperatorTok{@}\NormalTok{ x }\OperatorTok{+}\NormalTok{ r2 }\OperatorTok{\textless{}=} \DecValTok{0}\NormalTok{) }\CommentTok{\# ellipse 2}
+\NormalTok{constraints }\OperatorTok{=}\NormalTok{ [con1, con2]}
+\NormalTok{prob }\OperatorTok{=}\NormalTok{ cp.Problem(obj, constraints) }\CommentTok{\# form the problem}
+
+\CommentTok{\#\# Step 3: solve problem and get results}
+\NormalTok{prob.solve()  }
+\BuiltInTok{print}\NormalTok{(}\StringTok{"status: "}\NormalTok{, prob.status) }\CommentTok{\# check whether the status is "optimal"}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"optimal value: "}\NormalTok{, prob.value) }\CommentTok{\# optimal objective}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"optimal solution: "}\NormalTok{, x.value) }\CommentTok{\# optimal x}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{socp}{%
+\subsubsection{SOCP}\label{socp}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{import}\NormalTok{ cvxpy }\ImportTok{as}\NormalTok{ cp}
+\ImportTok{import}\NormalTok{ numpy }\ImportTok{as}\NormalTok{ np}
+\ImportTok{from}\NormalTok{ scipy.stats }\ImportTok{import}\NormalTok{ norm}
+
+\CommentTok{\#\# Define the SOCP example setting}
+\CommentTok{\# define bar\_ai, bi (i = 1, 2, 3, 4)}
+\NormalTok{bar\_a1 }\OperatorTok{=}\NormalTok{ np.array([}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{])}
+\NormalTok{b1 }\OperatorTok{=} \DecValTok{1}
+\NormalTok{bar\_a2 }\OperatorTok{=}\NormalTok{ np.array([}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{])}
+\NormalTok{b2 }\OperatorTok{=} \DecValTok{1}
+\NormalTok{bar\_a3 }\OperatorTok{=}\NormalTok{ np.array([}\OperatorTok{{-}}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{])}
+\NormalTok{b3 }\OperatorTok{=} \DecValTok{1}
+\NormalTok{bar\_a4 }\OperatorTok{=}\NormalTok{ np.array([}\DecValTok{0}\NormalTok{, }\OperatorTok{{-}}\DecValTok{1}\NormalTok{])}
+\NormalTok{b4 }\OperatorTok{=} \DecValTok{1}
+\NormalTok{sigma }\OperatorTok{=} \FloatTok{0.1} 
+\NormalTok{c }\OperatorTok{=}\NormalTok{ np.array([}\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{])}
+\NormalTok{p }\OperatorTok{=} \FloatTok{0.9} \CommentTok{\# p should be more than 0.5}
+
+\CommentTok{\#\# Step 1: define variables and parameters}
+\NormalTok{Phi\_inv }\OperatorTok{=}\NormalTok{ norm.ppf(p) }\CommentTok{\# get Phi\^{}\{{-}1\}(p)}
+
+\CommentTok{\#\# Step 2: define objective and constraints}
+\NormalTok{x }\OperatorTok{=}\NormalTok{ cp.Variable(}\DecValTok{2}\NormalTok{) }\CommentTok{\# variable: x = [x1, x2]\^{}T}
+\NormalTok{obj }\OperatorTok{=}\NormalTok{ cp.Minimize(c.T }\OperatorTok{@}\NormalTok{ x)}
+\CommentTok{\# use cp.SOC(t, x) to create the SOC constraint ||x||\_2 \textless{}= t}
+\NormalTok{constraints }\OperatorTok{=}\NormalTok{ [}
+\NormalTok{    cp.SOC(b1 }\OperatorTok{{-}}\NormalTok{ bar\_a1.T }\OperatorTok{@}\NormalTok{ x, sigma}\OperatorTok{*}\NormalTok{Phi\_inv}\OperatorTok{*}\NormalTok{x),}
+\NormalTok{    cp.SOC(b2 }\OperatorTok{{-}}\NormalTok{ bar\_a2.T }\OperatorTok{@}\NormalTok{ x, sigma}\OperatorTok{*}\NormalTok{Phi\_inv}\OperatorTok{*}\NormalTok{x),}
+\NormalTok{    cp.SOC(b3 }\OperatorTok{{-}}\NormalTok{ bar\_a3.T }\OperatorTok{@}\NormalTok{ x, sigma}\OperatorTok{*}\NormalTok{Phi\_inv}\OperatorTok{*}\NormalTok{x),}
+\NormalTok{    cp.SOC(b4 }\OperatorTok{{-}}\NormalTok{ bar\_a4.T }\OperatorTok{@}\NormalTok{ x, sigma}\OperatorTok{*}\NormalTok{Phi\_inv}\OperatorTok{*}\NormalTok{x),}
+\NormalTok{]}
+\NormalTok{prob }\OperatorTok{=}\NormalTok{ cp.Problem(obj, constraints) }\CommentTok{\# form the problem}
+
+\CommentTok{\#\# Step 3: solve problem and get results}
+\NormalTok{prob.solve()  }
+\BuiltInTok{print}\NormalTok{(}\StringTok{"status: "}\NormalTok{, prob.status) }\CommentTok{\# check whether the status is "optimal"}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"optimal value: "}\NormalTok{, prob.value) }\CommentTok{\# optimal objective}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"optimal solution: "}\NormalTok{, x.value) }\CommentTok{\# optimal x}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{sdp}{%
+\subsubsection{SDP}\label{sdp}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{import}\NormalTok{ cvxpy }\ImportTok{as}\NormalTok{ cp}
+\ImportTok{import}\NormalTok{ numpy }\ImportTok{as}\NormalTok{ np}
+\ImportTok{from}\NormalTok{ scipy.stats }\ImportTok{import}\NormalTok{ ortho\_group}
+
+\CommentTok{\#\# Define the SDP example setting}
+\CommentTok{\# this function help to generate PD matrix of size 3*3 }
+\CommentTok{\# if you provide the eigenvalues [lam\_1, lam\_2, lam\_3]}
+\KeywordTok{def}\NormalTok{ generate\_random\_PD\_matrix(lam\_list):}
+    \ControlFlowTok{assert}\NormalTok{ np.}\BuiltInTok{all}\NormalTok{(lam\_list }\OperatorTok{\textgreater{}=} \DecValTok{0}\NormalTok{) }\CommentTok{\# all eigenvalues \textgreater{}= 0}
+    \CommentTok{\# S = Q @ D @ Q.T}
+\NormalTok{    D }\OperatorTok{=}\NormalTok{ np.diag(lam\_list)}
+\NormalTok{    Q }\OperatorTok{=}\NormalTok{ ortho\_group.rvs(}\DecValTok{3}\NormalTok{)}
+    \ControlFlowTok{return}\NormalTok{ Q }\OperatorTok{@}\NormalTok{ D }\OperatorTok{@}\NormalTok{ Q.T}
+\NormalTok{lam\_list }\OperatorTok{=}\NormalTok{ np.array([}\FloatTok{0.5}\NormalTok{, }\FloatTok{2.4}\NormalTok{, }\FloatTok{3.7}\NormalTok{])}
+\NormalTok{S }\OperatorTok{=}\NormalTok{ generate\_random\_PD\_matrix(lam\_list) }\CommentTok{\# get a PD matrix S}
+
+\CommentTok{\#\# Step 1: define variables and parameters}
+\CommentTok{\# get coefficients for equality constraints}
+\NormalTok{A\_00 }\OperatorTok{=}\NormalTok{ np.array([[}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{]]) }\CommentTok{\# tr(A\_00 @ X) + lam = S\_00}
+\NormalTok{A\_01 }\OperatorTok{=}\NormalTok{ np.array([[}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{]]) }\CommentTok{\# tr(A\_01 @ X) = S\_01}
+\NormalTok{A\_02 }\OperatorTok{=}\NormalTok{ np.array([[}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{]]) }\CommentTok{\# tr(A\_02 @ X) = S\_02}
+\NormalTok{A\_11 }\OperatorTok{=}\NormalTok{ np.array([[}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{]]) }\CommentTok{\# tr(A\_11 @ X) + lam = S\_11}
+\NormalTok{A\_12 }\OperatorTok{=}\NormalTok{ np.array([[}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{]]) }\CommentTok{\# tr(A\_12 @ X) = S\_12}
+\NormalTok{A\_22 }\OperatorTok{=}\NormalTok{ np.array([[}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{]]) }\CommentTok{\# tr(A\_22 @ X) + lam = S\_22}
+
+\CommentTok{\#\# Step 2: define objective and constraints}
+\CommentTok{\# define a PD matrix variable X of size 3*3}
+\NormalTok{X }\OperatorTok{=}\NormalTok{ cp.Variable((}\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{), symmetric}\OperatorTok{=}\VariableTok{True}\NormalTok{)}
+\NormalTok{constraints }\OperatorTok{=}\NormalTok{ [X }\OperatorTok{\textgreater{}\textgreater{}} \DecValTok{0}\NormalTok{] }\CommentTok{\# the operator \textgreater{}\textgreater{} denotes matrix inequality}
+\NormalTok{lam }\OperatorTok{=}\NormalTok{ cp.Variable(}\DecValTok{1}\NormalTok{)}
+\NormalTok{constraints }\OperatorTok{+=}\NormalTok{ [}
+\NormalTok{    cp.trace(A\_00 }\OperatorTok{@}\NormalTok{ X) }\OperatorTok{+}\NormalTok{ lam }\OperatorTok{==}\NormalTok{ S[}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{],}
+\NormalTok{    cp.trace(A\_01 }\OperatorTok{@}\NormalTok{ X) }\OperatorTok{==}\NormalTok{ S[}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{],}
+\NormalTok{    cp.trace(A\_02 }\OperatorTok{@}\NormalTok{ X) }\OperatorTok{==}\NormalTok{ S[}\DecValTok{0}\NormalTok{,}\DecValTok{2}\NormalTok{],}
+\NormalTok{    cp.trace(A\_11 }\OperatorTok{@}\NormalTok{ X) }\OperatorTok{+}\NormalTok{ lam }\OperatorTok{==}\NormalTok{ S[}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{],}
+\NormalTok{    cp.trace(A\_12 }\OperatorTok{@}\NormalTok{ X) }\OperatorTok{==}\NormalTok{ S[}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{],}
+\NormalTok{    cp.trace(A\_22 }\OperatorTok{@}\NormalTok{ X) }\OperatorTok{+}\NormalTok{ lam }\OperatorTok{==}\NormalTok{ S[}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{],}
+\NormalTok{]}
+\NormalTok{obj }\OperatorTok{=}\NormalTok{ cp.Minimize(}\OperatorTok{{-}}\NormalTok{lam)}
+\NormalTok{prob }\OperatorTok{=}\NormalTok{ cp.Problem(obj, constraints) }\CommentTok{\# form the problem}
+
+\CommentTok{\#\# Step 3: solve problem and get results}
+\NormalTok{prob.solve()  }
+\BuiltInTok{print}\NormalTok{(}\StringTok{"status: "}\NormalTok{, prob.status) }\CommentTok{\# check whether the status is "optimal"}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"optimal value: "}\NormalTok{, prob.value) }\CommentTok{\# optimal objective}
+\BuiltInTok{print}\NormalTok{(}\StringTok{"optimal solution: "}\NormalTok{, lam.value) }\CommentTok{\# optimal lam}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{algebraic-techniques-and-sum-of-squares}{%
+\chapter{Algebraic Techniques and Sum-of-Squares}\label{algebraic-techniques-and-sum-of-squares}}
+
+\hypertarget{algebra}{%
+\section{Algebra}\label{algebra}}
+
+\hypertarget{polynomials}{%
+\subsection{Polynomials}\label{polynomials}}
+
+\begin{definition}[Monomial,Polynomial]
+\protect\hypertarget{def:monomial}{}\label{def:monomial}A \textbf{monomial} in \(x_1,\cdots,x_n\) is a product of the form \(x_1^{\alpha_1}\cdot x_2^{\alpha_2}\cdots x_n^{\alpha_n}\). The \textbf{total degree} of the monomial is \(\alpha_1+\cdots+\alpha_n\).
+
+A \textbf{polynomial} \(f\) in \(x_1,\cdots,x_n\) with coefficients in \(\mathbb{R}\) is a finite linear combination (with coefficients in \(\mathbb{R}\)) of monomials. We will write a polynomial \(f\) in the form: \(\Sigma_\alpha a_\alpha x^\alpha\). where the sum is over a finite number of n-tuples \(\alpha = (\alpha_1,\cdots,\alpha_n)\). The set of all polynomials in \(x_1,\cdots,x_n\) with coefficients in \(\mathbb{R}\) is denoted \(\mathbb{R}[x_1,\cdots,x_n]\)
+\end{definition}
+
+\begin{definition}[Affine Variety]
+\protect\hypertarget{def:affinevariety}{}\label{def:affinevariety}Let \(f_1,\cdots,f_s\in\mathbb{R}[x_1,\cdots,x_n]\), we set \[V(f_1,\cdots,f_s) = \{(a_1,\cdots,a_n)\in\mathbb{R}^n|f_i(a_1,\cdots a_n)=0 \quad \forall i\leq i\leq s\}\] We call \(V(f_1,\cdots,f_s)\) the \textbf{affine variety} defined bt \(f_1,\cdots,f_s\)
+\end{definition}
+
+\begin{definition}[Ideal]
+\protect\hypertarget{def:ideal}{}\label{def:ideal}A subset \(I\subset \mathbb{R}[x_1,\cdots,x_n]\) is an ideal if it satisfies:
+(i) Contains additive identity: \(0\in I\)
+(ii) Closed under addition: For all \(f,g\in I\), \(f+g\in I\)
+(iii) Absorption of multiplication: If \(f\in I\) and \(h\in \mathbb{R}[x_1,\cdots,x_n]\), then \(hf\in I\)
+\end{definition}
+
+\begin{definition}[Sum of squares,Quadratic Module and Preordering]
+\protect\hypertarget{def:sosquadpreorder}{}\label{def:sosquadpreorder}\leavevmode
+
+\begin{verbatim}
+Sum of squares
+\end{verbatim}
+
+\end{definition}
+
+\hypertarget{representation-of-nonnegative-polynomial-univariate-case}{%
+\subsection{Representation of nonnegative polynomial: Univariate case}\label{representation-of-nonnegative-polynomial-univariate-case}}
+
+\begin{theorem}[Global version]
+\protect\hypertarget{thm:uniglobal}{}\label{thm:uniglobal}A polynomial \(p\in\mathbb{R}[x]\) of even degree is nonnegative if and only if it can be written as a sum of squares of other polynomials, i.e., \(p(x) = \Sigma^k_{i=1}[h_i(x)]^2\), with \(h_i\in R[x], i = 1,\cdots, k\).
+\end{theorem}
+
+\begin{theorem}[Compact interval version]
+\protect\hypertarget{thm:unifiniteinterval}{}\label{thm:unifiniteinterval}A polynomial \(p\in\mathbb{R}[x]\) of even degree is nonnegative if and only if it can be written as a sum of squares of other polynomials, i.e., \(p(x) = \Sigma^k_{i=1}[h_i(x)]^2\), with \(h_i\in R[x], i = 1,\cdots, k\).
+\end{theorem}
+
 \hypertarget{app-lti-system-theory}{%
 \chapter{Linear System Theory}\label{app-lti-system-theory}}
 
@@ -5533,976 +6595,14 @@ The following statements are equivalent \citep{zhou1996book-robust}:
 
 \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
 
-\hypertarget{appconvex}{%
-\chapter{Convex Analysis and Optimization}\label{appconvex}}
+\hypertarget{algebraic-techniques-and-sum-of-squares-1}{%
+\chapter{Algebraic Techniques and Sum-of-Squares}\label{algebraic-techniques-and-sum-of-squares-1}}
 
-\hypertarget{appconvex-theory}{%
-\section{Theory}\label{appconvex-theory}}
+\hypertarget{algebra-1}{%
+\section{Algebra}\label{algebra-1}}
 
-\hypertarget{sets}{%
-\subsection{Sets}\label{sets}}
-
-Convex set is one of the most important concepts in convex optimization. Checking convexity of sets is crucial to determining whether a problem is a convex problem. Here we will present some definitions of some set notations in convex optimization.
-
-\begin{definition}[Affine set]
-\protect\hypertarget{def:affineset}{}\label{def:affineset}A set \(C\subset \mathbb{R}^n\) is affine if the line through any two distinct points in \(C\) lies in \(C\), i.e., if for any \(x_1,x_2 \in C\) and any \(\theta \in \mathbb{R}\), we have \(\theta x_1 + (1-\theta)x_2 \in C\).
-\end{definition}
-
-\begin{definition}[Convex set]
-\protect\hypertarget{def:convexset}{}\label{def:convexset}A set \(C\subset \mathbb{R}^n\) is convex if the line segment between any two distinct points in \(C\) lies in \(C\), i.e., if for any \(x_1,x_2 \in C\) and any \(\theta \in [0,1]\), we have \(\theta x_1 + (1-\theta)x_2 \in C\).
-\end{definition}
-
-\begin{definition}[Cone]
-\protect\hypertarget{def:cone}{}\label{def:cone}A set \(C\subset \mathbb{R}^n\) is a cone if for any \(x\in C\) and any \(\theta\geq 0\), we have \(\theta x \in C\).
-\end{definition}
-
-\begin{definition}[Convex Cone]
-\protect\hypertarget{def:convexcone}{}\label{def:convexcone}A set \(C\subset \mathbb{R}^n\) is a convex cone if \(C\) is convex and a cone.
-\end{definition}
-
-Below are some important examples of convex sets:
-
-\begin{definition}[Hyperplane]
-\protect\hypertarget{def:hyperplane}{}\label{def:hyperplane}A hyperplane is a set of the form \[\{x|a^Tx = b\}\]
-\end{definition}
-
-\begin{definition}[Halfspaces]
-\protect\hypertarget{def:halfspaces}{}\label{def:halfspaces}A (closed) halfspace is a set of the form \[\{x|a^Tx \leq b\}\]
-\end{definition}
-
-\begin{definition}[Balls]
-\protect\hypertarget{def:balls}{}\label{def:balls}A ball is a set of the form \[B(x,r) = \{y|\|y-x\|_2 \leq r\} = \{x+ru|\|u\|_2\leq 1\}\]
-where \(r >0\).
-\end{definition}
-
-\begin{definition}[Ellipsoids]
-\protect\hypertarget{def:ellipsoids}{}\label{def:ellipsoids}A ellipsoid is a set of the form \[\mathcal{E} = \{y|(y-x)^TP^{-1}(y-x)\leq 1\}\]
-where \(P\) is symmetric and positive definite.
-\end{definition}
-
-\begin{definition}[Polyhedra]
-\protect\hypertarget{def:polyhedra}{}\label{def:polyhedra}A polyhedra is defined as the solution set of a finite number of linear equalities
-and inequalities: \[\mathcal{P} = \{x|a_j^Tx\leq b_j, j=1,...,m, c_k^Tx=d_k,k=1,...,p\}\]
-\end{definition}
-
-\begin{definition}[Norm ball]
-\protect\hypertarget{def:normball}{}\label{def:normball}A norm ball \(B\) of radius \(r\) and a center \(x_c\) associated with the norm \(\|\cdot\|\) is defined as: \[B = \{x|\|x-x_c\|\leq r\}\]
-\end{definition}
-
-\begin{definition}[Norm cone]
-\protect\hypertarget{def:normcone}{}\label{def:normcone}A norm cone \(C\) associated with the norm \(\|\cdot\|\) is defined as: \[C = \{(x,t)|\|x\|\leq t\}\subset \mathbb{R}^{n+1}\]
-\end{definition}
-
-Simplexes are important family of polyhedra. Suppose the \(k+1\) points \(v_0,...,v_k\in \mathbb{R}^n\) are affinely independent, which means \(v_1-v_0,...,v_k-v_0\) are linearly independent.
-
-\begin{definition}[Simplex]
-\protect\hypertarget{def:simplex}{}\label{def:simplex}A simplex \(C\) defined by points \(v_0,...,v_k\) is: \[C = \textbf{conv}\{v_0,...,v_k\} = \{\theta_0v_0 + ... \theta_kv_k|\theta \succeq 0, \textbf{1}^T\theta = 1\}\]
-\end{definition}
-
-Extremely important examples of convex sets are positive semidefinite cones:
-
-\begin{definition}[Symmetric,positive semidefinite,positive definite matrices]
-\protect\hypertarget{def:symmetricmatrices}{}\label{def:symmetricmatrices}\leavevmode
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  Symmetric matrices: \(\textbf{S}^n = \{X\in\mathbb{R}^{n\times n}| X=X^T\}\)
-\item
-  Symmetric Positive Semidefinite matrices: \(\textbf{S}_+^n = \{X\in\textbf{S}^n| X\succeq0\}\)
-\item
-  Symmetric Positive definite matrices: \(\textbf{S}_{++}^n = \{X\in\textbf{S}^n| X\succ0\}\)
-\end{enumerate}
-
-\end{definition}
-
-In most scenarios, the set we encounter is more complicated. In general it is extermely hard to determine whether a set in convex or not. But if the set is `generated' by some convex sets, we can easily determine its convexity. So let's focus on operations that preserve convexity:
-
-\begin{proposition}
-\protect\hypertarget{prp:operationpreserveconvexity}{}\label{prp:operationpreserveconvexity}
-
-Assume \(S\) is convex, \(S_\alpha,\alpha\in\mathcal{A}\) is a family of convex sets. Following operations on convex sets will preserve convexity:
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\item
-  Intersection: \(\bigcap_{\alpha\in\mathcal{A}}S_\alpha\) is convex.
-\item
-  Image under affine function: A function \(f:\mathbb{R}^n\to\mathbb{R}^m\) is affine if it has the form \(f(x) = Ax+b\). The image of \(S\) under affine function \(f\) is convex. I.e. \(f(S) = \{f(x)|x\in S\}\) is convex
-\item
-  Image under perspective function: We define the perspective function \(P:\mathbb{R}^{n+1}\), with domain \(\textbf{dom}P = \mathbb{R}^n\times \mathbb{R}_{++}\)(where \(\mathbb{R}_{++}=\{x\in \mathbb{R}|x>0\}\)) as \(P(z,t) = z/t\). The image of \(S\) under perspective function is convex.
-\item
-  Image under linear-fractional function: We define linear fractional function \(f:\mathbb{R}^n\to\mathbb{R}^m\) as:\(f(x) = (Ax+b)/(c^Tx+d)\) with \(\textbf{dom}f = \{x|c^Tx+d>0\|\). The image of \(S\) under linear fractional functions is convex.
-\end{enumerate}
-
-\end{proposition}
-
-In some cases, the restrictions of \textbf{interior} is too strict. For example, imagine a plane in \(\mathbb{R}^3\). The interior of the plane is \(\emptyset\). But intuitively many property should be extended to this kind of situation. Because the points in the plane also lies `inside' the convex set. Thus, we will define \textbf{relative interior}. First we will define \textbf{affine hull}.
-
-\begin{definition}[Affine hull]
-\protect\hypertarget{def:affinehull}{}\label{def:affinehull}The affine hull of a set \(S\) is the smallest affine set that contains \(S\), which can be written as:
-\[\text{aff}(S) = \{\sum_{i=1}^k\alpha_ix_i|k>0,x_i\in S,\alpha_i\in\mathbb{R},\sum_{i=1}^k\alpha_i=1\}\]
-\end{definition}
-
-\begin{definition}[Relative Interior]
-\protect\hypertarget{def:relint}{}\label{def:relint}The relative interior of a set \(S\) (denoted \(\text{relint}(S)\)) is defined as its interior within the affine hull of \(S\). I.e.
-\[\text{relint}(S):=\{x\in S: \text{there exists } \epsilon>0 \text{ such that }N_\epsilon \cap \text{aff}(S)\subset S\}\]
-where \(N_\epsilon(x)\) is a ball of radius \(\epsilon\) centered on \(x\).
-\end{definition}
-
-\hypertarget{appconvex-theory-convexfunction}{%
-\subsection{Convex function}\label{appconvex-theory-convexfunction}}
-
-In this section, let's define convex functions:
-
-\begin{definition}[Convex function]
-\protect\hypertarget{def:defcvxfunc}{}\label{def:defcvxfunc}A function \(f:\mathbb{R}^n\to\mathbb{R}\) is \textbf{convex} if \(\textbf{dom}\ f\) is convex and \(\forall x,y\in \textbf{dom}\ f\) and with \(\theta \in [0,1]\), we have:\[f(\theta x +(1-\theta)y)\leq \theta f(x) + (1-\theta)f(y)\]
-The function is \textbf{strictly convex} if the inequality holds whenever \(x\neq y\) and \(\theta\in (0,1)\).
-\end{definition}
-
-If a function is differentiable, it will be easier for us to check its convexity:
-
-\begin{proposition}[Conditions for Convex function]
-\protect\hypertarget{prp:decidecvx}{}\label{prp:decidecvx}1.(First order condition) Suppose \(f\) is differentiable, then \(f\) is convex if and only if \(\textbf{dom} f\) is convex and \(\forall x,y\in \textbf{dom} f\), \[f(y)\geq f(x) +\nabla f(x)^T(y-x)\]
-2.(Second order conditions) Suppose \(f\) is twice differentiable, then \(f\) is convex if and only if \(\textbf{dom} f\) is convex and \(\forall x\in \textbf{dom} f\), \[\nabla^2 f(x) \succeq \textbf{0}\]
-\end{proposition}
-
-For the same purpose, some operations that preserve the convexity of the convex functions are presented here:
-
-\begin{proposition}[Operations that preserve convexity]
-\protect\hypertarget{prp:preservecvx}{}\label{prp:preservecvx}Let \(f:\mathbb{R}^n\to\mathbb{R}\) be a convex function and \(g_1,...,g_n\) be convex functions. The following operations will preserve convexity of the function:
-
-1.(Nonnegative weighted sum): A nonnegative weighted sum of convex functions: \[f = \omega_1f_1 + ... +\omega_mf_m\]
-
-2.(Composition with an affine mapping) Suppose \(A\in \mathbb{R}^{n\times m}\) and \(b\in \mathbb{R}^n\), then \(g(x) = f(Ax+b)\) is convex.
-
-3.(Pointwise maximum and supremum) \(g(x) = \max\{g_1(x),...,g_n(x)\}\) is convex. If \(h(x,y)\) is convex in \(x\) for each \(y\in\mathcal{A}\), then \(\sup_{y\in\mathcal{A}} h(x,y)\) is also convex in \(x\).
-
-4.(Minimization) If \(h(x,y)\) is convex in \((x,y)\), and \(C\) is a convex nonempty set, then \(\inf_{x\in C} h(x,y)\) is convex in \(x\).
-
-5.(Perspective of a function) The perspective of \(f\) is the function \(h:\mathbb{R}^{n+1}\to\mathbb{R}\) defined by: \(h(x,t) = tf(x/t)\) with domain \(\textbf{dom}\ h=\{(x,t)|x/t\in\textbf{dom} f,t>0\}\). And \(h\) is convex.
-\end{proposition}
-
-\hypertarget{lagrange-dual}{%
-\subsection{Lagrange dual}\label{lagrange-dual}}
-
-We consider an optimization problem in the standard form (without assuming convexity of anything):
-\begin{equation}
-\begin{aligned}
-p^* = \quad \min_{x} \quad & f_0(x)\\
-\textrm{s.t.} \quad & f_i(x)\leq 0\quad i=1...,m\\
-  & h_i(x) = 0\quad i=1,...,p   \\
-\end{aligned}
-\end{equation}
-
-\begin{definition}[Lagrange dual function]
-\protect\hypertarget{def:defdualfunc}{}\label{def:defdualfunc}The Lagrangian related to the problem above is defined as: \[L(x,\lambda,\nu)=f_0(x)+\sum_{i=1}^m\lambda_if_i(x)+\sum_{i=1}^p\nu_ih_i(x)\]
-The Lagrange dual function is defined as: \[g(\lambda,\nu) = \inf_{x\in\mathcal{D}}L(x,\lambda,\nu)\]
-\end{definition}
-
-When the Lagrangian is unbounded below in \(x\), the dual function takes on the value \(-\infty\). Note that since the Lagrange dual function is a pointwise infimum of a family of affine functions of \((\lambda,\nu)\), so it's concave. The Lagrange dual function will give us lower bounds of the optimal value of the original problem: \[g(\lambda,\nu)\leq p^*\]. We can see that, the dual function can give a nontrivial lower bound only when \(\lambda\succeq 0\). Thus we can solve the following dual problem to get the best lower bound.
-
-\begin{definition}[Lagrange dual problem]
-\protect\hypertarget{def:defdualprob}{}\label{def:defdualprob}The lagrangian dual problem is defined as follows:
-\begin{equation}
-  \begin{aligned}
-  d^* = \quad \max_{\lambda,\nu} \quad & g(\lambda,\nu)\\
-  \textrm{s.t.} \quad & \lambda\succeq 0
-  \end{aligned}
-  \end{equation}
-This is a convex optimization problem.
-\end{definition}
-
-We can easily see that \[d^*\leq p^*\] always hold. This property is called \textbf{weak duality}. If \[d^*=p^*\], it's called \textbf{strong duality}. Strong duality does not hold in general, but it usually holfs for convex problems. We can find conditions that guarantee strong duality in convex problems, which are called constrained qualifications. Slater's constraint qualification is a useful one.
-
-\begin{theorem}[Slater's constraint qualification]
-\protect\hypertarget{thm:slater}{}\label{thm:slater}Strong duality holds for a convex problem
-\begin{equation}
-  \begin{aligned}
-  p^* = \quad \min_{x} \quad & f_0(x)\\
-  \textrm{s.t.} \quad & f_i(x)\leq 0\quad i=1...,m\\
-    & Ax=b   \\
-  \end{aligned}
- \end{equation}
-if it is strictly feasible, i.e.
-\[\exists x\in\textbf{relint}\mathcal{D}:\quad f_i(x)<0,\quad i=1...m,\quad Ax=b\]
-And the linear inequalities do not need to hold with strict inequality.
-\end{theorem}
-
-\hypertarget{appconvex-theory-kkt}{%
-\subsection{KKT condition}\label{appconvex-theory-kkt}}
-
-Note that if strong duality holds, denote \(x^*\) to be primal optimal, and \((\lambda^*,\nu^*)\) to be dual optimal. Then:
-
-\begin{equation}
-  \begin{aligned}
-  f_0(x^*) = g(\lambda^*,\nu^*) = & \inf_x(f_0(x)+\sum_{i=1}^m\lambda_i^*f_i(x)+\sum_{i=1}^p\nu_i^*h_i(x))\\
- \leq & f_0(x^*)+\sum_{i=1}^m\lambda_i^*f_i(x)+\sum_{i=1}^p\nu_i^*h_i(x)\\
- \leq & f_0(x^*)\\
-  \end{aligned}
-  \end{equation}
-
-from this, combining \(\lambda^*\geq 0\) and \(f_i(x^*)\leq 0\), we can know that: \(\lambda_i^*f_i(x^*)=0\quad i=1\cdots m\). This means for \(\lambda_i^*\) and \(f_i(x^*)\), one of them must be zero, which is known as complementary slackness).
-
-Thus we arrived at the following four conditions, which are called KKT conditions.
-
-\begin{theorem}[Karush-Kuhn-Tucker(KKT) Conditions]
-\protect\hypertarget{thm:KKT}{}\label{thm:KKT}
-
-The following four conditions are called KKT conditions (for a problem with differentiable \(f_i,h_i\))
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  Primal feasible: \(f_i(x) \leq 0,i,\cdots ,m,\ h_i(x) = 0,i=1,\cdots ,p\)
-\item
-  Dual feasible: \(\lambda\succeq0\)
-\item
-  Complementary slackness: \(\lambda_if_i(x)=0,i=1,\cdots,m\)
-\item
-  Gradient of Lagrangian with respect to \(x\) vanishes:\(\nabla f_0(x)+\sum_{i=1}^m\lambda_i\nabla f_i(x)+\sum_{i=1}^p\nu_i\nabla h_i(x) = 0\)
-\end{enumerate}
-
-\end{theorem}
-
-From the discussion above, we know that if strong duality holds and \(x,\lambda,\nu\) are optimal, then they must satisfy the KKT conditions.
-
-Also if \(x,\lambda,\nu\) satisfy KKT for a convex problem, then they are optimal. However, the converse is not generally true, since KKT condition implies strong duality. If Slater's condition is satisfied, then \(x\) is optimal if and only if there exist \(\lambda,\nu\) that satisfy KKT conditions. Sometimes, by solving the KKT system, we can derive the closed-form solution of a optimization directly. Also, sometimes we will use the residual of the KKT system as the termination condition.
-
-In general, \(f_i,h_i\) may not be differentiable. There are also KKT conditions for them, which will include knowledge of subdifferential and will not be included here.
-
-\hypertarget{appconvex-practice}{%
-\section{Practice}\label{appconvex-practice}}
-
-\hypertarget{cvx-introduction}{%
-\subsection{CVX Introduction}\label{cvx-introduction}}
-
-In the last section, we have learned basic concepts and theorems in convex optimization. In this section, on the other hand, we will introduce you how to model basic convex optimization problems with CVX, an easy-to-use MATLAB package. To install CVX, please refer to this \href{http://cvxr.com/cvx/doc/install.html}{page}. Note that every time you what to use the CVX package, you should add it to your MATLAB path. For example, if I install CVX package in the parent directory of my current directory with default directory name \texttt{cvx}, the following line should be added before your CVX codes:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\VariableTok{addpath}\NormalTok{(}\VariableTok{genpath}\NormalTok{(}\StringTok{"../cvx/"}\NormalTok{))}\OperatorTok{;}
-\end{Highlighting}
-\end{Shaded}
-
-With CVX, it is incredibly easy for us to define and solve a convex optimization problem. You just need to:
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\item
-  define the variables.
-\item
-  define the objective function you want to minimize or maximize.
-\item
-  define the constraints.
-\end{enumerate}
-
-After running your codes, the optimal objective value is stored in the variable \texttt{cvx\_optval}, and the problem status is stored in the variable \texttt{cvx\_status} (when your problem is well-defined, this variable's value will be \texttt{Solved}). The optimal solutions will be stored in the variables you define.
-
-Throughout this section, we will study five types of convex optimization problems: linear programming (LP), quadratic programming (QP), (convex) quadratically constrained quadratic programming (QCQP), second-order cone programming (SOCP), and semidefinite programming (SDP). Given two types of optimization problems \(A\) and \(B\), we say \(A < B\) if \(A\) can always be converted to \(B\) while the inverse is not true. Under this notation, we have
-\begin{equation*}
-   \text{LP} < \text{QP} < \text{QCQP} < \text{SOCP} < \text{SDP}
-\end{equation*}
-
-\hypertarget{linear-programming-lp}{%
-\subsection{Linear Programming (LP)}\label{linear-programming-lp}}
-
-\textbf{Definition.} An LP has the following form:
-\begin{equation}
-   \label{eq:app-lpdef}
-   \begin{aligned}
-      \min_{x \in \mathbb{R}^n} & \ c^T x \\
-      \text{subject to } & A x \le b  
-   \end{aligned}
-\end{equation}
-where \(x\) is the variable, \(A \in \mathbb{R}^{m\times n}, b \in \mathbb{R}^m\), and \(c \in \mathbb{R}^n\) are the parameters. Note that the constraint \(A x \le b\) already incorporates linear equality constraints. To see this, consider the constraint \(A' x = b'\), we can reformulate it as \(A x \le b\) by
-\begin{equation*}
-   \begin{bmatrix}
-      A' \\ -A'
-   \end{bmatrix} x \le \begin{bmatrix}
-      b' \\ -b'
-   \end{bmatrix}
-\end{equation*}
-
-\textbf{Example.} Consider the problem of minimizing a linear function \(c_1 x_1 + c_2 x_2\) over a rectangle \([-l_1, l_1] \times [-l_2, l_2]\). We can convert it to the standard LP form in \eqref{eq:app-lpdef} by simply setting \(c\) as \([c_1, \ c_2]^T\) and the linear inequality constraint as
-\begin{equation*}
-   \begin{bmatrix}
-      1 & 0 \\ -1 & 0 \\ 0 & 1 \\ 0 & -1
-   \end{bmatrix} \begin{bmatrix}
-      x_1 \\ x_2
-   \end{bmatrix} \le \begin{bmatrix}
-      l_1 \\ l_1 \\ l_2 \\ l_2
-   \end{bmatrix}
-\end{equation*}
-
-Corresponding CVX codes are shown below:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\%\% Define the LP example setting}
-\VariableTok{c1} \OperatorTok{=} \FloatTok{2}\OperatorTok{;}
-\VariableTok{c2} \OperatorTok{=} \OperatorTok{{-}}\FloatTok{5}\OperatorTok{;}
-\VariableTok{l1} \OperatorTok{=} \FloatTok{3}\OperatorTok{;}
-\VariableTok{l2} \OperatorTok{=} \FloatTok{7}\OperatorTok{;}
-\CommentTok{\% parameters: c, A, b}
-\VariableTok{c} \OperatorTok{=}\NormalTok{ [}\VariableTok{c1}\OperatorTok{;} \VariableTok{c2}\NormalTok{]}\OperatorTok{;}
-\VariableTok{A} \OperatorTok{=}\NormalTok{ [}\FloatTok{1}\OperatorTok{,} \FloatTok{0}\OperatorTok{;} \OperatorTok{{-}}\FloatTok{1}\OperatorTok{,} \FloatTok{0}\OperatorTok{;} \FloatTok{0}\OperatorTok{,} \FloatTok{1}\OperatorTok{;} \FloatTok{0}\OperatorTok{,} \OperatorTok{{-}}\FloatTok{1}\NormalTok{]}\OperatorTok{;}
-\VariableTok{b} \OperatorTok{=}\NormalTok{ [}\VariableTok{l1}\OperatorTok{;} \VariableTok{l1}\OperatorTok{;} \VariableTok{l2}\OperatorTok{;} \VariableTok{l2}\NormalTok{]}\OperatorTok{;}
-
-\CommentTok{\%\% solve LP}
-\VariableTok{cvx\_begin}
-    \VariableTok{variable} \VariableTok{x}\NormalTok{(}\FloatTok{2}\NormalTok{)}\OperatorTok{;} \CommentTok{\% define variables [x1, x2]}
-    \VariableTok{minimize}\NormalTok{(}\VariableTok{c}\OperatorTok{\textquotesingle{}} \OperatorTok{*} \VariableTok{x}\NormalTok{)}\OperatorTok{;} \CommentTok{\% define the objective}
-    \VariableTok{subject} \VariableTok{to}
-        \VariableTok{A} \OperatorTok{*} \VariableTok{x} \OperatorTok{\textless{}=} \VariableTok{b}\OperatorTok{;} \CommentTok{\% define the linear constraint}
-\VariableTok{cvx\_end}
-\end{Highlighting}
-\end{Shaded}
-
-\hypertarget{quadratic-programming-qp}{%
-\subsection{Quadratic Programming (QP)}\label{quadratic-programming-qp}}
-
-\textbf{Definition.} A QP has the following form:
-\begin{align}
-   \label{eq:app-qpdef}
-   \min_{x \in \mathbb{R}^n} \ & \frac{1}{2} x^T P x + q^T x \\
-   \text{subject to } & Gx \le h \\
-   & Ax = b
-\end{align}
-where \(P \in \mathcal{S}_+^n, q\in \mathbb{R}^n, G \in \mathbb{R}^{m \times n}, h\in \mathbb{R}^m, A \in \mathbb{R}^{p \times n}, b \in \mathbb{R}^p\). Here \(\mathcal{S}_+^n\) denotes the set of positive semidefinite matrices of size \(n\times n\). Obviously, if we set \(P\) as zero, QP will degenerate to LP.
-
-\textbf{Example.} Consider the problem of minimizing a quadratic function
-\begin{equation*}
-   f(x_1, x_2) = p_1 x_1^2 + 2p_2 x_1 x_2 + p_3 x_2^2 + q_1 x_1 + q_2 x_2
-\end{equation*}
-over a rectangle \([-l_1, l_1] \times [-l_2, l_2]\). Since \(P = 2 \begin{bmatrix}  p_1 & p_2 \\ p_2 & p_3 \end{bmatrix} \succeq 0\), the following two conditions must hold:
-\begin{equation*}
-   \begin{cases}
-      p_1 \ge 0 \\
-      p_1 p_3 - 4 p_2^2 \ge 0
-   \end{cases}
-\end{equation*}
-Same as in the LP example, \(G\) and \(h\) can be expressed as:
-\begin{equation*}
-   \begin{bmatrix}
-      1 & 0 \\ -1 & 0 \\ 0 & 1 \\ 0 & -1
-   \end{bmatrix} \begin{bmatrix}
-      x_1 \\ x_2
-   \end{bmatrix} \le \begin{bmatrix}
-      l_1 \\ l_1 \\ l_2 \\ l_2
-   \end{bmatrix}
-\end{equation*}
-
-Corresponding CVX codes are shown below:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\%\% Define the QP example setting}
-\VariableTok{p1} \OperatorTok{=} \FloatTok{2}\OperatorTok{;}
-\VariableTok{p2} \OperatorTok{=} \FloatTok{0.5}\OperatorTok{;}
-\VariableTok{p3} \OperatorTok{=} \FloatTok{4}\OperatorTok{;}
-\VariableTok{q1} \OperatorTok{=} \OperatorTok{{-}}\FloatTok{3}\OperatorTok{;}
-\VariableTok{q2} \OperatorTok{=} \OperatorTok{{-}}\FloatTok{6.5}\OperatorTok{;}
-\VariableTok{l1} \OperatorTok{=} \FloatTok{2}\OperatorTok{;}
-\VariableTok{l2} \OperatorTok{=} \FloatTok{2.5}\OperatorTok{;}
-\CommentTok{\% check if the generated P is positive semidefinite}
-\VariableTok{tmp1} \OperatorTok{=}\NormalTok{ (}\VariableTok{p1} \OperatorTok{\textgreater{}=} \FloatTok{0}\NormalTok{)}\OperatorTok{;}
-\VariableTok{tmp2} \OperatorTok{=}\NormalTok{ (}\VariableTok{p1}\OperatorTok{*}\VariableTok{p3} \OperatorTok{{-}} \FloatTok{4}\OperatorTok{*}\VariableTok{p2}\OperatorTok{\^{}}\FloatTok{2} \OperatorTok{\textgreater{}=} \FloatTok{0}\NormalTok{)}\OperatorTok{;}
-\KeywordTok{if} \OperatorTok{\textasciitilde{}}\NormalTok{(}\VariableTok{tmp1} \OperatorTok{\&\&} \VariableTok{tmp2}\NormalTok{)}
-    \VariableTok{error}\NormalTok{(}\StringTok{"P is not positve semidefinite!"}\NormalTok{)}\OperatorTok{;}
-\KeywordTok{end}
-\CommentTok{\% parameters: P, q, G, h}
-\VariableTok{P} \OperatorTok{=} \FloatTok{2} \OperatorTok{*}\NormalTok{ [}\VariableTok{p1}\OperatorTok{,} \VariableTok{p2}\OperatorTok{;} \VariableTok{p2}\OperatorTok{,} \VariableTok{p3}\NormalTok{]}\OperatorTok{;}
-\VariableTok{q} \OperatorTok{=}\NormalTok{ [}\VariableTok{q1}\OperatorTok{;} \VariableTok{q2}\NormalTok{]}\OperatorTok{;}
-\VariableTok{G} \OperatorTok{=}\NormalTok{ [}\FloatTok{1}\OperatorTok{,} \FloatTok{0}\OperatorTok{;} \OperatorTok{{-}}\FloatTok{1}\OperatorTok{,} \FloatTok{0}\OperatorTok{;} \FloatTok{0}\OperatorTok{,} \FloatTok{1}\OperatorTok{;} \FloatTok{0}\OperatorTok{,} \OperatorTok{{-}}\FloatTok{1}\NormalTok{]}\OperatorTok{;}
-\VariableTok{h} \OperatorTok{=}\NormalTok{ [}\VariableTok{l1}\OperatorTok{;} \VariableTok{l1}\OperatorTok{;} \VariableTok{l2}\OperatorTok{;} \VariableTok{l2}\NormalTok{]}\OperatorTok{;}
-
-\CommentTok{\%\% Solve the QP problem}
-\VariableTok{cvx\_begin}
-    \VariableTok{variable} \VariableTok{x}\NormalTok{(}\FloatTok{2}\NormalTok{)}\OperatorTok{;} \CommentTok{\% define variables [x1; x2]}
-    \CommentTok{\% define the objective, where quad\_form(x, P) = x\textquotesingle{}*P*x}
-    \VariableTok{obj} \OperatorTok{=} \FloatTok{0.5} \OperatorTok{*} \VariableTok{quad\_form}\NormalTok{(}\VariableTok{x}\OperatorTok{,} \VariableTok{P}\NormalTok{) }\OperatorTok{+} \VariableTok{q}\OperatorTok{\textquotesingle{}} \OperatorTok{*} \VariableTok{x}\OperatorTok{;} 
-    \VariableTok{minimize}\NormalTok{(}\VariableTok{obj}\NormalTok{)}\OperatorTok{;} 
-    \VariableTok{subject} \VariableTok{to}
-        \VariableTok{G} \OperatorTok{*} \VariableTok{x} \OperatorTok{\textless{}=} \VariableTok{h}\OperatorTok{;} \CommentTok{\% define the linear constraint}
-\VariableTok{cvx\_end}
-\end{Highlighting}
-\end{Shaded}
-
-\hypertarget{quadratically-constrained-quadratic-programming-qcqp}{%
-\subsection{Quadratically Constrained Quadratic Programming (QCQP)}\label{quadratically-constrained-quadratic-programming-qcqp}}
-
-\textbf{Definition.} An (convex) QCQP has the following form:
-\begin{align}
-   \label{eq:app-qcqpdef}
-   \min_{x \in \mathbb{R}^n} \ & \frac{1}{2} x^T P_0 x + q_0^T x \\
-   \text{subject to } & \frac{1}{2} x^T P_i x + q_i^T x + r_i \le 0, \ i = 1 \dots m \\
-   & Ax = b
-\end{align}
-where \(P_i \in \mathcal{S}_+^n, i = 0 \dots m\), \(q_i \in \mathbb{R}^n, i = 0 \dots m\), \(A \in \mathbb{R}^{p \times n}\), and \(b \in \mathbb{R}^p\). Note that in other literature, you may find a more general form of QCQP: they don't require \(P_i\)'s to be positive semidefinite. Yet in this case, the problem is non-convex and beyond our scope.
-
-\textbf{Example.} We study the problem of getting the minimum distance between two ellipses. By convention, when the ellipses overlap, we set the minimum distance as \(0\). This problem can be exactly solved by (convex) QCQP.
-Consider two ellipses of the following form:
-\begin{equation*}
-   \begin{cases}
-      \frac{1}{2} \begin{bmatrix} y_1 \\ z_1 \end{bmatrix}^T K_1 \begin{bmatrix} y_1 \\ z_1 \end{bmatrix}
-      + k_1^T \begin{bmatrix} y_1 \\ z_1 \end{bmatrix} + c_1 \le 0 \\ 
-      \frac{1}{2} \begin{bmatrix} y_2 \\ z_2 \end{bmatrix}^T K_2 \begin{bmatrix} y_2 \\ z_2 \end{bmatrix}
-      + k_2^T \begin{bmatrix} y_2 \\ z_2 \end{bmatrix} + c_2 \le 0 \\ 
-   \end{cases}
-\end{equation*}
-where \([y_1, z_1]^T\) and \([y_2, z_2]^T\) are arbitrary points inside the two ellipses respectively. Also, two ensure the ellipses are well defined, we should enforce the following properties in \((K_i, k_i, c_i), i = 1, 2\): (1) \(K_i \succ 0\); (2) Let \(K_i = L_i L_i^T\) be the Cholesky decomposition of \(K_i\). Then, ellipse \(i\) can be rewritten as:
-\begin{equation*}
-   \frac{1}{2} \parallel L_i^T \begin{bmatrix} y_i \\ z_i \end{bmatrix} - L_i^{-1} k_i \parallel^2 \le 
-   \frac{1}{2} \parallel L_i^{-1} k_i \parallel^2 - c_i
-\end{equation*}
-Thus,
-\begin{equation*}
-   \frac{1}{2} \parallel L_i^{-1} k_i \parallel^2 - c_i > 0
-\end{equation*}
-With these two assumptions, we want to minimize:
-\begin{equation*}
-   \frac{1}{2} (y_1 - y_2)^2 + (z_1 - z_2)^2
-\end{equation*}
-
-Now, we construct \(P, q, r\)'s in QCQP with the above parameters. Define the variable \(x\) as \([y_1, z_1, y_2, z_2]\).
-
-\begin{enumerate}
-\def\labelenumi{(\arabic{enumi})}
-\item
-  \(P_0\) can be obtained from:
-  \begin{equation*}
-     \frac{1}{2} (y_1 - y_2)^2 + (z_1 - z_2)^2 = \frac{1}{2} \begin{bmatrix}
-    y_1 \\ z_1 \\ y_2 \\ z_2
-     \end{bmatrix}^T \begin{bmatrix}
-    1 & 0 & -1 & 0 \\ 0 & 1 & 0 & -1 \\ -1 & 0 & 1 & 0 \\ 0 & -1 & 0 & 1
-     \end{bmatrix} \begin{bmatrix}
-    y_1 \\ z_1 \\ y_2 \\ z_2
-     \end{bmatrix}
-  \end{equation*}
-\item
-  \(P_1, q_1, r_1\) can be obtained from:
-  \begin{equation*}
-     \frac{1}{2} \begin{bmatrix} y_1 \\ z_1 \end{bmatrix}^T K_1 \begin{bmatrix} y_1 \\ z_1 \end{bmatrix}
-    + k_1^T \begin{bmatrix} y_1 \\ z_1 \end{bmatrix} + c_1 
-     = \frac{1}{2} x^T \begin{bmatrix}
-    K_1 & O \\ O & O
-     \end{bmatrix} + \begin{bmatrix}
-    k_1 \\ O 
-     \end{bmatrix}^T x + c_1 \le 0
-  \end{equation*}
-\item
-  \(P_2, q_2, r_2\) can be obtained from:
-  \begin{equation*}
-     \frac{1}{2} \begin{bmatrix} y_2 \\ z_2 \end{bmatrix}^T K_2 \begin{bmatrix} y_2 \\ z_2 \end{bmatrix}
-    + k_2^T \begin{bmatrix} y_2 \\ z_2 \end{bmatrix} + c_2
-     = \frac{1}{2} x^T \begin{bmatrix}
-    O & O \\ O & K_2
-     \end{bmatrix} + \begin{bmatrix}
-    O \\ k_2
-     \end{bmatrix}^T x + c_2 \le 0
-  \end{equation*}
-\end{enumerate}
-
-The corresponding codes are shown below. In this example, we test the minimum distance between a circle \(y_1^2 + z_1^2 \le 1\) and another circle \((y_2 - 2)^2 + (z_2 - 2)^2 \le 1\). You can check whether the result from QCQP aligns with your manual calculation.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\%\% Define the QCQP example setting}
-\VariableTok{K1} \OperatorTok{=} \VariableTok{eye}\NormalTok{(}\FloatTok{2}\NormalTok{)}\OperatorTok{;}
-\VariableTok{k1} \OperatorTok{=} \VariableTok{zeros}\NormalTok{(}\FloatTok{2}\OperatorTok{,} \FloatTok{1}\NormalTok{)}\OperatorTok{;}
-\VariableTok{c1} \OperatorTok{=} \OperatorTok{{-}}\FloatTok{0.5}\OperatorTok{;}
-\VariableTok{K2} \OperatorTok{=} \VariableTok{eye}\NormalTok{(}\FloatTok{2}\NormalTok{)}\OperatorTok{;}
-\VariableTok{k2} \OperatorTok{=}\NormalTok{ [}\FloatTok{2}\OperatorTok{;} \FloatTok{2}\NormalTok{]}\OperatorTok{;}
-\VariableTok{c2} \OperatorTok{=} \FloatTok{3.5}\OperatorTok{;}
-\KeywordTok{if} \OperatorTok{\textasciitilde{}}\NormalTok{(}\VariableTok{if\_ellipse}\NormalTok{(}\VariableTok{K1}\OperatorTok{,} \VariableTok{k1}\OperatorTok{,} \VariableTok{c1}\NormalTok{) }\OperatorTok{\&\&} \VariableTok{if\_ellipse}\NormalTok{(}\VariableTok{K2}\OperatorTok{,} \VariableTok{k2}\OperatorTok{,} \VariableTok{c2}\NormalTok{))}
-    \VariableTok{error}\NormalTok{(}\StringTok{"The example setting is not correct"}\NormalTok{)}\OperatorTok{;}
-\KeywordTok{end}
-\CommentTok{\% define parameters P0, P1, P2, q1, q2, r1, r2}
-\VariableTok{P0} \OperatorTok{=}\NormalTok{ [}\FloatTok{1}\OperatorTok{,}\FloatTok{0}\OperatorTok{,{-}}\FloatTok{1}\OperatorTok{,}\FloatTok{0}\OperatorTok{;} \FloatTok{0}\OperatorTok{,}\FloatTok{1}\OperatorTok{,}\FloatTok{0}\OperatorTok{,{-}}\FloatTok{1}\OperatorTok{;} \OperatorTok{{-}}\FloatTok{1}\OperatorTok{,}\FloatTok{0}\OperatorTok{,}\FloatTok{1}\OperatorTok{,}\FloatTok{0}\OperatorTok{;} \FloatTok{0}\OperatorTok{,{-}}\FloatTok{1}\OperatorTok{,}\FloatTok{0}\OperatorTok{,}\FloatTok{1}\NormalTok{]}\OperatorTok{;}
-\VariableTok{P1} \OperatorTok{=} \VariableTok{zeros}\NormalTok{(}\FloatTok{4}\OperatorTok{,} \FloatTok{4}\NormalTok{)}\OperatorTok{;}
-\VariableTok{P1}\NormalTok{(}\FloatTok{1}\OperatorTok{:}\FloatTok{2}\OperatorTok{,} \FloatTok{1}\OperatorTok{:}\FloatTok{2}\NormalTok{) }\OperatorTok{=} \VariableTok{K1}\OperatorTok{;}
-\VariableTok{P2} \OperatorTok{=} \VariableTok{zeros}\NormalTok{(}\FloatTok{4}\OperatorTok{,} \FloatTok{4}\NormalTok{)}\OperatorTok{;}
-\VariableTok{P2}\NormalTok{(}\FloatTok{3}\OperatorTok{:}\FloatTok{4}\OperatorTok{,} \FloatTok{3}\OperatorTok{:}\FloatTok{4}\NormalTok{) }\OperatorTok{=} \VariableTok{K2}\OperatorTok{;}
-\VariableTok{q1} \OperatorTok{=}\NormalTok{ [}\VariableTok{k1}\OperatorTok{;} \VariableTok{zeros}\NormalTok{(}\FloatTok{2}\OperatorTok{,} \FloatTok{1}\NormalTok{)]}\OperatorTok{;}
-\VariableTok{q2} \OperatorTok{=}\NormalTok{ [}\VariableTok{zeros}\NormalTok{(}\FloatTok{2}\OperatorTok{,} \FloatTok{1}\NormalTok{)}\OperatorTok{;} \VariableTok{k2}\NormalTok{]}\OperatorTok{;}
-\VariableTok{r1} \OperatorTok{=} \VariableTok{c1}\OperatorTok{;}
-\VariableTok{r2} \OperatorTok{=} \VariableTok{c2}\OperatorTok{;}
-
-\CommentTok{\%\% Solve the QCQP problem}
-\VariableTok{cvx\_begin}
-    \VariableTok{variable} \VariableTok{x}\NormalTok{(}\FloatTok{4}\NormalTok{)}\OperatorTok{;} \CommentTok{\% define variables [y1; z1; y2; z2]}
-    \CommentTok{\% define the objective, where quad\_form(x, P) = x\textquotesingle{}*P*x}
-    \VariableTok{obj} \OperatorTok{=} \FloatTok{0.5} \OperatorTok{*} \VariableTok{quad\_form}\NormalTok{(}\VariableTok{x}\OperatorTok{,} \VariableTok{P0}\NormalTok{)}\OperatorTok{;} 
-    \VariableTok{minimize}\NormalTok{(}\VariableTok{obj}\NormalTok{)}\OperatorTok{;} 
-    \VariableTok{subject} \VariableTok{to}
-        \FloatTok{0.5} \OperatorTok{*} \VariableTok{quad\_form}\NormalTok{(}\VariableTok{x}\OperatorTok{,} \VariableTok{P1}\NormalTok{) }\OperatorTok{+} \VariableTok{q1}\OperatorTok{\textquotesingle{}} \OperatorTok{*} \VariableTok{x} \OperatorTok{+} \VariableTok{r1} \OperatorTok{\textless{}=} \FloatTok{0}\OperatorTok{;}
-        \FloatTok{0.5} \OperatorTok{*} \VariableTok{quad\_form}\NormalTok{(}\VariableTok{x}\OperatorTok{,} \VariableTok{P2}\NormalTok{) }\OperatorTok{+} \VariableTok{q2}\OperatorTok{\textquotesingle{}} \OperatorTok{*} \VariableTok{x} \OperatorTok{+} \VariableTok{r2} \OperatorTok{\textless{}=} \FloatTok{0}\OperatorTok{;}
-\VariableTok{cvx\_end}
-
-\CommentTok{\%\% detect whether (K, k, c) generates a ellipse}
-\KeywordTok{function} \VariableTok{flag} \OperatorTok{=} \VariableTok{if\_ellipse}\NormalTok{(}\VariableTok{K}\OperatorTok{,} \VariableTok{k}\OperatorTok{,} \VariableTok{c}\NormalTok{)}
-    \VariableTok{L} \OperatorTok{=} \VariableTok{chol}\NormalTok{(}\VariableTok{K}\NormalTok{)}\OperatorTok{;}
-    \VariableTok{radius\_square} \OperatorTok{=} \FloatTok{0.5} \OperatorTok{*} \VariableTok{norm}\NormalTok{(}\VariableTok{L} \OperatorTok{\textbackslash{}} \VariableTok{k}\NormalTok{)}\OperatorTok{\^{}}\FloatTok{2} \OperatorTok{{-}} \VariableTok{c}\OperatorTok{;} \CommentTok{\% L \textbackslash{} k = inv(L) * k}
-    \VariableTok{flag} \OperatorTok{=}\NormalTok{ (}\VariableTok{radius\_square} \OperatorTok{\textgreater{}} \FloatTok{0}\NormalTok{)}\OperatorTok{;}
-\KeywordTok{end}
-\end{Highlighting}
-\end{Shaded}
-
-\hypertarget{second-order-cone-programming-socp}{%
-\subsection{Second-Order Cone Programming (SOCP)}\label{second-order-cone-programming-socp}}
-
-\textbf{Definition.} An SOCP has the following form:
-\begin{align}
-   \label{eq:app-socpdef}
-   \min_{x \in \mathbb{R}^n} \ & f^T x \\
-   \text{subject to } & || A_i x + b_i ||_2 \le c_i^T x + d_i, \ i = 1 \dots m \\
-   & Fx = g
-\end{align}
-where \(f \in \mathbb{R}^n, A_i \in \mathbb{R}^{n_i \times n}, b_i \in \mathbb{R}^{n_i}, c_i \in \mathbb{R}^n, d_i \in \mathbb{R}, F \in \mathbb{R}^{p \times n}\), and \(g \in \mathbb{R}^p\).
-
-\textbf{Example.} We consider the problem of stochastic linear programming:
-\begin{align}
-   \min_x \ & c^T x \\
-   \text{subject to } & \mathbb{P}(a_i^T x \le b_i) \ge p, \ i = 1 \dots m \\
-   & a_i \sim \mathcal{N}(\bar{a}_i, \Sigma_i), \ i = 1 \dots m
-\end{align}
-Here \(p\) should be more than \(0.5\). We show that this problem can be converted to a SOCP:
-
-Since \(a_i \sim \mathcal{N}(\bar{a}_i, \Sigma_i)\), then \((a_i^T x - b_i) \sim \mathcal{N}(\bar{a}_i^T x - b_i, x^T \Sigma_i x)\). Standardize it:
-\begin{equation*}
-   t := ||\Sigma_i^{\frac{1}{2}} x||_2^{-1} \left\{ (a_i^T x - b_i) - (\bar{a}_i^T x - b_i) \right\} \sim \mathcal{N}(0, 1)
-\end{equation*}
-Then,
-\begin{align}
-   \mathbb{P}(a_i^T x \le b_i) & = \mathbb{P}(a_i^T x - b_i \le 0) \\
-   & = \mathbb{P}(t \le -||\Sigma_i^{\frac{1}{2}} x||_2^{-1}(\bar{a}_i^T x - b_i)) \\
-   & = \Phi(-||\Sigma_i^{\frac{1}{2}} x||_2^{-1}(\bar{a}_i^T x - b_i))
-\end{align}
-Here \(\Phi(\cdot)\) is the cumulative distribution function of the standard normal distribution:
-\begin{equation*}
-   \Phi(\xi) = \int_{-\infty}^{\xi} e^{-\frac{1}{2} t^2} \ dt
-\end{equation*}
-Thus,
-\begin{align}
-   & \mathbb{P}(a_i^T x \le b_i) \ge p \\
-   \Longleftrightarrow & \Phi(-||\Sigma_i^{\frac{1}{2}} x||_2^{-1}(\bar{a}_i^T x - b_i)) \ge p \\
-   \Longleftrightarrow & -||\Sigma_i^{\frac{1}{2}} x||_2^{-1}(\bar{a}_i^T x - b_i) \ge \Phi^{-1}(p) \\
-   \Longleftrightarrow & \Phi^{-1}(p) ||\Sigma_i^{\frac{1}{2}} x||_2 \le b_i - \bar{a}_i^T x
-\end{align}
-which is exactly the same as inequality constraints in SOCP formulation. (You can see why we enforce \(p > 0.5\) here: otherwise \(\Phi^{-1}(p)\) will be negative and the constraint with not be an second-order cone.)
-
-In the following code example, we set up four inequality constraints and let \(\bar{a}_i^T x \le b_i, \ i = 1 \dots 4\) form an square located at the origin of size \(2\). Then, for convenience, we set \(\Sigma_i \equiv \sigma^2 I\).
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\%\% Define the SOCP example setting}
-\VariableTok{bar\_a1} \OperatorTok{=}\NormalTok{ [}\FloatTok{1}\OperatorTok{;} \FloatTok{0}\NormalTok{]}\OperatorTok{;}
-\VariableTok{b1} \OperatorTok{=} \FloatTok{1}\OperatorTok{;}
-\VariableTok{bar\_a2} \OperatorTok{=}\NormalTok{ [}\FloatTok{0}\OperatorTok{;} \FloatTok{1}\NormalTok{]}\OperatorTok{;}
-\VariableTok{b2} \OperatorTok{=} \FloatTok{1}\OperatorTok{;}
-\VariableTok{bar\_a3} \OperatorTok{=}\NormalTok{ [}\OperatorTok{{-}}\FloatTok{1}\OperatorTok{;} \FloatTok{0}\NormalTok{]}\OperatorTok{;}
-\VariableTok{b3} \OperatorTok{=} \FloatTok{1}\OperatorTok{;}
-\VariableTok{bar\_a4} \OperatorTok{=}\NormalTok{ [}\FloatTok{0}\OperatorTok{;} \OperatorTok{{-}}\FloatTok{1}\NormalTok{]}\OperatorTok{;}
-\VariableTok{b4} \OperatorTok{=} \FloatTok{1}\OperatorTok{;}
-\VariableTok{sigma} \OperatorTok{=} \FloatTok{0.1}\OperatorTok{;} 
-\VariableTok{c} \OperatorTok{=}\NormalTok{ [}\FloatTok{2}\OperatorTok{;} \FloatTok{3}\NormalTok{]}\OperatorTok{;}
-\VariableTok{p} \OperatorTok{=} \FloatTok{0.9}\OperatorTok{;} \CommentTok{\% p should be more than 0.5}
-\VariableTok{Phi\_inv} \OperatorTok{=} \VariableTok{norminv}\NormalTok{(}\VariableTok{p}\NormalTok{)}\OperatorTok{;} \CommentTok{\% get Phi\^{}\{{-}1\}(p)}
-
-\CommentTok{\%\% Solve the SOCP problem}
-\VariableTok{cvx\_begin}
-    \VariableTok{variable} \VariableTok{x}\NormalTok{(}\FloatTok{2}\NormalTok{)}\OperatorTok{;} \CommentTok{\% define variables [x1; x2]}
-    \VariableTok{minimize}\NormalTok{(}\VariableTok{c}\OperatorTok{\textquotesingle{}} \OperatorTok{*} \VariableTok{x}\NormalTok{)}\OperatorTok{;} 
-    \VariableTok{subject} \VariableTok{to}
-        \VariableTok{sigma}\OperatorTok{*}\VariableTok{Phi\_inv} \OperatorTok{*} \VariableTok{norm}\NormalTok{(}\VariableTok{x}\NormalTok{) }\OperatorTok{\textless{}=} \VariableTok{b1} \OperatorTok{{-}} \VariableTok{bar\_a1}\OperatorTok{\textquotesingle{}} \OperatorTok{*} \VariableTok{x}\OperatorTok{;}
-        \VariableTok{sigma}\OperatorTok{*}\VariableTok{Phi\_inv} \OperatorTok{*} \VariableTok{norm}\NormalTok{(}\VariableTok{x}\NormalTok{) }\OperatorTok{\textless{}=} \VariableTok{b2} \OperatorTok{{-}} \VariableTok{bar\_a2}\OperatorTok{\textquotesingle{}} \OperatorTok{*} \VariableTok{x}\OperatorTok{;}
-        \VariableTok{sigma}\OperatorTok{*}\VariableTok{Phi\_inv} \OperatorTok{*} \VariableTok{norm}\NormalTok{(}\VariableTok{x}\NormalTok{) }\OperatorTok{\textless{}=} \VariableTok{b3} \OperatorTok{{-}} \VariableTok{bar\_a3}\OperatorTok{\textquotesingle{}} \OperatorTok{*} \VariableTok{x}\OperatorTok{;}
-        \VariableTok{sigma}\OperatorTok{*}\VariableTok{Phi\_inv} \OperatorTok{*} \VariableTok{norm}\NormalTok{(}\VariableTok{x}\NormalTok{) }\OperatorTok{\textless{}=} \VariableTok{b4} \OperatorTok{{-}} \VariableTok{bar\_a4}\OperatorTok{\textquotesingle{}} \OperatorTok{*} \VariableTok{x}\OperatorTok{;}
-\VariableTok{cvx\_end}
-\end{Highlighting}
-\end{Shaded}
-
-\hypertarget{semidefinite-programming-sdp}{%
-\subsection{Semidefinite Programming (SDP)}\label{semidefinite-programming-sdp}}
-
-\textbf{Definition.} An SDP has the following form:
-\begin{align}
-   \label{eq:app-sdpdef}
-   \min_{X_i, x_i} \ & \sum_{i=1}^{n_s} C_i \cdot X_i + \sum_{i=1}^{n_u} c_i \cdot x_i \\
-   \text{subject to } & \sum_{i=1}^{n_s} A_{i,j} \cdot X_i + \sum_{i=1}^{n_u} a_{i,j} \cdot x_i = b_j, \quad j = 1 \dots m \\
-   & X_i \in \mathcal{S}_+^{D_i}, \quad i = 1 \dots n_s \\
-   & x_i \in \mathbb{R}^{d_i}, \quad i = 1 \dots n_u  
-\end{align}
-where \(C_i, A_{i, j} \in \mathbb{R}^{D_i \times D_i}\), \(c_i, a_{i, j} \in \mathbb{R}^{d_i}\), and \(\cdot\) means element-wise product. For two square matrices \(A, B\), the dot product \(A \cdot B\) is equal to \(\text{tr}(A B)\); for two vectors \(a, b\), the dot product \(a \cdot b\) is the same as inner product \(a^T b\).
-
-Note that actually there are many ``standard'' forms of SDP. For example, in the convex optimization theory part, you may find an SDP that looks like:
-\begin{align}
-   \min_X \ & C \cdot X \\
-   \text{subject to } & A \cdot X = b \\
-   & X \succeq 0
-\end{align}
-It is convenient for us to analyze the theoretical properties of SDP with this form. Also, in SDP solvers' User Guide, you may see more complex SDP forms which involve more general convex cones. For example, see \href{https://docs.mosek.com/10.0/toolbox/tutorial-sdo-shared.html\#doc-tutorial-sdo}{MOSEK's MATLAB API docs}. Here we turn to use the form of \eqref{eq:app-sdpdef} for two reasons: (1) it is general enough: our SDP example below can be converted to this form (also, SDPs from sum-of-squares programming in this book are exactly of the form \eqref{eq:app-sdpdef}); (2) it is more readable than more complex forms.
-
-\textbf{Example.} We consider the problem of finding the minimum eigenvalue for a positive semidefinite matrix \(S\). We will show that this problem can be converted to \eqref{eq:app-sdpdef}. Since \(S\) is positive semidefinite, the finding procedure can be cast as
-\begin{align}
-    \max_\lambda & \ \lambda \\
-    \text{subject to } & S - \lambda I \succeq 0
-\end{align}
-Now define an auxiliary matrix \(X := S - \lambda I\). We have
-\begin{align}
-    \min_{\lambda, X} & \ -\lambda \\
-   \text{subject to } &  X + \lambda I = S \\
-   & X \succeq 0
-\end{align}
-It is obvious that the linear matrix equality constraint \(X + \lambda I = S\) can be divided into several linear scalar equality constraints in \eqref{eq:app-sdpdef}. For example, we consider \(S \in \mathbb{S}_+^3\). Thereby \(X + \lambda I = S\) will lead to \(6\) linear equality constraints (We don't consider \(X\) is a symmetric matrix here, since most solvers will implicitly consider this. Thus, only the upper-triangular part of \(X\) and \(S\) are actually used in the equality construction.):
-\begin{align}
-   &  \begin{bmatrix}
-      1 & 0 & 0 \\ 0 & 0 & 0 \\ 0 & 0 & 0
-   \end{bmatrix} \cdot X  + \lambda = S[0, 0],  
-    \begin{bmatrix}
-      0 & 1 & 0 \\ 0 & 0 & 0 \\ 0 & 0 & 0
-   \end{bmatrix} \cdot X  = S[0, 1],
-    \begin{bmatrix}
-      0 & 0 & 1 \\ 0 & 0 & 0 \\ 0 & 0 & 0
-   \end{bmatrix} \cdot X  = S[0, 2] \\
-   &  \begin{bmatrix}
-      0 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 0
-   \end{bmatrix} \cdot X  + \lambda = S[1, 1],
-    \begin{bmatrix}
-      0 & 0 & 0 \\ 0 & 0 & 1 \\ 0 & 0 & 0
-   \end{bmatrix} \cdot X  = S[1, 2], 
-    \begin{bmatrix}
-      0 & 0 & 0 \\ 0 & 0 & 0 \\ 0 & 0 & 1
-   \end{bmatrix} \cdot X  + \lambda = S[2, 2] 
-\end{align}
-Seems tedious? Fortunately, CVX provides a high-level API to handle these linear equality constraints: you just need to write down
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\VariableTok{X} \OperatorTok{+} \VariableTok{lam} \OperatorTok{*} \VariableTok{eye}\NormalTok{(}\FloatTok{3}\NormalTok{) }\OperatorTok{==} \VariableTok{S}\OperatorTok{;} \CommentTok{\% linear equality constraints: X + lam *I = S}
-\end{Highlighting}
-\end{Shaded}
-
-CVX will autometically convert this high-level constraint to \eqref{eq:app-sdpdef} and pass them to the underlying solver.
-
-To generate a ramdom \(S \in \mathcal{S}_+^3\), you just need to assign three nonnegative eigenvalues to the program. After that, an random \(S\) will be generated by \(S = Q \ \text{diag}(\lambda_1, \lambda_2, \lambda_3) \ Q^T\), where \(Q\) is random orthonormal matrix.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\%\% Define the SDP example setting}
-\VariableTok{lam\_list} \OperatorTok{=}\NormalTok{ [}\FloatTok{0.7}\OperatorTok{;} \FloatTok{2.4}\OperatorTok{;} \FloatTok{3.7}\NormalTok{]}\OperatorTok{;}
-\VariableTok{S} \OperatorTok{=} \VariableTok{generate\_random\_PD\_matrix}\NormalTok{(}\VariableTok{lam\_list}\NormalTok{)}\OperatorTok{;} \CommentTok{\% get a PD matrix S}
-
-\CommentTok{\%\% Solve the SDP problem}
-\VariableTok{cvx\_begin}
-    \VariableTok{variable} \VariableTok{X}\NormalTok{(}\FloatTok{3}\OperatorTok{,} \FloatTok{3}\NormalTok{) }\VariableTok{symmetric}\OperatorTok{;}
-    \VariableTok{variable} \VariableTok{lam}\OperatorTok{;} 
-    \VariableTok{maximize}\NormalTok{(}\VariableTok{lam}\NormalTok{)}\OperatorTok{;} 
-    \VariableTok{subject} \VariableTok{to}
-        \CommentTok{\% here "==" should be read as "is in"}
-        \VariableTok{X} \OperatorTok{==} \VariableTok{semidefinite}\NormalTok{(}\FloatTok{3}\NormalTok{)}\OperatorTok{;} 
-        \VariableTok{X} \OperatorTok{+} \VariableTok{lam} \OperatorTok{*} \VariableTok{eye}\NormalTok{(}\FloatTok{3}\NormalTok{) }\OperatorTok{==} \VariableTok{S}\OperatorTok{;}
-\VariableTok{cvx\_end}
-
-\CommentTok{\% this function help to generate PD matrix of size 3*3 }
-\CommentTok{\% if you provide the eigenvalues [lam\_1, lam\_2, lam\_3]}
-\KeywordTok{function} \VariableTok{S} \OperatorTok{=} \VariableTok{generate\_random\_PD\_matrix}\NormalTok{(}\VariableTok{lam\_list}\NormalTok{)}
-    \KeywordTok{if} \OperatorTok{\textasciitilde{}}\VariableTok{all}\NormalTok{(}\VariableTok{lam\_list} \OperatorTok{\textgreater{}=} \FloatTok{0}\NormalTok{) }\CommentTok{\% all eigenvalues \textgreater{}= 0}
-        \VariableTok{error}\NormalTok{(}\StringTok{"All eigenvalues must be nonnegative."}\NormalTok{)}\OperatorTok{;}
-    \KeywordTok{end}
-    \VariableTok{D} \OperatorTok{=} \VariableTok{diag}\NormalTok{(}\VariableTok{lam\_list}\NormalTok{)}\OperatorTok{;}
-    \CommentTok{\% use QR factorization to generate a random orthonormal matrix Q}
-\NormalTok{    [}\VariableTok{Q}\OperatorTok{,} \OperatorTok{\textasciitilde{}}\NormalTok{] }\OperatorTok{=} \VariableTok{qr}\NormalTok{(}\VariableTok{rand}\NormalTok{(}\FloatTok{3}\OperatorTok{,} \FloatTok{3}\NormalTok{))}\OperatorTok{;}
-    \VariableTok{S} \OperatorTok{=}  \VariableTok{Q} \OperatorTok{*} \VariableTok{D} \OperatorTok{*} \VariableTok{Q}\OperatorTok{\textquotesingle{};}
-\KeywordTok{end}
-\end{Highlighting}
-\end{Shaded}
-
-\hypertarget{cvxpy-introduction-and-examples}{%
-\subsection{CVXPY Introduction and Examples}\label{cvxpy-introduction-and-examples}}
-
-Apart from CVX MATLAB, we also have a Python package called CVXPY, which functions almost the same as CVX MATLAB. To define and solve a convex optimization problem CVXPY, basically, there are three steps (apart from importing necessary packages):
-
-\begin{itemize}
-\item
-  Step 1: Define parameters and variables in a certain type of convex problem. Here variables are what you are trying to optimize or ``learn''. Parameters are the ``coefficients'' of variables in the objective and constraints.
-\item
-  Step 2: Define the objective function and constraints.
-\item
-  Step 3: Solve the problem and get the results.
-\end{itemize}
-
-Here we provide the CVXPY codes for the above five convex optimization examples.
-
-\hypertarget{lp}{%
-\subsubsection{LP}\label{lp}}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\ImportTok{import}\NormalTok{ cvxpy }\ImportTok{as}\NormalTok{ cp}
-\ImportTok{import}\NormalTok{ numpy }\ImportTok{as}\NormalTok{ np}
-
-\CommentTok{\#\# Define the LP example setting}
-\NormalTok{c1 }\OperatorTok{=} \DecValTok{2}
-\NormalTok{c2 }\OperatorTok{=} \OperatorTok{{-}}\DecValTok{5}
-\NormalTok{l1 }\OperatorTok{=} \DecValTok{3}
-\NormalTok{l2 }\OperatorTok{=} \DecValTok{7}
-
-\CommentTok{\#\# Step 1: define variables and parameters}
-\NormalTok{x }\OperatorTok{=}\NormalTok{ cp.Variable(}\DecValTok{2}\NormalTok{) }\CommentTok{\# variable: x = [x1, x2]\^{}T}
-\CommentTok{\# parameters: c, A, b}
-\NormalTok{c }\OperatorTok{=}\NormalTok{ np.array([c1, c2]) }
-\NormalTok{A }\OperatorTok{=}\NormalTok{ np.array([[}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\OperatorTok{{-}}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\OperatorTok{{-}}\DecValTok{1}\NormalTok{]])}
-\NormalTok{b }\OperatorTok{=}\NormalTok{ np.array([l1, l1, l2, l2])}
-
-\CommentTok{\#\# Step 2: define objective and constraints}
-\NormalTok{obj }\OperatorTok{=}\NormalTok{ cp.Minimize(c.T }\OperatorTok{@}\NormalTok{ x)}
-\NormalTok{constraints }\OperatorTok{=}\NormalTok{ [A }\OperatorTok{@}\NormalTok{ x }\OperatorTok{\textless{}=}\NormalTok{ b]}
-\NormalTok{prob }\OperatorTok{=}\NormalTok{ cp.Problem(obj, constraints) }\CommentTok{\# form the problem}
-
-\CommentTok{\#\# Step 3: solve problem and get results}
-\NormalTok{prob.solve()  }
-\BuiltInTok{print}\NormalTok{(}\StringTok{"status: "}\NormalTok{, prob.status) }\CommentTok{\# check whether the status is "optimal"}
-\BuiltInTok{print}\NormalTok{(}\StringTok{"optimal value: "}\NormalTok{, prob.value) }\CommentTok{\# optimal objective}
-\BuiltInTok{print}\NormalTok{(}\StringTok{"optimal solution: "}\NormalTok{, x.value) }\CommentTok{\# optimal x}
-\end{Highlighting}
-\end{Shaded}
-
-\hypertarget{qp}{%
-\subsubsection{QP}\label{qp}}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\ImportTok{import}\NormalTok{ cvxpy }\ImportTok{as}\NormalTok{ cp}
-\ImportTok{import}\NormalTok{ numpy }\ImportTok{as}\NormalTok{ np}
-
-\CommentTok{\#\# Define the LP example setting}
-\NormalTok{p1 }\OperatorTok{=} \DecValTok{2}
-\NormalTok{p2 }\OperatorTok{=} \FloatTok{0.5}
-\NormalTok{p3 }\OperatorTok{=} \DecValTok{4}
-\NormalTok{q1 }\OperatorTok{=} \OperatorTok{{-}}\DecValTok{3}
-\NormalTok{q2 }\OperatorTok{=} \OperatorTok{{-}}\FloatTok{6.5}
-\NormalTok{l1 }\OperatorTok{=} \DecValTok{2}
-\NormalTok{l2 }\OperatorTok{=} \FloatTok{2.5}
-\CommentTok{\# check if the generated P is positive semidefinite}
-\NormalTok{tmp1 }\OperatorTok{=}\NormalTok{ (p1 }\OperatorTok{\textgreater{}=} \DecValTok{0}\NormalTok{)}
-\NormalTok{tmp2 }\OperatorTok{=}\NormalTok{ (p1}\OperatorTok{*}\NormalTok{p3 }\OperatorTok{{-}} \DecValTok{4}\OperatorTok{*}\NormalTok{p2}\OperatorTok{**}\DecValTok{2} \OperatorTok{\textgreater{}=} \DecValTok{0}\NormalTok{)}
-\ControlFlowTok{assert}\NormalTok{(tmp1 }\KeywordTok{and}\NormalTok{ tmp2, }\StringTok{"P is not positve semidefinite!"}\NormalTok{)}
-
-\CommentTok{\#\# Step 1: define variables and parameters}
-\NormalTok{x }\OperatorTok{=}\NormalTok{ cp.Variable(}\DecValTok{2}\NormalTok{) }\CommentTok{\# variable: x = [x1, x2]\^{}T}
-\CommentTok{\# parameters: P, q, G, h}
-\NormalTok{P }\OperatorTok{=} \DecValTok{2}\OperatorTok{*}\NormalTok{np.array([[p1, p2], [p2, p3]])}
-\NormalTok{q }\OperatorTok{=}\NormalTok{ np.array([q1, q2]) }
-\NormalTok{G }\OperatorTok{=}\NormalTok{ np.array([[}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\OperatorTok{{-}}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\OperatorTok{{-}}\DecValTok{1}\NormalTok{]])}
-\NormalTok{h }\OperatorTok{=}\NormalTok{ np.array([l1, l1, l2, l2])}
-
-\CommentTok{\#\# Step 2: define the objective and constraints}
-\NormalTok{fx }\OperatorTok{=} \FloatTok{0.5} \OperatorTok{*}\NormalTok{ cp.quad\_form(x, P) }\OperatorTok{+}\NormalTok{ q.T }\OperatorTok{@}\NormalTok{ x}
-\NormalTok{obj }\OperatorTok{=}\NormalTok{ cp.Minimize(fx)}
-\NormalTok{constraints }\OperatorTok{=}\NormalTok{ [G }\OperatorTok{@}\NormalTok{ x }\OperatorTok{\textless{}=}\NormalTok{ h]}
-\NormalTok{prob }\OperatorTok{=}\NormalTok{ cp.Problem(obj, constraints) }\CommentTok{\# form the problem}
-
-\CommentTok{\#\# Step 3: solve the problem and get results}
-\NormalTok{prob.solve()  }
-\BuiltInTok{print}\NormalTok{(}\StringTok{"status: "}\NormalTok{, prob.status) }\CommentTok{\# check whether the status is "optimal"}
-\BuiltInTok{print}\NormalTok{(}\StringTok{"optimal value: "}\NormalTok{, prob.value) }\CommentTok{\# optimal objective}
-\BuiltInTok{print}\NormalTok{(}\StringTok{"optimal solution: "}\NormalTok{, x.value) }\CommentTok{\# optimal x}
-\end{Highlighting}
-\end{Shaded}
-
-\hypertarget{qcqp}{%
-\subsubsection{QCQP}\label{qcqp}}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\ImportTok{import}\NormalTok{ cvxpy }\ImportTok{as}\NormalTok{ cp}
-\ImportTok{import}\NormalTok{ numpy }\ImportTok{as}\NormalTok{ np}
-\ImportTok{from}\NormalTok{ numpy.linalg }\ImportTok{import}\NormalTok{ cholesky, inv, norm}
-
-\CommentTok{\#\# Define the QCQP example setting}
-\KeywordTok{def}\NormalTok{ if\_ellipse(K, k, c):}
-    \CommentTok{\# examine whether 0.5*x\^{}T K x + k\^{}T x + c \textless{}= 0 is a ellipse}
-    \CommentTok{\# if K is not positive semidefinite, Cholesky will raise an error}
-\NormalTok{    L }\OperatorTok{=}\NormalTok{ cholesky(K) }
-\NormalTok{    radius\_square }\OperatorTok{=} \FloatTok{0.5} \OperatorTok{*}\NormalTok{ norm(inv(L) }\OperatorTok{@}\NormalTok{ k)}\OperatorTok{**}\DecValTok{2} \OperatorTok{{-}}\NormalTok{ c}
-    \ControlFlowTok{return}\NormalTok{ radius\_square }\OperatorTok{\textgreater{}} \DecValTok{0}
-\NormalTok{K1 }\OperatorTok{=}\NormalTok{ np.eye(}\DecValTok{2}\NormalTok{)}
-\NormalTok{k1 }\OperatorTok{=}\NormalTok{ np.zeros(}\DecValTok{2}\NormalTok{)}
-\NormalTok{c1 }\OperatorTok{=} \OperatorTok{{-}}\FloatTok{0.5}
-\NormalTok{K2 }\OperatorTok{=}\NormalTok{ np.array([[}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{]])}
-\NormalTok{k2 }\OperatorTok{=}\NormalTok{ np.array([}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{])}
-\NormalTok{c2 }\OperatorTok{=} \FloatTok{3.5}
-\ControlFlowTok{if} \KeywordTok{not}\NormalTok{ (if\_ellipse(K1, k1, c1) }\KeywordTok{and}\NormalTok{ if\_ellipse(K2, k2, c2)):}
-    \ControlFlowTok{raise} \PreprocessorTok{ValueError}\NormalTok{(}\StringTok{"The example setting is not correct"}\NormalTok{)}
-
-\CommentTok{\#\# Step 1: define variables and parameters}
-\NormalTok{P0 }\OperatorTok{=}\NormalTok{ np.array([[}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\OperatorTok{{-}}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\OperatorTok{{-}}\DecValTok{1}\NormalTok{], [}\OperatorTok{{-}}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{,}\OperatorTok{{-}}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{]])}
-\NormalTok{P1 }\OperatorTok{=}\NormalTok{ np.zeros((}\DecValTok{4}\NormalTok{,}\DecValTok{4}\NormalTok{))}
-\NormalTok{P1[:}\DecValTok{2}\NormalTok{, :}\DecValTok{2}\NormalTok{] }\OperatorTok{=}\NormalTok{ K1}
-\NormalTok{P2 }\OperatorTok{=}\NormalTok{ np.zeros((}\DecValTok{4}\NormalTok{,}\DecValTok{4}\NormalTok{))}
-\NormalTok{P2[}\DecValTok{2}\NormalTok{:, }\DecValTok{2}\NormalTok{:] }\OperatorTok{=}\NormalTok{ K2}
-\NormalTok{q1 }\OperatorTok{=}\NormalTok{ np.concatenate([k1, np.zeros(}\DecValTok{2}\NormalTok{)])}
-\NormalTok{q2 }\OperatorTok{=}\NormalTok{ np.concatenate([np.zeros(}\DecValTok{2}\NormalTok{), k2])}
-\NormalTok{r1 }\OperatorTok{=}\NormalTok{ c1}
-\NormalTok{r2 }\OperatorTok{=}\NormalTok{ c2}
-
-\CommentTok{\#\# Step 2: define objective and constraints}
-\NormalTok{x }\OperatorTok{=}\NormalTok{ cp.Variable(}\DecValTok{4}\NormalTok{) }\CommentTok{\# variable: x = [y1, z1, y2, z2]\^{}T}
-\NormalTok{fx }\OperatorTok{=} \FloatTok{0.5} \OperatorTok{*}\NormalTok{ cp.quad\_form(x, P0)}
-\NormalTok{obj }\OperatorTok{=}\NormalTok{ cp.Minimize(fx)}
-\NormalTok{con1 }\OperatorTok{=}\NormalTok{ (}\FloatTok{0.5} \OperatorTok{*}\NormalTok{ cp.quad\_form(x, P1) }\OperatorTok{+}\NormalTok{ q1.T }\OperatorTok{@}\NormalTok{ x }\OperatorTok{+}\NormalTok{ r1 }\OperatorTok{\textless{}=} \DecValTok{0}\NormalTok{) }\CommentTok{\# ellipse 1}
-\NormalTok{con2 }\OperatorTok{=}\NormalTok{ (}\FloatTok{0.5} \OperatorTok{*}\NormalTok{ cp.quad\_form(x, P2) }\OperatorTok{+}\NormalTok{ q2.T }\OperatorTok{@}\NormalTok{ x }\OperatorTok{+}\NormalTok{ r2 }\OperatorTok{\textless{}=} \DecValTok{0}\NormalTok{) }\CommentTok{\# ellipse 2}
-\NormalTok{constraints }\OperatorTok{=}\NormalTok{ [con1, con2]}
-\NormalTok{prob }\OperatorTok{=}\NormalTok{ cp.Problem(obj, constraints) }\CommentTok{\# form the problem}
-
-\CommentTok{\#\# Step 3: solve problem and get results}
-\NormalTok{prob.solve()  }
-\BuiltInTok{print}\NormalTok{(}\StringTok{"status: "}\NormalTok{, prob.status) }\CommentTok{\# check whether the status is "optimal"}
-\BuiltInTok{print}\NormalTok{(}\StringTok{"optimal value: "}\NormalTok{, prob.value) }\CommentTok{\# optimal objective}
-\BuiltInTok{print}\NormalTok{(}\StringTok{"optimal solution: "}\NormalTok{, x.value) }\CommentTok{\# optimal x}
-\end{Highlighting}
-\end{Shaded}
-
-\hypertarget{socp}{%
-\subsubsection{SOCP}\label{socp}}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\ImportTok{import}\NormalTok{ cvxpy }\ImportTok{as}\NormalTok{ cp}
-\ImportTok{import}\NormalTok{ numpy }\ImportTok{as}\NormalTok{ np}
-\ImportTok{from}\NormalTok{ scipy.stats }\ImportTok{import}\NormalTok{ norm}
-
-\CommentTok{\#\# Define the SOCP example setting}
-\CommentTok{\# define bar\_ai, bi (i = 1, 2, 3, 4)}
-\NormalTok{bar\_a1 }\OperatorTok{=}\NormalTok{ np.array([}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{])}
-\NormalTok{b1 }\OperatorTok{=} \DecValTok{1}
-\NormalTok{bar\_a2 }\OperatorTok{=}\NormalTok{ np.array([}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{])}
-\NormalTok{b2 }\OperatorTok{=} \DecValTok{1}
-\NormalTok{bar\_a3 }\OperatorTok{=}\NormalTok{ np.array([}\OperatorTok{{-}}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{])}
-\NormalTok{b3 }\OperatorTok{=} \DecValTok{1}
-\NormalTok{bar\_a4 }\OperatorTok{=}\NormalTok{ np.array([}\DecValTok{0}\NormalTok{, }\OperatorTok{{-}}\DecValTok{1}\NormalTok{])}
-\NormalTok{b4 }\OperatorTok{=} \DecValTok{1}
-\NormalTok{sigma }\OperatorTok{=} \FloatTok{0.1} 
-\NormalTok{c }\OperatorTok{=}\NormalTok{ np.array([}\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{])}
-\NormalTok{p }\OperatorTok{=} \FloatTok{0.9} \CommentTok{\# p should be more than 0.5}
-
-\CommentTok{\#\# Step 1: define variables and parameters}
-\NormalTok{Phi\_inv }\OperatorTok{=}\NormalTok{ norm.ppf(p) }\CommentTok{\# get Phi\^{}\{{-}1\}(p)}
-
-\CommentTok{\#\# Step 2: define objective and constraints}
-\NormalTok{x }\OperatorTok{=}\NormalTok{ cp.Variable(}\DecValTok{2}\NormalTok{) }\CommentTok{\# variable: x = [x1, x2]\^{}T}
-\NormalTok{obj }\OperatorTok{=}\NormalTok{ cp.Minimize(c.T }\OperatorTok{@}\NormalTok{ x)}
-\CommentTok{\# use cp.SOC(t, x) to create the SOC constraint ||x||\_2 \textless{}= t}
-\NormalTok{constraints }\OperatorTok{=}\NormalTok{ [}
-\NormalTok{    cp.SOC(b1 }\OperatorTok{{-}}\NormalTok{ bar\_a1.T }\OperatorTok{@}\NormalTok{ x, sigma}\OperatorTok{*}\NormalTok{Phi\_inv}\OperatorTok{*}\NormalTok{x),}
-\NormalTok{    cp.SOC(b2 }\OperatorTok{{-}}\NormalTok{ bar\_a2.T }\OperatorTok{@}\NormalTok{ x, sigma}\OperatorTok{*}\NormalTok{Phi\_inv}\OperatorTok{*}\NormalTok{x),}
-\NormalTok{    cp.SOC(b3 }\OperatorTok{{-}}\NormalTok{ bar\_a3.T }\OperatorTok{@}\NormalTok{ x, sigma}\OperatorTok{*}\NormalTok{Phi\_inv}\OperatorTok{*}\NormalTok{x),}
-\NormalTok{    cp.SOC(b4 }\OperatorTok{{-}}\NormalTok{ bar\_a4.T }\OperatorTok{@}\NormalTok{ x, sigma}\OperatorTok{*}\NormalTok{Phi\_inv}\OperatorTok{*}\NormalTok{x),}
-\NormalTok{]}
-\NormalTok{prob }\OperatorTok{=}\NormalTok{ cp.Problem(obj, constraints) }\CommentTok{\# form the problem}
-
-\CommentTok{\#\# Step 3: solve problem and get results}
-\NormalTok{prob.solve()  }
-\BuiltInTok{print}\NormalTok{(}\StringTok{"status: "}\NormalTok{, prob.status) }\CommentTok{\# check whether the status is "optimal"}
-\BuiltInTok{print}\NormalTok{(}\StringTok{"optimal value: "}\NormalTok{, prob.value) }\CommentTok{\# optimal objective}
-\BuiltInTok{print}\NormalTok{(}\StringTok{"optimal solution: "}\NormalTok{, x.value) }\CommentTok{\# optimal x}
-\end{Highlighting}
-\end{Shaded}
-
-\hypertarget{sdp}{%
-\subsubsection{SDP}\label{sdp}}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\ImportTok{import}\NormalTok{ cvxpy }\ImportTok{as}\NormalTok{ cp}
-\ImportTok{import}\NormalTok{ numpy }\ImportTok{as}\NormalTok{ np}
-\ImportTok{from}\NormalTok{ scipy.stats }\ImportTok{import}\NormalTok{ ortho\_group}
-
-\CommentTok{\#\# Define the SDP example setting}
-\CommentTok{\# this function help to generate PD matrix of size 3*3 }
-\CommentTok{\# if you provide the eigenvalues [lam\_1, lam\_2, lam\_3]}
-\KeywordTok{def}\NormalTok{ generate\_random\_PD\_matrix(lam\_list):}
-    \ControlFlowTok{assert}\NormalTok{ np.}\BuiltInTok{all}\NormalTok{(lam\_list }\OperatorTok{\textgreater{}=} \DecValTok{0}\NormalTok{) }\CommentTok{\# all eigenvalues \textgreater{}= 0}
-    \CommentTok{\# S = Q @ D @ Q.T}
-\NormalTok{    D }\OperatorTok{=}\NormalTok{ np.diag(lam\_list)}
-\NormalTok{    Q }\OperatorTok{=}\NormalTok{ ortho\_group.rvs(}\DecValTok{3}\NormalTok{)}
-    \ControlFlowTok{return}\NormalTok{ Q }\OperatorTok{@}\NormalTok{ D }\OperatorTok{@}\NormalTok{ Q.T}
-\NormalTok{lam\_list }\OperatorTok{=}\NormalTok{ np.array([}\FloatTok{0.5}\NormalTok{, }\FloatTok{2.4}\NormalTok{, }\FloatTok{3.7}\NormalTok{])}
-\NormalTok{S }\OperatorTok{=}\NormalTok{ generate\_random\_PD\_matrix(lam\_list) }\CommentTok{\# get a PD matrix S}
-
-\CommentTok{\#\# Step 1: define variables and parameters}
-\CommentTok{\# get coefficients for equality constraints}
-\NormalTok{A\_00 }\OperatorTok{=}\NormalTok{ np.array([[}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{]]) }\CommentTok{\# tr(A\_00 @ X) + lam = S\_00}
-\NormalTok{A\_01 }\OperatorTok{=}\NormalTok{ np.array([[}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{]]) }\CommentTok{\# tr(A\_01 @ X) = S\_01}
-\NormalTok{A\_02 }\OperatorTok{=}\NormalTok{ np.array([[}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{]]) }\CommentTok{\# tr(A\_02 @ X) = S\_02}
-\NormalTok{A\_11 }\OperatorTok{=}\NormalTok{ np.array([[}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{]]) }\CommentTok{\# tr(A\_11 @ X) + lam = S\_11}
-\NormalTok{A\_12 }\OperatorTok{=}\NormalTok{ np.array([[}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{]]) }\CommentTok{\# tr(A\_12 @ X) = S\_12}
-\NormalTok{A\_22 }\OperatorTok{=}\NormalTok{ np.array([[}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{], [}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{]]) }\CommentTok{\# tr(A\_22 @ X) + lam = S\_22}
-
-\CommentTok{\#\# Step 2: define objective and constraints}
-\CommentTok{\# define a PD matrix variable X of size 3*3}
-\NormalTok{X }\OperatorTok{=}\NormalTok{ cp.Variable((}\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{), symmetric}\OperatorTok{=}\VariableTok{True}\NormalTok{)}
-\NormalTok{constraints }\OperatorTok{=}\NormalTok{ [X }\OperatorTok{\textgreater{}\textgreater{}} \DecValTok{0}\NormalTok{] }\CommentTok{\# the operator \textgreater{}\textgreater{} denotes matrix inequality}
-\NormalTok{lam }\OperatorTok{=}\NormalTok{ cp.Variable(}\DecValTok{1}\NormalTok{)}
-\NormalTok{constraints }\OperatorTok{+=}\NormalTok{ [}
-\NormalTok{    cp.trace(A\_00 }\OperatorTok{@}\NormalTok{ X) }\OperatorTok{+}\NormalTok{ lam }\OperatorTok{==}\NormalTok{ S[}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{],}
-\NormalTok{    cp.trace(A\_01 }\OperatorTok{@}\NormalTok{ X) }\OperatorTok{==}\NormalTok{ S[}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{],}
-\NormalTok{    cp.trace(A\_02 }\OperatorTok{@}\NormalTok{ X) }\OperatorTok{==}\NormalTok{ S[}\DecValTok{0}\NormalTok{,}\DecValTok{2}\NormalTok{],}
-\NormalTok{    cp.trace(A\_11 }\OperatorTok{@}\NormalTok{ X) }\OperatorTok{+}\NormalTok{ lam }\OperatorTok{==}\NormalTok{ S[}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{],}
-\NormalTok{    cp.trace(A\_12 }\OperatorTok{@}\NormalTok{ X) }\OperatorTok{==}\NormalTok{ S[}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{],}
-\NormalTok{    cp.trace(A\_22 }\OperatorTok{@}\NormalTok{ X) }\OperatorTok{+}\NormalTok{ lam }\OperatorTok{==}\NormalTok{ S[}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{],}
-\NormalTok{]}
-\NormalTok{obj }\OperatorTok{=}\NormalTok{ cp.Minimize(}\OperatorTok{{-}}\NormalTok{lam)}
-\NormalTok{prob }\OperatorTok{=}\NormalTok{ cp.Problem(obj, constraints) }\CommentTok{\# form the problem}
-
-\CommentTok{\#\# Step 3: solve problem and get results}
-\NormalTok{prob.solve()  }
-\BuiltInTok{print}\NormalTok{(}\StringTok{"status: "}\NormalTok{, prob.status) }\CommentTok{\# check whether the status is "optimal"}
-\BuiltInTok{print}\NormalTok{(}\StringTok{"optimal value: "}\NormalTok{, prob.value) }\CommentTok{\# optimal objective}
-\BuiltInTok{print}\NormalTok{(}\StringTok{"optimal solution: "}\NormalTok{, lam.value) }\CommentTok{\# optimal lam}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
-
-\hypertarget{the-kalman-yakubovich-lemma}{%
-\chapter{The Kalman-Yakubovich Lemma}\label{the-kalman-yakubovich-lemma}}
-
-\begin{lemma}[Kalman-Yakubovich]
-\protect\hypertarget{lem:KalmanYakubovich}{}\label{lem:KalmanYakubovich}Consider a controllable linear time-invariant system
-\[
-\dot{x} = A x + b u \\
-y = c^T x.
-\]
-The transfer function
-\[
-h(p) = c^T (p I - A)^{-1} b 
-\]
-is strictly positive real (SPR) if and only if there exist positive definite matrices \(P\) and \(Q\) such that
-\[
-A^T P + P A = - Q \\
-Pb = c.
-\]
-\end{lemma}
-
-\hypertarget{feedbacklinearization}{%
-\chapter{Feedback Linearization}\label{feedbacklinearization}}
-
-\hypertarget{slidingcontrol}{%
-\chapter{Sliding Control}\label{slidingcontrol}}
-
-\hypertarget{algebraic-techniques-and-sum-of-squares}{%
-\chapter{Algebraic Techniques and Sum-of-Squares}\label{algebraic-techniques-and-sum-of-squares}}
-
-\hypertarget{algebra}{%
-\section{Algebra}\label{algebra}}
-
-\hypertarget{polynomials}{%
-\subsection{Polynomials}\label{polynomials}}
+\hypertarget{polynomials-1}{%
+\subsection{Polynomials}\label{polynomials-1}}
 
 \begin{definition}[Monomial,Polynomial]
 \protect\hypertarget{def:monomial}{}\label{def:monomial}A \textbf{monomial} in \(x_1,\cdots,x_n\) is a product of the form \(x_1^{\alpha_1}\cdot x_2^{\alpha_2}\cdots x_n^{\alpha_n}\). The \textbf{total degree} of the monomial is \(\alpha_1+\cdots+\alpha_n\).
@@ -6530,8 +6630,8 @@ Sum of squares
 
 \end{definition}
 
-\hypertarget{representation-of-nonnegative-polynomial-univariate-case}{%
-\subsection{Representation of nonnegative polynomial: Univariate case}\label{representation-of-nonnegative-polynomial-univariate-case}}
+\hypertarget{representation-of-nonnegative-polynomial-univariate-case-1}{%
+\subsection{Representation of nonnegative polynomial: Univariate case}\label{representation-of-nonnegative-polynomial-univariate-case-1}}
 
 \begin{theorem}[Global version]
 \protect\hypertarget{thm:uniglobal}{}\label{thm:uniglobal}A polynomial \(p\in\mathbb{R}[x]\) of even degree is nonnegative if and only if it can be written as a sum of squares of other polynomials, i.e., \(p(x) = \Sigma^k_{i=1}[h_i(x)]^2\), with \(h_i\in R[x], i = 1,\cdots, k\).
@@ -6540,6 +6640,32 @@ Sum of squares
 \begin{theorem}[Compact interval version]
 \protect\hypertarget{thm:unifiniteinterval}{}\label{thm:unifiniteinterval}A polynomial \(p\in\mathbb{R}[x]\) of even degree is nonnegative if and only if it can be written as a sum of squares of other polynomials, i.e., \(p(x) = \Sigma^k_{i=1}[h_i(x)]^2\), with \(h_i\in R[x], i = 1,\cdots, k\).
 \end{theorem}
+
+\hypertarget{the-kalman-yakubovich-lemma}{%
+\chapter{The Kalman-Yakubovich Lemma}\label{the-kalman-yakubovich-lemma}}
+
+\begin{lemma}[Kalman-Yakubovich]
+\protect\hypertarget{lem:KalmanYakubovich}{}\label{lem:KalmanYakubovich}Consider a controllable linear time-invariant system
+\[
+\dot{x} = A x + b u \\
+y = c^T x.
+\]
+The transfer function
+\[
+h(p) = c^T (p I - A)^{-1} b 
+\]
+is strictly positive real (SPR) if and only if there exist positive definite matrices \(P\) and \(Q\) such that
+\[
+A^T P + P A = - Q \\
+Pb = c.
+\]
+\end{lemma}
+
+\hypertarget{feedbacklinearization}{%
+\chapter{Feedback Linearization}\label{feedbacklinearization}}
+
+\hypertarget{slidingcontrol}{%
+\chapter{Sliding Control}\label{slidingcontrol}}
 
   \bibliography{book.bib,packages.bib}
 

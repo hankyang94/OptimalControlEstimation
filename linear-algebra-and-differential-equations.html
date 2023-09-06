@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>References | Optimal Control and Estimation</title>
+  <title>A Linear Algebra and Differential Equations | Optimal Control and Estimation</title>
   <meta name="description" content="Lecture notes for Harvard ES/AM 158 Introduction to Optimal Control and Estimation." />
   <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="References | Optimal Control and Estimation" />
+  <meta property="og:title" content="A Linear Algebra and Differential Equations | Optimal Control and Estimation" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Lecture notes for Harvard ES/AM 158 Introduction to Optimal Control and Estimation." />
   <meta name="github-repo" content="hankyang94/OptimalControlEstimation" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="References | Optimal Control and Estimation" />
+  <meta name="twitter:title" content="A Linear Algebra and Differential Equations | Optimal Control and Estimation" />
   
   <meta name="twitter:description" content="Lecture notes for Harvard ES/AM 158 Introduction to Optimal Control and Estimation." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="slidingcontrol.html"/>
-
+<link rel="prev" href="acknowledgement.html"/>
+<link rel="next" href="appconvex.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -361,141 +361,75 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="references" class="section level1 unnumbered hasAnchor">
-<h1>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="linear-algebra-and-differential-equations" class="section level1 hasAnchor" number="10">
+<h1><span class="header-section-number">A</span> Linear Algebra and Differential Equations<a href="linear-algebra-and-differential-equations.html#linear-algebra-and-differential-equations" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>In this Chapter, we provide basic concepts in linear algebra and ordinary differential equations (ODE), which can be a cheatsheet for readers.</p>
+<div id="linear-algebra" class="section level2 hasAnchor" number="10.1">
+<h2><span class="header-section-number">A.1</span> Linear Algebra<a href="linear-algebra-and-differential-equations.html#linear-algebra" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Most of the linear algebraic concepts used in this textbook are provided in this section.</p>
+<div id="matrix-exponential" class="section level3 hasAnchor" number="10.1.1">
+<h3><span class="header-section-number">A.1.1</span> Matrix Exponential<a href="linear-algebra-and-differential-equations.html#matrix-exponential" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="definitionbox">
+<div class="definition">
+<p><span id="def:matrixexp" class="definition"><strong>Definition 7.3  (Matrix exponential) </strong></span>Given a <span class="math inline">\(n\times n\)</span> matrix <span class="math inline">\(A\)</span>, the matrix exponential of <span class="math inline">\(A\)</span>, denoted as <span class="math inline">\(e^A\)</span>, is defined as:
+<span class="math display">\[e^A = \sum_{p=0}^\infty \frac{A^p}{p!}.\]</span></p>
+</div>
+</div>
+<p>Note that the matrix exponential is well defined, and every entry converges absolutely. We show some special cases of matrix exponential.</p>
+<ol style="list-style-type: decimal">
+<li><p>Diagonal matrix. Note that if <span class="math inline">\(A=\text{diag}(a_1,a_2,\ldots,a_n)\)</span>, then <span class="math inline">\(A^p=\text{diag}(a_1^p,a_2^p,\ldots,a_n^p)\)</span>, and <span class="math inline">\(e^A=\text{diag}(e^{a_1},e^{a_2},\ldots,e^{a_n})\)</span>.</p></li>
+<li><p>Diagonalizable matrix:</p></li>
+</ol>
+<div class="definitionbox">
+<div class="definition">
+<p><span id="def:diagonaliable" class="definition"><strong>Definition A.1  (Diagonablizable matrix) </strong></span>A square matrix <span class="math inline">\(A\)</span> is said to be <strong>diagonalizable</strong> or <strong>non-defective</strong>, if there exists an invertible matrix <span class="math inline">\(P\)</span>, such that <span class="math inline">\(P^{-1}AP\)</span> is a diagonal matrix. In words, after change of coordination, the matrix becomes diagonal. If a matrix is not diagonalizable, it is <strong>defective</strong>.</p>
+</div>
+</div>
+<p>With diagonalization <span class="math inline">\(A=PDP^{-1}\)</span> where <span class="math inline">\(D\)</span> is a diagonal matrix (e.g. symmetric matrix is diagonalizable), we have <span class="math inline">\(e^A=Pe^DP^{-1}.\)</span> Specifically if <span class="math inline">\(U\)</span> consists of eigenvectors of <span class="math inline">\(A\)</span> and <span class="math inline">\(D\)</span> is the spectrum, then matrix exponential is the same as taking exponents of eigenvalues of <span class="math inline">\(A\)</span> while keeping the eigenbasis invariant.</p>
+<ol start="3" style="list-style-type: decimal">
+<li><p>Exchangable matrices. If <span class="math inline">\(A_1\)</span> and <span class="math inline">\(A_2\)</span> are exchangeable, that is, <span class="math inline">\(A_1A_2=A_2A_1\)</span>, then <span class="math inline">\(e^{A_1+A_2}=e^{A_1}e^{A_2}\)</span> (exercise!).</p></li>
+<li><p>Nilpotent matrix. If <span class="math inline">\(N\)</span> is a nilpotent matrix, which means that <span class="math inline">\(N^K=0\)</span> for some integer <span class="math inline">\(K\)</span>, then <span class="math inline">\(e^N=I+N+\frac12N^2+\ldots+\frac1{(K-1)!}N^{K-1}.\)</span></p></li>
+<li><p>Any matrix with Jordan canonical form (*This is out of scope of this textbook. We leave it for readers with interest). Any matrix <span class="math inline">\(A\)</span> can be decomposed as <span class="math inline">\(P(D+N)P^{-1}\)</span>, where <span class="math inline">\(D\)</span> is diagonal and exchangeable with the nilpotent matrix <span class="math inline">\(N\)</span>. Then based on the above discussions, <span class="math inline">\(e^A=P(e^De^N)P^{-1}\)</span>.</p></li>
+<li><p>Projection matrix <span class="math inline">\(A^2=A\)</span>. Then <span class="math inline">\(e^A=I+(e-1)A\)</span> (exercise!).</p></li>
+</ol>
+</div>
+<div id="gradients" class="section level3 hasAnchor" number="10.1.2">
+<h3><span class="header-section-number">A.1.2</span> Gradients<a href="linear-algebra-and-differential-equations.html#gradients" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>In matrix calculus, index may not be consistent in different references. It should be noted that in neural network literature, gradients may have a transpose on our results here.</p>
+<p>For any function <span class="math inline">\(f(X):\mathbb{R}^{m\times n}\rightarrow \mathbb{R}\)</span> of an <span class="math inline">\(m\)</span>-by-<span class="math inline">\(n\)</span> matrix <span class="math inline">\(X\)</span> (if <span class="math inline">\(n=1\)</span> then it is a vector), the gradient <span class="math inline">\(\nabla f(X)\)</span> is another <span class="math inline">\(m\)</span>-by-<span class="math inline">\(n\)</span> matrix with the <span class="math inline">\((i,j)\)</span>-th entry <span class="math inline">\(\frac{\partial f(X)}{\partial X_{ij}}\)</span>.</p>
+<p>For any function <span class="math inline">\(f(x):\mathbb{R}^{m}\rightarrow \mathbb{R}^n\)</span> that maps an <span class="math inline">\(m\)</span>-dimensional vector <span class="math inline">\(x\)</span> to <span class="math inline">\(n\)</span>-dimensional space, <span class="math inline">\(\nabla f(x)\)</span> is an <span class="math inline">\(m\)</span>-by-<span class="math inline">\(n\)</span> matrix with the <span class="math inline">\((i,j)\)</span>-th entry <span class="math inline">\(\frac{\partial (f(x))_j}{\partial x_i}\)</span>.</p>
+<p>Some important examples include:</p>
+<ul>
+<li><p>Vector inner-product. <span class="math inline">\(\nabla(a^\top x)=a\)</span>.</p></li>
+<li><p>Quadratic form <span class="math inline">\(\nabla(x^\top Ax) = (A+A^\top)x\)</span>.</p></li>
+<li><p>Composition. Suppose <span class="math inline">\(f(y):\mathbb{R}^{n}\rightarrow \mathbb{R}^k\)</span> and <span class="math inline">\(g(x):\mathbb{R}^{m}\rightarrow \mathbb{R}^n\)</span>, then <span class="math inline">\(\nabla f(g(x))\)</span> is an <span class="math inline">\(m\)</span>-by-<span class="math inline">\(k\)</span> matrix <span class="math inline">\(\nabla g(x) \nabla f(y=g(x))\)</span>.</p></li>
+</ul>
+</div>
+</div>
+<div id="solving-an-ordinary-differential-equation" class="section level2 hasAnchor" number="10.2">
+<h2><span class="header-section-number">A.2</span> Solving an Ordinary Differential Equation<a href="linear-algebra-and-differential-equations.html#solving-an-ordinary-differential-equation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="separation-of-variables" class="section level3 hasAnchor" number="10.2.1">
+<h3><span class="header-section-number">A.2.1</span> Separation of Variables<a href="linear-algebra-and-differential-equations.html#separation-of-variables" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+</div>
+<div id="first-order-linear-ode" class="section level3 hasAnchor" number="10.2.2">
+<h3><span class="header-section-number">A.2.2</span> First-order Linear ODE<a href="linear-algebra-and-differential-equations.html#first-order-linear-ode" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+</div>
+<div id="gronwall-inequality" class="section level3 hasAnchor" number="10.2.3">
+<h3><span class="header-section-number">A.2.3</span> Gronwall Inequality<a href="linear-algebra-and-differential-equations.html#gronwall-inequality" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+</div>
+<div id="matlab" class="section level3 hasAnchor" number="10.2.4">
+<h3><span class="header-section-number">A.2.4</span> Matlab<a href="linear-algebra-and-differential-equations.html#matlab" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 
-<div id="refs" class="references csl-bib-body hanging-indent">
-<div class="csl-entry">
-Agarwal, Alekh, Nan Jiang, Sham M Kakade, and Wen Sun. 2022. <span>“Reinforcement Learning: Theory and Algorithms.”</span> <em>CS Dept., UW Seattle, Seattle, WA, USA, Tech. Rep</em> 32.
-</div>
-<div class="csl-entry">
-Andrieu, Vincent, and Laurent Praly. 2006. <span>“On the Existence of a Kazantzis–Kravaris/Luenberger Observer.”</span> <em>SIAM Journal on Control and Optimization</em> 45 (2): 432–56.
-</div>
-<div class="csl-entry">
-Arnold, William F, and Alan J Laub. 1984. <span>“Generalized Eigenproblem Algorithms and Software for Algebraic Riccati Equations.”</span> <em>Proceedings of the IEEE</em> 72 (12): 1746–54.
-</div>
-<div class="csl-entry">
-Astolfi, Alessandro, and Romeo Ortega. 2003. <span>“Immersion and Invariance: A New Tool for Stabilization and Adaptive Control of Nonlinear Systems.”</span> <em>IEEE Transactions on Automatic Control</em> 48 (4): 590–606.
-</div>
-<div class="csl-entry">
-Bernard, Pauline. 2019. <em>Observer Design for Nonlinear Systems</em>. Vol. 479. Springer.
-</div>
-<div class="csl-entry">
-Bernard, Pauline, Vincent Andrieu, and Daniele Astolfi. 2022. <span>“Observer Design for Continuous-Time Dynamical Systems.”</span> <em>Annual Reviews in Control</em>.
-</div>
-<div class="csl-entry">
-Bertsekas, Dimitri. 2012. <em>Dynamic Programming and Optimal Control: Volume i</em>. Vol. 1. Athena scientific.
-</div>
-<div class="csl-entry">
-Besançon, Gildas, Guy Bornard, and Hassan Hammouri. 1996. <span>“Observer Synthesis for a Class of Nonlinear Control Systems.”</span> <em>European Journal of Control</em> 2 (3): 176–92.
-</div>
-<div class="csl-entry">
-Blekherman, Grigoriy, Pablo A Parrilo, and Rekha R Thomas. 2012. <em>Semidefinite Optimization and Convex Algebraic Geometry</em>. SIAM.
-</div>
-<div class="csl-entry">
-Chen, Chi-Tsong. 1984. <em>Linear System Theory and Design</em>. Saunders college publishing.
-</div>
-<div class="csl-entry">
-Davison, E., and W. Wonham. 1968. <span>“On Pole Assignment in Multivariable Linear Systems.”</span> <em>IEEE Transactions on Automatic Control</em> 13 (6): 747–48. <a href="https://doi.org/10.1109/TAC.1968.1099056">https://doi.org/10.1109/TAC.1968.1099056</a>.
-</div>
-<div class="csl-entry">
-Dawson, Charles, Sicun Gao, and Chuchu Fan. 2023. <span>“Safe Control with Learned Certificates: A Survey of Neural Lyapunov, Barrier, and Contraction Methods for Robotics and Control.”</span> <em>IEEE Transactions on Robotics</em>.
-</div>
-<div class="csl-entry">
-Ebenbauer, Christian, Jonathan Renz, and F Allgower. 2005. <span>“Polynomial Feedback and Observer Design Using Nonquadratic Lyapunov Functions.”</span> In <em>Proceedings of the 44th IEEE Conference on Decision and Control</em>, 7587–92. IEEE.
-</div>
-<div class="csl-entry">
-Hammouri, Hassan, and Jesus de Leon Morales. 1990. <span>“Observer Synthesis for State-Affine Systems.”</span> In <em>29th IEEE Conference on Decision and Control</em>, 784–85. IEEE.
-</div>
-<div class="csl-entry">
-Janny, Steeven, Vincent Andrieu, Madiha Nadri, and Christian Wolf. 2021. <span>“Deep Kkl: Data-Driven Output Prediction for Non-Linear Systems.”</span> In <em>2021 60th IEEE Conference on Decision and Control (CDC)</em>, 4376–81. IEEE.
-</div>
-<div class="csl-entry">
-Kalman, Rudolph E, and Richard S Bucy. 1961. <span>“New Results in Linear Filtering and Prediction Theory.”</span>
-</div>
-<div class="csl-entry">
-Karagiannis, Dimitrios, and Alessandro Astolfi. 2005. <span>“Nonlinear Observer Design Using Invariant Manifolds and Applications.”</span> In <em>Proceedings of the 44th IEEE Conference on Decision and Control</em>, 7775–80. IEEE.
-</div>
-<div class="csl-entry">
-Kazantzis, Nikolaos, and Costas Kravaris. 1998. <span>“Nonlinear Observer Design Using Lyapunov’s Auxiliary Theorem.”</span> <em>Systems &amp; Control Letters</em> 34 (5): 241–47.
-</div>
-<div class="csl-entry">
-Lasserre, Jean B. 2001. <span>“Global Optimization with Polynomials and the Problem of Moments.”</span> <em>SIAM Journal on Optimization</em> 11 (3): 796–817.
-</div>
-<div class="csl-entry">
-Lasserre, Jean Bernard. 2009. <em>Moments, Positive Polynomials and Their Applications</em>. Vol. 1. World Scientific.
-</div>
-<div class="csl-entry">
-Luenberger, David G. 1964. <span>“Observing the State of a Linear System.”</span> <em>IEEE Transactions on Military Electronics</em> 8 (2): 74–80.
-</div>
-<div class="csl-entry">
-Magron, Victor, and Jie Wang. 2023. <em>Sparse Polynomial Optimization: Theory and Practice</em>. World Scientific.
-</div>
-<div class="csl-entry">
-Miao, Keyan, and Konstantinos Gatsis. 2023. <span>“Learning Robust State Observers Using Neural ODEs.”</span> In <em>Learning for Dynamics and Control Conference</em>, 208–19. PMLR.
-</div>
-<div class="csl-entry">
-Murray, Riley, Venkat Chandrasekaran, and Adam Wierman. 2021. <span>“Signomial and Polynomial Optimization via Relative Entropy and Partial Dualization.”</span> <em>Mathematical Programming Computation</em> 13: 257–95.
-</div>
-<div class="csl-entry">
-Niazi, Muhammad Umar B, John Cao, Xudong Sun, Amritam Das, and Karl Henrik Johansson. 2023. <span>“Learning-Based Design of Luenberger Observers for Autonomous Nonlinear Systems.”</span> In <em>2023 American Control Conference (ACC)</em>, 3048–55. IEEE.
-</div>
-<div class="csl-entry">
-Nie, Jiawang. 2023. <em>Moment and Polynomial Optimization</em>. SIAM.
-</div>
-<div class="csl-entry">
-Saccon, Alessandro, John Hauser, and A Pedro Aguiar. 2013. <span>“Optimal Control on Lie Groups: The Projection Operator Approach.”</span> <em>IEEE Transactions on Automatic Control</em> 58 (9): 2230–45.
-</div>
-<div class="csl-entry">
-Slotine, Jean-Jacques E, Weiping Li, et al. 1991. <em>Applied Nonlinear Control</em>. Vol. 199. 1. Prentice hall Englewood Cliffs, NJ.
-</div>
-<div class="csl-entry">
-Teng, Sangli, William Clark, Anthony Bloch, Ram Vasudevan, and Maani Ghaffari. 2022. <span>“Lie Algebraic Cost Function Design for Control on Lie Groups.”</span> In <em>2022 IEEE 61st Conference on Decision and Control (CDC)</em>, 1867–74. IEEE.
-</div>
-<div class="csl-entry">
-Vinograd, Robert Èlyukimovich. 1957. <span>“Inapplicability of the Method of Characteristic Exponents to the Study of Non-Linear Differential Equations.”</span> <em>Matematicheskii Sbornik</em> 83 (4): 431–38.
-</div>
-<div class="csl-entry">
-Wang, Jie. 2022. <span>“Nonnegative Polynomials and Circuit Polynomials.”</span> <em>SIAM Journal on Applied Algebra and Geometry</em> 6 (2): 111–33.
-</div>
-<div class="csl-entry">
-Yang, Heng, and Luca Carlone. 2022. <span>“Certifiably Optimal Outlier-Robust Geometric Perception: Semidefinite Relaxations and Scalable Global Optimization.”</span> <em>IEEE Transactions on Pattern Analysis and Machine Intelligence</em> 45 (3): 2816–34.
-</div>
-<div class="csl-entry">
-Yang, Heng, Ling Liang, Luca Carlone, and Kim-Chuan Toh. 2022. <span>“An Inexact Projected Gradient Method with Rounding and Lifting by Nonlinear Programming for Solving Rank-One Semidefinite Relaxation of Polynomial Optimization.”</span> <em>Mathematical Programming</em>, 1–64.
-</div>
-<div class="csl-entry">
-Zhou, Kemin, JC Doyle, and Keither Glover. 1996. <span>“Robust and Optimal Control.”</span> <em>Control Engineering Practice</em> 4 (8): 1189–90.
 </div>
 </div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             </section>
 
           </div>
         </div>
       </div>
-<a href="slidingcontrol.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="acknowledgement.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="appconvex.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -526,7 +460,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/hankyang94/OptimalControlEstimation/blob/main/12-references.Rmd",
+"link": "https://github.com/hankyang94/OptimalControlEstimation/blob/main/11-1-appendix-algebra-ode.Rmd",
 "text": "Edit"
 },
 "history": {
