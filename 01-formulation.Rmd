@@ -94,7 +94,7 @@ The Bellman principle of optimality is more than just a principle, it is also an
 ::: {.theorem #dynamicprogramming name="Dynamic Programming"}
 The optimal value function $J^\star(x_0)$ of the optimal control problem \@ref(def:basicproblem) (starting from any given initial condition $x_0$) is equal to $J_0(x_0)$, which can be computed backwards and recursively as
 \begin{align}
-J_N(X_N) &= g_N(x_N) \\
+J_N(x_N) &= g_N(x_N) \\
 J_k(x_k) &= \min_{u_k \in \mathbb{U}} \displaystyle \mathbb{E}_{w_k \sim P_k(\cdot \mid x_k, u_k)} \displaystyle \left\{ g_k(x_k,u_k) + J_{k+1}(f_k(x_k,u_k,w_k) ) \right\}, \ k=N-1,\dots,1,0.
 (\#eq:dpbackwardrecursion)
 \end{align}
@@ -149,7 +149,63 @@ Due to these challenges, only in a very limited amount of cases will we be able 
 For general optimal control problems with continuous state space and control space (and most problems we care about in robotics), unfortunately, we will have to resort to _approximate dynamic programming_, basically variations of the DP algorithm \@ref(eq:dpbackwardrecursion) where approximate value functions $J_k(x_k)$ and/or control policies $\mu_k(x_k)$ are used (e.g., with neural networks and machine learning).^[Another possible solution is to discretize continuous states and controls. However, when the dimension of state and control is high, discretization becomes too expensive in terms of memory and computational complexity.] We will introduce several popular approximation schemes in Chapter \@ref(approximatedp). We will see that, although exact DP is not possible anymore, the Bellman principle of optimality still remains one of the most important guidelines for designing approximation algorithms. Efficient algorithms for approximate dynamic programming, preferrably with performance guarantees, still remain an active area of research. 
 
 
+## Infinite-horizon Formulation
 
+So far we are focusing on problems with a finite horizon $N$, what if the horizon $N$ tends to infinity?
 
+In particular, consider the controller $\pi$ now contains an infinite sequence of functions
+$$
+\pi = \{ \mu_0,\dots \}
+$$
+and let us try to find the best policy that minimizes the cost-to-go starting from $x_0$ subject to the same dynamics as in \@ref(eq:discrete-time-dynamics) (with $N$ tends to infinity and $f_k \equiv f$)
+\begin{equation}
+J_{\pi}(x_0) = \mathbb{E} \left\{ \sum_{k=0}^{\infty} g(x_k, \mu_k(x_k)) \right\}
+(\#eq:cost-to-go-infinite),
+\end{equation}
+where the expectation is taken over the (infinite number of) disturbances $\{w_0,\dots \}$.
+
+We can write \@ref(eq:cost-to-go-infinite) equivalently as
+$$
+J_{\pi}(x_0) = \lim_{N \rightarrow \infty} J_\pi^N(x_0),
+$$
+where, with a slight abuse of notation, $J_\pi^N(x_0)$ is \@ref(eq:expected-cost) with $g_N(x_N)$ set to zero. 
+
+Now we invoke the dynamic programming algorithm in Theorem \@ref(thm:dynamicprogramming). We will first set $J_N(x_N) = g_N(x_N)=0$, and then compute backwards in time 
+$$
+J_k(x_k) = \min_{u_k \in \mathbb{U}} \mathbb{E}_{w_k} \left\{ g(x_k,u_k) + J_{k+1}(f(x_k,u_k,w_k)) \right\}, \quad k=N-1,\dots,0.
+$$
+To make our presentation easier later, the above DP iterations are equivalent to
+\begin{align}
+J_0(x_0) &= 0 \\
+J_{k+1}(x_{k+1}) &= \min_{u_k \in \mathbb{U}} \mathbb{E}_{w_k} \left\{ g(x_k,u_k) + J_k(f(x_k,u_k,w_k))  \right\}, \quad k=0,\dots,N, (\#eq:dp-infinite-reversed)
+\end{align}
+where I have done nothing but reversed the time indexing.
+
+Observe that when $N \rightarrow \infty$, \@ref(eq:dp-infinite-reversed) performs the recursion an infinite number of times.
+
+We may want to conjecture three natural consequences of the infinite-horizon solution:
+
+1. The optimal infinite-horizon cost is the limit of the corresponding $N$-stage optimal cost as $N \rightarrow \infty$, i.e.,
+$$
+J^\star(x) = \lim_{N \rightarrow \infty} J_N(x_N),
+$$
+where $J_N(x_N)$ is computed from DP \@ref(eq:dp-infinite-reversed).
+
+2. Bacause $J^\star$ is the result of DP \@ref(eq:dp-infinite-reversed) when $N$ tends to infinity, if the DP algorithm converges to $J^\star$, then $J^\star$ should satisfy
+\begin{equation}
+J^\star(x) = \min_{u \in \mathbb{U}} \mathbb{E}_w \left\{ g(x,u) + J^\star(f(x,u,w)) \right\}, \quad \forall x
+(\#eq:bellman-optimality-equation-infinite-horizon)
+\end{equation}
+Note that \@ref(eq:bellman-optimality-equation-infinite-horizon) is an _equation_ that $J^\star(x)$ should satisfy for all $x$. In fact, this is called the _Bellman Optimality Equation_.
+
+3. If $\mu(x)$ satisfies the Bellman equation \@ref(eq:bellman-optimality-equation-infinite-horizon), i.e., $u = \mu(x)$ minimizes the right-hand side of \@ref(eq:bellman-optimality-equation-infinite-horizon) for any $x$, then the policy $\pi = \{\mu,\mu,\dots \}$ should be optimal. This is saying, the optimal policy is time-invariant.
+
+In fact, all of our conjectures above are true, for most infinite-horizon problems. For example, in Chapter \@ref(mdp-exact-dp), we will investigate the Markov Decision Process (MDP) formulation, under which the above conjectures all hold. However, one should know that there also exist many infinite-horizon problems where our conjectures will fail, and there are many mathematical subtleties in rigorously proving the conjectures. 
+
+The reader should see why it can be more convenient to study the infinite-horizon formulation: (i) the optimal cost-to-go is only a function of the state $x$, but not a function of timestep $k$; (ii) the optimal policy is time-invariant and easier to implement.
+
+**Value Iteration**. The Bellman optimality equation \@ref(eq:bellman-optimality-equation-infinite-horizon) also suggests a natural algorithm for computing $J^\star(x)$. We start with $J(x)$ being all zero, and then iteratively update $J(x)$ by performing the right-hand side of \@ref(eq:bellman-optimality-equation-infinite-horizon). This is the famous _value iteration_ algorithm. We will study it in Chapter \@ref(mdp-exact-dp).
+
+As practitioners, we may simply execute the dynamic programming (value iteration) algoithm without carefully checking if our problem satisfies the assumptions. If the algorithm converges, oftentimes the problem indeed satisfies the assumptions. Otherwise, the algorithm may fail to converge, as we will see in Example \@ref(exm:pendulumvalueiterationbarycentric).
 
 

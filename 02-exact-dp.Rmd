@@ -243,7 +243,7 @@ knitr::include_graphics('images/pendulum-stabilization-lqr.png')
 
 Let's explore LQR with constraints in Exercise \@ref(exr:lqrconstraints)
 
-## Markov Decision Process
+## Markov Decision Process {#mdp-exact-dp}
 
 In Section \@ref(lqr), we see that linear dynamics and quadratic costs leads to exact dynamic programming. We now introduce another setup where the number of states and controls is finite (as opposed to the LQR case where $x_k$ and $u_k$ live in continuous spaces). We will see that we can execute DP exactly in this setup as well.
 
