@@ -151,7 +151,7 @@ arc=4pt}
 
 \title{Optimal Control and Estimation}
 \author{Heng Yang}
-\date{2023-09-06}
+\date{2023-09-07}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -4486,6 +4486,118 @@ which implies the boundedness of \(\dot{s}\) (note that \(H\) is uniformly posit
 
 \hypertarget{psets}{%
 \chapter{Problem Sets}\label{psets}}
+
+\begin{exercise}[Inscribed Polygon of Maximal Perimeter]
+\protect\hypertarget{exr:polygoninsidecircle}{}\label{exr:polygoninsidecircle}
+
+In this exercise, we will use dynamic programming to solve a geometry problem, i.e., to find the \(N\)-side polygon inscribed inside a circle with maximum perimeter. We will walk you through the key steps of formulating and solving the problem, while leaving a few mathematical details for you to fill in.
+
+Given a circle with radius \(1\), we can randomly choose \(N\) distinct points on the circle to form a polygon with \(N\) vertices and sides, as shown in Fig. \ref{fig:inscribed-polygon} with \(N=3,4,5\).
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.8\linewidth]{images/polygon-inside-circle} 
+
+}
+
+\caption{Polygons inscribed inside a circle}\label{fig:inscribed-polygon}
+\end{figure}
+
+Once the \(N\) points are chosen, the \(N\)-polygon will have a perimeter, i.e., the sum of the lengths of its edges.
+
+What is the configuration of the \(N\) points such that the resulting \(N\)-polygon has the maximum perimeter? I claim that the answer is when the \(N\)-polygon has edges of equal lengths, or in other words, when the \(N\) points are placed on the circle evenly.
+
+Let us use dynamic programming to prove the claim.
+
+To use dynamic programming, we need to definie a dynamical system and an objective function.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth]{images/sequential-placement-N-point} 
+
+}
+
+\caption{Sequential placement of N points on the circle.}\label{fig:sequential-placement-N-point}
+\end{figure}
+
+\textbf{Dynamical system}. We will use \(\{x_1,\dots,x_N \}\) to denote the angular positions of the \(N\) points to be placed on the circle (with slight abuse of notation, we will call each of those points \(x_k\) as well). In particular,
+as shown in Fig. \ref{fig:sequential-placement-N-point}, let us use \(x_k\) to denote the angle between the line \(O-x_k\) and the vertical line (\(O\) is the center of the circle), with zero angle starting at \(12\) O'clock and clockwise being positive. Without loss of generality, we assume \(x_1 = 0\). (if \(x_1\) is nonzero, we can always rotate the entire circle so that \(x_1 = 0\)).
+
+After the \(k\)-th point is placed, we can ``control'' where the next point \(x_{k+1}\) will be, by deciding the incremental angle between \(x_{k+1}\) and \(x_k\), denoted as \(u_k > 0\) in Fig. \ref{fig:sequential-placement-N-point}. This is simply saying the dynamics is
+\[
+x_{k+1} = x_k + u_k, \quad k=1,\dots,N-1, \quad x_1 = 0.
+\]
+
+\textbf{Cost-to-go}. The perimeter of the \(N\)-polygon is therefore
+\[
+g_N(x_N) + \sum_{k=1}^{N-1} g_k(x_k, u_k),
+\]
+with the terminal cost
+\[
+g_N(x_N) = 2 \sin \left(  \frac{2\pi - x_N}{2} \right)
+\]
+the distance between \(x_N\) and \(x_1\) (see Fig. \ref{fig:sequential-placement-N-point}), and the running cost
+\[
+g_k(x_k,u_k) = 2 \sin \left(  \frac{u_k}{2} \right)
+\]
+the distance between \(x_{k+1}\) and \(x_k\).
+
+\textbf{Dynamic programming}. We are now ready to invoke dynamic programming.
+
+We start by setting
+\[
+J_N(x_N) = g_N(x_N) = 2 \sin \left(  \frac{2\pi - x_N}{2} \right).
+\]
+We then compute \(J_{N-1}(x_{N-1})\) as
+\begin{equation}
+J_{N-1}(x_{N-1}) = \max_{0< u_{N-1} < 2\pi - x_{N-1}} \left\{ \underbrace{ 2 \sin \left(  \frac{u_{N-1}}{2} \right) + J_N(x_{N-1} + u_{N-1}) }_{Q_{N-1}(x_{N-1}, u_{N-1})} \right\},
+\label{eq:polygon-circle-N-1}
+\end{equation}
+where \(u_{N-1} < 2\pi - x_{N-1}\) because we do not want \(x_N\) to cross \(2\pi\).
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\item
+  Show that
+  \[
+  Q_{N-1}(x_{N-1},u_{N-1}) = 2 \sin \left(  \frac{u_{N-1}}{2} \right) + 2 \sin \left(  \frac{2\pi - x_{N-1} - u_{N-1} }{2} \right),
+  \]
+  and
+  \[
+  \frac{\partial Q_{N-1}(x_{N-1},u_{N-1})}{\partial u_{N-1}} = \cos \left(  \frac{u_{N-1}}{2} \right) -  \cos \left(  \frac{2\pi - x_{N-1} - u_{N-1} }{2} \right).
+  \]
+\item
+  Show that \(Q_{N-1}(x_{N-1},u_{N-1})\) is concave (i.e., \(-Q_{N-1}(x_{N-1},u_{N-1})\) is convex) in \(u_{N-1}\) for every \(x_{N-1} \in (0, \pi)\) and \(u_{N-1} \in (0, 2\pi - x_{N-1})\). (Hint: compute the second derivative of \(Q_{N-1}(x_{N-1},u_{N-1})\) with respect to \(u_{N-1}\) and use Proposition \ref{prp:decidecvx}).
+\item
+  With a and b, show that the optimal \(u_{N-1}\) that solves \eqref{eq:polygon-circle-N-1} is
+  \[
+  u_{N-1}^\star = \frac{2\pi - x_{N-1}}{2},
+  \]
+  and therefore
+  \[
+  J_{N-1}(x_{N-1}) = 4 \sin \left( \frac{2\pi - x_{N-1}}{4} \right).
+  \]
+  (Hint: the point at which a concave function's gradient vanishes must be the unique maximizer of that function)
+\item
+  Now use induction to show that the \(k\)-th step dynamic programming
+  \[
+  J_k(x_k) = \max_{0< u_k < 2\pi - x_k} \left\{ 2 \sin\left( \frac{u_k}{2} \right) + J_{k+1}(x_k + u_k) \right\}
+  \]
+  admits an optimal control
+  \[
+  u_k^\star = \frac{2\pi - x_k}{N-k+1},
+  \]
+  and optimal cost-to-go
+  \[
+  J_k(x_k) = 2(N-k+1)\sin\left( \frac{2\pi - x_k}{2(N-k+1)} \right).
+  \]
+\item
+  Starting from \(x_1 = 0\), what is the optimal sequence of controls? Do you see why my original claim is true?
+\end{enumerate}
+
+\end{exercise}
+
+~
 
 \begin{exercise}[LQR with Constraints]
 \protect\hypertarget{exr:lqrconstraints}{}\label{exr:lqrconstraints}

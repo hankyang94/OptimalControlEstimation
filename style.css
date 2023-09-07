@@ -20,6 +20,12 @@ pre code {
   border-radius: 10px;
 }
 
+.exercisebox {
+  padding: 1em;
+  border: 2px solid rgb(112, 94, 232);
+  border-radius: 10px;
+}
+
 .theorembox {
   padding: 1em;
   background: rgba(0, 250, 0, 0.3);

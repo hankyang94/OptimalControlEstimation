@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-09-06" />
+<meta name="date" content="2023-09-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -356,30 +356,118 @@ div.csl-indent {
             <section class="normal" id="section-">
 <div id="psets" class="section level1 hasAnchor" number="9">
 <h1><span class="header-section-number">Chapter 9</span> Problem Sets<a href="psets.html#psets" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div class="exercisebox">
 <div class="exercise">
-<p><span id="exr:lqrconstraints" class="exercise"><strong>Exercise 9.1  (LQR with Constraints) </strong></span>Consider a variant of the LQR problem <a href="exactdp.html#eq:lqr-formulation">(2.2)</a> where the controls are bounded between <span class="math inline">\([-u_{\max}, u_{\max}]\)</span>, the system matrices <span class="math inline">\(A_k, B_k\)</span> are constant, and the dynamics is deterministic:
+<p><span id="exr:polygoninsidecircle" class="exercise"><strong>Exercise 9.1  (Inscribed Polygon of Maximal Perimeter) </strong></span>In this exercise, we will use dynamic programming to solve a geometry problem, i.e., to find the <span class="math inline">\(N\)</span>-side polygon inscribed inside a circle with maximum perimeter. We will walk you through the key steps of formulating and solving the problem, while leaving a few mathematical details for you to fill in.</p>
+<p>Given a circle with radius <span class="math inline">\(1\)</span>, we can randomly choose <span class="math inline">\(N\)</span> distinct points on the circle to form a polygon with <span class="math inline">\(N\)</span> vertices and sides, as shown in Fig. <a href="psets.html#fig:inscribed-polygon">9.1</a> with <span class="math inline">\(N=3,4,5\)</span>.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:inscribed-polygon"></span>
+<img src="images/polygon-inside-circle.png" alt="Polygons inscribed inside a circle" width="80%" />
+<p class="caption">
+Figure 9.1: Polygons inscribed inside a circle
+</p>
+</div>
+<p>Once the <span class="math inline">\(N\)</span> points are chosen, the <span class="math inline">\(N\)</span>-polygon will have a perimeter, i.e., the sum of the lengths of its edges.</p>
+<p>What is the configuration of the <span class="math inline">\(N\)</span> points such that the resulting <span class="math inline">\(N\)</span>-polygon has the maximum perimeter? I claim that the answer is when the <span class="math inline">\(N\)</span>-polygon has edges of equal lengths, or in other words, when the <span class="math inline">\(N\)</span> points are placed on the circle evenly.</p>
+<p>Let us use dynamic programming to prove the claim.</p>
+<p>To use dynamic programming, we need to definie a dynamical system and an objective function.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:sequential-placement-N-point"></span>
+<img src="images/sequential-placement-N-point.png" alt="Sequential placement of N points on the circle." width="50%" />
+<p class="caption">
+Figure 9.2: Sequential placement of N points on the circle.
+</p>
+</div>
+<p><strong>Dynamical system</strong>. We will use <span class="math inline">\(\{x_1,\dots,x_N \}\)</span> to denote the angular positions of the <span class="math inline">\(N\)</span> points to be placed on the circle (with slight abuse of notation, we will call each of those points <span class="math inline">\(x_k\)</span> as well). In particular,
+as shown in Fig. <a href="psets.html#fig:sequential-placement-N-point">9.2</a>, let us use <span class="math inline">\(x_k\)</span> to denote the angle between the line <span class="math inline">\(O-x_k\)</span> and the vertical line (<span class="math inline">\(O\)</span> is the center of the circle), with zero angle starting at <span class="math inline">\(12\)</span> O’clock and clockwise being positive. Without loss of generality, we assume <span class="math inline">\(x_1 = 0\)</span>. (if <span class="math inline">\(x_1\)</span> is nonzero, we can always rotate the entire circle so that <span class="math inline">\(x_1 = 0\)</span>).</p>
+<p>After the <span class="math inline">\(k\)</span>-th point is placed, we can “control” where the next point <span class="math inline">\(x_{k+1}\)</span> will be, by deciding the incremental angle between <span class="math inline">\(x_{k+1}\)</span> and <span class="math inline">\(x_k\)</span>, denoted as <span class="math inline">\(u_k &gt; 0\)</span> in Fig. <a href="psets.html#fig:sequential-placement-N-point">9.2</a>. This is simply saying the dynamics is
+<span class="math display">\[
+x_{k+1} = x_k + u_k, \quad k=1,\dots,N-1, \quad x_1 = 0.
+\]</span></p>
+<p><strong>Cost-to-go</strong>. The perimeter of the <span class="math inline">\(N\)</span>-polygon is therefore
+<span class="math display">\[
+g_N(x_N) + \sum_{k=1}^{N-1} g_k(x_k, u_k),
+\]</span>
+with the terminal cost
+<span class="math display">\[
+g_N(x_N) = 2 \sin \left(  \frac{2\pi - x_N}{2} \right)
+\]</span>
+the distance between <span class="math inline">\(x_N\)</span> and <span class="math inline">\(x_1\)</span> (see Fig. <a href="psets.html#fig:sequential-placement-N-point">9.2</a>), and the running cost
+<span class="math display">\[
+g_k(x_k,u_k) = 2 \sin \left(  \frac{u_k}{2} \right)
+\]</span>
+the distance between <span class="math inline">\(x_{k+1}\)</span> and <span class="math inline">\(x_k\)</span>.</p>
+<p><strong>Dynamic programming</strong>. We are now ready to invoke dynamic programming.</p>
+<p>We start by setting
+<span class="math display">\[
+J_N(x_N) = g_N(x_N) = 2 \sin \left(  \frac{2\pi - x_N}{2} \right).
+\]</span>
+We then compute <span class="math inline">\(J_{N-1}(x_{N-1})\)</span> as
+<span class="math display" id="eq:polygon-circle-N-1">\[\begin{equation}
+J_{N-1}(x_{N-1}) = \max_{0&lt; u_{N-1} &lt; 2\pi - x_{N-1}} \left\{ \underbrace{ 2 \sin \left(  \frac{u_{N-1}}{2} \right) + J_N(x_{N-1} + u_{N-1}) }_{Q_{N-1}(x_{N-1}, u_{N-1})} \right\},
+\tag{9.1}
+\end{equation}\]</span>
+where <span class="math inline">\(u_{N-1} &lt; 2\pi - x_{N-1}\)</span> because we do not want <span class="math inline">\(x_N\)</span> to cross <span class="math inline">\(2\pi\)</span>.</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>Show that
+<span class="math display">\[
+Q_{N-1}(x_{N-1},u_{N-1}) = 2 \sin \left(  \frac{u_{N-1}}{2} \right) + 2 \sin \left(  \frac{2\pi - x_{N-1} - u_{N-1} }{2} \right),
+\]</span>
+and
+<span class="math display">\[
+\frac{\partial Q_{N-1}(x_{N-1},u_{N-1})}{\partial u_{N-1}} = \cos \left(  \frac{u_{N-1}}{2} \right) -  \cos \left(  \frac{2\pi - x_{N-1} - u_{N-1} }{2} \right).
+\]</span></p></li>
+<li><p>Show that <span class="math inline">\(Q_{N-1}(x_{N-1},u_{N-1})\)</span> is concave (i.e., <span class="math inline">\(-Q_{N-1}(x_{N-1},u_{N-1})\)</span> is convex) in <span class="math inline">\(u_{N-1}\)</span> for every <span class="math inline">\(x_{N-1} \in (0, \pi)\)</span> and <span class="math inline">\(u_{N-1} \in (0, 2\pi - x_{N-1})\)</span>. (Hint: compute the second derivative of <span class="math inline">\(Q_{N-1}(x_{N-1},u_{N-1})\)</span> with respect to <span class="math inline">\(u_{N-1}\)</span> and use Proposition <a href="appconvex.html#prp:decidecvx">B.2</a>).</p></li>
+<li><p>With a and b, show that the optimal <span class="math inline">\(u_{N-1}\)</span> that solves <a href="psets.html#eq:polygon-circle-N-1">(9.1)</a> is
+<span class="math display">\[
+u_{N-1}^\star = \frac{2\pi - x_{N-1}}{2},
+\]</span>
+and therefore
+<span class="math display">\[
+J_{N-1}(x_{N-1}) = 4 \sin \left( \frac{2\pi - x_{N-1}}{4} \right).
+\]</span>
+(Hint: the point at which a concave function’s gradient vanishes must be the unique maximizer of that function)</p></li>
+<li><p>Now use induction to show that the <span class="math inline">\(k\)</span>-th step dynamic programming
+<span class="math display">\[
+J_k(x_k) = \max_{0&lt; u_k &lt; 2\pi - x_k} \left\{ 2 \sin\left( \frac{u_k}{2} \right) + J_{k+1}(x_k + u_k) \right\}
+\]</span>
+admits an optimal control
+<span class="math display">\[
+u_k^\star = \frac{2\pi - x_k}{N-k+1},
+\]</span>
+and optimal cost-to-go
+<span class="math display">\[
+J_k(x_k) = 2(N-k+1)\sin\left( \frac{2\pi - x_k}{2(N-k+1)} \right).
+\]</span></p></li>
+<li><p>Starting from <span class="math inline">\(x_1 = 0\)</span>, what is the optimal sequence of controls? Do you see why my original claim is true?</p></li>
+</ol>
+</div>
+</div>
+<p> </p>
+<div class="exercisebox">
+<div class="exercise">
+<p><span id="exr:lqrconstraints" class="exercise"><strong>Exercise 9.2  (LQR with Constraints) </strong></span>Consider a variant of the LQR problem <a href="exactdp.html#eq:lqr-formulation">(2.2)</a> where the controls are bounded between <span class="math inline">\([-u_{\max}, u_{\max}]\)</span>, the system matrices <span class="math inline">\(A_k, B_k\)</span> are constant, and the dynamics is deterministic:
 <span class="math display" id="eq:lqr-constraints">\[\begin{equation}
 \begin{split}
 J(x_0) = \min_{u_{0},\dots,u_{N-1} \in [-u_{\max},u_{\max}]} &amp;\quad  x_N^T Q_N x_N + \sum_{k=0}^{N-1} (x_k^T Q_k x_k + u_k^T R_k u_k) \\
 \text{subject to} &amp;\quad  x_{k+1} = A x_k + B u_k,  k=0,\dots,N-1
 \end{split}
-\tag{9.1}
+\tag{9.2}
 \end{equation}\]</span>
 We assume <span class="math inline">\(Q_k\succeq 0\)</span> for <span class="math inline">\(k=0,\dots,N\)</span> and <span class="math inline">\(R_k \succ 0\)</span> for all <span class="math inline">\(k=0,\dots,N-1\)</span>.</p>
 <ol style="list-style-type: lower-alpha">
-<li><p>Show that Problem <a href="psets.html#eq:lqr-constraints">(9.1)</a>, when <span class="math inline">\(x_0\)</span> is given, is a convex optimization problem.</p></li>
+<li><p>Show that Problem <a href="psets.html#eq:lqr-constraints">(9.2)</a>, when <span class="math inline">\(x_0\)</span> is given, is a convex optimization problem.</p></li>
 <li><p>Discretize the continuous-time double integrator dynamics
 <span class="math display">\[
 \ddot{q} = u, \quad u \in [-1,1]
 \]</span>
 in the form of <span class="math inline">\(x_{k+1} = A x_k + B u_k\)</span> with a constant <span class="math inline">\(dt\)</span> time discretization. (Hint: take <span class="math inline">\(x = [q,\dot{q}]\)</span> as the state vector.)</p></li>
-<li><p>Fix <span class="math inline">\(N=50\)</span>, <span class="math inline">\(dt=0.1\)</span> and choose your favorite <span class="math inline">\(Q_k\)</span> and <span class="math inline">\(R_k\)</span>. Solve the convex optimization <a href="psets.html#eq:lqr-constraints">(9.1)</a> at a dense grid of <span class="math inline">\(x_0\)</span>. Plot <span class="math inline">\(J(x_0)\)</span>. (Hint: you will most likely benefit from Appendix <a href="appconvex.html#appconvex-practice">B.2</a>.)</p></li>
+<li><p>Fix <span class="math inline">\(N=50\)</span>, <span class="math inline">\(dt=0.1\)</span> and choose your favorite <span class="math inline">\(Q_k\)</span> and <span class="math inline">\(R_k\)</span>. Solve the convex optimization <a href="psets.html#eq:lqr-constraints">(9.2)</a> at a dense grid of <span class="math inline">\(x_0\)</span>. Plot <span class="math inline">\(J(x_0)\)</span>. (Hint: you will most likely benefit from Appendix <a href="appconvex.html#appconvex-practice">B.2</a>.)</p></li>
 <li><p>Increase <span class="math inline">\(N\)</span> and decrease <span class="math inline">\(dt\)</span>, plot <span class="math inline">\(J(x_0)\)</span> for different pairs of <span class="math inline">\((N,dt)\)</span>. What do you observe?</p></li>
-<li><p>(Bonus) Can you write down the KKT optimality conditions of <a href="psets.html#eq:lqr-constraints">(9.1)</a> and explain what you have observed from the numerical experiment? (Hint: KKT optimality conditions can be found in Theorem <a href="appconvex.html#thm:KKT">B.2</a>.)</p></li>
+<li><p>(Bonus) Can you write down the KKT optimality conditions of <a href="psets.html#eq:lqr-constraints">(9.2)</a> and explain what you have observed from the numerical experiment? (Hint: KKT optimality conditions can be found in Theorem <a href="appconvex.html#thm:KKT">B.2</a>.)</p></li>
 </ol>
 </div>
+</div>
 <div class="exercise">
-<p><span id="exr:lqrmanifold" class="exercise"><strong>Exercise 9.2  (LQR on A Manifold) </strong></span>LQR on manifolds <span class="citation">(<a href="#ref-saccon13tac-lie" role="doc-biblioref">Saccon, Hauser, and Aguiar 2013</a>)</span> and <span class="citation">(<a href="#ref-teng22cdc-lie" role="doc-biblioref">Teng et al. 2022</a>)</span>.</p>
+<p><span id="exr:lqrmanifold" class="exercise"><strong>Exercise 9.3  (LQR on A Manifold) </strong></span>LQR on manifolds <span class="citation">(<a href="#ref-saccon13tac-lie" role="doc-biblioref">Saccon, Hauser, and Aguiar 2013</a>)</span> and <span class="citation">(<a href="#ref-teng22cdc-lie" role="doc-biblioref">Teng et al. 2022</a>)</span>.</p>
 </div>
 </div>
 <h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
