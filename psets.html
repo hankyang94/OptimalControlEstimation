@@ -437,8 +437,73 @@ and optimal cost-to-go
 <span class="math display">\[
 J_k(x_k) = 2(N-k+1)\sin\left( \frac{2\pi - x_k}{2(N-k+1)} \right).
 \]</span></p></li>
-<li><p>Starting from <span class="math inline">\(x_1 = 0\)</span>, what is the optimal sequence of controls? Do you see why my original claim is true?</p></li>
+<li><p>Starting from <span class="math inline">\(x_1 = 0\)</span>, what is the optimal sequence of controls?</p></li>
 </ol>
+<p>Hopefully now you see why my original claim is true!</p>
+<p><strong>(Bonus)</strong> We are not yet done for this exercise. Since you have probably already spent quite some time on this exercise, I will leave the rest of the exercise a bonus. In case you found this simple geometric problem interesting, you should keep reading as we will use numerical techniques to prove the same claim.</p>
+<p>In Fig. <a href="psets.html#fig:sequential-placement-N-point">9.2</a>, by denoting
+<span class="math display">\[
+u_N = 2\pi - x_N = 2\pi - (u_1 + \dots + u_{N-1})
+\]</span>
+as the angle between the line <span class="math inline">\(O-x_{N}\)</span> and the line <span class="math inline">\(O-x_1\)</span>, it is not hard to observe that the perimeter of the <span class="math inline">\(N\)</span>-polygon is
+<span class="math display">\[
+\sum_{k=1}^N 2 \sin \left( \frac{u_k}{2} \right).
+\]</span>
+Consequently, to maximize the perimeter, we can formulate the following optimization
+<span class="math display" id="eq:polygon-circle-convexoptmization">\[\begin{equation}
+\begin{split}
+\max_{u_1,\dots,u_N} &amp;\quad \sum_{k=1}^N 2 \sin \left( \frac{u_k}{2} \right) \\
+\text{subject to} &amp;\quad u_k &gt; 0, k=1,\dots,N \\
+&amp;\quad u_1 + \dots + u_N = 2 \pi
+\end{split}
+\tag{9.2}
+\end{equation}\]</span>
+where <span class="math inline">\(u_k\)</span> can be seen as the angle spanned by the line <span class="math inline">\(x_k - x_{k+1}\)</span> with respect to the center <span class="math inline">\(O\)</span> so that they are positive and sum up to <span class="math inline">\(2\pi\)</span>.</p>
+<ol start="6" style="list-style-type: lower-alpha">
+<li>Show that the optimization <a href="psets.html#eq:polygon-circle-convexoptmization">(9.2)</a> is convex. (Hint: first show the feasible set is convex, and then show the objective function is concave over the feasible set.)</li>
+</ol>
+<p>Now that we have shown <a href="psets.html#eq:polygon-circle-convexoptmization">(9.2)</a> is a convex optimization problem, we know that pretty much any numerical algorithm will guarantee convergence to the globally optimal solution.</p>
+<p>It is too much to ask you to implement a numerical algorithm on your own, as that can be a one-semester graduate-level course <span class="citation">(<a href="#ref-nocedal99book-numerical" role="doc-biblioref">Nocedal and Wright 1999</a>)</span>. However, Matlab provides a nice interface, <a href="https://www.mathworks.com/help/optim/ug/fmincon.html"><code>fmincon</code></a>, to many such numerical algorithms, and let me show you how to use <code>fmincon</code> to solve <a href="psets.html#eq:polygon-circle-convexoptmization">(9.2)</a> so we can numerically prove our claim.</p>
+<ol start="7" style="list-style-type: lower-alpha">
+<li>I have provided most of the code necessary for solving <a href="psets.html#eq:polygon-circle-convexoptmization">(9.2)</a> below. Please fill in the definition of the function <code>perimeter(u)</code>, and then run the code in Matlab. Show your results for <span class="math inline">\(N=3,10,100\)</span>. Do the solutions obtained from <code>fmincon</code> verify our claim?</li>
+</ol>
+<div class="sourceCode" id="cb1"><pre class="sourceCode matlab"><code class="sourceCode matlab"><span id="cb1-1"><a href="psets.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="va">clc</span><span class="op">;</span> <span class="va">clear</span><span class="op">;</span> <span class="va">close</span> <span class="va">all</span><span class="op">;</span></span>
+<span id="cb1-2"><a href="psets.html#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">% number of points to be placed</span></span>
+<span id="cb1-3"><a href="psets.html#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="va">N</span> <span class="op">=</span> <span class="fl">10</span><span class="op">;</span></span>
+<span id="cb1-4"><a href="psets.html#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">% define the objective function</span></span>
+<span id="cb1-5"><a href="psets.html#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">% fmincon assumes minimization</span></span>
+<span id="cb1-6"><a href="psets.html#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">% We minimize the negative perimeter so as to maximize the perimeter</span></span>
+<span id="cb1-7"><a href="psets.html#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="va">objective</span> <span class="op">=</span> <span class="op">@</span>(<span class="va">u</span>) <span class="op">-</span><span class="fl">1</span><span class="op">*</span><span class="va">perimeter</span>(<span class="va">u</span>)<span class="op">;</span></span>
+<span id="cb1-8"><a href="psets.html#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">% choose which algorithm to use for solving</span></span>
+<span id="cb1-9"><a href="psets.html#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="va">options</span> <span class="op">=</span> <span class="va">optimoptions</span>(<span class="ss">&#39;fmincon&#39;</span><span class="op">,</span> <span class="ss">&#39;Algorithm&#39;</span><span class="op">,</span> <span class="ss">&#39;interior-point&#39;</span>)<span class="op">;</span></span>
+<span id="cb1-10"><a href="psets.html#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">% supply an initial guess</span></span>
+<span id="cb1-11"><a href="psets.html#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">% since this is a convex problem, we can use any initial guess</span></span>
+<span id="cb1-12"><a href="psets.html#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="va">u0</span> <span class="op">=</span> <span class="va">rand</span>(<span class="va">N</span><span class="op">,</span><span class="fl">1</span>)<span class="op">;</span></span>
+<span id="cb1-13"><a href="psets.html#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">% solve</span></span>
+<span id="cb1-14"><a href="psets.html#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="va">uopt</span> <span class="op">=</span> <span class="va">fmincon</span>(<span class="va">objective</span><span class="op">,</span><span class="va">u0</span><span class="op">,...</span> <span class="co">% objective and initial guess</span></span>
+<span id="cb1-15"><a href="psets.html#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="op">-</span><span class="va">eye</span>(<span class="va">N</span>)<span class="op">,</span><span class="va">zeros</span>(<span class="va">N</span><span class="op">,</span><span class="fl">1</span>)<span class="op">,...</span> <span class="co">% linear inequality constraints</span></span>
+<span id="cb1-16"><a href="psets.html#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="va">ones</span>(<span class="fl">1</span><span class="op">,</span><span class="va">N</span>)<span class="op">,</span><span class="fl">2</span><span class="op">*</span><span class="va">pi</span><span class="op">,...</span> <span class="co">% linear equality constraints</span></span>
+<span id="cb1-17"><a href="psets.html#cb1-17" aria-hidden="true" tabindex="-1"></a>    []<span class="op">,</span>[]<span class="op">,</span>[]<span class="op">,...</span> <span class="co">% we do not have lower/upper bounds and nonlinear constraints</span></span>
+<span id="cb1-18"><a href="psets.html#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="va">options</span>)<span class="op">;</span></span>
+<span id="cb1-19"><a href="psets.html#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="psets.html#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co">% plot the solution</span></span>
+<span id="cb1-21"><a href="psets.html#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="va">x</span> <span class="op">=</span> <span class="va">zeros</span>(<span class="va">N</span><span class="op">,</span><span class="fl">1</span>)<span class="op">;</span></span>
+<span id="cb1-22"><a href="psets.html#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="kw">for</span> <span class="va">k</span> <span class="op">=</span> <span class="fl">2</span><span class="op">:</span><span class="va">N</span></span>
+<span id="cb1-23"><a href="psets.html#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="va">x</span>(<span class="va">k</span>) <span class="op">=</span> <span class="va">x</span>(<span class="va">k</span><span class="op">-</span><span class="fl">1</span>) <span class="op">+</span> <span class="va">uopt</span>(<span class="va">k</span><span class="op">-</span><span class="fl">1</span>)<span class="op">;</span></span>
+<span id="cb1-24"><a href="psets.html#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb1-25"><a href="psets.html#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="va">figure</span><span class="op">;</span></span>
+<span id="cb1-26"><a href="psets.html#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co">% plot a circle</span></span>
+<span id="cb1-27"><a href="psets.html#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="va">viscircles</span>([<span class="fl">0</span><span class="op">,</span><span class="fl">0</span>]<span class="op">,</span><span class="fl">1</span>)<span class="op">;</span></span>
+<span id="cb1-28"><a href="psets.html#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="va">hold</span> <span class="va">on</span></span>
+<span id="cb1-29"><a href="psets.html#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="co">% scatter the placed points</span></span>
+<span id="cb1-30"><a href="psets.html#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="va">scatter</span>(<span class="va">cos</span>(<span class="va">x</span>)<span class="op">,</span><span class="va">sin</span>(<span class="va">x</span>)<span class="op">,</span><span class="ss">&#39;blue&#39;</span><span class="op">,</span><span class="ss">&#39;filled&#39;</span>)<span class="op">;</span></span>
+<span id="cb1-31"><a href="psets.html#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="va">axis</span> <span class="va">equal</span><span class="op">;</span></span>
+<span id="cb1-32"><a href="psets.html#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-33"><a href="psets.html#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="co">%% helper functions</span></span>
+<span id="cb1-34"><a href="psets.html#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="co">% The objective function</span></span>
+<span id="cb1-35"><a href="psets.html#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="va">f</span> <span class="op">=</span> <span class="va">perimeter</span>(<span class="va">u</span>)</span>
+<span id="cb1-36"><a href="psets.html#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="co">% </span><span class="al">TODO</span><span class="co">: define the perimeter function here.</span></span>
+<span id="cb1-37"><a href="psets.html#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div>
 </div>
 </div>
 <p> </p>
@@ -450,28 +515,32 @@ J_k(x_k) = 2(N-k+1)\sin\left( \frac{2\pi - x_k}{2(N-k+1)} \right).
 J(x_0) = \min_{u_{0},\dots,u_{N-1} \in [-u_{\max},u_{\max}]} &amp;\quad  x_N^T Q_N x_N + \sum_{k=0}^{N-1} (x_k^T Q_k x_k + u_k^T R_k u_k) \\
 \text{subject to} &amp;\quad  x_{k+1} = A x_k + B u_k,  k=0,\dots,N-1
 \end{split}
-\tag{9.2}
+\tag{9.3}
 \end{equation}\]</span>
 We assume <span class="math inline">\(Q_k\succeq 0\)</span> for <span class="math inline">\(k=0,\dots,N\)</span> and <span class="math inline">\(R_k \succ 0\)</span> for all <span class="math inline">\(k=0,\dots,N-1\)</span>.</p>
 <ol style="list-style-type: lower-alpha">
-<li><p>Show that Problem <a href="psets.html#eq:lqr-constraints">(9.2)</a>, when <span class="math inline">\(x_0\)</span> is given, is a convex optimization problem.</p></li>
+<li><p>Show that Problem <a href="psets.html#eq:lqr-constraints">(9.3)</a>, when <span class="math inline">\(x_0\)</span> is given, is a convex optimization problem.</p></li>
 <li><p>Discretize the continuous-time double integrator dynamics
 <span class="math display">\[
 \ddot{q} = u, \quad u \in [-1,1]
 \]</span>
 in the form of <span class="math inline">\(x_{k+1} = A x_k + B u_k\)</span> with a constant <span class="math inline">\(dt\)</span> time discretization. (Hint: take <span class="math inline">\(x = [q,\dot{q}]\)</span> as the state vector.)</p></li>
-<li><p>Fix <span class="math inline">\(N=50\)</span>, <span class="math inline">\(dt=0.1\)</span> and choose your favorite <span class="math inline">\(Q_k\)</span> and <span class="math inline">\(R_k\)</span>. Solve the convex optimization <a href="psets.html#eq:lqr-constraints">(9.2)</a> at a dense grid of <span class="math inline">\(x_0\)</span>. Plot <span class="math inline">\(J(x_0)\)</span>. (Hint: you will most likely benefit from Appendix <a href="appconvex.html#appconvex-practice">B.2</a>.)</p></li>
+<li><p>Fix <span class="math inline">\(N=50\)</span>, <span class="math inline">\(dt=0.1\)</span> and choose your favorite <span class="math inline">\(Q_k\)</span> and <span class="math inline">\(R_k\)</span>. Solve the convex optimization <a href="psets.html#eq:lqr-constraints">(9.3)</a> at a dense grid of <span class="math inline">\(x_0\)</span>. Plot <span class="math inline">\(J(x_0)\)</span>. (Hint: you will most likely benefit from Appendix <a href="appconvex.html#appconvex-practice">B.2</a>.)</p></li>
 <li><p>Increase <span class="math inline">\(N\)</span> and decrease <span class="math inline">\(dt\)</span>, plot <span class="math inline">\(J(x_0)\)</span> for different pairs of <span class="math inline">\((N,dt)\)</span>. What do you observe?</p></li>
-<li><p>(Bonus) Can you write down the KKT optimality conditions of <a href="psets.html#eq:lqr-constraints">(9.2)</a> and explain what you have observed from the numerical experiment? (Hint: KKT optimality conditions can be found in Theorem <a href="appconvex.html#thm:KKT">B.2</a>.)</p></li>
+<li><p>(Bonus) Can you write down the KKT optimality conditions of <a href="psets.html#eq:lqr-constraints">(9.3)</a> and explain what you have observed from the numerical experiment? (Hint: KKT optimality conditions can be found in Theorem <a href="appconvex.html#thm:KKT">B.2</a>.)</p></li>
 </ol>
 </div>
 </div>
+<p> </p>
 <div class="exercise">
 <p><span id="exr:lqrmanifold" class="exercise"><strong>Exercise 9.3  (LQR on A Manifold) </strong></span>LQR on manifolds <span class="citation">(<a href="#ref-saccon13tac-lie" role="doc-biblioref">Saccon, Hauser, and Aguiar 2013</a>)</span> and <span class="citation">(<a href="#ref-teng22cdc-lie" role="doc-biblioref">Teng et al. 2022</a>)</span>.</p>
 </div>
 </div>
 <h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-nocedal99book-numerical" class="csl-entry">
+Nocedal, Jorge, and Stephen J Wright. 1999. <em>Numerical Optimization</em>. Springer.
+</div>
 <div id="ref-saccon13tac-lie" class="csl-entry">
 Saccon, Alessandro, John Hauser, and A Pedro Aguiar. 2013. <span>“Optimal Control on Lie Groups: The Projection Operator Approach.”</span> <em>IEEE Transactions on Automatic Control</em> 58 (9): 2230–45.
 </div>
