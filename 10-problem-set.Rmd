@@ -91,7 +91,78 @@ $$
 J_k(x_k) = 2(N-k+1)\sin\left( \frac{2\pi - x_k}{2(N-k+1)} \right).
 $$
 
-e. Starting from $x_1 = 0$, what is the optimal sequence of controls? Do you see why my original claim is true?
+e. Starting from $x_1 = 0$, what is the optimal sequence of controls? 
+
+Hopefully now you see why my original claim is true!
+
+**(Bonus)** We are not yet done for this exercise. Since you have probably already spent quite some time on this exercise, I will leave the rest of the exercise a bonus. In case you found this simple geometric problem interesting, you should keep reading as we will use numerical techniques to prove the same claim.
+
+In Fig. \@ref(fig:sequential-placement-N-point), by denoting 
+$$
+u_N = 2\pi - x_N = 2\pi - (u_1 + \dots + u_{N-1})
+$$
+as the angle between the line $O-x_{N}$ and the line $O-x_1$, it is not hard to observe that the perimeter of the $N$-polygon is 
+$$
+\sum_{k=1}^N 2 \sin \left( \frac{u_k}{2} \right).
+$$
+Consequently, to maximize the perimeter, we can formulate the following optimization
+\begin{equation}
+\begin{split}
+\max_{u_1,\dots,u_N} &\quad \sum_{k=1}^N 2 \sin \left( \frac{u_k}{2} \right) \\
+\text{subject to} &\quad u_k > 0, k=1,\dots,N \\
+&\quad u_1 + \dots + u_N = 2 \pi
+\end{split}
+(\#eq:polygon-circle-convexoptmization)
+\end{equation}
+where $u_k$ can be seen as the angle spanned by the line $x_k - x_{k+1}$ with respect to the center $O$ so that they are positive and sum up to $2\pi$.
+
+f. Show that the optimization \@ref(eq:polygon-circle-convexoptmization) is convex. (Hint: first show the feasible set is convex, and then show the objective function is concave over the feasible set.)
+
+Now that we have shown \@ref(eq:polygon-circle-convexoptmization) is a convex optimization problem, we know that pretty much any numerical algorithm will guarantee convergence to the globally optimal solution.
+
+It is too much to ask you to implement a numerical algorithm on your own, as that can be a one-semester graduate-level course [@nocedal99book-numerical]. However, Matlab provides a nice interface, [`fmincon`](https://www.mathworks.com/help/optim/ug/fmincon.html), to many such numerical algorithms, and let me show you how to use `fmincon` to solve \@ref(eq:polygon-circle-convexoptmization) so we can numerically prove our claim.
+
+g. I have provided most of the code necessary for solving \@ref(eq:polygon-circle-convexoptmization) below. Please fill in the definition of the function `perimeter(u)`, and then run the code in Matlab. Show your results for $N=3,10,100$. Do the solutions obtained from `fmincon` verify our claim?
+
+```matlab
+clc; clear; close all;
+% number of points to be placed
+N = 10;
+% define the objective function
+% fmincon assumes minimization
+% We minimize the negative perimeter so as to maximize the perimeter
+objective = @(u) -1*perimeter(u);
+% choose which algorithm to use for solving
+options = optimoptions('fmincon', 'Algorithm', 'interior-point');
+% supply an initial guess
+% since this is a convex problem, we can use any initial guess
+u0 = rand(N,1);
+% solve
+uopt = fmincon(objective,u0,... % objective and initial guess
+    -eye(N),zeros(N,1),... % linear inequality constraints
+    ones(1,N),2*pi,... % linear equality constraints
+    [],[],[],... % we do not have lower/upper bounds and nonlinear constraints
+    options);
+
+% plot the solution
+x = zeros(N,1);
+for k = 2:N
+    x(k) = x(k-1) + uopt(k-1);
+end
+figure;
+% plot a circle
+viscircles([0,0],1);
+hold on
+% scatter the placed points
+scatter(cos(x),sin(x),'blue','filled');
+axis equal;
+
+%% helper functions
+% The objective function
+function f = perimeter(u)
+% TODO: define the perimeter function here.
+end
+```
 :::
 :::
 
@@ -124,6 +195,8 @@ d. Increase $N$ and decrease $dt$, plot $J(x_0)$ for different pairs of $(N,dt)$
 e. (Bonus) Can you write down the KKT optimality conditions of \@ref(eq:lqr-constraints) and explain what you have observed from the numerical experiment? (Hint: KKT optimality conditions can be found in Theorem \@ref(thm:KKT).)
 :::
 :::
+
+&nbsp;
 
 ::: {.exercise #lqrmanifold name="LQR on A Manifold"}
 LQR on manifolds [@saccon13tac-lie] and [@teng22cdc-lie].
