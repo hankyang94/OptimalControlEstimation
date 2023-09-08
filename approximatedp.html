@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-09-07" />
+<meta name="date" content="2023-09-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -419,20 +419,53 @@ The notion of feature is commonly used in the theory of computer vision, where <
 By using this architecture, the fitted value iteration <a href="approximatedp.html#eq:apprinv-fvi-1">(3.2)</a>, <a href="approximatedp.html#eq:apprinv-fvi-2">(3.3)</a> greatly simplifies and admits a closed-form solution.</p>
 <div class="examplebox">
 <div class="example">
-<p><span id="exm:featurebasedswingingupapendulum" class="example"><strong>Example 3.1  (Swinging up a pendulum using feature-based method) </strong></span><span style="color:red">EXPERIMENT HERE</span></p>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:pendulum-feature-example"></span>
-<img src="images/drawme.png" alt="example of swinging up a pendulum using feature-based value function approximation" width="60%" />
+<p><span id="exm:feature-double-integrator" class="example"><strong>Example 3.1  (Optimal Control for Linear System Using Feature-based Method) </strong></span>Consider a linear system whose dynamics is:
+<span class="math display" id="eq:double-integrator-dynamics">\[\begin{equation}
+    x = \begin{bmatrix} x_0 \\ x_1 \end{bmatrix}, \quad
+    \dot{x} = f(x,u) = \begin{bmatrix}
+    x_1 \\
+    u
+    \end{bmatrix} =
+    \begin{bmatrix}
+        0 &amp; 1 \\
+        0 &amp; 0
+    \end{bmatrix} x + \begin{bmatrix}
+        0 \\
+        1 \end{bmatrix} u
+    \tag{3.4}
+\end{equation}\]</span></p>
+<p>The goal is to regulate the system at <span class="math inline">\((0,0)\)</span>. This system is a typical linear system, named as <strong>double integrator</strong> on many occasions. In Chapter <a href="exactdp.html#exactdp">2</a>, we learned how to use LQR to precisely calculate the cost-to-go function of these systems using <em>Recatti Equation</em>. Now we can show that using linear feature-based fitted value iteration, we can also get the cost-to-go function of double integrator and the result is the same as the ground truth.</p>
+<p>In this example, we use second-order monomials as the features and use the linear combination of them to model the cost-to-go function of the double integrator, while the combination parameter <span class="math inline">\(w\)</span> is tuned using fitted value iteration.
+<span class="math display">\[\begin{equation}
+    \text{features vector: }F = \begin{bmatrix}
+        x_0^2 \\ x_0 x_1 \\ x_1^2 \\ x_0 \\ x_1 \\ 1
+    \end{bmatrix}, \quad
+    J(x) = w^T F
+\end{equation}\]</span></p>
+Applying fitted value iteration on randomly sampled points mentioned above, we obtain the cost-to-go in Fig. <a href="approximatedp.html#fig:double-integrator-feature-example">3.1</a>. The value iteration converges in 3000 iterations.
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:double-integrator-feature-example"></span>
+<img src="images/approxdp-feature-FVI.png" alt="Comparison between the result of feature-based FVI and ground truth" width="90%" />
 <p class="caption">
-Figure 3.1: example of swinging up a pendulum using feature-based value function approximation
+Figure 3.1: Comparison between the result of feature-based FVI and ground truth
 </p>
 </div>
+<p>The S matrix calculated by the result of FVI is <span class="math inline">\(S_1\)</span>, and <span class="math inline">\(S_2\)</span> is the solution to the Recatti Equation. We have
+<span class="math display">\[\begin{equation}
+    S_1 = \begin{bmatrix}
+        27.164022 &amp; 31.758386 \\
+        31.758386 &amp; 85.950968 \end{bmatrix}, \quad
+    S_2 = \begin{bmatrix}
+        27.164022 &amp; 31.758386 \\
+        31.758386 &amp; 85.950968 \end{bmatrix}
+    \end{equation}\]</span>
+<span class="math inline">\(S_1\)</span> and <span class="math inline">\(S_2\)</span> are almost the same, which means that we obtained the optimal cost-to-go function using fitted value iteration.
+It is worth noting that the cost-to-go function in Linear Quadratic Regulator is also using the linear architecture mentioned above.
+<span class="math display">\[\begin{equation}
+    J(x,S)=x^T S x = \operatorname{tr}(S x^T x)
+\end{equation}\]</span>
+It is quadratic in <span class="math inline">\(x\)</span> but linear in <span class="math inline">\(S\)</span>.</p>
 </div>
 </div>
-<p>It is worth noting that the cost-to-go function in Linear Quadratic Regulator is also using the linear architecture mentioned above.</p>
-<p><span class="math display">\[\begin{equation}
-J(x,S)=x^T S x
-\end{equation}\]</span></p>
-<p>It is quadratic in <span class="math inline">\(x\)</span> but linear in <span class="math inline">\(S\)</span>. Therefore, except for using the Recatti equation to solve for S, we could also try to use fitted value iteration to handle it.</p>
 </div>
 <div id="neural-networks" class="section level4 hasAnchor" number="3.2.2.2">
 <h4><span class="header-section-number">3.2.2.2</span> Neural networks<a href="approximatedp.html#neural-networks" class="anchor-section" aria-label="Anchor link to header"></a></h4>
@@ -440,13 +473,19 @@ J(x,S)=x^T S x
 <p>However, the optimization process of the weights is more difficult due to the non-convexity. According to the equation <a href="approximatedp.html#eq:apprinv-dp">(3.1)</a>, the <span class="math inline">\(J_{k+1}\)</span> is non-convex which makes the entire equation hard to optimize.</p>
 <div class="examplebox">
 <div class="example">
-<p><span id="exm:NNbasedswingingupapendulum" class="example"><strong>Example 3.2  (Swinging up a pendulum using NN-based method) </strong></span><span style="color:red">EXPERIMENT HERE</span></p>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:pendulum-NN-example"></span>
-<img src="images/drawme.png" alt="example of swinging up a pendulum using NN-based value function approximation" width="60%" />
+<p><span id="exm:NNbased-double-tegrator" class="example"><strong>Example 3.2  (Optimal Control for Linear System Using NN-based Method) </strong></span></p>
+In this example, we will use neural network as the approximation of the cost-to-go function and conduct neural FVI on a double integrator. The dynamics of the double integrator has been introduced in example <a href="approximatedp.html#exm:feature-double-integrator">3.1</a>. We use a semi-positive-definite network to model the cost-to-go function.
+<span class="math display">\[\begin{equation}
+    J(x) = N(x)^T N(x)
+\end{equation}\]</span>
+<span class="math inline">\(N(x)\)</span> is a 3-layer Multi-Layer-Perceptron with ReLU activation functions. Using mini-batch learning plus Adam optimizer, we obtain the cost-to-go in Fig. <a href="approximatedp.html#fig:double-integrator-NN-example">3.2</a> after 300 epochs of training.
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:double-integrator-NN-example"></span>
+<img src="images/approxdp-NN-FVI.png" alt="Comparison between the result of NN-based FVI and ground truth" width="90%" />
 <p class="caption">
-Figure 3.2: example of swinging up a pendulum using NN-based value function approximation
+Figure 3.2: Comparison between the result of NN-based FVI and ground truth
 </p>
 </div>
+<p>The figure shows that the approximation performance of NN is pretty good. Simulation experiments also shows that the corresponding controller could successfully regulate the system at <span class="math inline">\((0,0)\)</span>.</p>
 </div>
 </div>
 </div>
@@ -461,11 +500,11 @@ Figure 3.2: example of swinging up a pendulum using NN-based value function appr
 The policy <span class="math inline">\(\bar \pi=\{\bar\mu_0,...,\bar\mu_{N-1}\}\)</span> thus obtained is called the <em>rollout policy</em> based on <span class="math inline">\(\pi\)</span>. In short, <em>the rollout</em> policy is the one-step lookahead policy, with the optimal cost-to-go approximated by the cost-to-go of the base policy_.</p>
 <p><strong>Definition 3.1 (One-step Rollout Algorithm)</strong> We can get an improved policy from the base policy <span class="math inline">\(\pi\)</span></p>
 <p><span class="math display" id="eq:apprinv-rollout">\[\begin{equation}
-\bar\mu_k(x_k) = \arg\min_{u_k\in\mathbb U_k(x_k)} E\left\{g_k(x_k,u_k,w_k)+\tilde J_{k+1}(f_k(x_k,u_k,w_k))\right\} \tag{3.4}
+\bar\mu_k(x_k) = \arg\min_{u_k\in\mathbb U_k(x_k)} E\left\{g_k(x_k,u_k,w_k)+\tilde J_{k+1}(f_k(x_k,u_k,w_k))\right\} \tag{3.5}
 \end{equation}\]</span></p>
 <p>where <span class="math inline">\(\tilde J_{k+1}\)</span> is the corresponding cost-to-go function of the base policy <span class="math inline">\(\pi\)</span>. If we use <span class="math inline">\(H_{k+1}\)</span> to represent the cost-to-go function of the base policy <span class="math inline">\(\pi\)</span>, the rollout algorithm will be:</p>
 <p><span class="math display" id="eq:apprinv-rollout-2">\[\begin{equation}
-\bar\mu_k(x_k) = \arg\min_{u_k\in\mathbb U_k(x_k)} E\left\{g_k(x_k,u_k,w_k)+H_{k+1}(f_k(x_k,u_k,w_k))\right\} \tag{3.5}
+\bar\mu_k(x_k) = \arg\min_{u_k\in\mathbb U_k(x_k)} E\left\{g_k(x_k,u_k,w_k)+H_{k+1}(f_k(x_k,u_k,w_k))\right\} \tag{3.6}
 \end{equation}\]</span></p>
 <p>In the control system, after the current state <span class="math inline">\(x_k\)</span> is revealed, we calculate the cost-to-go function <span class="math inline">\(H_{k+1}\)</span> of the known base policy <span class="math inline">\(\pi\)</span> and conduct one-step lookahead minimization to find <span class="math inline">\(\bar\mu_k(x_k)\)</span> and feed it into the system immediately.</p>
 <p>Note that it is also possible to define the rollout policy that makes use of multistep lookahead. While such multistep lookahead involves much more online computation, it will likely yield better performance than its one-step counterpart. In what follows, we concentrate on rollout policy with one-step lookahead.</p>
@@ -485,7 +524,7 @@ The policy <span class="math inline">\(\bar \pi=\{\bar\mu_0,...,\bar\mu_{N-1}\}\
 \end{equation}\]</span></p>
 <p>We will now show that the rollout algorithm obtained with a base policy with sequential improvement property yields no worse cost than the base policy. In particular, consider the rollout policy <span class="math inline">\(\tilde \pi = \{\tilde \mu_0, ..., \tilde \mu_{N-1}\}\)</span>, and let <span class="math inline">\(J_{k, \tilde \pi} (x_k)\)</span> denote the cost obtained with <span class="math inline">\(\tilde \pi\)</span> starting from <span class="math inline">\(x_k\)</span>. We claim that</p>
 <p><span class="math display" id="eq:apprinv-cost-improvement">\[\begin{equation}
-J_{k,\tilde \pi} (x_k) \leq H_k(x_k), for \ all \ x_k \ and \ k \tag{3.6}
+J_{k,\tilde \pi} (x_k) \leq H_k(x_k), for \ all \ x_k \ and \ k \tag{3.7}
 \end{equation}\]</span></p>
 </div>
 </div>
@@ -506,13 +545,13 @@ J_{k,\tilde \pi} (x_k) \leq H_k(x_k), for \ all \ x_k \ and \ k \tag{3.6}
 <li><p>The second equality holds by the definition of the rollout algorithm.</p></li>
 <li><p>The second inequality holds by the sequential improvement property.</p></li>
 </ol>
-<p>This completes the induction proof of the cost improvement property <a href="approximatedp.html#eq:apprinv-cost-improvement">(3.6)</a>.</p>
+<p>This completes the induction proof of the cost improvement property <a href="approximatedp.html#eq:apprinv-cost-improvement">(3.7)</a>.</p>
 </div>
 </div>
 <p><strong>Computational issues in rollout algorithms</strong>. In the rollout algorithm, the cost-to-go function <span class="math inline">\(H_{k+1}\)</span> of the base policy is required to be computed online at all possible next states <span class="math inline">\(f_k(x_k,u_k,w_k)\)</span>. However, the real-time constraint will be a critical problem, for the corresponding cost-to-go function of a given base policy is not easy to calculate in real-time.
 In most cases, we will use the approximate version of the cost-to-go <span class="math inline">\(\tilde H_{k+1}\)</span> to simplify the calculation. So the rollout algorithm will be:</p>
 <p><span class="math display" id="eq:apprinv-rollout-3">\[\begin{equation}
-\bar\mu_k(x_k) = \arg\min_{u_k\in\mathbb U_k(x_k)} E\left\{g_k(x_k,u_k,w_k)+\tilde H_{k+1}(f_k(x_k,u_k,w_k))\right\} \tag{3.7}
+\bar\mu_k(x_k) = \arg\min_{u_k\in\mathbb U_k(x_k)} E\left\{g_k(x_k,u_k,w_k)+\tilde H_{k+1}(f_k(x_k,u_k,w_k))\right\} \tag{3.8}
 \end{equation}\]</span></p>
 <p>There are two variants to handle the computational difficulties, deterministic case, and stochastic case.</p>
 <ol style="list-style-type: decimal">

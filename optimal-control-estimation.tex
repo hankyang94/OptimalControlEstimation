@@ -151,7 +151,7 @@ arc=4pt}
 
 \title{Optimal Control and Estimation}
 \author{Heng Yang}
-\date{2023-09-07}
+\date{2023-09-08}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -1144,29 +1144,60 @@ Here \(T\) means the transpose of the matrix, \(\phi_k(x_k)\) is pre-selected an
 The notion of feature is commonly used in the theory of computer vision, where \(x_k\) could be interpreted as an image, and the \(\phi_k\) function extracts the critical features such as angles and points that could be used for object recognition or image alignment.
 By using this architecture, the fitted value iteration \eqref{eq:apprinv-fvi-1}, \eqref{eq:apprinv-fvi-2} greatly simplifies and admits a closed-form solution.
 
-\begin{example}[Swinging up a pendulum using feature-based method]
-\protect\hypertarget{exm:featurebasedswingingupapendulum}{}\label{exm:featurebasedswingingupapendulum}
+\begin{example}[Optimal Control for Linear System Using Feature-based Method]
+\protect\hypertarget{exm:feature-double-integrator}{}\label{exm:feature-double-integrator}Consider a linear system whose dynamics is:
+\begin{equation}
+    x = \begin{bmatrix} x_0 \\ x_1 \end{bmatrix}, \quad 
+    \dot{x} = f(x,u) = \begin{bmatrix}
+    x_1 \\
+    u
+    \end{bmatrix} = 
+    \begin{bmatrix}
+        0 & 1 \\
+        0 & 0 
+    \end{bmatrix} x + \begin{bmatrix}
+        0 \\
+        1 \end{bmatrix} u
+    \label{eq:double-integrator-dynamics}
+\end{equation}
 
-{EXPERIMENT HERE}
+The goal is to regulate the system at \((0,0)\). This system is a typical linear system, named as \textbf{double integrator} on many occasions. In Chapter \ref{exactdp}, we learned how to use LQR to precisely calculate the cost-to-go function of these systems using \emph{Recatti Equation}. Now we can show that using linear feature-based fitted value iteration, we can also get the cost-to-go function of double integrator and the result is the same as the ground truth.
+
+In this example, we use second-order monomials as the features and use the linear combination of them to model the cost-to-go function of the double integrator, while the combination parameter \(w\) is tuned using fitted value iteration.
+\begin{equation}
+    \text{features vector: }F = \begin{bmatrix}
+        x_0^2 \\ x_0 x_1 \\ x_1^2 \\ x_0 \\ x_1 \\ 1
+    \end{bmatrix}, \quad
+    J(x) = w^T F
+\end{equation}
+
+Applying fitted value iteration on randomly sampled points mentioned above, we obtain the cost-to-go in Fig. \ref{fig:double-integrator-feature-example}. The value iteration converges in 3000 iterations.
 
 \begin{figure}
 
-{\centering \includegraphics[width=0.6\linewidth]{images/drawme} 
+{\centering \includegraphics[width=0.9\linewidth]{images/approxdp-feature-FVI} 
 
 }
 
-\caption{example of swinging up a pendulum using feature-based value function approximation}\label{fig:pendulum-feature-example}
+\caption{Comparison between the result of feature-based FVI and ground truth}\label{fig:double-integrator-feature-example}
 \end{figure}
 
-\end{example}
-
-It is worth noting that the cost-to-go function in Linear Quadratic Regulator is also using the linear architecture mentioned above.
-
+The S matrix calculated by the result of FVI is \(S_1\), and \(S_2\) is the solution to the Recatti Equation. We have
 \begin{equation}
-J(x,S)=x^T S x
+    S_1 = \begin{bmatrix}
+        27.164022 & 31.758386 \\ 
+        31.758386 & 85.950968 \end{bmatrix}, \quad
+    S_2 = \begin{bmatrix}
+        27.164022 & 31.758386 \\
+        31.758386 & 85.950968 \end{bmatrix}
+    \end{equation}
+\(S_1\) and \(S_2\) are almost the same, which means that we obtained the optimal cost-to-go function using fitted value iteration.
+It is worth noting that the cost-to-go function in Linear Quadratic Regulator is also using the linear architecture mentioned above.
+\begin{equation}
+    J(x,S)=x^T S x = \operatorname{tr}(S x^T x)
 \end{equation}
-
-It is quadratic in \(x\) but linear in \(S\). Therefore, except for using the Recatti equation to solve for S, we could also try to use fitted value iteration to handle it.
+It is quadratic in \(x\) but linear in \(S\).
+\end{example}
 
 \hypertarget{neural-networks}{%
 \subsubsection{Neural networks}\label{neural-networks}}
@@ -1175,19 +1206,25 @@ The selection of features is frequently manually crafted, relying on human intel
 
 However, the optimization process of the weights is more difficult due to the non-convexity. According to the equation \eqref{eq:apprinv-dp}, the \(J_{k+1}\) is non-convex which makes the entire equation hard to optimize.
 
-\begin{example}[Swinging up a pendulum using NN-based method]
-\protect\hypertarget{exm:NNbasedswingingupapendulum}{}\label{exm:NNbasedswingingupapendulum}
+\begin{example}[Optimal Control for Linear System Using NN-based Method]
+\protect\hypertarget{exm:NNbased-double-tegrator}{}\label{exm:NNbased-double-tegrator}\leavevmode
 
-{EXPERIMENT HERE}
+In this example, we will use neural network as the approximation of the cost-to-go function and conduct neural FVI on a double integrator. The dynamics of the double integrator has been introduced in example \ref{exm:feature-double-integrator}. We use a semi-positive-definite network to model the cost-to-go function.
+\begin{equation}
+    J(x) = N(x)^T N(x)
+\end{equation}
+\(N(x)\) is a 3-layer Multi-Layer-Perceptron with ReLU activation functions. Using mini-batch learning plus Adam optimizer, we obtain the cost-to-go in Fig. \ref{fig:double-integrator-NN-example} after 300 epochs of training.
 
 \begin{figure}
 
-{\centering \includegraphics[width=0.6\linewidth]{images/drawme} 
+{\centering \includegraphics[width=0.9\linewidth]{images/approxdp-NN-FVI} 
 
 }
 
-\caption{example of swinging up a pendulum using NN-based value function approximation}\label{fig:pendulum-NN-example}
+\caption{Comparison between the result of NN-based FVI and ground truth}\label{fig:double-integrator-NN-example}
 \end{figure}
+
+The figure shows that the approximation performance of NN is pretty good. Simulation experiments also shows that the corresponding controller could successfully regulate the system at \((0,0)\).
 
 \end{example}
 
