@@ -78,22 +78,59 @@ The notion of feature is commonly used in the theory of computer vision, where $
 By using this architecture, the fitted value iteration \@ref(eq:apprinv-fvi-1), \@ref(eq:apprinv-fvi-2) greatly simplifies and admits a closed-form solution. 
 
 ::: {.examplebox}
-::: {.example #featurebasedswingingupapendulum name="Swinging up a pendulum using feature-based method"}
-<span style="color:red">EXPERIMENT HERE</span>
-
-```{r pendulum-feature-example, out.width='60%', fig.show='hold', fig.cap='example of swinging up a pendulum using feature-based value function approximation', fig.align='center', echo=FALSE}
-knitr::include_graphics('images/drawme.png')
-```
-:::
-:::
-
-It is worth noting that the cost-to-go function in Linear Quadratic Regulator is also using the linear architecture mentioned above. 
-
+::: {.example #feature-double-integrator name="Optimal Control for Linear System Using Feature-based Method"}
+Consider a linear system whose dynamics is: 
 \begin{equation}
-J(x,S)=x^T S x
+    x = \begin{bmatrix} x_0 \\ x_1 \end{bmatrix}, \quad 
+    \dot{x} = f(x,u) = \begin{bmatrix}
+    x_1 \\
+    u
+    \end{bmatrix} = 
+    \begin{bmatrix}
+        0 & 1 \\
+        0 & 0 
+    \end{bmatrix} x + \begin{bmatrix}
+        0 \\
+        1 \end{bmatrix} u
+    (\#eq:double-integrator-dynamics)
 \end{equation}
 
-It is quadratic in $x$ but linear in $S$. Therefore, except for using the Recatti equation to solve for S, we could also try to use fitted value iteration to handle it. 
+The goal is to regulate the system at $(0,0)$. This system is a typical linear system, named as **double integrator** on many occasions. In Chapter \@ref(exactdp), we learned how to use LQR to precisely calculate the cost-to-go function of these systems using _Recatti Equation_. Now we can show that using linear feature-based fitted value iteration, we can also get the cost-to-go function of double integrator and the result is the same as the ground truth. 
+
+In this example, we use second-order monomials as the features and use the linear combination of them to model the cost-to-go function of the double integrator, while the combination parameter $w$ is tuned using fitted value iteration. 
+\begin{equation}
+    \text{features vector: }F = \begin{bmatrix}
+        x_0^2 \\ x_0 x_1 \\ x_1^2 \\ x_0 \\ x_1 \\ 1
+    \end{bmatrix}, \quad
+    J(x) = w^T F
+\end{equation}
+
+Applying fitted value iteration on randomly sampled points mentioned above, we obtain the cost-to-go in Fig. \@ref(fig:double-integrator-feature-example). The value iteration converges in 3000 iterations.
+```{r double-integrator-feature-example, out.width='90%', fig.show='hold', fig.cap='Comparison between the result of feature-based FVI and ground truth', fig.align='center', echo=FALSE}
+knitr::include_graphics('images/approxdp-feature-FVI.png')
+```
+The S matrix calculated by the result of FVI is $S_1$, and $S_2$ is the solution to the Recatti Equation. We have
+\begin{equation}
+    S_1 = \begin{bmatrix}
+        27.164022 & 31.758386 \\ 
+        31.758386 & 85.950968 \end{bmatrix}, \quad
+    S_2 = \begin{bmatrix}
+        27.164022 & 31.758386 \\
+        31.758386 & 85.950968 \end{bmatrix}
+    \end{equation}
+$S_1$ and $S_2$ are almost the same, which means that we obtained the optimal cost-to-go function using fitted value iteration. 
+It is worth noting that the cost-to-go function in Linear Quadratic Regulator is also using the linear architecture mentioned above.
+\begin{equation}
+    J(x,S)=x^T S x = \operatorname{tr}(S x^T x)
+\end{equation}
+It is quadratic in $x$ but linear in $S$. 
+:::
+:::
+
+
+
+
+
 
 #### Neural networks
 
@@ -102,12 +139,16 @@ The selection of features is frequently manually crafted, relying on human intel
 However, the optimization process of the weights is more difficult due to the non-convexity. According to the equation \@ref(eq:apprinv-dp), the $J_{k+1}$ is non-convex which makes the entire equation hard to optimize. 
 
 ::: {.examplebox}
-::: {.example #NNbasedswingingupapendulum name="Swinging up a pendulum using NN-based method"}
-<span style="color:red">EXPERIMENT HERE</span>
-
-```{r pendulum-NN-example, out.width='60%', fig.show='hold', fig.cap='example of swinging up a pendulum using NN-based value function approximation', fig.align='center', echo=FALSE}
-knitr::include_graphics('images/drawme.png')
+::: {.example #NNbased-double-tegrator name="Optimal Control for Linear System Using NN-based Method"}
+In this example, we will use neural network as the approximation of the cost-to-go function and conduct neural FVI on a double integrator. The dynamics of the double integrator has been introduced in example \@ref(exm:feature-double-integrator). We use a semi-positive-definite network to model the cost-to-go function. 
+\begin{equation}
+    J(x) = N(x)^T N(x)
+\end{equation}
+$N(x)$ is a 3-layer Multi-Layer-Perceptron with ReLU activation functions. Using mini-batch learning plus Adam optimizer, we obtain the cost-to-go in Fig. \@ref(fig:double-integrator-NN-example) after 300 epochs of training. 
+```{r double-integrator-NN-example, out.width='90%', fig.show='hold', fig.cap='Comparison between the result of NN-based FVI and ground truth', fig.align='center', echo=FALSE}
+knitr::include_graphics('images/approxdp-NN-FVI.png')
 ```
+The figure shows that the approximation performance of NN is pretty good. Simulation experiments also shows that the corresponding controller could successfully regulate the system at $(0,0)$. 
 :::
 :::
 
