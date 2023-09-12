@@ -532,20 +532,58 @@ in the form of <span class="math inline">\(x_{k+1} = A x_k + B u_k\)</span> with
 </div>
 </div>
 <p> </p>
+<div class="exercisebox">
 <div class="exercise">
-<p><span id="exr:lqrmanifold" class="exercise"><strong>Exercise 9.3  (LQR on A Manifold) </strong></span>LQR on manifolds <span class="citation">(<a href="#ref-saccon13tac-lie" role="doc-biblioref">Saccon, Hauser, and Aguiar 2013</a>)</span> and <span class="citation">(<a href="#ref-teng22cdc-lie" role="doc-biblioref">Teng et al. 2022</a>)</span>.</p>
+<p><span id="exr:cartpole" class="exercise"><strong>Exercise 9.3  (Cart Pole System) </strong></span>In this question, we will study the cart-pole system that we saw the video of human-controlled version in our first lecture. The task is to balance a pendulum on a cart by horizontally moving the cart. See this video (<a href="https://www.youtube.com/watch?v=Bzq96V1yN5k" class="uri">https://www.youtube.com/watch?v=Bzq96V1yN5k</a>) for an actual robotic implementation.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:cart-pole"></span>
+<img src="images/cartpole.png" alt="Illustration of cart-pole problem" width="100%" />
+<p class="caption">
+Figure 9.3: Illustration of cart-pole problem
+</p>
+</div>
+<p>With the above illustration, we parameterize the system with two scalers: <span class="math inline">\(x\)</span> represents the current location of the cart, while <span class="math inline">\(\theta\)</span> is the angle between current pole and the stable equilibrium. Therefore, our goal is to study the motion of the cart-pole system with a horizonal control <span class="math inline">\(f\)</span>. We assume hereafter the system is ideal such that there is no friction, and the mass of the pole concentrates at the free end point.</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>Denote the mass of cart and pole as <span class="math inline">\(m_c\)</span> and <span class="math inline">\(m_p\)</span>, respectively.
+(i). Derive the equations of motion:
+<span class="math display" id="eq:ex-cartpole-1">\[\begin{equation}
+  \left(m_c+m_p\right) \ddot{x}+m_p l \ddot{\theta} \cos \theta-m_p l \dot{\theta}^2 \sin \theta=f,
+  \tag{9.4}
+  \end{equation}\]</span>
+<span class="math display" id="eq:ex-cartpole-2">\[\begin{equation}
+  m_p l \ddot{x} \cos \theta+m_p l^2 \ddot{\theta}+m_p g l \sin \theta=0.
+  \tag{9.5}
+  \end{equation}\]</span>
+<em>(Hints: compute the Lagrangian of the system and the corresponding Lagrangian equations. Analyzing the two objects separately also works.)</em>
+<!--Hint2: https://en.wikipedia.org/wiki/Lagrangian_mechanics#Pendulum_on_a_movable_support-->
+(ii). Translate the equations <a href="psets.html#eq:ex-cartpole-1">(9.4)</a> and <a href="psets.html#eq:ex-cartpole-2">(9.5)</a> into the standard form
+<span class="math display">\[\begin{equation}
+  \mathbf{M}(\mathbf{q}) \ddot{\mathbf{q}}+\mathbf{C}(\mathbf{q}, \dot{\mathbf{q}}) \dot{\mathbf{q}}=\tau_g(\mathbf{q})+\mathbf{B u},
+  \end{equation}\]</span>
+where <span class="math inline">\(\mathbf{q}=\begin{bmatrix}x\\ \theta \end{bmatrix}\)</span>, <span class="math inline">\(\mathbf{u}=\begin{bmatrix} f \end{bmatrix}\)</span>. What are <span class="math inline">\(\mathbf{M},\mathbf{C}, \tau_g,\mathbf{B}\)</span> here?
+(iii). Translate the equations into the basic state-space dynamics form
+<span class="math display" id="eq:ex-cartpole-3">\[\begin{equation}
+\dot{\mathbf{x}}=f(\mathbf{x}, \mathbf{u}).
+\tag{9.6}
+\end{equation}\]</span>
+What are <span class="math inline">\(\mathbf{x},\mathbf{u},f\)</span> here?
+<em>(Hint: try <span class="math inline">\(\mathbf{x}=[x,\theta,\dot{x},\dot{\theta}]^\top\)</span>.)</em></p></li>
+<li><p>Linearize the dynamics in 1.(c) around the unstable equilibrium where <span class="math inline">\(\theta^*=\pi\)</span> and <span class="math inline">\(x^*=\dot{x}^*=\dot{\theta}^*=0.\)</span> The result should be in the form of
+<span class="math display" id="eq:ex-cartpole-4">\[\begin{equation}
+\dot{\Delta\mathbf{x}}=A\Delta\mathbf{x}+B\Delta\mathbf{u},
+\tag{9.7}
+\end{equation}\]</span>
+where <span class="math inline">\(\Delta\mathbf{x} = \mathbf{x}-\mathbf{x}^*\)</span> and <span class="math inline">\(\Delta\mathbf{u}=\mathbf{u}-\mathbf{u}^*\)</span>.</p></li>
+<li><p>Define the linearization error <span class="math inline">\(e(\mathbf{x}, \mathbf{u}):=\|f(\mathbf{x}, \mathbf{u}) - (A\Delta\mathbf{x}+B\Delta\mathbf{u})\|^2\)</span>. Simulate the original system <a href="psets.html#eq:ex-cartpole-3">(9.6)</a> and the linearized system <a href="psets.html#eq:ex-cartpole-4">(9.7)</a> with the same initial condition. How does the linearization error change over time? Provide at least three different initialization results.<br>
+<em>(Hints: (i) Sanity check: intuitively the error should not depend on the initial location <span class="math inline">\(x\)</span>, and it should have symmetry. Is that true in your simulation? <br>(ii) In the same unstable position, how does push/pull (positive/negative) force change the results?)</em></p></li>
+<li><p>(Bonus) Will a linear controller (i.e., <span class="math inline">\(f\)</span> is linear in <span class="math inline">\(\mathbf{x}\)</span>) be a good controller? Why or why not? The answer might depend on whether the end point of the pole is above the horizonal line.</p></li>
+</ol>
+</div>
 </div>
 </div>
 <h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-nocedal99book-numerical" class="csl-entry">
 Nocedal, Jorge, and Stephen J Wright. 1999. <em>Numerical Optimization</em>. Springer.
-</div>
-<div id="ref-saccon13tac-lie" class="csl-entry">
-Saccon, Alessandro, John Hauser, and A Pedro Aguiar. 2013. <span>“Optimal Control on Lie Groups: The Projection Operator Approach.”</span> <em>IEEE Transactions on Automatic Control</em> 58 (9): 2230–45.
-</div>
-<div id="ref-teng22cdc-lie" class="csl-entry">
-Teng, Sangli, William Clark, Anthony Bloch, Ram Vasudevan, and Maani Ghaffari. 2022. <span>“Lie Algebraic Cost Function Design for Control on Lie Groups.”</span> In <em>2022 IEEE 61st Conference on Decision and Control (CDC)</em>, 1867–74. IEEE.
 </div>
 </div>
             </section>
