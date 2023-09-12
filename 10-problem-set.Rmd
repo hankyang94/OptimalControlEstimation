@@ -198,8 +198,52 @@ e. (Bonus) Can you write down the KKT optimality conditions of \@ref(eq:lqr-cons
 
 &nbsp;
 
-::: {.exercise #lqrmanifold name="LQR on A Manifold"}
-LQR on manifolds [@saccon13tac-lie] and [@teng22cdc-lie].
-:::
+::: {.exercisebox}
+::: {.exercise #cartpole name="Cart Pole System"}
+In this question, we will study the cart-pole system that we saw the video of human-controlled version in our first lecture. The task is to balance a pendulum on a cart by horizontally moving the cart. See this video (https://www.youtube.com/watch?v=Bzq96V1yN5k) for an actual robotic implementation. 
 
+```{r cart-pole, out.width='100%', fig.show='hold', fig.cap='Illustration of cart-pole problem', fig.align='center', echo=FALSE}
+knitr::include_graphics('images/cartpole.png')
+```
+
+With the above illustration, we parameterize the system with two scalers: $x$ represents the current location of the cart, while $\theta$ is the angle between current pole and the stable equilibrium. Therefore, our goal is to study the motion of the cart-pole system with a horizonal control $f$. We assume hereafter the system is ideal such that there is no friction, and the mass of the pole concentrates at the free end point. 
+
+a. Denote the mass of cart and pole as $m_c$ and $m_p$, respectively. 
+    (i). Derive the equations of motion:
+  \begin{equation}
+  \left(m_c+m_p\right) \ddot{x}+m_p l \ddot{\theta} \cos \theta-m_p l \dot{\theta}^2 \sin \theta=f,
+  (\#eq:ex-cartpole-1)
+  \end{equation}
+  \begin{equation}
+  m_p l \ddot{x} \cos \theta+m_p l^2 \ddot{\theta}+m_p g l \sin \theta=0.
+  (\#eq:ex-cartpole-2)
+  \end{equation}
+  *(Hints: compute the Lagrangian of the system and the corresponding Lagrangian equations. Analyzing the two objects separately also works.)*
+  <!--Hint2: https://en.wikipedia.org/wiki/Lagrangian_mechanics#Pendulum_on_a_movable_support-->
+    (ii). Translate the equations \@ref(eq:ex-cartpole-1) and \@ref(eq:ex-cartpole-2) into the standard form 
+  \begin{equation}
+  \mathbf{M}(\mathbf{q}) \ddot{\mathbf{q}}+\mathbf{C}(\mathbf{q}, \dot{\mathbf{q}}) \dot{\mathbf{q}}=\tau_g(\mathbf{q})+\mathbf{B u},
+  \end{equation}
+  where $\mathbf{q}=\begin{bmatrix}x\\ \theta \end{bmatrix}$, $\mathbf{u}=\begin{bmatrix} f \end{bmatrix}$. What are $\mathbf{M},\mathbf{C}, \tau_g,\mathbf{B}$ here?
+    (iii). Translate the equations into the basic state-space dynamics form 
+    \begin{equation}
+    \dot{\mathbf{x}}=f(\mathbf{x}, \mathbf{u}).
+    (\#eq:ex-cartpole-3)
+    \end{equation}
+    What are $\mathbf{x},\mathbf{u},f$ here?
+    *(Hint: try $\mathbf{x}=[x,\theta,\dot{x},\dot{\theta}]^\top$.)*
+
+b. Linearize the dynamics in 1.(c) around the unstable equilibrium where $\theta^*=\pi$ and $x^*=\dot{x}^*=\dot{\theta}^*=0.$ The result should be in the form of 
+\begin{equation}
+\dot{\Delta\mathbf{x}}=A\Delta\mathbf{x}+B\Delta\mathbf{u},
+(\#eq:ex-cartpole-4)
+\end{equation}
+where $\Delta\mathbf{x} = \mathbf{x}-\mathbf{x}^*$ and $\Delta\mathbf{u}=\mathbf{u}-\mathbf{u}^*$.
+
+c. Define the linearization error $e(\mathbf{x}, \mathbf{u}):=\|f(\mathbf{x}, \mathbf{u}) - (A\Delta\mathbf{x}+B\Delta\mathbf{u})\|^2$. Simulate the original system \@ref(eq:ex-cartpole-3) and the linearized system \@ref(eq:ex-cartpole-4) with the same initial condition. How does the linearization error change over time? Provide at least three different initialization results.<br>
+*(Hints: (i) Sanity check: intuitively the error should not depend on the initial location $x$, and it should have symmetry. Is that true in your simulation? <br>(ii) In the same unstable position, how does push/pull (positive/negative) force change the results?)*
+
+d. (Bonus) Will a linear controller (i.e., $f$ is linear in $\mathbf{x}$) be a good controller? Why or why not? The answer might depend on whether the end point of the pole is above the horizonal line.
+:::
+:::
 # Acknowledgement {-}
