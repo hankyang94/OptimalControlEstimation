@@ -151,7 +151,7 @@ arc=4pt}
 
 \title{Optimal Control and Estimation}
 \author{Heng Yang}
-\date{2023-09-12}
+\date{2023-09-14}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -4724,6 +4724,12 @@ It is too much to ask you to implement a numerical algorithm on your own, as tha
 \begin{exercise}[LQR with Constraints]
 \protect\hypertarget{exr:lqrconstraints}{}\label{exr:lqrconstraints}
 
+In class we worked on the LQR problem where the states and controls are unbounded. This is rarely the case in real life -- you only have a limited amount of control power, and you want your states to be bounded (e.g., not entering some dangerous zones).
+
+For linear systems with convex constraints on the control and states, the seminal paper \citep{bemporad02automatica-explicit} investigates the landscape of the optimal cost-to-go and controller.
+
+In this exercise, let us use convex optimization to numerically study a toy problem.
+
 Consider a variant of the LQR problem \eqref{eq:lqr-formulation} where the controls are bounded between \([-u_{\max}, u_{\max}]\), the system matrices \(A_k, B_k\) are constant, and the dynamics is deterministic:
 \begin{equation}
 \begin{split}
@@ -4745,11 +4751,13 @@ We assume \(Q_k\succeq 0\) for \(k=0,\dots,N\) and \(R_k \succ 0\) for all \(k=0
   \]
   in the form of \(x_{k+1} = A x_k + B u_k\) with a constant \(dt\) time discretization. (Hint: take \(x = [q,\dot{q}]\) as the state vector.)
 \item
-  Fix \(N=50\), \(dt=0.1\) and choose your favorite \(Q_k\) and \(R_k\). Solve the convex optimization \eqref{eq:lqr-constraints} at a dense grid of \(x_0\). Plot \(J(x_0)\). (Hint: you will most likely benefit from Appendix \ref{appconvex-practice}.)
+  Fix \(N=50\), \(dt=0.1\) and choose your favorite \(Q_k\) and \(R_k\). Solve the convex optimization \eqref{eq:lqr-constraints} at a dense grid of \(x_0\) (e.g., using CVX or cvxpy). Plot the optimal cost-to-go \(J(x_0)\), and the optimal controls \(u_0(x_0),\dots,u_{N-1}(x_0)\). For the optimal controls, you can just plot one of the controls such as \(u_0(x_0)\). You may want to use the Matlab function \href{https://www.mathworks.com/help/matlab/ref/surf.html}{\texttt{surf}}. (Hint: you will most likely benefit from Appendix \ref{appconvex-practice}.)
 \item
-  Increase \(N\) and decrease \(dt\), plot \(J(x_0)\) for different pairs of \((N,dt)\). What do you observe?
+  Increase \(N\) and decrease \(dt\), repeat (c). Do you get more fine-grained plots of the optimal cost-to-go and controls? (When you increase \(N\), the convex optimization has more variables to optimize, so there is a limit at which the solver takes too much time.)
 \item
-  (Bonus) Can you write down the KKT optimality conditions of \eqref{eq:lqr-constraints} and explain what you have observed from the numerical experiment? (Hint: KKT optimality conditions can be found in Theorem \ref{thm:KKT}.)
+  \textbf{(Bonus)} We only have constraints on the control so far. What if you add constraints to the states as well? For example, you can try limiting the velocity \(\dot{q}\) to be at least \(0.1\) by adding \(\dot{q}_k \geq 0.1\) for some k. How will \(J\) and \(u\) change?
+\item
+  \textbf{(Bonus)} Can you write down the KKT optimality conditions of \eqref{eq:lqr-constraints} and explain what you have observed from the numerical experiments? (Hint: KKT optimality conditions can be found in Theorem \ref{thm:KKT}.)
 \end{enumerate}
 
 \end{exercise}
@@ -4759,47 +4767,51 @@ We assume \(Q_k\succeq 0\) for \(k=0,\dots,N\) and \(R_k \succ 0\) for all \(k=0
 \begin{exercise}[Cart Pole System]
 \protect\hypertarget{exr:cartpole}{}\label{exr:cartpole}
 
-In this question, we will study the cart-pole system that we saw the video of human-controlled version in our first lecture. The task is to balance a pendulum on a cart by horizontally moving the cart. See this video (\url{https://www.youtube.com/watch?v=Bzq96V1yN5k}) for an actual robotic implementation.
+In this exercse, let us study the cart-pole system (we saw the video of human-controlled version in our first lecture), another interesting nonlinear control problem, and reinforce our knowledge about LQR.
+
+Our task is to balance a pendulum on a cart by horizontally moving the cart. Fig. \ref{fig:cart-pole} gives an illustration of the system. See this \href{https://www.youtube.com/watch?v=Bzq96V1yN5k}{video} for an actual robotic implementation.
 
 \begin{figure}
 
-{\centering \includegraphics[width=1\linewidth]{images/cartpole} 
+{\centering \includegraphics[width=0.6\linewidth]{images/cartpole} 
 
 }
 
 \caption{Illustration of cart-pole problem}\label{fig:cart-pole}
 \end{figure}
 
-With the above illustration, we parameterize the system with two scalers: \(x\) represents the current location of the cart, while \(\theta\) is the angle between current pole and the stable equilibrium. Therefore, our goal is to study the motion of the cart-pole system with a horizonal control \(f\). We assume hereafter the system is ideal such that there is no friction, and the mass of the pole concentrates at the free end point.
+With the above illustration, we parameterize the system with two scalars: \(x\) represents the current location of the cart, while \(\theta\) is the angle between current pole and the stable equilibrium. Therefore, our goal is to study the motion of the cart-pole system with a horizonal control \(f\). We assume hereafter the system is ideal such that there is no friction, and the mass of the pole concentrates at the free end point.
 
 \begin{enumerate}
 \def\labelenumi{\alph{enumi}.}
+\tightlist
 \item
-  Denote the mass of cart and pole as \(m_c\) and \(m_p\), respectively.
-  (i). Derive the equations of motion:
+  \textbf{(Bonus)} For those of you who have background in rigid-body dynamics, this is an opportunity for you to apply your knowledge. However, feel free to skip this subproblem and it won't affect the rest of the exercise.
+  Denote the mass of cart and pole as \(m_c\) and \(m_p\), respectively. Derive the equations of motion:
   \begin{equation}
-    \left(m_c+m_p\right) \ddot{x}+m_p l \ddot{\theta} \cos \theta-m_p l \dot{\theta}^2 \sin \theta=f,
-    \label{eq:ex-cartpole-1}
-    \end{equation}
+  \left(m_c+m_p\right) \ddot{x}+m_p l \ddot{\theta} \cos \theta-m_p l \dot{\theta}^2 \sin \theta=f,
+  \label{eq:ex-cartpole-1}
+  \end{equation}
   \begin{equation}
-    m_p l \ddot{x} \cos \theta+m_p l^2 \ddot{\theta}+m_p g l \sin \theta=0.
-    \label{eq:ex-cartpole-2}
-    \end{equation}
-  \emph{(Hints: compute the Lagrangian of the system and the corresponding Lagrangian equations. Analyzing the two objects separately also works.)}
-  (ii). Translate the equations \eqref{eq:ex-cartpole-1} and \eqref{eq:ex-cartpole-2} into the standard form
+  m_p l \ddot{x} \cos \theta+m_p l^2 \ddot{\theta}+m_p g l \sin \theta=0.
+  \label{eq:ex-cartpole-2}
+  \end{equation}
+  (Hints: compute the Lagrangian of the system and the corresponding Lagrangian equations. Analyzing the two objects separately also works.)
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{1}
+\item
+  Translate the equations in (a) into the basic state-space dynamics form
   \begin{equation}
-    \mathbf{M}(\mathbf{q}) \ddot{\mathbf{q}}+\mathbf{C}(\mathbf{q}, \dot{\mathbf{q}}) \dot{\mathbf{q}}=\tau_g(\mathbf{q})+\mathbf{B u},
-    \end{equation}
-  where \(\mathbf{q}=\begin{bmatrix}x\\ \theta \end{bmatrix}\), \(\mathbf{u}=\begin{bmatrix} f \end{bmatrix}\). What are \(\mathbf{M},\mathbf{C}, \tau_g,\mathbf{B}\) here?
-  (iii). Translate the equations into the basic state-space dynamics form
-  \begin{equation}
-   \dot{\mathbf{x}}=f(\mathbf{x}, \mathbf{u}).
-   \label{eq:ex-cartpole-3}
-   \end{equation}
+  \dot{\mathbf{x}}=f(\mathbf{x}, \mathbf{u}).
+  \label{eq:ex-cartpole-3}
+  \end{equation}
   What are \(\mathbf{x},\mathbf{u},f\) here?
-  \emph{(Hint: try \(\mathbf{x}=[x,\theta,\dot{x},\dot{\theta}]^\top\).)}
+  (Hint: try \(\mathbf{x}=[x,\theta,\dot{x},\dot{\theta}]^\top\).)
 \item
-  Linearize the dynamics in 1.(c) around the unstable equilibrium where \(\theta^*=\pi\) and \(x^*=\dot{x}^*=\dot{\theta}^*=0.\) The result should be in the form of
+  Linearize the dynamics in (b) around the unstable equilibrium where \(\theta^*=\pi\) and \(x^*=\dot{x}^*=\dot{\theta}^*=0.\) (i.e., the pole is in the upright position and the cart stay at zero.) The result should be in the form of
   \begin{equation}
   \dot{\Delta\mathbf{x}}=A\Delta\mathbf{x}+B\Delta\mathbf{u},
   \label{eq:ex-cartpole-4}
@@ -4807,9 +4819,9 @@ With the above illustration, we parameterize the system with two scalers: \(x\) 
   where \(\Delta\mathbf{x} = \mathbf{x}-\mathbf{x}^*\) and \(\Delta\mathbf{u}=\mathbf{u}-\mathbf{u}^*\).
 \item
   Define the linearization error \(e(\mathbf{x}, \mathbf{u}):=\|f(\mathbf{x}, \mathbf{u}) - (A\Delta\mathbf{x}+B\Delta\mathbf{u})\|^2\). Simulate the original system \eqref{eq:ex-cartpole-3} and the linearized system \eqref{eq:ex-cartpole-4} with the same initial condition. How does the linearization error change over time? Provide at least three different initialization results.
-  \emph{(Hints: (i) Sanity check: intuitively the error should not depend on the initial location \(x\), and it should have symmetry. Is that true in your simulation? (ii) In the same unstable position, how does push/pull (positive/negative) force change the results?)}
+  (Hints: (i) Sanity check: intuitively the error should not depend on the initial location \(x\), and it should have symmetry. Is that true in your simulation? (ii) In the same unstable position, how does push/pull (positive/negative) force change the results?)
 \item
-  (Bonus) Will a linear controller (i.e., \(f\) is linear in \(\mathbf{x}\)) be a good controller? Why or why not? The answer might depend on whether the end point of the pole is above the horizonal line.
+  Convert the continuous-time dynamics in \eqref{eq:ex-cartpole-4} to discrete-time with a fixed time-discretization. Then design an LQR controller to stabilize the cart-pole at the unstable equilibrium. Does the LQR controller succeed for all initial conditions you tested? (Hint: try several initial conditions where the end point of the pole is above or below the horizontal line.) You may want to take a look at the LQR example for the simple pendulum in Example \ref{exm:lqr-pendulum-stabilization}.
 \end{enumerate}
 
 \end{exercise}

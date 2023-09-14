@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-09-12" />
+<meta name="date" content="2023-09-14" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -569,6 +569,42 @@ Figure 2.2: LQR stabilization of a simple pendulum.
 </div>
 </div>
 </div>
+<!-- ### LQR as Convex Optimization
+Consider the following problem
+\begin{equation}
+\min_{K} \sum_{k=0}^{\infty} x_k^T Q x_k + u_k^T R u_k, \quad \text{subject to } x_{k+1} = A x_k + B u_k, \quad u_k = - K x_k.
+(\#eq:dt-lqr-opt)
+\end{equation}
+Write the objective of \@ref(eq:dt-lqr-opt) as
+$$
+J(K) = \sum_{k=0}^{\infty} x_k^T (Q + K^T R K) x_k.
+$$
+Use the fact that
+$$
+x_{k+1} = (A - BK) x_k = (A - BK)^k x_0,
+$$
+we have 
+\begin{align}
+J(K) &= \sum_{k=0}^{\infty} x_0^T ((A - BK)^T)^k (Q + K^T R K) (A - BK)^k x_0 \\
+&= \text{tr}\left[ (Q + K^T R K) X \right]
+\end{align}
+with 
+$$
+X = \sum_{k=0}^{\infty} (A - BK)^k x_0 x_0^T ((A - BK)^T)^k.
+$$
+One can show that $X$ is the solution to the following Lyapunov equation
+$$
+(A - BK) X (A - BK)^T - X + x_0 x_0^T = 0.
+$$
+Therefore, the original optimization problem becomes
+$$
+\begin{align}
+\min_{K, X} & \quad \text{tr}(QX) + \text{tr}(K^T R K X) \\
+\text{subject to} & \quad (A - BK) X (A - BK)^T - X + x_0 x_0^T = 0 \\
+& \quad X \succeq 0
+(\#eq:dt-lqr-opt-matrix)
+\end{align}
+$$ -->
 </div>
 <div id="lqr-with-constraints" class="section level3 hasAnchor" number="2.1.2">
 <h3><span class="header-section-number">2.1.2</span> LQR with Constraints<a href="exactdp.html#lqr-with-constraints" class="anchor-section" aria-label="Anchor link to header"></a></h3>

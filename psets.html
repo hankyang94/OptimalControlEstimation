@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-09-12" />
+<meta name="date" content="2023-09-14" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -509,7 +509,10 @@ where <span class="math inline">\(u_k\)</span> can be seen as the angle spanned 
 <p> </p>
 <div class="exercisebox">
 <div class="exercise">
-<p><span id="exr:lqrconstraints" class="exercise"><strong>Exercise 9.2  (LQR with Constraints) </strong></span>Consider a variant of the LQR problem <a href="exactdp.html#eq:lqr-formulation">(2.2)</a> where the controls are bounded between <span class="math inline">\([-u_{\max}, u_{\max}]\)</span>, the system matrices <span class="math inline">\(A_k, B_k\)</span> are constant, and the dynamics is deterministic:
+<p><span id="exr:lqrconstraints" class="exercise"><strong>Exercise 9.2  (LQR with Constraints) </strong></span>In class we worked on the LQR problem where the states and controls are unbounded. This is rarely the case in real life – you only have a limited amount of control power, and you want your states to be bounded (e.g., not entering some dangerous zones).</p>
+<p>For linear systems with convex constraints on the control and states, the seminal paper <span class="citation">(<a href="#ref-bemporad02automatica-explicit" role="doc-biblioref">Bemporad et al. 2002</a>)</span> investigates the landscape of the optimal cost-to-go and controller.</p>
+<p>In this exercise, let us use convex optimization to numerically study a toy problem.</p>
+<p>Consider a variant of the LQR problem <a href="exactdp.html#eq:lqr-formulation">(2.2)</a> where the controls are bounded between <span class="math inline">\([-u_{\max}, u_{\max}]\)</span>, the system matrices <span class="math inline">\(A_k, B_k\)</span> are constant, and the dynamics is deterministic:
 <span class="math display" id="eq:lqr-constraints">\[\begin{equation}
 \begin{split}
 J(x_0) = \min_{u_{0},\dots,u_{N-1} \in [-u_{\max},u_{\max}]} &amp;\quad  x_N^T Q_N x_N + \sum_{k=0}^{N-1} (x_k^T Q_k x_k + u_k^T R_k u_k) \\
@@ -525,63 +528,71 @@ We assume <span class="math inline">\(Q_k\succeq 0\)</span> for <span class="mat
 \ddot{q} = u, \quad u \in [-1,1]
 \]</span>
 in the form of <span class="math inline">\(x_{k+1} = A x_k + B u_k\)</span> with a constant <span class="math inline">\(dt\)</span> time discretization. (Hint: take <span class="math inline">\(x = [q,\dot{q}]\)</span> as the state vector.)</p></li>
-<li><p>Fix <span class="math inline">\(N=50\)</span>, <span class="math inline">\(dt=0.1\)</span> and choose your favorite <span class="math inline">\(Q_k\)</span> and <span class="math inline">\(R_k\)</span>. Solve the convex optimization <a href="psets.html#eq:lqr-constraints">(9.3)</a> at a dense grid of <span class="math inline">\(x_0\)</span>. Plot <span class="math inline">\(J(x_0)\)</span>. (Hint: you will most likely benefit from Appendix <a href="appconvex.html#appconvex-practice">B.2</a>.)</p></li>
-<li><p>Increase <span class="math inline">\(N\)</span> and decrease <span class="math inline">\(dt\)</span>, plot <span class="math inline">\(J(x_0)\)</span> for different pairs of <span class="math inline">\((N,dt)\)</span>. What do you observe?</p></li>
-<li><p>(Bonus) Can you write down the KKT optimality conditions of <a href="psets.html#eq:lqr-constraints">(9.3)</a> and explain what you have observed from the numerical experiment? (Hint: KKT optimality conditions can be found in Theorem <a href="appconvex.html#thm:KKT">B.2</a>.)</p></li>
+<li><p>Fix <span class="math inline">\(N=50\)</span>, <span class="math inline">\(dt=0.1\)</span> and choose your favorite <span class="math inline">\(Q_k\)</span> and <span class="math inline">\(R_k\)</span>. Solve the convex optimization <a href="psets.html#eq:lqr-constraints">(9.3)</a> at a dense grid of <span class="math inline">\(x_0\)</span> (e.g., using CVX or cvxpy). Plot the optimal cost-to-go <span class="math inline">\(J(x_0)\)</span>, and the optimal controls <span class="math inline">\(u_0(x_0),\dots,u_{N-1}(x_0)\)</span>. For the optimal controls, you can just plot one of the controls such as <span class="math inline">\(u_0(x_0)\)</span>. You may want to use the Matlab function <a href="https://www.mathworks.com/help/matlab/ref/surf.html"><code>surf</code></a>. (Hint: you will most likely benefit from Appendix <a href="appconvex.html#appconvex-practice">B.2</a>.)</p></li>
+<li><p>Increase <span class="math inline">\(N\)</span> and decrease <span class="math inline">\(dt\)</span>, repeat (c). Do you get more fine-grained plots of the optimal cost-to-go and controls? (When you increase <span class="math inline">\(N\)</span>, the convex optimization has more variables to optimize, so there is a limit at which the solver takes too much time.)</p></li>
+<li><p><strong>(Bonus)</strong> We only have constraints on the control so far. What if you add constraints to the states as well? For example, you can try limiting the velocity <span class="math inline">\(\dot{q}\)</span> to be at least <span class="math inline">\(0.1\)</span> by adding <span class="math inline">\(\dot{q}_k \geq 0.1\)</span> for some k. How will <span class="math inline">\(J\)</span> and <span class="math inline">\(u\)</span> change?</p></li>
+<li><p><strong>(Bonus)</strong> Can you write down the KKT optimality conditions of <a href="psets.html#eq:lqr-constraints">(9.3)</a> and explain what you have observed from the numerical experiments? (Hint: KKT optimality conditions can be found in Theorem <a href="appconvex.html#thm:KKT">B.2</a>.)</p></li>
 </ol>
 </div>
 </div>
 <p> </p>
 <div class="exercisebox">
 <div class="exercise">
-<p><span id="exr:cartpole" class="exercise"><strong>Exercise 9.3  (Cart Pole System) </strong></span>In this question, we will study the cart-pole system that we saw the video of human-controlled version in our first lecture. The task is to balance a pendulum on a cart by horizontally moving the cart. See this video (<a href="https://www.youtube.com/watch?v=Bzq96V1yN5k" class="uri">https://www.youtube.com/watch?v=Bzq96V1yN5k</a>) for an actual robotic implementation.</p>
+<p><span id="exr:cartpole" class="exercise"><strong>Exercise 9.3  (Cart Pole System) </strong></span>In this exercse, let us study the cart-pole system (we saw the video of human-controlled version in our first lecture), another interesting nonlinear control problem, and reinforce our knowledge about LQR.</p>
+<p>Our task is to balance a pendulum on a cart by horizontally moving the cart. Fig. <a href="psets.html#fig:cart-pole">9.3</a> gives an illustration of the system. See this <a href="https://www.youtube.com/watch?v=Bzq96V1yN5k">video</a> for an actual robotic implementation.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:cart-pole"></span>
-<img src="images/cartpole.png" alt="Illustration of cart-pole problem" width="100%" />
+<img src="images/cartpole.png" alt="Illustration of cart-pole problem" width="60%" />
 <p class="caption">
 Figure 9.3: Illustration of cart-pole problem
 </p>
 </div>
-<p>With the above illustration, we parameterize the system with two scalers: <span class="math inline">\(x\)</span> represents the current location of the cart, while <span class="math inline">\(\theta\)</span> is the angle between current pole and the stable equilibrium. Therefore, our goal is to study the motion of the cart-pole system with a horizonal control <span class="math inline">\(f\)</span>. We assume hereafter the system is ideal such that there is no friction, and the mass of the pole concentrates at the free end point.</p>
+<p>With the above illustration, we parameterize the system with two scalars: <span class="math inline">\(x\)</span> represents the current location of the cart, while <span class="math inline">\(\theta\)</span> is the angle between current pole and the stable equilibrium. Therefore, our goal is to study the motion of the cart-pole system with a horizonal control <span class="math inline">\(f\)</span>. We assume hereafter the system is ideal such that there is no friction, and the mass of the pole concentrates at the free end point.</p>
 <ol style="list-style-type: lower-alpha">
-<li><p>Denote the mass of cart and pole as <span class="math inline">\(m_c\)</span> and <span class="math inline">\(m_p\)</span>, respectively.
-(i). Derive the equations of motion:
+<li><strong>(Bonus)</strong> For those of you who have background in rigid-body dynamics, this is an opportunity for you to apply your knowledge. However, feel free to skip this subproblem and it won’t affect the rest of the exercise.
+Denote the mass of cart and pole as <span class="math inline">\(m_c\)</span> and <span class="math inline">\(m_p\)</span>, respectively. Derive the equations of motion:
 <span class="math display" id="eq:ex-cartpole-1">\[\begin{equation}
-  \left(m_c+m_p\right) \ddot{x}+m_p l \ddot{\theta} \cos \theta-m_p l \dot{\theta}^2 \sin \theta=f,
-  \tag{9.4}
-  \end{equation}\]</span>
+\left(m_c+m_p\right) \ddot{x}+m_p l \ddot{\theta} \cos \theta-m_p l \dot{\theta}^2 \sin \theta=f,
+\tag{9.4}
+\end{equation}\]</span>
 <span class="math display" id="eq:ex-cartpole-2">\[\begin{equation}
-  m_p l \ddot{x} \cos \theta+m_p l^2 \ddot{\theta}+m_p g l \sin \theta=0.
-  \tag{9.5}
-  \end{equation}\]</span>
-<em>(Hints: compute the Lagrangian of the system and the corresponding Lagrangian equations. Analyzing the two objects separately also works.)</em>
-<!--Hint2: https://en.wikipedia.org/wiki/Lagrangian_mechanics#Pendulum_on_a_movable_support-->
-(ii). Translate the equations <a href="psets.html#eq:ex-cartpole-1">(9.4)</a> and <a href="psets.html#eq:ex-cartpole-2">(9.5)</a> into the standard form
-<span class="math display">\[\begin{equation}
-  \mathbf{M}(\mathbf{q}) \ddot{\mathbf{q}}+\mathbf{C}(\mathbf{q}, \dot{\mathbf{q}}) \dot{\mathbf{q}}=\tau_g(\mathbf{q})+\mathbf{B u},
-  \end{equation}\]</span>
-where <span class="math inline">\(\mathbf{q}=\begin{bmatrix}x\\ \theta \end{bmatrix}\)</span>, <span class="math inline">\(\mathbf{u}=\begin{bmatrix} f \end{bmatrix}\)</span>. What are <span class="math inline">\(\mathbf{M},\mathbf{C}, \tau_g,\mathbf{B}\)</span> here?
-(iii). Translate the equations into the basic state-space dynamics form
+m_p l \ddot{x} \cos \theta+m_p l^2 \ddot{\theta}+m_p g l \sin \theta=0.
+\tag{9.5}
+\end{equation}\]</span>
+(Hints: compute the Lagrangian of the system and the corresponding Lagrangian equations. Analyzing the two objects separately also works.)
+<!--Hint2: https://en.wikipedia.org/wiki/Lagrangian_mechanics#Pendulum_on_a_movable_support--></li>
+</ol>
+<!-- (ii) Translate the equations \@ref(eq:ex-cartpole-1) and \@ref(eq:ex-cartpole-2) into the standard form 
+\begin{equation}
+\mathbf{M}(\mathbf{q}) \ddot{\mathbf{q}}+\mathbf{C}(\mathbf{q}, \dot{\mathbf{q}}) \dot{\mathbf{q}}=\tau_g(\mathbf{q})+\mathbf{B u},
+\end{equation}
+where $\mathbf{q}=\begin{bmatrix}x\\ \theta \end{bmatrix}$, $\mathbf{u}=\begin{bmatrix} f \end{bmatrix}$. What are $\mathbf{M},\mathbf{C}, \tau_g,\mathbf{B}$ here? -->
+<ol start="2" style="list-style-type: lower-alpha">
+<li><p>Translate the equations in (a) into the basic state-space dynamics form
 <span class="math display" id="eq:ex-cartpole-3">\[\begin{equation}
 \dot{\mathbf{x}}=f(\mathbf{x}, \mathbf{u}).
 \tag{9.6}
 \end{equation}\]</span>
 What are <span class="math inline">\(\mathbf{x},\mathbf{u},f\)</span> here?
-<em>(Hint: try <span class="math inline">\(\mathbf{x}=[x,\theta,\dot{x},\dot{\theta}]^\top\)</span>.)</em></p></li>
-<li><p>Linearize the dynamics in 1.(c) around the unstable equilibrium where <span class="math inline">\(\theta^*=\pi\)</span> and <span class="math inline">\(x^*=\dot{x}^*=\dot{\theta}^*=0.\)</span> The result should be in the form of
+(Hint: try <span class="math inline">\(\mathbf{x}=[x,\theta,\dot{x},\dot{\theta}]^\top\)</span>.)</p></li>
+<li><p>Linearize the dynamics in (b) around the unstable equilibrium where <span class="math inline">\(\theta^*=\pi\)</span> and <span class="math inline">\(x^*=\dot{x}^*=\dot{\theta}^*=0.\)</span> (i.e., the pole is in the upright position and the cart stay at zero.) The result should be in the form of
 <span class="math display" id="eq:ex-cartpole-4">\[\begin{equation}
 \dot{\Delta\mathbf{x}}=A\Delta\mathbf{x}+B\Delta\mathbf{u},
 \tag{9.7}
 \end{equation}\]</span>
 where <span class="math inline">\(\Delta\mathbf{x} = \mathbf{x}-\mathbf{x}^*\)</span> and <span class="math inline">\(\Delta\mathbf{u}=\mathbf{u}-\mathbf{u}^*\)</span>.</p></li>
 <li><p>Define the linearization error <span class="math inline">\(e(\mathbf{x}, \mathbf{u}):=\|f(\mathbf{x}, \mathbf{u}) - (A\Delta\mathbf{x}+B\Delta\mathbf{u})\|^2\)</span>. Simulate the original system <a href="psets.html#eq:ex-cartpole-3">(9.6)</a> and the linearized system <a href="psets.html#eq:ex-cartpole-4">(9.7)</a> with the same initial condition. How does the linearization error change over time? Provide at least three different initialization results.<br>
-<em>(Hints: (i) Sanity check: intuitively the error should not depend on the initial location <span class="math inline">\(x\)</span>, and it should have symmetry. Is that true in your simulation? <br>(ii) In the same unstable position, how does push/pull (positive/negative) force change the results?)</em></p></li>
-<li><p>(Bonus) Will a linear controller (i.e., <span class="math inline">\(f\)</span> is linear in <span class="math inline">\(\mathbf{x}\)</span>) be a good controller? Why or why not? The answer might depend on whether the end point of the pole is above the horizonal line.</p></li>
+(Hints: (i) Sanity check: intuitively the error should not depend on the initial location <span class="math inline">\(x\)</span>, and it should have symmetry. Is that true in your simulation? <br>(ii) In the same unstable position, how does push/pull (positive/negative) force change the results?)</p></li>
+<li><p>Convert the continuous-time dynamics in <a href="psets.html#eq:ex-cartpole-4">(9.7)</a> to discrete-time with a fixed time-discretization. Then design an LQR controller to stabilize the cart-pole at the unstable equilibrium. Does the LQR controller succeed for all initial conditions you tested? (Hint: try several initial conditions where the end point of the pole is above or below the horizontal line.) You may want to take a look at the LQR example for the simple pendulum in Example <a href="exactdp.html#exm:lqr-pendulum-stabilization">2.1</a>.</p></li>
 </ol>
+<!-- e. **(Bonus)** Will a linear controller (i.e., $f$ is linear in $\mathbf{x}$) be a good controller? Why or why not? The answer might depend on whether the end point of the pole is above the horizonal line. -->
 </div>
 </div>
 </div>
 <h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-bemporad02automatica-explicit" class="csl-entry">
+Bemporad, Alberto, Manfred Morari, Vivek Dua, and Efstratios N Pistikopoulos. 2002. <span>“The Explicit Linear Quadratic Regulator for Constrained Systems.”</span> <em>Automatica</em> 38 (1): 3–20.
+</div>
 <div id="ref-nocedal99book-numerical" class="csl-entry">
 Nocedal, Jorge, and Stephen J Wright. 1999. <em>Numerical Optimization</em>. Springer.
 </div>
