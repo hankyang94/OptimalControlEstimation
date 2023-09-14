@@ -238,7 +238,7 @@ knitr::include_graphics('images/pendulum-stabilization-lqr.png')
 :::
 :::
 
-### LQR as Convex Optimization
+<!-- ### LQR as Convex Optimization
 Consider the following problem
 \begin{equation}
 \min_{K} \sum_{k=0}^{\infty} x_k^T Q x_k + u_k^T R u_k, \quad \text{subject to } x_{k+1} = A x_k + B u_k, \quad u_k = - K x_k.
@@ -273,7 +273,7 @@ $$
 & \quad X \succeq 0
 (\#eq:dt-lqr-opt-matrix)
 \end{align}
-$$
+$$ -->
 
 
 ### LQR with Constraints
