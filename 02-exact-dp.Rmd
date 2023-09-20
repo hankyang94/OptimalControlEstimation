@@ -266,14 +266,12 @@ $$
 (A - BK) X (A - BK)^T - X + x_0 x_0^T = 0.
 $$
 Therefore, the original optimization problem becomes
-$$
 \begin{align}
 \min_{K, X} & \quad \text{tr}(QX) + \text{tr}(K^T R K X) \\
 \text{subject to} & \quad (A - BK) X (A - BK)^T - X + x_0 x_0^T = 0 \\
 & \quad X \succeq 0
 (\#eq:dt-lqr-opt-matrix)
-\end{align}
-$$ -->
+\end{align} -->
 
 
 ### LQR with Constraints

@@ -149,7 +149,7 @@ Due to these challenges, only in a very limited amount of cases will we be able 
 For general optimal control problems with continuous state space and control space (and most problems we care about in robotics), unfortunately, we will have to resort to _approximate dynamic programming_, basically variations of the DP algorithm \@ref(eq:dpbackwardrecursion) where approximate value functions $J_k(x_k)$ and/or control policies $\mu_k(x_k)$ are used (e.g., with neural networks and machine learning).^[Another possible solution is to discretize continuous states and controls. However, when the dimension of state and control is high, discretization becomes too expensive in terms of memory and computational complexity.] We will introduce several popular approximation schemes in Chapter \@ref(approximatedp). We will see that, although exact DP is not possible anymore, the Bellman principle of optimality still remains one of the most important guidelines for designing approximation algorithms. Efficient algorithms for approximate dynamic programming, preferrably with performance guarantees, still remain an active area of research. 
 
 
-## Infinite-horizon Formulation
+## Infinite-horizon Formulation {#infinite-horizon}
 
 So far we are focusing on problems with a finite horizon $N$, what if the horizon $N$ tends to infinity?
 
