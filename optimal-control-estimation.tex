@@ -1324,7 +1324,9 @@ You can play with the code \href{https://github.com/ComputationalRobotics/Optima
 \hypertarget{deep-q-network}{%
 \subsection{Deep Q Network}\label{deep-q-network}}
 
-DQN \citep{mnih15nature-dqn}.
+Although we have only tested FVI and FQI on the simple double integrator linear system, these algoithms are really not so different from the state-of-the-art reinforcement learning algoithms. For example, the core of the seminal work Deep \(Q\)-Network (DQN) \citep{mnih15nature-dqn} is to use a deep neural network to parameterize the \(Q\)-value function. Of course the DQN work has used other clever ideas to make it work in practice, such as experience replay, but the essence is fitted \(Q\)-value iteration.
+
+You can find a good explanation of DQN in this \href{https://www.tensorflow.org/agents/tutorials/0_intro_rl}{tutorial}, and a practical step-by-step Pytorch implementation that \href{https://pytorch.org/tutorials/intermediate/reinforcement_q_learning.html}{applies DQN on the cart-pole system}.
 
 \hypertarget{deep-shallow}{%
 \subsection{Deep + Shallow}\label{deep-shallow}}

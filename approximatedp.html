@@ -613,7 +613,8 @@ which is exactly the same as the solution obtained from LQR.</p>
 </div>
 <div id="deep-q-network" class="section level3 hasAnchor" number="3.1.4">
 <h3><span class="header-section-number">3.1.4</span> Deep Q Network<a href="approximatedp.html#deep-q-network" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>DQN <span class="citation">(<a href="#ref-mnih15nature-dqn" role="doc-biblioref">Mnih et al. 2015</a>)</span>.</p>
+<p>Although we have only tested FVI and FQI on the simple double integrator linear system, these algoithms are really not so different from the state-of-the-art reinforcement learning algoithms. For example, the core of the seminal work Deep <span class="math inline">\(Q\)</span>-Network (DQN) <span class="citation">(<a href="#ref-mnih15nature-dqn" role="doc-biblioref">Mnih et al. 2015</a>)</span> is to use a deep neural network to parameterize the <span class="math inline">\(Q\)</span>-value function. Of course the DQN work has used other clever ideas to make it work in practice, such as experience replay, but the essence is fitted <span class="math inline">\(Q\)</span>-value iteration.</p>
+<p>You can find a good explanation of DQN in this <a href="https://www.tensorflow.org/agents/tutorials/0_intro_rl">tutorial</a>, and a practical step-by-step Pytorch implementation that <a href="https://pytorch.org/tutorials/intermediate/reinforcement_q_learning.html">applies DQN on the cart-pole system</a>.</p>
 </div>
 <div id="deep-shallow" class="section level3 hasAnchor" number="3.1.5">
 <h3><span class="header-section-number">3.1.5</span> Deep + Shallow<a href="approximatedp.html#deep-shallow" class="anchor-section" aria-label="Anchor link to header"></a></h3>
