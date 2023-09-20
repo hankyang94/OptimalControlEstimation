@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-09-14" />
+<meta name="date" content="2023-09-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -167,7 +167,7 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="1.1" data-path="formulation.html"><a href="formulation.html#the-basic-problem"><i class="fa fa-check"></i><b>1.1</b> The Basic Problem</a></li>
 <li class="chapter" data-level="1.2" data-path="formulation.html"><a href="formulation.html#dynamic-programming-and-principle-of-optimality"><i class="fa fa-check"></i><b>1.2</b> Dynamic Programming and Principle of Optimality</a></li>
-<li class="chapter" data-level="1.3" data-path="formulation.html"><a href="formulation.html#infinite-horizon-formulation"><i class="fa fa-check"></i><b>1.3</b> Infinite-horizon Formulation</a></li>
+<li class="chapter" data-level="1.3" data-path="formulation.html"><a href="formulation.html#infinite-horizon"><i class="fa fa-check"></i><b>1.3</b> Infinite-horizon Formulation</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="exactdp.html"><a href="exactdp.html"><i class="fa fa-check"></i><b>2</b> Exact Dynamic Programming</a>
 <ul>
@@ -185,19 +185,19 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="3" data-path="approximatedp.html"><a href="approximatedp.html"><i class="fa fa-check"></i><b>3</b> Approximate Dynamic Programming</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="approximatedp.html"><a href="approximatedp.html#introduction"><i class="fa fa-check"></i><b>3.1</b> Introduction</a></li>
-<li class="chapter" data-level="3.2" data-path="approximatedp.html"><a href="approximatedp.html#approximation-in-value-space"><i class="fa fa-check"></i><b>3.2</b> Approximation in value space</a>
+<li class="chapter" data-level="3.1" data-path="approximatedp.html"><a href="approximatedp.html#fitted-value-iteration"><i class="fa fa-check"></i><b>3.1</b> Fitted Value Iteration</a>
 <ul>
-<li class="chapter" data-level="3.2.1" data-path="approximatedp.html"><a href="approximatedp.html#problem-approximation"><i class="fa fa-check"></i><b>3.2.1</b> Problem Approximation</a></li>
-<li class="chapter" data-level="3.2.2" data-path="approximatedp.html"><a href="approximatedp.html#parametric-cost-approximation"><i class="fa fa-check"></i><b>3.2.2</b> Parametric cost approximation</a></li>
-<li class="chapter" data-level="3.2.3" data-path="approximatedp.html"><a href="approximatedp.html#online-approximate-optimization"><i class="fa fa-check"></i><b>3.2.3</b> Online approximate optimization</a></li>
+<li class="chapter" data-level="3.1.1" data-path="approximatedp.html"><a href="approximatedp.html#linear-features"><i class="fa fa-check"></i><b>3.1.1</b> Linear Features</a></li>
+<li class="chapter" data-level="3.1.2" data-path="approximatedp.html"><a href="approximatedp.html#neural-network-features"><i class="fa fa-check"></i><b>3.1.2</b> Neural Network Features</a></li>
+<li class="chapter" data-level="3.1.3" data-path="approximatedp.html"><a href="approximatedp.html#fitted-q-value-iteration"><i class="fa fa-check"></i><b>3.1.3</b> Fitted Q-value Iteration</a></li>
+<li class="chapter" data-level="3.1.4" data-path="approximatedp.html"><a href="approximatedp.html#deep-q-network"><i class="fa fa-check"></i><b>3.1.4</b> Deep Q Network</a></li>
+<li class="chapter" data-level="3.1.5" data-path="approximatedp.html"><a href="approximatedp.html#deep-shallow"><i class="fa fa-check"></i><b>3.1.5</b> Deep + Shallow</a></li>
 </ul></li>
-<li class="chapter" data-level="3.3" data-path="approximatedp.html"><a href="approximatedp.html#approximation-in-policy-space"><i class="fa fa-check"></i><b>3.3</b> Approximation in policy space</a>
+<li class="chapter" data-level="3.2" data-path="approximatedp.html"><a href="approximatedp.html#model-predictive-control"><i class="fa fa-check"></i><b>3.2</b> Model Predictive Control</a>
 <ul>
-<li class="chapter" data-level="3.3.1" data-path="approximatedp.html"><a href="approximatedp.html#training-by-using-an-expert"><i class="fa fa-check"></i><b>3.3.1</b> Training by using an expert</a></li>
-<li class="chapter" data-level="3.3.2" data-path="approximatedp.html"><a href="approximatedp.html#training-by-cost-optimization"><i class="fa fa-check"></i><b>3.3.2</b> Training by cost optimization</a></li>
+<li class="chapter" data-level="3.2.1" data-path="approximatedp.html"><a href="approximatedp.html#online-approximate-optimization"><i class="fa fa-check"></i><b>3.2.1</b> Online approximate optimization</a></li>
 </ul></li>
-<li class="chapter" data-level="3.4" data-path="approximatedp.html"><a href="approximatedp.html#extension"><i class="fa fa-check"></i><b>3.4</b> Extension</a></li>
+<li class="chapter" data-level="3.3" data-path="approximatedp.html"><a href="approximatedp.html#policy-gradient"><i class="fa fa-check"></i><b>3.3</b> Policy Gradient</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html"><i class="fa fa-check"></i><b>4</b> Continuous-time Optimal Control</a>
 <ul>
@@ -357,7 +357,7 @@ div.csl-indent {
 <div id="header">
 <h1 class="title">Optimal Control and Estimation</h1>
 <p class="author"><em>Heng Yang</em></p>
-<p class="date"><em>2023-09-14</em></p>
+<p class="date"><em>2023-09-20</em></p>
 </div>
 <div id="preface" class="section level1 unnumbered hasAnchor">
 <h1>Preface<a href="index.html#preface" class="anchor-section" aria-label="Anchor link to header"></a></h1>

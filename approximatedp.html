@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-09-14" />
+<meta name="date" content="2023-09-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -167,7 +167,7 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="1.1" data-path="formulation.html"><a href="formulation.html#the-basic-problem"><i class="fa fa-check"></i><b>1.1</b> The Basic Problem</a></li>
 <li class="chapter" data-level="1.2" data-path="formulation.html"><a href="formulation.html#dynamic-programming-and-principle-of-optimality"><i class="fa fa-check"></i><b>1.2</b> Dynamic Programming and Principle of Optimality</a></li>
-<li class="chapter" data-level="1.3" data-path="formulation.html"><a href="formulation.html#infinite-horizon-formulation"><i class="fa fa-check"></i><b>1.3</b> Infinite-horizon Formulation</a></li>
+<li class="chapter" data-level="1.3" data-path="formulation.html"><a href="formulation.html#infinite-horizon"><i class="fa fa-check"></i><b>1.3</b> Infinite-horizon Formulation</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="exactdp.html"><a href="exactdp.html"><i class="fa fa-check"></i><b>2</b> Exact Dynamic Programming</a>
 <ul>
@@ -185,19 +185,19 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="3" data-path="approximatedp.html"><a href="approximatedp.html"><i class="fa fa-check"></i><b>3</b> Approximate Dynamic Programming</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="approximatedp.html"><a href="approximatedp.html#introduction"><i class="fa fa-check"></i><b>3.1</b> Introduction</a></li>
-<li class="chapter" data-level="3.2" data-path="approximatedp.html"><a href="approximatedp.html#approximation-in-value-space"><i class="fa fa-check"></i><b>3.2</b> Approximation in value space</a>
+<li class="chapter" data-level="3.1" data-path="approximatedp.html"><a href="approximatedp.html#fitted-value-iteration"><i class="fa fa-check"></i><b>3.1</b> Fitted Value Iteration</a>
 <ul>
-<li class="chapter" data-level="3.2.1" data-path="approximatedp.html"><a href="approximatedp.html#problem-approximation"><i class="fa fa-check"></i><b>3.2.1</b> Problem Approximation</a></li>
-<li class="chapter" data-level="3.2.2" data-path="approximatedp.html"><a href="approximatedp.html#parametric-cost-approximation"><i class="fa fa-check"></i><b>3.2.2</b> Parametric cost approximation</a></li>
-<li class="chapter" data-level="3.2.3" data-path="approximatedp.html"><a href="approximatedp.html#online-approximate-optimization"><i class="fa fa-check"></i><b>3.2.3</b> Online approximate optimization</a></li>
+<li class="chapter" data-level="3.1.1" data-path="approximatedp.html"><a href="approximatedp.html#linear-features"><i class="fa fa-check"></i><b>3.1.1</b> Linear Features</a></li>
+<li class="chapter" data-level="3.1.2" data-path="approximatedp.html"><a href="approximatedp.html#neural-network-features"><i class="fa fa-check"></i><b>3.1.2</b> Neural Network Features</a></li>
+<li class="chapter" data-level="3.1.3" data-path="approximatedp.html"><a href="approximatedp.html#fitted-q-value-iteration"><i class="fa fa-check"></i><b>3.1.3</b> Fitted Q-value Iteration</a></li>
+<li class="chapter" data-level="3.1.4" data-path="approximatedp.html"><a href="approximatedp.html#deep-q-network"><i class="fa fa-check"></i><b>3.1.4</b> Deep Q Network</a></li>
+<li class="chapter" data-level="3.1.5" data-path="approximatedp.html"><a href="approximatedp.html#deep-shallow"><i class="fa fa-check"></i><b>3.1.5</b> Deep + Shallow</a></li>
 </ul></li>
-<li class="chapter" data-level="3.3" data-path="approximatedp.html"><a href="approximatedp.html#approximation-in-policy-space"><i class="fa fa-check"></i><b>3.3</b> Approximation in policy space</a>
+<li class="chapter" data-level="3.2" data-path="approximatedp.html"><a href="approximatedp.html#model-predictive-control"><i class="fa fa-check"></i><b>3.2</b> Model Predictive Control</a>
 <ul>
-<li class="chapter" data-level="3.3.1" data-path="approximatedp.html"><a href="approximatedp.html#training-by-using-an-expert"><i class="fa fa-check"></i><b>3.3.1</b> Training by using an expert</a></li>
-<li class="chapter" data-level="3.3.2" data-path="approximatedp.html"><a href="approximatedp.html#training-by-cost-optimization"><i class="fa fa-check"></i><b>3.3.2</b> Training by cost optimization</a></li>
+<li class="chapter" data-level="3.2.1" data-path="approximatedp.html"><a href="approximatedp.html#online-approximate-optimization"><i class="fa fa-check"></i><b>3.2.1</b> Online approximate optimization</a></li>
 </ul></li>
-<li class="chapter" data-level="3.4" data-path="approximatedp.html"><a href="approximatedp.html#extension"><i class="fa fa-check"></i><b>3.4</b> Extension</a></li>
+<li class="chapter" data-level="3.3" data-path="approximatedp.html"><a href="approximatedp.html#policy-gradient"><i class="fa fa-check"></i><b>3.3</b> Policy Gradient</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html"><i class="fa fa-check"></i><b>4</b> Continuous-time Optimal Control</a>
 <ul>
@@ -356,74 +356,83 @@ div.csl-indent {
             <section class="normal" id="section-">
 <div id="approximatedp" class="section level1 hasAnchor" number="3">
 <h1><span class="header-section-number">Chapter 3</span> Approximate Dynamic Programming<a href="approximatedp.html#approximatedp" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p><em>Thanks to <a href="https://jrli.org/">Jiarui Li</a> for writing this Chapter.</em></p>
-<div id="introduction" class="section level2 hasAnchor" number="3.1">
-<h2><span class="header-section-number">3.1</span> Introduction<a href="approximatedp.html#introduction" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>The limitations of classical deterministic dynamic programming (DP) were mentioned in Chapter <a href="formulation.html#formulation">1</a>, particularly its inefficiency in fields such as robotics where both the state and control spaces are typically large and continuous. The process of discretization in such contexts is not only challenging but also costly. Even when discretization is achievable, the resultant state and control spaces tend to be extraordinarily vast and often high-dimensional, leading to prohibitive computational demands. This issue, commonly called the <em>curse of dimensionality</em>, renders the use of classical DP unfeasible. <span style="color:red">Add time complexity analysis here</span>.
-To circumvent the constraints of traditional DP algorithms in such contexts, a pragmatic approach involves the adoption of a suboptimal control scheme. This compromises between the ease of implementation and adequate performance. The principal objective of this chapter is to find such suboptimal control. In this chapter, we will spend most of the time discussing finite horizon problems with discrete state and control space, which is the classical scenario. We will also mention the infinite horizon problem and continuous state and control spaces scenario later.</p>
-<p>Broadly, two categories of approximation are used in the context of DP-based suboptimal control. The first is <em>approximation in value space</em>, where we aim to approximate the optimal cost function or the cost function of a given policy. The second is <em>approximation in policy space</em>, where we select the policy by using optimization over a suitable class of policies.</p>
-</div>
-<div id="approximation-in-value-space" class="section level2 hasAnchor" number="3.2">
-<h2><span class="header-section-number">3.2</span> Approximation in value space<a href="approximatedp.html#approximation-in-value-space" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Let us first recap the iteration process of the generic form of DP as mentioned in theorem <a href="formulation.html#thm:dynamicprogramming">1.2</a>. We can obtain the cost-to-go function <span class="math inline">\(J_k\)</span>, which means the cost-to-go value at time <span class="math inline">\(k\)</span>, thereby defining corresponding control <span class="math inline">\(u_k\)</span> or policy <span class="math inline">\(\mu_k\)</span>.</p>
-<p><span class="math display">\[\begin{equation}
-J_k(x_k) = \min_{u_k \in \mathbb{U}} \displaystyle \mathbb{E} \displaystyle \left\{ g_k(x_k,u_k) + J_{k+1}(f_k(x_k,u_k,w_k) ) \right\}, \ k=N-1,\dots,1,0.
-\end{equation}\]</span></p>
-<p>By using the <em>approximation in value space</em> methods, we could replace the optimal cost-to-go function <span class="math inline">\(J_k\)</span> with some other functions <span class="math inline">\(\tilde J_k\)</span>. In other words, the suboptimal policy <span class="math inline">\(\tilde{\mu}_k(x_k)\)</span> (and the corresponding control) is obtained from the one-step lookahead minimization</p>
-<p><span class="math display" id="eq:apprinv-dp">\[\begin{align}
-\tilde{J}_k(x_k) &amp;= \min_{u_k \in \mathbb{U}_k (x_k)} \displaystyle \mathbb{E} \displaystyle \left\{g_k(x_k,u_k,w_k) + \tilde J_{k+1} (f_k(x_k,u_k,w_k) ) \right\} \\
-\tilde{\mu}_k(x_k) &amp;= \arg \min_{u_k \in \mathbb{U}_k (x_k)} \displaystyle \mathbb{E} \displaystyle \left\{g_k(x_k,u_k,w_k) + \tilde J_{k+1} (f_k(x_k,u_k,w_k) ) \right\} \tag{3.1}
-\end{align}\]</span></p>
-<p>The major issue in value space approximation is how to compute the approximate cost-to-go functions <span class="math inline">\(\tilde J_{k+1}\)</span> in <a href="approximatedp.html#eq:apprinv-dp">(3.1)</a>. We will consider three types of methods:</p>
-<ol style="list-style-type: decimal">
-<li><p><em>Problem approximation</em></p></li>
-<li><p><em>Parametric cost approximation</em></p></li>
-<li><p><em>Online approximate optimization</em></p></li>
-</ol>
-<p>In approximation in value space, we may also distinguish between <em>online</em> and <em>offline</em> methods.</p>
-<ol style="list-style-type: decimal">
-<li><p><em>Offline</em> methods, where the entire function <span class="math inline">\(\tilde J_{k+1}\)</span> in <a href="approximatedp.html#eq:apprinv-dp">(3.1)</a> is computed for every <span class="math inline">\(k\)</span> before the control process begins. The advantage of this is that most of the computation is done offline. Once the control process starts, the only thing we have to do is one-step lookahead minimization. These methods are well-suited for settings where there are strict time constraints for the online computation of the control, and where there is no need for online replanning.</p></li>
-<li><p><em>Online</em> methods, where most of the computation is performed just after the current state <span class="math inline">\(x_k\)</span> becomes known, the values <span class="math inline">\(\tilde J_{k+1}(x_{k+1})\)</span> are computed only at the relevant next states <span class="math inline">\(x_{k+1}\)</span> and are used to compute <span class="math inline">\(u_k\)</span> via <a href="approximatedp.html#eq:apprinv-dp">(3.1)</a>. These methods require the computation of control only for the <span class="math inline">\(N\)</span> states actually encountered in the control process. These methods are well-suited for online replanning.</p></li>
-</ol>
-<div id="problem-approximation" class="section level3 hasAnchor" number="3.2.1">
-<h3><span class="header-section-number">3.2.1</span> Problem Approximation<a href="approximatedp.html#problem-approximation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>The functions <span class="math inline">\(\tilde J_{k+1}\)</span> are obtained (by exact DP, or other methods) as the optimal or nearly optimal cost functions of a simplified version of the original problem. The problem is how to simplify the problem, which is more convenient for computation. There are three widely-used approaches to simplify the initial problem:</p>
-<ol style="list-style-type: decimal">
-<li><p><em>Simplifying the structure of the problem through enforced decomposition</em>.</p></li>
-<li><p><em>Simplifying the probabilistic structure of the problem</em>, such as replacing the stochastic problem with a deterministic one by <em>certainty equivalence</em>. To be more specific, the original stochastic system contains the disturbance term <span class="math inline">\(w_k(x_k,u_k)\)</span>. To simplify the probabilistic structure of the problem, we could fix the disturbances at some “typical” values and transform the stochastic problem into a deterministic one.</p></li>
-<li><p><em>Aggregation</em>, where the original problem is approximated with a new problem with fewer states, makes it easier to obtain the cost-to-go function. The state in this new problem is the “combination” of the states in the initial problem. It is worth noting that the discretization of continuous state space and action space could be viewed as a kind of aggregation.</p></li>
-</ol>
-</div>
-<div id="parametric-cost-approximation" class="section level3 hasAnchor" number="3.2.2">
-<h3><span class="header-section-number">3.2.2</span> Parametric cost approximation<a href="approximatedp.html#parametric-cost-approximation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>For discrete problems, it is natural to consider using the tabular method to represent the <span class="math inline">\(\tilde J_k\)</span> functions. However, if the number of the state space is large this method’s memory cost will be overwhelming. On the other hand, for tabular representation, it is not convenient to optimize the function, while we can only update the value of <em>one</em> state at a time, but in many circumstances, there is a cluster of states that have similar attributes, which means their corresponding <span class="math inline">\(\tilde J_k\)</span> are also similar.
-It is inconvenient to update them one by one. In this part, we will discuss an alternative approach to represent <span class="math inline">\(\tilde J_k\)</span> function, whereby <span class="math inline">\(\tilde J_k\)</span> are chosen to be members of a parametric class of functions, with the parameters “optimized” or “trained” by using some algorithms.</p>
-<p>To be more specific, the <span class="math inline">\(\tilde J_k\)</span> functions could be described as <span class="math inline">\(\tilde J_k (x_k,r_k)\)</span> that for each <span class="math inline">\(k\)</span>, depend on the current state <span class="math inline">\(x_k\)</span> and a vector <span class="math inline">\(r_k=(r_{1,k}, ..., r_{m,k})\)</span> of <span class="math inline">\(m\)</span> “tunable” scalar parameters, also called <em>weights</em>. By adjusting the weights, one can change the “shape” of <span class="math inline">\(\tilde J_k\)</span> so that it is a reasonably close approximation to the true cost-to-go function <span class="math inline">\(J_k\)</span>.
-In order to train those weights, we can use some cost functions to measure the accuracy of the approximation. The most common cost function is <em>least squares</em>. Training the parameters <span class="math inline">\(r_k\)</span> using least squares as the cost function is sometimes referred to as <em>fitted value iteration</em>.
-Value iteration could be viewed as a special form of dynamic programming, where the parameter vectors <span class="math inline">\(r_k\)</span> are determined sequentially, starting from the end of the horizon and proceeding backward. The algorithm samples the state space for each stage <span class="math inline">\(k\)</span> and generates a large number of states <span class="math inline">\(x_k^s\)</span>, <span class="math inline">\(s=1,...,q\)</span>. It then determines sequentially the parameter vectors <span class="math inline">\(r_k\)</span> to obtain a good “least square fit” to the DP algorithm.</p>
-<p><span class="math display" id="eq:apprinv-fvi-1">\[\begin{equation}
-\beta_k^s=\min_{u \in \mathbb U_k(x_k^s)} E \displaystyle \left\{g(x_k^s,u,w_k) + \tilde J_{k+1} (f_k(x_k^s,u,w_k),r_{k+1}) \right\} \tag{3.2}
+<p><em>Thanks to <a href="https://jrli.org/">Jiarui Li</a> for contributing to this Chapter.</em></p>
+<p>In Chapter <a href="exactdp.html#exactdp">2</a>, we have studied two cases where dynamic programming (DP) can be executed exactly. Both cases are interesting yet limiting.</p>
+<p>In the linear quadratic regulator (LQR) case, the optimal controller is a linear controller and it does not require discretization of the state and control space. However, LQR only handles systems with linear dynamics.</p>
+<p>In the Markov Decision Process (MDP) case, value iteration can obtain the optimal cost-to-go (or the optimal <span class="math inline">\(Q\)</span>-value function) usually in a finite number of iterations. With barycentric interpolation, value iteration also leads to a practical controller for swinging up the pendulum (see Example <a href="exactdp.html#exm:pendulumvalueiterationbarycentric">2.3</a>), at least starting from some initial states. However, value iteration suffers from the <em>curse of dimensionality</em>, i.e., the amount of memory and computation needed to compute the optimal cost-to-go grows exponentially with the number of grids used to discretize the state space and control space.</p>
+<p>In this Chapter, we will study approximate dynamic programming, which aims to not find the optimal controller (simply because it is too demanding), but only a suboptimal controller that is perhaps good enough. It is worth noting that there exists a large amount of algorithms and literature for approximate DP, most of which are closely related to reinforcement learning, and studying all of them is beyond the scope of this course. In the following we will only go through several algorithmic frameworks that are representative.</p>
+<!-- Although we see in Example \@ref(exm:pendulumvalueiterationbarycentric) that value iteration with barycentric interpolation does stabilize the pendulum, we also realize that DP comes with 
+
+The limitations of classical deterministic dynamic programming (DP) were mentioned in Chapter \@ref(formulation), particularly its inefficiency in fields such as robotics where both the state and control spaces are typically large and continuous. The process of discretization in such contexts is not only challenging but also costly. Even when discretization is achievable, the resultant state and control spaces tend to be extraordinarily vast and often high-dimensional, leading to prohibitive computational demands. This issue, commonly called the _curse of dimensionality_, renders the use of classical DP unfeasible. <span style="color:red">Add time complexity analysis here</span>. 
+To circumvent the constraints of traditional DP algorithms in such contexts, a pragmatic approach involves the adoption of a suboptimal control scheme. This compromises between the ease of implementation and adequate performance. The principal objective of this chapter is to find such suboptimal control. In this chapter, we will spend most of the time discussing finite horizon problems with discrete state and control space, which is the classical scenario. We will also mention the infinite horizon problem and continuous state and control spaces scenario later. 
+
+Broadly, two categories of approximation are used in the context of DP-based suboptimal control. The first is _approximation in value space_, where we aim to approximate the optimal cost function or the cost function of a given policy. The second is _approximation in policy space_, where we select the policy by using optimization over a suitable class of policies.  -->
+<div id="fitted-value-iteration" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> Fitted Value Iteration<a href="approximatedp.html#fitted-value-iteration" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Let us consider the infinite-horizon optimal control problem introduced in Chapter <a href="formulation.html#infinite-horizon">1.3</a>
+<span class="math display">\[
+\min_{\pi} \mathbb{E} \left\{ \sum_{k=0}^\infty g(x_k, \pi(x_k)) \right\}.
+\]</span>
+Under some technical conditions, we know that the optimal policy is a deterministic and stationary policy and the optimal cost-to-go satisfies the following Bellman Optimality Equation
+<span class="math display" id="eq:bellmanoptimality-fvi">\[\begin{equation}
+J^\star(x) = \min_{u \in \mathbb{U}} \mathbb{E}_w \left\{ g(x,u) + J^\star(f(x,u,w)) \right\}, \quad \forall x \in \mathbb{X}.
+\tag{3.1}
 \end{equation}\]</span>
-<span class="math display" id="eq:apprinv-fvi-2">\[\begin{equation}
-r_k = \arg \min_r \sum_{s=1}^q (\tilde J_k(x_k^s,r) - \beta_k^s)^2 \tag{3.3}
-\end{equation}\]</span></p>
-<p>The next question is how to choose the most suitable class of functions, which is called <em>approximation architecture</em>. It is obvious that approximation architecture can greatly affect the performance of the approximation and the difficulty of training. The most popular architecture is <em>neural networks</em>, which are widely used in <em>reinforcement learning</em>, but the optimization process is difficult and the optimality is not guaranteed. We will start with a simpler linear feature-based approximation architecture.</p>
-<div id="linear-feature-based-architecture" class="section level4 hasAnchor" number="3.2.2.1">
-<h4><span class="header-section-number">3.2.2.1</span> Linear feature-based architecture<a href="approximatedp.html#linear-feature-based-architecture" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<p>In this architecture, the <span class="math inline">\(\tilde J_k\)</span> function could be parameterized as follows:</p>
-<p><span class="math display">\[\begin{equation}
-\tilde J_k(x_k, r_k)=r_k^T \phi_k(x_k)
-\end{equation}\]</span></p>
-<p>Here <span class="math inline">\(T\)</span> means the transpose of the matrix, <span class="math inline">\(\phi_k(x_k)\)</span> is pre-selected and called the (non-linear) feature vector associated with <span class="math inline">\(x_k\)</span> at time <span class="math inline">\(k\)</span>. The scalar components of the feature vector are called <em>features</em>. Common examples of features include polynomials and radial basis functions.
-The notion of feature is commonly used in the theory of computer vision, where <span class="math inline">\(x_k\)</span> could be interpreted as an image, and the <span class="math inline">\(\phi_k\)</span> function extracts the critical features such as angles and points that could be used for object recognition or image alignment.
-By using this architecture, the fitted value iteration <a href="approximatedp.html#eq:apprinv-fvi-1">(3.2)</a>, <a href="approximatedp.html#eq:apprinv-fvi-2">(3.3)</a> greatly simplifies and admits a closed-form solution.</p>
+From the plots in Example <a href="exactdp.html#exm:pendulumvalueiterationbarycentric">2.3</a>, we observe that even for a “simple” problem like pendulum swing-up, the optimal cost-to-go <span class="math inline">\(J^\star(x)\)</span> does not look simple at all.</p>
+<p>So here comes a very natural idea. What if we parametrize a cost-to-go function <span class="math inline">\(\tilde{J}(x,r)\)</span> by a vector of unknown coefficients <span class="math inline">\(r \in \mathbb{R}^{d}\)</span> and ask <span class="math inline">\(\tilde{J}(x,r)\)</span> to satisfy <a href="approximatedp.html#eq:bellmanoptimality-fvi">(3.1)</a> as closely as possible?</p>
+<p>This indeed leads to a valid algoithm called fitted value iteration (FVI).</p>
+<p>In FVI, we initialize the parameters <span class="math inline">\(r\)</span> as <span class="math inline">\(r_0\)</span> in the first step. Then, at the <span class="math inline">\(k\)</span>-th iteration, we perform two subroutines.</p>
+<p><strong>Value update</strong>. Firstly, we sample a large amount of points in the state space <span class="math inline">\(\{x_k^s \}_{s=1}^q\)</span>, and for each <span class="math inline">\(x_k^s\)</span>, we solve the minimization problem on the right-hand side of <a href="approximatedp.html#eq:bellmanoptimality-fvi">(3.1)</a> using <span class="math inline">\(J(x,r^{(k)})\)</span> as the cost-to-go. Formally, this is
+<span class="math display" id="eq:fvi-step-one">\[\begin{equation}
+\beta_k^s \leftarrow \min_{u \in \mathbb{U}} \mathbb{E}_w \left\{ g(x_k^s, u) + \tilde{J}(f(x_k^s,u,w),r^{(k)}) \right\}, \quad \forall x_k^s, s= 1,\dots,q.
+\tag{3.2}
+\end{equation}\]</span>
+This step gives us a list of scalars <span class="math inline">\(\{ \beta_k^s \}_{s=1}^q\)</span>. If <span class="math inline">\(\tilde{J}(x,r)\)</span> indeed satisfies the Bellman optimality equation, then we should have
+<span class="math display">\[
+\tilde{J}(x_k^s,r^{(k)}) = \beta_k^s, \quad \forall s = 1,\dots,q.
+\]</span>
+This is certainly not true when the parameter <span class="math inline">\(r\)</span> is imperfect.</p>
+<p><strong>Parameter update</strong>. Therefore, we will see the best parameter that minimizes the violation of the above equation
+<span class="math display" id="eq:fvi-step-two">\[\begin{equation}
+r^{(k+1)} \leftarrow \arg\min_{r \in \mathbb{R}^d} \sum_{s=1}^q \left(\tilde{J}(x_k^s,r) -  \beta_k^s\right)^2.
+\tag{3.3}
+\end{equation}\]</span>
+FVI essentially carries out <a href="approximatedp.html#eq:fvi-step-one">(3.2)</a> and <a href="approximatedp.html#eq:fvi-step-two">(3.3)</a> until some convergence metric is met.</p>
+<p>Two challenges immediately show up:</p>
+<ul>
+<li><p>How to perform the minimization over <span class="math inline">\(u\)</span> in the first step <a href="approximatedp.html#eq:fvi-step-one">(3.2)</a>?</p></li>
+<li><p>How to find the best parameter update in the second step <a href="approximatedp.html#eq:fvi-step-two">(3.3)</a>?</p></li>
+</ul>
+<p>To solve the first challenge, we will assume that <span class="math inline">\(\mathbb{U}\)</span> is a finite set so that minimization over <span class="math inline">\(u\)</span> can be solved exactly. Note that this assumption is not strictly necessary. In fact, as long as <span class="math inline">\(\mathbb{U}\)</span> is a convex set and the objective in <a href="approximatedp.html#eq:fvi-step-one">(3.2)</a> is also convex, then the minimization can also be solved exactly <span class="citation">(<a href="#ref-yang23arxiv-value" role="doc-biblioref">A. Yang and Boyd 2023</a>)</span>. However, we assume <span class="math inline">\(\mathbb{U}\)</span> is finite to simplify our presentation.</p>
+<p>To solve the second challenge, we will assume <span class="math inline">\(\tilde{J}(x,r)\)</span> is <em>linear</em> in the parameters <span class="math inline">\(r\)</span>, as we will study further in the following.</p>
+<div id="linear-features" class="section level3 hasAnchor" number="3.1.1">
+<h3><span class="header-section-number">3.1.1</span> Linear Features<a href="approximatedp.html#linear-features" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We parameterize <span class="math inline">\(\tilde{J}(x,r)\)</span> as follows:
+<span class="math display">\[\begin{equation}
+\tilde{J}(x,r) = \sum_{i=1}^d r_i \cdot \phi_i(x) = \begin{bmatrix} \phi_1(x) &amp; \cdots &amp; \phi_d(x) \end{bmatrix} r = \phi(x)^T r,
+\end{equation}\]</span>
+where <span class="math inline">\(\phi_1(x),\dots,\phi_d(x)\)</span> are a set of known basis functions, or <em>features</em>. Common examples of features include polynomials and radial basis functions.
+With this parametrization, the optimization in <a href="approximatedp.html#eq:fvi-step-two">(3.3)</a> becomes
+<span class="math display" id="eq:fvi-step-two-least-squares">\[\begin{equation}
+\min_{r \in \mathbb{R}^d} \sum_{s=1}^q \left( \phi(x_k^s)^T r - \beta_k^s \right)^2,
+\tag{3.4}
+\end{equation}\]</span>
+which is a least-squares problem that can be solved in closed form. In particular, we can compute the gradient of its objective with respect to <span class="math inline">\(r\)</span> and set it to zero, leading to
+<span class="math display">\[\begin{align}
+0 = \sum_{s=1}^q 2(\phi(x_k^s)^T r - \beta_k^s ) \phi(x_k^s)  \Longrightarrow \\
+r = \left( \sum_{s=1}^q \phi(x_k^s) \phi(x_k^s)^T \right)^{-1} \left( \sum_{s=1}^q \beta_k^s \phi(x_k^s) \right).
+\end{align}\]</span></p>
+<p>Let us apply FVI with linear features to a linear system for which we know the optimal cost-to-go.</p>
 <div class="examplebox">
 <div class="example">
-<p><span id="exm:feature-double-integrator" class="example"><strong>Example 3.1  (Optimal Control for Linear System Using Feature-based Method) </strong></span>Consider a linear system whose dynamics is:
+<p><span id="exm:feature-double-integrator" class="example"><strong>Example 3.1  (Fitted Value Iteration for Double Integrator) </strong></span>Consider the double integrator
+<span class="math display">\[
+\ddot{q} = u.
+\]</span>
+Take <span class="math inline">\(x = [q;\dot{q}]\)</span>, we can write the dynamics in state-space form
 <span class="math display" id="eq:double-integrator-dynamics">\[\begin{equation}
-    x = \begin{bmatrix} x_0 \\ x_1 \end{bmatrix}, \quad
-    \dot{x} = f(x,u) = \begin{bmatrix}
-    x_1 \\
+    \dot{x} = \begin{bmatrix}
+    \dot{q} \\
     u
     \end{bmatrix} =
     \begin{bmatrix}
@@ -432,79 +441,260 @@ By using this architecture, the fitted value iteration <a href="approximatedp.ht
     \end{bmatrix} x + \begin{bmatrix}
         0 \\
         1 \end{bmatrix} u
-    \tag{3.4}
-\end{equation}\]</span></p>
-<p>The goal is to regulate the system at <span class="math inline">\((0,0)\)</span>. This system is a typical linear system, named as <strong>double integrator</strong> on many occasions. In Chapter <a href="exactdp.html#exactdp">2</a>, we learned how to use LQR to precisely calculate the cost-to-go function of these systems using <em>Recatti Equation</em>. Now we can show that using linear feature-based fitted value iteration, we can also get the cost-to-go function of double integrator and the result is the same as the ground truth.</p>
-<p>In this example, we use second-order monomials as the features and use the linear combination of them to model the cost-to-go function of the double integrator, while the combination parameter <span class="math inline">\(w\)</span> is tuned using fitted value iteration.
-<span class="math display">\[\begin{equation}
-    \text{features vector: }F = \begin{bmatrix}
-        x_0^2 \\ x_0 x_1 \\ x_1^2 \\ x_0 \\ x_1 \\ 1
-    \end{bmatrix}, \quad
-    J(x) = w^T F
-\end{equation}\]</span></p>
-Applying fitted value iteration on randomly sampled points mentioned above, we obtain the cost-to-go in Fig. <a href="approximatedp.html#fig:double-integrator-feature-example">3.1</a>. The value iteration converges in 3000 iterations.
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:double-integrator-feature-example"></span>
-<img src="images/approxdp-feature-FVI.png" alt="Comparison between the result of feature-based FVI and ground truth" width="90%" />
-<p class="caption">
-Figure 3.1: Comparison between the result of feature-based FVI and ground truth
-</p>
-</div>
-<p>The S matrix calculated by the result of FVI is <span class="math inline">\(S_1\)</span>, and <span class="math inline">\(S_2\)</span> is the solution to the Recatti Equation. We have
-<span class="math display">\[\begin{equation}
-    S_1 = \begin{bmatrix}
-        27.164022 &amp; 31.758386 \\
-        31.758386 &amp; 85.950968 \end{bmatrix}, \quad
-    S_2 = \begin{bmatrix}
-        27.164022 &amp; 31.758386 \\
-        31.758386 &amp; 85.950968 \end{bmatrix}
-    \end{equation}\]</span>
-<span class="math inline">\(S_1\)</span> and <span class="math inline">\(S_2\)</span> are almost the same, which means that we obtained the optimal cost-to-go function using fitted value iteration.
-It is worth noting that the cost-to-go function in Linear Quadratic Regulator is also using the linear architecture mentioned above.
-<span class="math display">\[\begin{equation}
-    J(x,S)=x^T S x = \operatorname{tr}(S x^T x)
+    \tag{3.5}
 \end{equation}\]</span>
-It is quadratic in <span class="math inline">\(x\)</span> but linear in <span class="math inline">\(S\)</span>.</p>
+We use a constant time <span class="math inline">\(h=0.01\)</span> differentiation to convert the continuous-time dynamics into discrete-time:
+<span class="math display">\[
+x_{k+1} = h \cdot \dot{x}_k + x_k = \begin{bmatrix} 1 &amp; h \\ 0 &amp; 1 \end{bmatrix} x_k + \begin{bmatrix} 0 \\ h \end{bmatrix} u_k.
+\]</span></p>
+<p>The goal is to regulate the system at <span class="math inline">\((0,0)\)</span>. To do so, we use a quadratic cost
+<span class="math display">\[
+J(x) = \min \sum_{k=0}^{\infty} x_k^T Q x_k + u_k^T R u_k, \quad x_0 = x.
+\]</span>
+with <span class="math inline">\(Q = 0.1I_2\)</span> and <span class="math inline">\(R = 1\)</span>.</p>
+<p>In Chapter <a href="exactdp.html#exactdp">2</a>, we learned how to use LQR to precisely calculate the cost-to-go function of these systems using the <em>Algebraic Recatti Equation</em>. Solving the ARE, we obtain
+<span class="math display">\[
+S_{\mathrm{LQR}} = \begin{bmatrix} 27.1640 &amp; 31.7584 \\ 31.7584 &amp; 85.9510 \end{bmatrix}.
+\]</span></p>
+<p>Now we want to investigate if FVI can find the same matrix <span class="math inline">\(S\)</span>. To do so, we parametrize
+<span class="math display">\[
+\tilde{J}(x) = x^T S x = x^T \begin{bmatrix} S_1 &amp; S_2 \\ S_2 &amp; S_3 \end{bmatrix} x = \begin{bmatrix} x_1^2 &amp; 2 x_1 x_2 &amp; x_2^2 \end{bmatrix} \begin{bmatrix} S_1 \\ S_2 \\ S_3 \end{bmatrix},
+\]</span>
+where <span class="math inline">\(S\)</span> only has three independent variables due to being symmetric. Do note that <span class="math inline">\(\tilde{J}(x)\)</span> is <em>linear</em> in <span class="math inline">\(S\)</span>, so the parameter update step can be solved in closed form.</p>
+<p>We now show that the value update step can also be solved in closed form. Suppose we choose <span class="math inline">\(x_k\)</span> as a sample, then the right-hand side of <a href="approximatedp.html#eq:fvi-step-one">(3.2)</a> reads:
+<span class="math display">\[
+\min_{u} x_k^T Q x_k + u^2 + (A x_k + B u)^T S^{(k)} (A x_k + B u),
+\]</span>
+where <span class="math inline">\(S^{(k)}\)</span> is the value of <span class="math inline">\(S\)</span> at the <span class="math inline">\(k\)</span>-th iteration. Clearly, the optimization problem above is a convex quadratic optimization and can be solved in closed form:
+<span class="math display">\[
+u = - (1 + B^T S^{(k)} B) ^{-1} B^T S^{(k)} A x_k.
+\]</span></p>
+<p>Applying fitted value iteration on randomly sampled points mentioned above, we obtain the fitted <span class="math inline">\(S\)</span>
+<span class="math display">\[
+S_{\mathrm{FVI}} = \begin{bmatrix} 27.1640 &amp; 31.7583 \\ 31.7584 &amp; 85.9509 \end{bmatrix}.
+\]</span></p>
+<p>We can see that <span class="math inline">\(S_{\mathrm{FVI}}\)</span> almost exactly matches the groundtruth LQR solution <span class="math inline">\(S_{\mathrm{LQR}}\)</span>.</p>
+<p>You can play with the code <a href="https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/LQR_FVI_Example.m">here</a>.</p>
+<!-- the cost-to-go in Fig. \@ref(fig:double-integrator-feature-example). The value iteration converges in 3000 iterations.
+<div class="figure" style="text-align: center">
+<img src="images/approxdp-feature-FVI.png" alt="Comparison between the result of feature-based FVI and ground truth" width="90%" />
+<p class="caption">(\#fig:double-integrator-feature-example)Comparison between the result of feature-based FVI and ground truth</p>
+</div>
+The S matrix calculated by the result of FVI is $S_1$, and $S_2$ is the solution to the Recatti Equation. We have
+\begin{equation}
+    S_1 = \begin{bmatrix}
+        27.164022 & 31.758386 \\ 
+        31.758386 & 85.950968 \end{bmatrix}, \quad
+    S_2 = \begin{bmatrix}
+        27.164022 & 31.758386 \\
+        31.758386 & 85.950968 \end{bmatrix}
+    \end{equation}
+$S_1$ and $S_2$ are almost the same, which means that we obtained the optimal cost-to-go function using fitted value iteration. 
+It is worth noting that the cost-to-go function in Linear Quadratic Regulator is also using the linear architecture mentioned above.
+\begin{equation}
+    J(x,S)=x^T S x = \operatorname{tr}(S x^T x)
+\end{equation}
+It is quadratic in $x$ but linear in $S$.  -->
 </div>
 </div>
 </div>
-<div id="neural-networks" class="section level4 hasAnchor" number="3.2.2.2">
-<h4><span class="header-section-number">3.2.2.2</span> Neural networks<a href="approximatedp.html#neural-networks" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<p>The selection of features is frequently manually crafted, relying on human intellect, intuition, or experience, and can pose considerable challenges. The utilization of a neural network as the approximation architecture has emerged as a popular approach in recent years. In this context, the parameter <span class="math inline">\(r_k\)</span> may correspond to the weights of the neural networks. A diverse range of machine learning techniques can then be implemented to manage the training problem, steering the approximation toward the optimal value.</p>
-<p>However, the optimization process of the weights is more difficult due to the non-convexity. According to the equation <a href="approximatedp.html#eq:apprinv-dp">(3.1)</a>, the <span class="math inline">\(J_{k+1}\)</span> is non-convex which makes the entire equation hard to optimize.</p>
+<div id="neural-network-features" class="section level3 hasAnchor" number="3.1.2">
+<h3><span class="header-section-number">3.1.2</span> Neural Network Features<a href="approximatedp.html#neural-network-features" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We have seen that simple quadratic features work for the LQR problem. For more complicated problems, we will need more powerful function approximators like neural networks.</p>
+<p>When we parameterize <span class="math inline">\(\tilde{J}(x,r)\)</span> as a neural network, <span class="math inline">\(r\)</span> will be the weights of the neural network. We may still be able to solve the value update step if <span class="math inline">\(u\)</span> lives in a finite space. However, the parameter update step usually cannot be solved exactly and will need to rely on numerical algoithms such as gradient descent.</p>
+<p>Let us try neural FVI on the same double integrator problem.</p>
+<!-- The selection of features is frequently manually crafted, relying on human intellect, intuition, or experience, and can pose considerable challenges. The utilization of a neural network as the approximation architecture has emerged as a popular approach in recent years. In this context, the parameter $r_k$ may correspond to the weights of the neural networks. A diverse range of machine learning techniques can then be implemented to manage the training problem, steering the approximation toward the optimal value.
+
+However, the optimization process of the weights is more difficult due to the non-convexity. According to the equation \@ref(eq:apprinv-dp), the $J_{k+1}$ is non-convex which makes the entire equation hard to optimize.  -->
 <div class="examplebox">
 <div class="example">
-<p><span id="exm:NNbased-double-tegrator" class="example"><strong>Example 3.2  (Optimal Control for Linear System Using NN-based Method) </strong></span></p>
-In this example, we will use neural network as the approximation of the cost-to-go function and conduct neural FVI on a double integrator. The dynamics of the double integrator has been introduced in example <a href="approximatedp.html#exm:feature-double-integrator">3.1</a>. We use a semi-positive-definite network to model the cost-to-go function.
+<p><span id="exm:NNbased-double-tegrator" class="example"><strong>Example 3.2  (Neural Fitted Value Iteration for the Double Integrator) </strong></span>In this example, we will use neural network as the approximation of the cost-to-go function and conduct neural FVI on a double integrator. The dynamics of the double integrator has been introduced in example <a href="approximatedp.html#exm:feature-double-integrator">3.1</a>. We use a positive definite network to model the cost-to-go function
 <span class="math display">\[\begin{equation}
-    J(x) = N(x)^T N(x)
+    J(x) = N(x)^T N(x),
 \end{equation}\]</span>
-<span class="math inline">\(N(x)\)</span> is a 3-layer Multi-Layer-Perceptron with ReLU activation functions. Using mini-batch learning plus Adam optimizer, we obtain the cost-to-go in Fig. <a href="approximatedp.html#fig:double-integrator-NN-example">3.2</a> after 300 epochs of training.
+where <span class="math inline">\(N(x)\)</span> is a 3-layer Multi-Layer-Perceptron with ReLU activation.</p>
+Using mini-batch learning plus Adam optimizer, we obtain the cost-to-go in Fig. <a href="approximatedp.html#fig:double-integrator-NN-example">3.1</a> after 300 epochs of training.
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:double-integrator-NN-example"></span>
 <img src="images/approxdp-NN-FVI.png" alt="Comparison between the result of NN-based FVI and ground truth" width="90%" />
 <p class="caption">
-Figure 3.2: Comparison between the result of NN-based FVI and ground truth
+Figure 3.1: Comparison between the result of NN-based FVI and ground truth
 </p>
 </div>
 <p>The figure shows that the approximation performance of NN is pretty good. Simulation experiments also shows that the corresponding controller could successfully regulate the system at <span class="math inline">\((0,0)\)</span>.</p>
+<p>You can see the code <a href="https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/tree/main/Neural-FVI">here</a>.</p>
 </div>
 </div>
 </div>
+<div id="fitted-q-value-iteration" class="section level3 hasAnchor" number="3.1.3">
+<h3><span class="header-section-number">3.1.3</span> Fitted Q-value Iteration<a href="approximatedp.html#fitted-q-value-iteration" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>From the MDP Chapter we know there is an equivalent representation of the Bellman Optimality Equation by replacing the <span class="math inline">\(J\)</span> value function in <a href="approximatedp.html#eq:bellmanoptimality-fvi">(3.1)</a> with the <span class="math inline">\(Q\)</span>-value function <span class="math inline">\(Q(x,u)\)</span>. In particular, with
+<span class="math display">\[
+J^\star(x) = \min_{u \in \mathbb{U}} Q^\star(x,u)
+\]</span>
+substituted into <a href="approximatedp.html#eq:bellmanoptimality-fvi">(3.1)</a>, we obtain the Bellman Optimality Equation in <span class="math inline">\(Q^\star(x,u)\)</span>:
+<span class="math display" id="eq:bellmanoptimality-fqi">\[\begin{equation}
+Q^\star(x,u) =  g(x,u) + \mathbb{E}_w \left\{ \min_{u&#39; \in \mathbb{U}} Q^\star(f(x,u,w),u&#39;) \right\}.
+\tag{3.6}
+\end{equation}\]</span>
+We can then use the same idea to approximate <span class="math inline">\(Q^\star(x,u)\)</span> as
+<span class="math display">\[
+\tilde{Q}(x,u,r)
+\]</span>
+with <span class="math inline">\(r \in \mathbb{R}^d\)</span> a parameter vector. By iteratively evaluating the right-hand side of <a href="approximatedp.html#eq:bellmanoptimality-fqi">(3.6)</a>, we obtain the algoithm known as <em>fitted <span class="math inline">\(Q\)</span>-value iteration</em> (FQI).</p>
+<p>For example, we can similarly adopt the linear feature parameterization and set
+<span class="math display">\[
+\tilde{Q}(x,u,r) = \phi(x,u)^T r,
+\]</span>
+where <span class="math inline">\(\phi(x,u)\)</span> is a known pre-selected feature vector. Then at the <span class="math inline">\(k\)</span>-th iteration of FQI, we perform two subroutines.</p>
+<p><strong>Value update</strong>. We sample a number of state-control pairs <span class="math inline">\(\{(x_k^s,u_k^s) \}_{s=1}^q\)</span> and evaluate the right-hand side of the Bellman optimality equation <a href="approximatedp.html#eq:bellmanoptimality-fqi">(3.6)</a>:
+<span class="math display" id="eq:fqi-value-update">\[\begin{equation}
+\beta_k^s \leftarrow g(x_k^s,u_k^s) + \mathbb{E}_w \left\{ \min_{u&#39; \in \mathbb{U}} \tilde{Q}(f(x_k^s,u_k^s,w),u&#39;,r^{(k)}) \right\}, \quad \forall s = 1,\dots,q.
+\tag{3.7}
+\end{equation}\]</span>
+Again, if <span class="math inline">\(u\)</span> lives in a finite space, or the minimization is convex, the above value update can be solved exactly.</p>
+<p><strong>Parameter update</strong>. We update the parameter vector using the updated values <span class="math inline">\(\{ \beta_k^s \}_{s=1}^q\)</span>:
+<span class="math display" id="eq:fqi-parameter-update">\[\begin{equation}
+r^{(k+1)} \leftarrow \arg\min_{r \in \mathbb{R}^d} \sum_{s=1}^q \left( \tilde{Q}(x_k^s,u_k^s,r) - \beta_k^s \right)^2,
+\tag{3.8}
+\end{equation}\]</span>
+which is a least squares problem that can be solved in closed form.</p>
+<p>Let us apply FQI to the same double integrator example.</p>
+<div class="examplebox">
+<div class="example">
+<p><span id="exm:fqidoubleintegrator" class="example"><strong>Example 3.3  (Fitted Q-value Iteration for Double Integrator) </strong></span>Consider the same double integrator dynamics in Example <a href="approximatedp.html#exm:feature-double-integrator">3.1</a>.</p>
+<p>From the LQR solution we know the optimal <span class="math inline">\(Q\)</span>-value function is
+<span class="math display">\[\begin{align}
+Q^\star(x,u) &amp;= x^T Q x + u^T R u + (Ax + Bu)^T S (Ax + Bu) \\
+&amp;= \begin{bmatrix} x \\ u \end{bmatrix}^T
+\underbrace{\begin{bmatrix} A^T S A + Q &amp; A^T S B \\
+B^T S A &amp; B^T S B + R \end{bmatrix}}_{M_{\mathrm{LQR}}} \begin{bmatrix} x \\ u \end{bmatrix},
+\end{align}\]</span>
+where <span class="math inline">\(M_{\mathrm{LQR}}\)</span> is
+<span class="math display">\[
+M_{\mathrm{LQR}} = \begin{bmatrix}
+27.2640 &amp; 32.0300 &amp; 0.3176 \\
+32.0300 &amp; 86.6889 &amp; 0.8627 \\
+0.3176 &amp; 0.8627 &amp; 1.0086
+\end{bmatrix}.
+\]</span></p>
+<p>Let us apply FQI to see if we get the same solution. We parametrize
+<span class="math display">\[\begin{align}
+\tilde{Q}(x,u) &amp;= \begin{bmatrix} x \\ u \end{bmatrix}^T \begin{bmatrix}
+M_1 &amp; M_2 &amp; M_3 \\
+M_2 &amp; M_4 &amp; M_5 \\
+M_3 &amp; M_5 &amp; M_6
+\end{bmatrix} \begin{bmatrix} x \\ u \end{bmatrix} \\
+&amp;= \begin{bmatrix} x_1^2 &amp; 2 x_1 x_2 &amp; 2x_1 u &amp; x_2^2 &amp; 2x_2 u &amp; u^2 \end{bmatrix} \begin{bmatrix} M_1 \\ M_2 \\ M_3 \\ M_4 \\ M_5 \\ M_6 \end{bmatrix}.
+\end{align}\]</span></p>
+<p>At the <span class="math inline">\(k\)</span>-th FQI iteration, we are given <span class="math inline">\(M^{(k)}\)</span>. Suppose we sample <span class="math inline">\((x_k, u_k)\)</span>, then the value update step needs to solve <a href="approximatedp.html#eq:fqi-value-update">(3.7)</a>, which reads:
+<span class="math display">\[
+\beta_k = g(x_k, u_k) + \min_{u&#39;} \underbrace{\begin{bmatrix} A x_k + B u_k \\ u&#39; \end{bmatrix}^T M^{(k)} \begin{bmatrix} A x_k + B u_k \\ u&#39; \end{bmatrix}}_{\psi(u&#39;)}.
+\]</span>
+The objective function <span class="math inline">\(\psi(u&#39;)\)</span> can be shown to be quadratic:
+<span class="math display">\[
+\psi(u&#39;) = (Lu&#39; + a_k)^T M^{(k)} (Lu&#39; + a_k), \quad L = \begin{bmatrix} 0 \\ 1 \end{bmatrix}, a_k = \begin{bmatrix} A x_k + B u_k \\ 0 \end{bmatrix}.
+\]</span>
+Therefore, we can solve <span class="math inline">\(u&#39;\)</span> in closed-form
+<span class="math display">\[
+u&#39; = - (L^T M^{(k)} L)^{-1} L^T M^{(k)} a_k.
+\]</span></p>
+<p>Applying FQI with the closed-form update above, we get
+<span class="math display">\[
+M_{\mathrm{FQI}} = \begin{bmatrix}
+27.2640 &amp; 32.0300 &amp; 0.3176 \\
+32.0300 &amp; 86.6889 &amp; 0.8627 \\
+0.3176 &amp; 0.8627 &amp; 1.0086
+\end{bmatrix},
+\]</span>
+which is exactly the same as the solution obtained from LQR.</p>
+<p>You can play with the code <a href="https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/LQR_FQI_Example.m">here</a>.</p>
 </div>
-<div id="online-approximate-optimization" class="section level3 hasAnchor" number="3.2.3">
-<h3><span class="header-section-number">3.2.3</span> Online approximate optimization<a href="approximatedp.html#online-approximate-optimization" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+</div>
+</div>
+<div id="deep-q-network" class="section level3 hasAnchor" number="3.1.4">
+<h3><span class="header-section-number">3.1.4</span> Deep Q Network<a href="approximatedp.html#deep-q-network" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>DQN <span class="citation">(<a href="#ref-mnih15nature-dqn" role="doc-biblioref">Mnih et al. 2015</a>)</span>.</p>
+</div>
+<div id="deep-shallow" class="section level3 hasAnchor" number="3.1.5">
+<h3><span class="header-section-number">3.1.5</span> Deep + Shallow<a href="approximatedp.html#deep-shallow" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Combine the rich features of DQN with the stable learning of FQI <span class="citation">(<a href="#ref-levine17neurips-shallow" role="doc-biblioref">Levine et al. 2017</a>)</span>.</p>
+</div>
+</div>
+<div id="model-predictive-control" class="section level2 hasAnchor" number="3.2">
+<h2><span class="header-section-number">3.2</span> Model Predictive Control<a href="approximatedp.html#model-predictive-control" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<!-- ## Approximation in value space
+
+Let us first recap the iteration process of the generic form of DP as mentioned in theorem \@ref(thm:dynamicprogramming). We can obtain the cost-to-go function $J_k$, which means the cost-to-go value at time $k$, thereby defining corresponding control $u_k$ or policy $\mu_k$. 
+
+\begin{equation}
+J_k(x_k) = \min_{u_k \in \mathbb{U}} \displaystyle \mathbb{E} \displaystyle \left\{ g_k(x_k,u_k) + J_{k+1}(f_k(x_k,u_k,w_k) ) \right\}, \ k=N-1,\dots,1,0.
+\end{equation}
+
+By using the _approximation in value space_ methods, we could replace the optimal cost-to-go function $J_k$ with some other functions $\tilde J_k$. In other words, the suboptimal policy $\tilde{\mu}_k(x_k)$ (and the corresponding control) is obtained from the one-step lookahead minimization
+
+\begin{align}
+\tilde{J}_k(x_k) &= \min_{u_k \in \mathbb{U}_k (x_k)} \displaystyle \mathbb{E} \displaystyle \left\{g_k(x_k,u_k,w_k) + \tilde J_{k+1} (f_k(x_k,u_k,w_k) ) \right\} \\
+\tilde{\mu}_k(x_k) &= \arg \min_{u_k \in \mathbb{U}_k (x_k)} \displaystyle \mathbb{E} \displaystyle \left\{g_k(x_k,u_k,w_k) + \tilde J_{k+1} (f_k(x_k,u_k,w_k) ) \right\} (\#eq:apprinv-dp)
+\end{align}
+
+The major issue in value space approximation is how to compute the approximate cost-to-go functions $\tilde J_{k+1}$ in \@ref(eq:apprinv-dp). We will consider three types of methods: 
+
+1. _Problem approximation_
+
+2. _Parametric cost approximation_
+
+3. _Online approximate optimization_
+
+In approximation in value space, we may also distinguish between _online_ and _offline_ methods. 
+
+1. _Offline_ methods, where the entire function $\tilde J_{k+1}$ in \@ref(eq:apprinv-dp) is computed for every $k$ before the control process begins. The advantage of this is that most of the computation is done offline. Once the control process starts, the only thing we have to do is one-step lookahead minimization. These methods are well-suited for settings where there are strict time constraints for the online computation of the control, and where there is no need for online replanning. 
+
+2. _Online_ methods, where most of the computation is performed just after the current state $x_k$ becomes known, the values $\tilde J_{k+1}(x_{k+1})$ are computed only at the relevant next states $x_{k+1}$ and are used to compute $u_k$ via \@ref(eq:apprinv-dp). These methods require the computation of control only for the $N$ states actually encountered in the control process. These methods are well-suited for online replanning. 
+
+### Problem Approximation
+
+The functions $\tilde J_{k+1}$ are obtained (by exact DP, or other methods) as the optimal or nearly optimal cost functions of a simplified version of the original problem. The problem is how to simplify the problem, which is more convenient for computation. There are three widely-used approaches to simplify the initial problem: 
+
+1. _Simplifying the structure of the problem through enforced decomposition_.
+
+2. _Simplifying the probabilistic structure of the problem_, such as replacing the stochastic problem with a deterministic one by _certainty equivalence_. To be more specific, the original stochastic system contains the disturbance term $w_k(x_k,u_k)$. To simplify the probabilistic structure of the problem, we could fix the disturbances at some "typical" values and transform the stochastic problem into a deterministic one. 
+
+3. _Aggregation_, where the original problem is approximated with a new problem with fewer states, makes it easier to obtain the cost-to-go function. The state in this new problem is the "combination" of the states in the initial problem. It is worth noting that the discretization of continuous state space and action space could be viewed as a kind of aggregation. 
+
+### Parametric cost approximation
+
+For discrete problems, it is natural to consider using the tabular method to represent the $\tilde J_k$ functions. However, if the number of the state space is large this method's memory cost will be overwhelming. On the other hand, for tabular representation, it is not convenient to optimize the function, while we can only update the value of _one_ state at a time, but in many circumstances, there is a cluster of states that have similar attributes, which means their corresponding $\tilde J_k$ are also similar. 
+It is inconvenient to update them one by one. In this part, we will discuss an alternative approach to represent $\tilde J_k$ function, whereby $\tilde J_k$ are chosen to be members of a parametric class of functions, with the parameters "optimized" or "trained" by using some algorithms. 
+
+To be more specific, the $\tilde J_k$ functions could be described as $\tilde J_k (x_k,r_k)$ that for each $k$, depend on the current state $x_k$ and a vector $r_k=(r_{1,k}, ..., r_{m,k})$ of $m$ "tunable" scalar parameters, also called _weights_. By adjusting the weights, one can change the "shape" of $\tilde J_k$ so that it is a reasonably close approximation to the true cost-to-go function $J_k$. 
+In order to train those weights, we can use some cost functions to measure the accuracy of the approximation. The most common cost function is _least squares_. Training the parameters $r_k$ using least squares as the cost function is sometimes referred to as _fitted value iteration_. 
+Value iteration could be viewed as a special form of dynamic programming, where the parameter vectors $r_k$ are determined sequentially, starting from the end of the horizon and proceeding backward. The algorithm samples the state space for each stage $k$ and generates a large number of states $x_k^s$, $s=1,...,q$. It then determines sequentially the parameter vectors $r_k$ to obtain a good "least square fit" to the DP algorithm. 
+
+\begin{equation}
+\beta_k^s=\min_{u \in \mathbb U_k(x_k^s)} E \displaystyle \left\{g(x_k^s,u,w_k) + \tilde J_{k+1} (f_k(x_k^s,u,w_k),r_{k+1}) \right\} (\#eq:apprinv-fvi-1)
+\end{equation}
+\begin{equation}
+r_k = \arg \min_r \sum_{s=1}^q (\tilde J_k(x_k^s,r) - \beta_k^s)^2 (\#eq:apprinv-fvi-2)
+\end{equation}
+
+The next question is how to choose the most suitable class of functions, which is called _approximation architecture_. It is obvious that approximation architecture can greatly affect the performance of the approximation and the difficulty of training. The most popular architecture is _neural networks_, which are widely used in _reinforcement learning_, but the optimization process is difficult and the optimality is not guaranteed. We will start with a simpler linear feature-based approximation architecture. 
+
+#### Linear feature-based architecture -->
+<div id="online-approximate-optimization" class="section level3 hasAnchor" number="3.2.1">
+<h3><span class="header-section-number">3.2.1</span> Online approximate optimization<a href="approximatedp.html#online-approximate-optimization" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Different from previous sections, in this section, we will discuss <em>online</em> approaches for computing the one-step lookahead control <span class="math inline">\(u_k\)</span> just after the current state <span class="math inline">\(x_k\)</span> becomes known. Here, to compute <span class="math inline">\(u_k\)</span>, the values <span class="math inline">\(\tilde J_{k+1} (x_{k+1})\)</span> need only be computed at the relevant next states <span class="math inline">\(x_{k+1}\)</span> (the ones that can occur following application of <span class="math inline">\(u_k\)</span>).</p>
 <p>A particularly effective online approach is <em>rollout</em>. In rollout algorithm, <span class="math inline">\(\tilde J_{k+1}(x_{k+1})\)</span> is calculated by a <em>suboptimal policy</em>, or <em>base policy</em>. <span class="math inline">\(\tilde J_{k+1}\)</span> could be calculated either analytically or by Monte Carlo simulation. This part is interconnected with <em>model predictive control (MPC)</em>, which we will also discuss at the end of this section.</p>
-<div id="rollout-algorithm" class="section level4 hasAnchor" number="3.2.3.1">
-<h4><span class="header-section-number">3.2.3.1</span> Rollout algorithm<a href="approximatedp.html#rollout-algorithm" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div id="rollout-algorithm" class="section level4 hasAnchor" number="3.2.1.1">
+<h4><span class="header-section-number">3.2.1.1</span> Rollout algorithm<a href="approximatedp.html#rollout-algorithm" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>The essence of the rollout is policy improvement, which generates a better policy on top of the base policy. In the rollout algorithm, <span class="math inline">\(\tilde J_{k+1}\)</span> is the cost-to-go of some known suboptimal policy <span class="math inline">\(\pi = \{\mu_0,...,\mu_{N-1}\}\)</span>, referred to as <em>base policy</em>.
 The policy <span class="math inline">\(\bar \pi=\{\bar\mu_0,...,\bar\mu_{N-1}\}\)</span> thus obtained is called the <em>rollout policy</em> based on <span class="math inline">\(\pi\)</span>. In short, <em>the rollout</em> policy is the one-step lookahead policy, with the optimal cost-to-go approximated by the cost-to-go of the base policy_.</p>
 <p><strong>Definition 3.1 (One-step Rollout Algorithm)</strong> We can get an improved policy from the base policy <span class="math inline">\(\pi\)</span></p>
 <p><span class="math display" id="eq:apprinv-rollout">\[\begin{equation}
-\bar\mu_k(x_k) = \arg\min_{u_k\in\mathbb U_k(x_k)} E\left\{g_k(x_k,u_k,w_k)+\tilde J_{k+1}(f_k(x_k,u_k,w_k))\right\} \tag{3.5}
+\bar\mu_k(x_k) = \arg\min_{u_k\in\mathbb U_k(x_k)} E\left\{g_k(x_k,u_k,w_k)+\tilde J_{k+1}(f_k(x_k,u_k,w_k))\right\} \tag{3.9}
 \end{equation}\]</span></p>
 <p>where <span class="math inline">\(\tilde J_{k+1}\)</span> is the corresponding cost-to-go function of the base policy <span class="math inline">\(\pi\)</span>. If we use <span class="math inline">\(H_{k+1}\)</span> to represent the cost-to-go function of the base policy <span class="math inline">\(\pi\)</span>, the rollout algorithm will be:</p>
 <p><span class="math display" id="eq:apprinv-rollout-2">\[\begin{equation}
-\bar\mu_k(x_k) = \arg\min_{u_k\in\mathbb U_k(x_k)} E\left\{g_k(x_k,u_k,w_k)+H_{k+1}(f_k(x_k,u_k,w_k))\right\} \tag{3.6}
+\bar\mu_k(x_k) = \arg\min_{u_k\in\mathbb U_k(x_k)} E\left\{g_k(x_k,u_k,w_k)+H_{k+1}(f_k(x_k,u_k,w_k))\right\} \tag{3.10}
 \end{equation}\]</span></p>
 <p>In the control system, after the current state <span class="math inline">\(x_k\)</span> is revealed, we calculate the cost-to-go function <span class="math inline">\(H_{k+1}\)</span> of the known base policy <span class="math inline">\(\pi\)</span> and conduct one-step lookahead minimization to find <span class="math inline">\(\bar\mu_k(x_k)\)</span> and feed it into the system immediately.</p>
 <p>Note that it is also possible to define the rollout policy that makes use of multistep lookahead. While such multistep lookahead involves much more online computation, it will likely yield better performance than its one-step counterpart. In what follows, we concentrate on rollout policy with one-step lookahead.</p>
@@ -524,7 +714,7 @@ The policy <span class="math inline">\(\bar \pi=\{\bar\mu_0,...,\bar\mu_{N-1}\}\
 \end{equation}\]</span></p>
 <p>We will now show that the rollout algorithm obtained with a base policy with sequential improvement property yields no worse cost than the base policy. In particular, consider the rollout policy <span class="math inline">\(\tilde \pi = \{\tilde \mu_0, ..., \tilde \mu_{N-1}\}\)</span>, and let <span class="math inline">\(J_{k, \tilde \pi} (x_k)\)</span> denote the cost obtained with <span class="math inline">\(\tilde \pi\)</span> starting from <span class="math inline">\(x_k\)</span>. We claim that</p>
 <p><span class="math display" id="eq:apprinv-cost-improvement">\[\begin{equation}
-J_{k,\tilde \pi} (x_k) \leq H_k(x_k), for \ all \ x_k \ and \ k \tag{3.7}
+J_{k,\tilde \pi} (x_k) \leq H_k(x_k), for \ all \ x_k \ and \ k \tag{3.11}
 \end{equation}\]</span></p>
 </div>
 </div>
@@ -545,13 +735,13 @@ J_{k,\tilde \pi} (x_k) \leq H_k(x_k), for \ all \ x_k \ and \ k \tag{3.7}
 <li><p>The second equality holds by the definition of the rollout algorithm.</p></li>
 <li><p>The second inequality holds by the sequential improvement property.</p></li>
 </ol>
-<p>This completes the induction proof of the cost improvement property <a href="approximatedp.html#eq:apprinv-cost-improvement">(3.7)</a>.</p>
+<p>This completes the induction proof of the cost improvement property <a href="approximatedp.html#eq:apprinv-cost-improvement">(3.11)</a>.</p>
 </div>
 </div>
 <p><strong>Computational issues in rollout algorithms</strong>. In the rollout algorithm, the cost-to-go function <span class="math inline">\(H_{k+1}\)</span> of the base policy is required to be computed online at all possible next states <span class="math inline">\(f_k(x_k,u_k,w_k)\)</span>. However, the real-time constraint will be a critical problem, for the corresponding cost-to-go function of a given base policy is not easy to calculate in real-time.
 In most cases, we will use the approximate version of the cost-to-go <span class="math inline">\(\tilde H_{k+1}\)</span> to simplify the calculation. So the rollout algorithm will be:</p>
 <p><span class="math display" id="eq:apprinv-rollout-3">\[\begin{equation}
-\bar\mu_k(x_k) = \arg\min_{u_k\in\mathbb U_k(x_k)} E\left\{g_k(x_k,u_k,w_k)+\tilde H_{k+1}(f_k(x_k,u_k,w_k))\right\} \tag{3.8}
+\bar\mu_k(x_k) = \arg\min_{u_k\in\mathbb U_k(x_k)} E\left\{g_k(x_k,u_k,w_k)+\tilde H_{k+1}(f_k(x_k,u_k,w_k))\right\} \tag{3.12}
 \end{equation}\]</span></p>
 <p>There are two variants to handle the computational difficulties, deterministic case, and stochastic case.</p>
 <ol style="list-style-type: decimal">
@@ -562,14 +752,14 @@ In most cases, we will use the approximate version of the cost-to-go <span class
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:multi-step-rollout"></span>
 <img src="images/drawme.png" alt="Illustration of truncated rollout with two-step lookahead" width="60%" />
 <p class="caption">
-Figure 3.3: Illustration of truncated rollout with two-step lookahead
+Figure 3.2: Illustration of truncated rollout with two-step lookahead
 </p>
 </div>
 <p>The extension of the algorithm to lookahead of more than two steps is straightforward: instead of the two-step-ahead states <span class="math inline">\(x_{k+2}\)</span> we run the base policy starting from all the possible <span class="math inline">\(l\)</span>-step ahead states <span class="math inline">\(x_{k+l}\)</span>, etc.</p>
 <p>An important variation for problems with a large number of stages is <em>truncated rollout with terminal cost approximation</em>. Here the rollout trajectories are obtained by running the base policy from the leaf nodes of the lookahead tree, and they are truncated after a given number of steps, while a terminal cost approximation is added to the policy cost to compensate for the resulting error. One possibility that works well for many problems is to simply set the terminal cost approximation to zero. Alternatively, the terminal cost function approximation may be obtained by problem approximation or by using some sophisticated offline training process that may involve an approximation architecture such as a neural network.</p>
 </div>
-<div id="model-predictive-control-mpc" class="section level4 hasAnchor" number="3.2.3.2">
-<h4><span class="header-section-number">3.2.3.2</span> Model predictive control (MPC)<a href="approximatedp.html#model-predictive-control-mpc" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div id="model-predictive-control-mpc" class="section level4 hasAnchor" number="3.2.1.2">
+<h4><span class="header-section-number">3.2.1.2</span> Model predictive control (MPC)<a href="approximatedp.html#model-predictive-control-mpc" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>In this section, we will discuss a popular control algorithm called <em>model predictive control (MPC)</em>. We will start by considering the case where the objective is to keep the state close to the origin (or more generally some point of interest, called the <em>set point</em>, or <em>fixed point</em>); this is called the <em>regulation problem</em>. Similar approaches have been developed for the problem of maintaining the state of a non-stationary system along a given state trajectory, and also, with appropriate modifications, to control problems involving disturbances. In particular, in some cases, the trajectory is treated like a sequence of set points, and the subsequently described algorithm is applied repeatedly.</p>
 <p>We will consider a deterministic system</p>
 <p><span class="math display">\[\begin{equation}
@@ -615,35 +805,56 @@ x_{i+1} = f_i(x_i,u_i)
 </div>
 </div>
 </div>
-<div id="approximation-in-policy-space" class="section level2 hasAnchor" number="3.3">
-<h2><span class="header-section-number">3.3</span> Approximation in policy space<a href="approximatedp.html#approximation-in-policy-space" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>A major alternative to approximation in value space is <em>approximation in policy space</em>, whereby we select the policy from a suitably restricted class of policies, usually a parametric class of some form. In particular, we can introduce a parametric family of policies</p>
-<p><span class="math display">\[\begin{equation}
-\mu_k(x_k,r_k), k=0,...,N-1
-\end{equation}\]</span></p>
-<p>where <span class="math inline">\(r_k\)</span> is a parameter, such as a family represented by a neural network, and then estimate the parameters <span class="math inline">\(r_k\)</span> using some type of optimization.</p>
-<p>An important advantage of approximation in policy space is that the computation of controls during the online operation of the system is often much easier compared with the lookahead minimization <a href="approximatedp.html#eq:apprinv-dp">(3.1)</a>. In this section, we will present two distinct approaches for computing <span class="math inline">\(r\)</span>: <em>training by cost optimization</em> and <em>training by using an expert</em>.</p>
-<div id="training-by-using-an-expert" class="section level3 hasAnchor" number="3.3.1">
-<h3><span class="header-section-number">3.3.1</span> Training by using an expert<a href="approximatedp.html#training-by-using-an-expert" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>This approach is pretty similar to <em>supervised learning</em> in machine learning. We <span class="math inline">\(r_k\)</span> by “training” on a large number of sample state-control pairs <span class="math inline">\((x_k^s, u_k^s), s=1, ... ,q\)</span>, such that for each <span class="math inline">\(s\)</span>, <span class="math inline">\(u_k^s\)</span> is a “good” control at state <span class="math inline">\(x_k^s\)</span>. This can be done for example by solving for each <span class="math inline">\(k\)</span> the least squares problem</p>
-<p><span class="math display">\[\begin{equation}
-\min_{r_k} \sum_{s=1}^q \left\Vert{u_k^s - \tilde \mu_k(x_k^s,r_k)}\right\Vert^2
-\end{equation}\]</span></p>
-<p>(possibly with added regularization). In particular, we may determine <span class="math inline">\(u_k^s\)</span> by a human or a software “expert” that can choose “near-optimal” controls at the given states <span class="math inline">\(x_k^s\)</span>, so <span class="math inline">\(\tilde{\mu}_k\)</span> is trained to match the behavior of the expert. Of course, in the expert training approach, we cannot expect to obtain a controller that performs better than the expert with which it is trained.</p>
-<p>The “near-optimal” controls of sampled states <span class="math inline">\(x_k^s, s = 1, ...,q\)</span> could also be calculated from one-step lookahead minimization with a suitable approximation <span class="math inline">\(\tilde{J}_{k+1}\)</span>.</p>
-<p><span class="math display">\[\begin{equation}
-u_k^s = \arg \min_{u_k \in \mathbb{U}_k (x_k)} \displaystyle \mathbb{E} \displaystyle \left\{g_k(x_k^s,u_k,w_k) + \tilde J_{k+1} (f_k(x_k^s,u_k,w_k) ) \right\}
-\end{equation}\]</span></p>
-</div>
-<div id="training-by-cost-optimization" class="section level3 hasAnchor" number="3.3.2">
-<h3><span class="header-section-number">3.3.2</span> Training by cost optimization<a href="approximatedp.html#training-by-cost-optimization" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>POLICY GRADIENT</p>
-</div>
-</div>
-<div id="extension" class="section level2 hasAnchor" number="3.4">
-<h2><span class="header-section-number">3.4</span> Extension<a href="approximatedp.html#extension" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>It is possible for a suboptimal control scheme to employ both types of approximation: in policy space and in value space, with a distinct architecture for each case. This is known as the simultaneous use of a “policy network” (or “actor network”) and a “value network” (or “critic network”), each with its own set of parameters. Simultaneous approximation in policy space and value space through the use of deep neural networks are central in AlphaGo and AlphaZero, DeepMind’s Go and chess playing programs.</p>
+<div id="policy-gradient" class="section level2 hasAnchor" number="3.3">
+<h2><span class="header-section-number">3.3</span> Policy Gradient<a href="approximatedp.html#policy-gradient" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<!-- ## Approximation in policy space
 
+A major alternative to approximation in value space is _approximation in policy space_, whereby we select the policy from a suitably restricted class of policies, usually a parametric class of some form. In particular, we can introduce a parametric family of policies
+
+\begin{equation}
+\mu_k(x_k,r_k), k=0,...,N-1
+\end{equation}
+
+where $r_k$ is a parameter, such as a family represented by a neural network, and then estimate the parameters $r_k$ using some type of optimization. 
+
+An important advantage of approximation in policy space is that the computation of controls during the online operation of the system is often much easier compared with the lookahead minimization \@ref(eq:apprinv-dp). In this section, we will present two distinct approaches for computing $r$: _training by cost optimization_ and _training by using an expert_. 
+
+### Training by using an expert
+
+This approach is pretty similar to _supervised learning_ in machine learning. We $r_k$ by "training" on a large number of sample state-control pairs $(x_k^s, u_k^s), s=1, ... ,q$, such that for each $s$, $u_k^s$ is a "good" control at state $x_k^s$. This can be done for example by solving for each $k$ the least squares problem
+
+\begin{equation}
+\min_{r_k} \sum_{s=1}^q \left\Vert{u_k^s - \tilde \mu_k(x_k^s,r_k)}\right\Vert^2
+\end{equation}
+
+(possibly with added regularization). In particular, we may determine $u_k^s$ by a human or a software "expert" that can choose "near-optimal" controls at the given states $x_k^s$, so $\tilde{\mu}_k$ is trained to match the behavior of the expert. Of course, in the expert training approach, we cannot expect to obtain a controller that performs better than the expert with which it is trained. 
+
+The "near-optimal" controls of sampled states $x_k^s, s = 1, ...,q$ could also be calculated from one-step lookahead minimization with a suitable approximation $\tilde{J}_{k+1}$. 
+
+\begin{equation}
+u_k^s = \arg \min_{u_k \in \mathbb{U}_k (x_k)} \displaystyle \mathbb{E} \displaystyle \left\{g_k(x_k^s,u_k,w_k) + \tilde J_{k+1} (f_k(x_k^s,u_k,w_k) ) \right\}
+\end{equation}
+
+### Training by cost optimization
+
+POLICY GRADIENT
+
+## Extension
+
+It is possible for a suboptimal control scheme to employ both types of approximation: in policy space and in value space, with a distinct architecture for each case. This is known as the simultaneous use of a "policy network" (or "actor network") and a "value network" (or "critic network"), each with its own set of parameters. Simultaneous approximation in policy space and value space through the use of deep neural networks are central in AlphaGo and AlphaZero, DeepMind's Go and chess playing programs.  -->
+
+</div>
+</div>
+<h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-levine17neurips-shallow" class="csl-entry">
+Levine, Nir, Tom Zahavy, Daniel J Mankowitz, Aviv Tamar, and Shie Mannor. 2017. <span>“Shallow Updates for Deep Reinforcement Learning.”</span> <em>Advances in Neural Information Processing Systems</em> 30.
+</div>
+<div id="ref-mnih15nature-dqn" class="csl-entry">
+Mnih, Volodymyr, Koray Kavukcuoglu, David Silver, Andrei A Rusu, Joel Veness, Marc G Bellemare, Alex Graves, et al. 2015. <span>“Human-Level Control Through Deep Reinforcement Learning.”</span> <em>Nature</em> 518 (7540): 529–33.
+</div>
+<div id="ref-yang23arxiv-value" class="csl-entry">
+Yang, Alan, and Stephen Boyd. 2023. <span>“Value-Gradient Iteration with Quadratic Approximate Value Functions.”</span> <em>arXiv Preprint arXiv:2307.07086</em>.
 </div>
 </div>
             </section>
