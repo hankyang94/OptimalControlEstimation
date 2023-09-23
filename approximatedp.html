@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-09-20" />
+<meta name="date" content="2023-09-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -195,7 +195,7 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="3.2" data-path="approximatedp.html"><a href="approximatedp.html#model-predictive-control"><i class="fa fa-check"></i><b>3.2</b> Model Predictive Control</a>
 <ul>
-<li class="chapter" data-level="3.2.1" data-path="approximatedp.html"><a href="approximatedp.html#online-approximate-optimization"><i class="fa fa-check"></i><b>3.2.1</b> Online approximate optimization</a></li>
+<li class="chapter" data-level="3.2.1" data-path="approximatedp.html"><a href="approximatedp.html#trajectory-optimization"><i class="fa fa-check"></i><b>3.2.1</b> Trajectory Optimization</a></li>
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="approximatedp.html"><a href="approximatedp.html#policy-gradient"><i class="fa fa-check"></i><b>3.3</b> Policy Gradient</a></li>
 </ul></li>
@@ -623,6 +623,146 @@ which is exactly the same as the solution obtained from LQR.</p>
 </div>
 <div id="model-predictive-control" class="section level2 hasAnchor" number="3.2">
 <h2><span class="header-section-number">3.2</span> Model Predictive Control<a href="approximatedp.html#model-predictive-control" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="trajectory-optimization" class="section level3 hasAnchor" number="3.2.1">
+<h3><span class="header-section-number">3.2.1</span> Trajectory Optimization<a href="approximatedp.html#trajectory-optimization" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="direct-collocation" class="section level4 hasAnchor" number="3.2.1.1">
+<h4><span class="header-section-number">3.2.1.1</span> Direct Collocation<a href="approximatedp.html#direct-collocation" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Consider a continuous-time optimal control problem in full generality
+<span class="math display" id="eq:constrained-optimal-control">\[\begin{equation}
+\begin{split}
+\min_{u(t), t \in [0,T]} &amp; \quad  g_T(x(T)) + \int_{t = 0}^T g(x(t),u(t)) \\
+\text{subject to} &amp; \quad \dot{x} = f(x(t),u(t)) \\
+&amp; \quad x(0) = x_0 \\
+&amp; \quad (x(t),u(t)) \in \mathcal{X} \times \mathcal{U} \\
+&amp; \quad \phi_i (x(t),u(t)) \geq 0, i=1,\dots,q.
+\end{split}
+\tag{3.9}
+\end{equation}\]</span>
+where <span class="math inline">\(g_T\)</span> the terminal cost, <span class="math inline">\(g\)</span> the running cost, <span class="math inline">\(x_0\)</span> the initial condition, <span class="math inline">\(\mathcal{X}\)</span> the state constraint set, <span class="math inline">\(\mathcal{U}\)</span> the control constraint set, and <span class="math inline">\(\{ \phi_i \}_{i=1}^q\)</span> are general state-control constraints. We assume that the state constraint set <span class="math inline">\(\mathcal{X}\)</span> and control constraint set <span class="math inline">\(\mathcal{U}\)</span> can be described by a finite set of inequalities, i.e.,
+<span class="math display">\[
+\mathcal{X} = \{x \in \mathbb{R}^n \mid c^x_i(x) \geq 0, i =1,\dots,q_x\}, \quad \mathcal{U} = \{u \in \mathbb{R}^m \mid c^u_i(u) \geq 0, i = 1,\dots,q_u \}.
+\]</span>
+Assume that all functions are differentiable.</p>
+<p><em>Direct collocation</em>, roughly speaking, is a set of techniques that transcribe the infinite-dimensional optimal control problem <a href="approximatedp.html#eq:constrained-optimal-control">(3.9)</a> into a <em>nonlinear constrained optimization</em> problem over finite-dimensional vectors. The key idea of direct collocation is to approximate the state trajectory <span class="math inline">\(x(t)\)</span> and the control trajectory <span class="math inline">\(u(t)\)</span> as piece-wise polynomial functions. In the following, we will describe the Hermite-Simpson collocation method.</p>
+<p><strong>Time discretization</strong>. We first discretize the total time window <span class="math inline">\([0,T]\)</span> into a set of <span class="math inline">\(N\)</span> intervals:
+<span class="math display">\[
+0 = t_0 \leq t_1 \leq \dots \leq t_k \leq t_{k+1} \leq \dots \leq t_N = T.
+\]</span>
+We denote
+<span class="math display">\[
+h_k = t_{k+1} - t_k
+\]</span>
+as the length of the <span class="math inline">\(k\)</span>-th time interval. As we will see, the length of the time interval does not need to be fixed, and instead they can themselves be unknown variables to be optimized (in which case the final time <span class="math inline">\(T\)</span> also becomes flexible).</p>
+<p><strong>Knot variables</strong>. At each of the timestamps <span class="math inline">\(t_0,\dots,t_N\)</span>, we assign <em>knot variables</em>, which are unknown state and control varaibles that need to be optimized. In particular, we have state knot variables
+<span class="math display">\[
+x_k = x(t_k), k=1,\dots,N,
+\]</span>
+and control knot variables
+<span class="math display">\[
+u_k = u(t_k),k=0,\dots,N-1.
+\]</span>
+As a result, the entire set of knot varaibles to be optimized is
+<span class="math display" id="eq:knot-variables">\[\begin{equation}
+v = \begin{bmatrix} u_0 \\ u_1 \\ \vdots \\ u_{N-1} \\ x_1 \\ x_2 \\ \vdots \\ x_{N} \end{bmatrix}.
+\tag{3.10}
+\end{equation}\]</span>
+If the time-discretization is also optimized, then <span class="math inline">\(v\)</span>
+<!-- $$
+v = \begin{bmatrix} u_0 \\ u_1 \\ \vdots \\ u_{N-1} \\ x_1 \\ x_2 \\ \vdots \\ x_{N} \\ h_0 \\ \vdots \\ h_{N-1} \end{bmatrix}
+$$ -->
+includes the time intervals as well.</p>
+<p><strong>Transcribe dynamics</strong>. The most important step is to transcribe the nonlinear dynamics <span class="math inline">\(\dot{x}=f(x(t),u(t))\)</span> as constraints on the knot varaibles. In direct collocation, the way this is done is to enforce the dynamics equation at the set of <em>collocation points</em> that are the mid-points between each consecutive pair of knot variables <span class="math inline">\((x_k, x_{k+1})\)</span>.</p>
+<p>Specifically, in each subinterval <span class="math inline">\([t_k, t_{k+1}]\)</span>, we approximate the state trajectory as a cubic polynomial
+<span class="math display" id="eq:state-polynomial">\[\begin{equation}
+x(t) = p_{k,0} + p_{k,1}(t-t_k) + p_{k,2}(t-t_k)^2 + p_{k,3}(t - t_k)^3, \quad t \in [t_k, t_{k+1}],
+\tag{3.11}
+\end{equation}\]</span>
+where <span class="math inline">\(p_{k,0},p_{k,1},p_{k,2},p_{k,3} \in \mathbb{R}^n\)</span> are the coefficients of the polynomial. You would think that we would need to optimize the coefficients as well, but actually we won’t need to, as will be shown soon.
+With this parameterization, we can obtain the time derivative of <span class="math inline">\(x(t)\)</span> as
+<span class="math display" id="eq:state-polynomial-derivative">\[\begin{equation}
+\dot{x}(t) = p_{k,1} + 2 p_{k,2}(t-t_k) + 3p_{k,3}(t - t_k)^2, \quad t \in [t_k, t_{k+1}].
+\tag{3.12}
+\end{equation}\]</span>
+Now the key step is to write the coefficients <span class="math inline">\(p_{k,0},p_{k,1},p_{k,2},p_{k,3}\)</span> using our knot variables <a href="approximatedp.html#eq:knot-variables">(3.10)</a>. To do so, we can invoke <a href="approximatedp.html#eq:state-polynomial">(3.11)</a> and <a href="approximatedp.html#eq:state-polynomial-derivative">(3.12)</a> to obtain
+<span class="math display">\[
+\begin{bmatrix}
+x_k \\
+\dot{x}_k = f(x_k,u_k) \\
+x_{k+1} \\
+\dot{x}_{k+1} = f(x_{k+1}, u_{k+1})
+\end{bmatrix}
+= \begin{bmatrix}
+I &amp; 0 &amp; 0 &amp; 0 \\
+0 &amp; I &amp; 0 &amp; 0 \\
+I &amp; h_k I &amp; h_k^2 I &amp; h_k^3 I \\
+0 &amp; I &amp; 2 h_k I &amp; 3 h_k^2 I \end{bmatrix}
+\begin{bmatrix}
+p_{k,0}\\
+p_{k,1}\\
+p_{k,2}\\
+p_{k,3}
+\end{bmatrix}.
+\]</span>
+Solving the above equation, we get
+<span class="math display" id="eq:polynomial-coefficients-closed-form">\[\begin{equation}
+\begin{bmatrix}
+p_{k,0}\\
+p_{k,1}\\
+p_{k,2}\\
+p_{k,3}
+\end{bmatrix} =
+\begin{bmatrix}
+I &amp; 0 &amp; 0 &amp; 0 \\
+0 &amp; I &amp; 0 &amp; 0 \\
+- \frac{3}{h_k^2} I &amp; - \frac{2}{h_k} I &amp; \frac{3}{h_k^2} I &amp; -\frac{1}{h_k} I \\
+\frac{2}{h_k^3} I &amp; \frac{1}{h_k^2} I &amp; -\frac{2}{h_k^3} I &amp; \frac{1}{h_k^2} I
+\end{bmatrix}
+\begin{bmatrix}
+x_k \\
+f(x_k,u_k) \\
+x_{k+1} \\
+f(x_{k+1}, u_{k+1})
+\end{bmatrix}.
+\tag{3.13}
+\end{equation}\]</span>
+Equation <a href="approximatedp.html#eq:polynomial-coefficients-closed-form">(3.13)</a> implies, using the knot variables <span class="math inline">\(v\)</span> in <a href="approximatedp.html#eq:knot-variables">(3.10)</a>, we can query the value of <span class="math inline">\(x(t)\)</span> and <span class="math inline">\(\dot{x}(t)\)</span> at any time <span class="math inline">\(t \in [0,T]\)</span>. In particular, we will query the values of <span class="math inline">\(x(t)\)</span> and <span class="math inline">\(\dot{x}(t)\)</span> at the midpoints to obtain
+<span class="math display">\[
+x_k^c = x\left( t_k + \frac{h_k}{2} \right) = \frac{1}{2} (x_k + x_{k+1}) + \frac{h_k}{8} (f(x_k,u_k) - f(x_{k+1},u_{k+1})),
+\]</span>
+and
+<span class="math display">\[
+\dot{x}_k^c = \dot{x} \left( t_k + \frac{h_k}{2} \right) = - \frac{3}{2h_k} (x_k - x_{k+1}) - \frac{1}{4} \left( f(x_k,u_k) + f(x_{k+1},u_{k+1}) \right).
+\]</span>
+At the midpoint, we assume the control is
+<span class="math display">\[
+u_k^c = \frac{1}{2}(u_k + u_{k+1}).
+\]</span>
+Therefore, we can enforce the dynamics constraint at the midpoint as
+<span class="math display" id="eq:collocation-constraint">\[\begin{equation}
+\dot{x}^c_k = f(x_k^c, u_k^c).
+\tag{3.14}
+\end{equation}\]</span></p>
+<p><strong>Transcribe other constraints</strong>. The other constraints in the continuous-time formulation <a href="approximatedp.html#eq:constrained-optimal-control">(3.9)</a> can be transcribed to the knot variables in a straightforward way:
+<span class="math display">\[\begin{align}
+x_k \in \mathcal{X} \Rightarrow c_i^x(x_k)\geq 0, i=1,\dots,q_x, \quad k=1,\dots,N \\
+u_k \in \mathcal{X} \Rightarrow c^u_i(u_k) \geq 0, i=1,\dots,q_u, \quad k=0,\dots,N-1\\
+\phi_i(x_k, u_k) \geq 0, i=1,\dots,q, \quad k=0,\dots,N.
+\end{align}\]</span></p>
+<p><strong>Transcribe the objective</strong>. We can write the objective as
+<span class="math display">\[
+g_T(x_N) + \sum_{k=0}^{N-1} \frac{g(x_k,u_k) + g(x_{k+1},u_{k+1})}{2} h_k.
+\]</span></p>
+<p><strong>Summary</strong>. In summary, the final optimization problem becomes</p>
+<p><span class="math display" id="eq:constrained-optimal-control-nlp">\[\begin{equation}
+\begin{split}
+\min_{u_0,\dots,u_{N-1},x_1,\dots,x_N} &amp; \quad  g_T(x_N) + \sum_{k=0}^{N-1} \frac{g(x_k,u_k) + g(x_{k+1},u_{k+1})}{2} h_k \\
+\text{subject to} &amp; \quad \dot{x}_k^c = f(x_k^c,u_k^c), \quad k=0,\dots,N-1 \\
+&amp; \quad c_i^x(x_k) \geq 0,i=1,\dots,q_x, \quad k=1,\dots,N \\
+&amp; \quad c_i^u(u_k) \geq 0,i=1,\dots,q_u, \quad k=0,\dots,N-1 \\
+&amp; \quad \phi_i (x_k,u_k) \geq 0, i=1,\dots,q, \quad k=0,\dots,N.
+\end{split}
+\tag{3.15}
+\end{equation}\]</span></p>
 <!-- ## Approximation in value space
 
 Let us first recap the iteration process of the generic form of DP as mentioned in theorem \@ref(thm:dynamicprogramming). We can obtain the cost-to-go function $J_k$, which means the cost-to-go value at time $k$, thereby defining corresponding control $u_k$ or policy $\mu_k$. 
@@ -681,128 +821,173 @@ r_k = \arg \min_r \sum_{s=1}^q (\tilde J_k(x_k^s,r) - \beta_k^s)^2 (\#eq:apprinv
 The next question is how to choose the most suitable class of functions, which is called _approximation architecture_. It is obvious that approximation architecture can greatly affect the performance of the approximation and the difficulty of training. The most popular architecture is _neural networks_, which are widely used in _reinforcement learning_, but the optimization process is difficult and the optimality is not guaranteed. We will start with a simpler linear feature-based approximation architecture. 
 
 #### Linear feature-based architecture -->
-<div id="online-approximate-optimization" class="section level3 hasAnchor" number="3.2.1">
-<h3><span class="header-section-number">3.2.1</span> Online approximate optimization<a href="approximatedp.html#online-approximate-optimization" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>Different from previous sections, in this section, we will discuss <em>online</em> approaches for computing the one-step lookahead control <span class="math inline">\(u_k\)</span> just after the current state <span class="math inline">\(x_k\)</span> becomes known. Here, to compute <span class="math inline">\(u_k\)</span>, the values <span class="math inline">\(\tilde J_{k+1} (x_{k+1})\)</span> need only be computed at the relevant next states <span class="math inline">\(x_{k+1}\)</span> (the ones that can occur following application of <span class="math inline">\(u_k\)</span>).</p>
-<p>A particularly effective online approach is <em>rollout</em>. In rollout algorithm, <span class="math inline">\(\tilde J_{k+1}(x_{k+1})\)</span> is calculated by a <em>suboptimal policy</em>, or <em>base policy</em>. <span class="math inline">\(\tilde J_{k+1}\)</span> could be calculated either analytically or by Monte Carlo simulation. This part is interconnected with <em>model predictive control (MPC)</em>, which we will also discuss at the end of this section.</p>
-<div id="rollout-algorithm" class="section level4 hasAnchor" number="3.2.1.1">
-<h4><span class="header-section-number">3.2.1.1</span> Rollout algorithm<a href="approximatedp.html#rollout-algorithm" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<p>The essence of the rollout is policy improvement, which generates a better policy on top of the base policy. In the rollout algorithm, <span class="math inline">\(\tilde J_{k+1}\)</span> is the cost-to-go of some known suboptimal policy <span class="math inline">\(\pi = \{\mu_0,...,\mu_{N-1}\}\)</span>, referred to as <em>base policy</em>.
-The policy <span class="math inline">\(\bar \pi=\{\bar\mu_0,...,\bar\mu_{N-1}\}\)</span> thus obtained is called the <em>rollout policy</em> based on <span class="math inline">\(\pi\)</span>. In short, <em>the rollout</em> policy is the one-step lookahead policy, with the optimal cost-to-go approximated by the cost-to-go of the base policy_.</p>
-<p><strong>Definition 3.1 (One-step Rollout Algorithm)</strong> We can get an improved policy from the base policy <span class="math inline">\(\pi\)</span></p>
-<p><span class="math display" id="eq:apprinv-rollout">\[\begin{equation}
-\bar\mu_k(x_k) = \arg\min_{u_k\in\mathbb U_k(x_k)} E\left\{g_k(x_k,u_k,w_k)+\tilde J_{k+1}(f_k(x_k,u_k,w_k))\right\} \tag{3.9}
-\end{equation}\]</span></p>
-<p>where <span class="math inline">\(\tilde J_{k+1}\)</span> is the corresponding cost-to-go function of the base policy <span class="math inline">\(\pi\)</span>. If we use <span class="math inline">\(H_{k+1}\)</span> to represent the cost-to-go function of the base policy <span class="math inline">\(\pi\)</span>, the rollout algorithm will be:</p>
-<p><span class="math display" id="eq:apprinv-rollout-2">\[\begin{equation}
-\bar\mu_k(x_k) = \arg\min_{u_k\in\mathbb U_k(x_k)} E\left\{g_k(x_k,u_k,w_k)+H_{k+1}(f_k(x_k,u_k,w_k))\right\} \tag{3.10}
-\end{equation}\]</span></p>
-<p>In the control system, after the current state <span class="math inline">\(x_k\)</span> is revealed, we calculate the cost-to-go function <span class="math inline">\(H_{k+1}\)</span> of the known base policy <span class="math inline">\(\pi\)</span> and conduct one-step lookahead minimization to find <span class="math inline">\(\bar\mu_k(x_k)\)</span> and feed it into the system immediately.</p>
-<p>Note that it is also possible to define the rollout policy that makes use of multistep lookahead. While such multistep lookahead involves much more online computation, it will likely yield better performance than its one-step counterpart. In what follows, we concentrate on rollout policy with one-step lookahead.</p>
-<div class="theorembox">
-<div class="theorem">
-<p><span id="thm:cost-improvement" class="theorem"><strong>Theorem 3.1  (Cost improvement property of rollout algorithm) </strong></span>It is possible to show that the rollout policy’s performance is no worse than the one of the base policy, while some special conditions must hold to guarantee this cost improvement property. Here we introduce the <em>sequential improvement</em> condition. We say that the base policy has sequential improvement property if, for all <span class="math inline">\(x_k\)</span> and <span class="math inline">\(k\)</span>, we have</p>
-<p><span class="math display">\[\begin{equation}
+<!-- ### Online approximate optimization
+
+Different from previous sections, in this section, we will discuss _online_ approaches for computing the one-step lookahead control $u_k$ just after the current state $x_k$ becomes known. Here, to compute $u_k$, the values $\tilde J_{k+1} (x_{k+1})$ need only be computed at the relevant next states $x_{k+1}$ (the ones that can occur following application of $u_k$). 
+
+A particularly effective online approach is _rollout_. In rollout algorithm, $\tilde J_{k+1}(x_{k+1})$ is calculated by a _suboptimal policy_, or _base policy_. $\tilde J_{k+1}$ could be calculated either analytically or by Monte Carlo simulation. This part is interconnected with _model predictive control (MPC)_, which we will also discuss at the end of this section. 
+
+#### Rollout algorithm
+
+The essence of the rollout is policy improvement, which generates a better policy on top of the base policy. In the rollout algorithm, $\tilde J_{k+1}$ is the cost-to-go of some known suboptimal policy $\pi = \{\mu_0,...,\mu_{N-1}\}$, referred to as _base policy_.
+The policy $\bar \pi=\{\bar\mu_0,...,\bar\mu_{N-1}\}$ thus obtained is called the _rollout policy_ based on $\pi$. In short, _the rollout_ policy is the one-step lookahead policy, with the optimal cost-to-go approximated by the cost-to-go of the base policy_. 
+
+**Definition 3.1 (One-step Rollout Algorithm)** We can get an improved policy from the base policy $\pi$
+
+\begin{equation}
+\bar\mu_k(x_k) = \arg\min_{u_k\in\mathbb U_k(x_k)} E\left\{g_k(x_k,u_k,w_k)+\tilde J_{k+1}(f_k(x_k,u_k,w_k))\right\} (\#eq:apprinv-rollout)
+\end{equation}
+
+where $\tilde J_{k+1}$ is the corresponding cost-to-go function of the base policy $\pi$. If we use $H_{k+1}$ to represent the cost-to-go function of the base policy $\pi$, the rollout algorithm will be: 
+
+\begin{equation}
+\bar\mu_k(x_k) = \arg\min_{u_k\in\mathbb U_k(x_k)} E\left\{g_k(x_k,u_k,w_k)+H_{k+1}(f_k(x_k,u_k,w_k))\right\} (\#eq:apprinv-rollout-2)
+\end{equation}
+
+In the control system, after the current state $x_k$ is revealed, we calculate the cost-to-go function $H_{k+1}$ of the known base policy $\pi$ and conduct one-step lookahead minimization to find $\bar\mu_k(x_k)$ and feed it into the system immediately. 
+
+Note that it is also possible to define the rollout policy that makes use of multistep lookahead. While such multistep lookahead involves much more online computation, it will likely yield better performance than its one-step counterpart. In what follows, we concentrate on rollout policy with one-step lookahead. 
+
+::: {.theorembox}
+::: {.theorem #cost-improvement name="Cost improvement property of rollout algorithm"}
+It is possible to show that the rollout policy's performance is no worse than the one of the base policy, while some special conditions must hold to guarantee this cost improvement property. Here we introduce the _sequential improvement_ condition. We say that the base policy has sequential improvement property if, for all $x_k$ and $k$, we have
+
+\begin{equation}
 \min_{u_k \in \mathbb U_k(x_k)} \left\{g_k(x_k,u_k)+H_{k+1}(f_k(x_k,u_k))\right\} \leq H_k(x_k)
-\end{equation}\]</span></p>
-<p>where <span class="math inline">\(H_k(x_k)\)</span> denotes the cost of the base policy starting from <span class="math inline">\(x_k\)</span>. Here we use deterministic problems to make our proof concise. Sometimes people also use the <em>Q factor</em> mentioned below:</p>
-<p><span class="math display">\[\begin{equation}
+\end{equation}
+
+where $H_k(x_k)$ denotes the cost of the base policy starting from $x_k$. Here we use deterministic problems to make our proof concise. Sometimes people also use the _Q factor_ mentioned below: 
+
+\begin{equation}
 \tilde Q_k(x_k,u_k) = g_k(x_k,u_k)+H_{k+1}(f_k(x_k,u_k))
-\end{equation}\]</span></p>
-<p>so now the sequential improvement property could also be written as:</p>
-<p><span class="math display">\[\begin{equation}
+\end{equation}
+
+so now the sequential improvement property could also be written as: 
+
+\begin{equation}
 \min_{u_k \in \mathbb U_k(x_k)} \tilde Q_k(x_k,u_k) \leq H_k(x_k)
-\end{equation}\]</span></p>
-<p>We will now show that the rollout algorithm obtained with a base policy with sequential improvement property yields no worse cost than the base policy. In particular, consider the rollout policy <span class="math inline">\(\tilde \pi = \{\tilde \mu_0, ..., \tilde \mu_{N-1}\}\)</span>, and let <span class="math inline">\(J_{k, \tilde \pi} (x_k)\)</span> denote the cost obtained with <span class="math inline">\(\tilde \pi\)</span> starting from <span class="math inline">\(x_k\)</span>. We claim that</p>
-<p><span class="math display" id="eq:apprinv-cost-improvement">\[\begin{equation}
-J_{k,\tilde \pi} (x_k) \leq H_k(x_k), for \ all \ x_k \ and \ k \tag{3.11}
-\end{equation}\]</span></p>
-</div>
-</div>
-<div class="proofbox">
-<div class="proof">
-<p><span id="unlabeled-div-7" class="proof"><em>Proof</em>. </span>We prove this inequality by induction. Clearly it holds for <span class="math inline">\(k=N\)</span>, since <span class="math inline">\(J_{N,\tilde \pi} = H_N = g_N\)</span>. Assume it holds for index <span class="math inline">\(k+1\)</span>. We have:</p>
-<p><span class="math display">\[\begin{align}
-\tilde J_{k, \tilde \pi}(x_k) &amp;= g_k(x_k, \tilde \mu_k(x_k)) + J_{k+1,\tilde \pi}(f_k(x_k, \tilde \mu_k(x_k))) \\
-&amp;\leq g_k(x_k, \tilde \mu_k(x_k)) + H_{k+1}(f_k(x_k, \tilde \mu_k(x_k))) \\
-&amp;= \min_{u_k \in \mathbb U_k(x_k)} \left[g_k(x_k,u_k) + H_{k+1} (f_k(x_k,u_k))\right] \\
-&amp;= \min_{u_k \in \mathbb U_k(x_k)} \tilde Q_k(x_k,u_k) \\
-&amp;\leq H_k(x_k)
-\end{align}\]</span></p>
-<p>where:</p>
-<ol style="list-style-type: lower-alpha">
-<li><p>The first equality is the DP equation for the rollout policy <span class="math inline">\(\tilde \pi\)</span>.</p></li>
-<li><p>The first inequality holds by the induction hypothesis.</p></li>
-<li><p>The second equality holds by the definition of the rollout algorithm.</p></li>
-<li><p>The second inequality holds by the sequential improvement property.</p></li>
-</ol>
-<p>This completes the induction proof of the cost improvement property <a href="approximatedp.html#eq:apprinv-cost-improvement">(3.11)</a>.</p>
-</div>
-</div>
-<p><strong>Computational issues in rollout algorithms</strong>. In the rollout algorithm, the cost-to-go function <span class="math inline">\(H_{k+1}\)</span> of the base policy is required to be computed online at all possible next states <span class="math inline">\(f_k(x_k,u_k,w_k)\)</span>. However, the real-time constraint will be a critical problem, for the corresponding cost-to-go function of a given base policy is not easy to calculate in real-time.
-In most cases, we will use the approximate version of the cost-to-go <span class="math inline">\(\tilde H_{k+1}\)</span> to simplify the calculation. So the rollout algorithm will be:</p>
-<p><span class="math display" id="eq:apprinv-rollout-3">\[\begin{equation}
-\bar\mu_k(x_k) = \arg\min_{u_k\in\mathbb U_k(x_k)} E\left\{g_k(x_k,u_k,w_k)+\tilde H_{k+1}(f_k(x_k,u_k,w_k))\right\} \tag{3.12}
-\end{equation}\]</span></p>
-<p>There are two variants to handle the computational difficulties, deterministic case, and stochastic case.</p>
-<ol style="list-style-type: decimal">
-<li><p><em>Deterministic case</em>. If the problem is deterministic, the calculation is greatly simplified.</p></li>
-<li><p><em>Stochastic case</em>. In these cases, the <span class="math inline">\(\tilde H_{k+1}\)</span> are evaluated online by Monte Carlo simulation for all <span class="math inline">\(u_k \in \mathbb U_k(x_k)\)</span>.</p></li>
-</ol>
-<p><strong>Truncated rollout algorithm with multistep lookahead and terminal cost approximation</strong>. We may incorporate multistep lookahead into the rollout framework. Let us start with a two-step lookahead for deterministic problems. Suppose that after <span class="math inline">\(k\)</span> steps we have reached state <span class="math inline">\(x_k\)</span>. We then consider the set of all two-step-ahead states <span class="math inline">\(x_{k+2}\)</span>, run the base policy starting from each of them, and compute the two-stage cost to get from <span class="math inline">\(x_k\)</span> to <span class="math inline">\(x_{k+2}\)</span>, plus the cost of the base policy from <span class="math inline">\(x_{k+2}\)</span>. We select the state, say <span class="math inline">\(\tilde x_{k+2}\)</span>, that is associated with minimum cost, compute the controls <span class="math inline">\(\tilde u_k\)</span> and <span class="math inline">\(\tilde u_{k+1}\)</span> that lead from <span class="math inline">\(x_k\)</span> to <span class="math inline">\(\tilde x_{k+2}\)</span>, and choose <span class="math inline">\(\tilde u_k\)</span> as the next rollout control and <span class="math inline">\(x_{k+1}=f_k(x_k,\tilde u_k)\)</span> as the next state.</p>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:multi-step-rollout"></span>
+\end{equation}
+
+We will now show that the rollout algorithm obtained with a base policy with sequential improvement property yields no worse cost than the base policy. In particular, consider the rollout policy $\tilde \pi = \{\tilde \mu_0, ..., \tilde \mu_{N-1}\}$, and let $J_{k, \tilde \pi} (x_k)$ denote the cost obtained with $\tilde \pi$ starting from $x_k$. We claim that 
+
+\begin{equation}
+J_{k,\tilde \pi} (x_k) \leq H_k(x_k), for \ all \ x_k \ and \ k (\#eq:apprinv-cost-improvement)
+\end{equation}
+:::
+:::
+::: {.proofbox}
+::: {.proof}
+We prove this inequality by induction. Clearly it holds for $k=N$, since $J_{N,\tilde \pi} = H_N = g_N$. Assume it holds for index $k+1$. We have: 
+
+\begin{align}
+\tilde J_{k, \tilde \pi}(x_k) &= g_k(x_k, \tilde \mu_k(x_k)) + J_{k+1,\tilde \pi}(f_k(x_k, \tilde \mu_k(x_k))) \\
+&\leq g_k(x_k, \tilde \mu_k(x_k)) + H_{k+1}(f_k(x_k, \tilde \mu_k(x_k))) \\ 
+&= \min_{u_k \in \mathbb U_k(x_k)} \left[g_k(x_k,u_k) + H_{k+1} (f_k(x_k,u_k))\right] \\ 
+&= \min_{u_k \in \mathbb U_k(x_k)} \tilde Q_k(x_k,u_k) \\
+&\leq H_k(x_k)
+\end{align}
+
+where: 
+
+a. The first equality is the DP equation for the rollout policy $\tilde \pi$. 
+
+b. The first inequality holds by the induction hypothesis. 
+
+c. The second equality holds by the definition of the rollout algorithm. 
+
+d. The second inequality holds by the sequential improvement property. 
+
+This completes the induction proof of the cost improvement property \@ref(eq:apprinv-cost-improvement). 
+
+:::
+:::
+
+**Computational issues in rollout algorithms**. In the rollout algorithm, the cost-to-go function $H_{k+1}$ of the base policy is required to be computed online at all possible next states $f_k(x_k,u_k,w_k)$. However, the real-time constraint will be a critical problem, for the corresponding cost-to-go function of a given base policy is not easy to calculate in real-time. 
+In most cases, we will use the approximate version of the cost-to-go $\tilde H_{k+1}$ to simplify the calculation. So the rollout algorithm will be: 
+
+\begin{equation}
+\bar\mu_k(x_k) = \arg\min_{u_k\in\mathbb U_k(x_k)} E\left\{g_k(x_k,u_k,w_k)+\tilde H_{k+1}(f_k(x_k,u_k,w_k))\right\} (\#eq:apprinv-rollout-3)
+\end{equation}
+
+There are two variants to handle the computational difficulties, deterministic case, and stochastic case. 
+
+1. _Deterministic case_. If the problem is deterministic, the calculation is greatly simplified. 
+
+2. _Stochastic case_. In these cases, the $\tilde H_{k+1}$ are evaluated online by Monte Carlo simulation for all $u_k \in \mathbb U_k(x_k)$. 
+
+**Truncated rollout algorithm with multistep lookahead and terminal cost approximation**. We may incorporate multistep lookahead into the rollout framework. Let us start with a two-step lookahead for deterministic problems. Suppose that after $k$ steps we have reached state $x_k$. We then consider the set of all two-step-ahead states $x_{k+2}$, run the base policy starting from each of them, and compute the two-stage cost to get from $x_k$ to $x_{k+2}$, plus the cost of the base policy from $x_{k+2}$. We select the state, say $\tilde x_{k+2}$, that is associated with minimum cost, compute the controls $\tilde u_k$ and $\tilde u_{k+1}$ that lead from $x_k$ to $\tilde x_{k+2}$, and choose $\tilde u_k$ as the next rollout control and $x_{k+1}=f_k(x_k,\tilde u_k)$ as the next state. 
+
+<div class="figure" style="text-align: center">
 <img src="images/drawme.png" alt="Illustration of truncated rollout with two-step lookahead" width="60%" />
-<p class="caption">
-Figure 3.2: Illustration of truncated rollout with two-step lookahead
-</p>
+<p class="caption">(\#fig:multi-step-rollout)Illustration of truncated rollout with two-step lookahead</p>
 </div>
-<p>The extension of the algorithm to lookahead of more than two steps is straightforward: instead of the two-step-ahead states <span class="math inline">\(x_{k+2}\)</span> we run the base policy starting from all the possible <span class="math inline">\(l\)</span>-step ahead states <span class="math inline">\(x_{k+l}\)</span>, etc.</p>
-<p>An important variation for problems with a large number of stages is <em>truncated rollout with terminal cost approximation</em>. Here the rollout trajectories are obtained by running the base policy from the leaf nodes of the lookahead tree, and they are truncated after a given number of steps, while a terminal cost approximation is added to the policy cost to compensate for the resulting error. One possibility that works well for many problems is to simply set the terminal cost approximation to zero. Alternatively, the terminal cost function approximation may be obtained by problem approximation or by using some sophisticated offline training process that may involve an approximation architecture such as a neural network.</p>
-</div>
-<div id="model-predictive-control-mpc" class="section level4 hasAnchor" number="3.2.1.2">
-<h4><span class="header-section-number">3.2.1.2</span> Model predictive control (MPC)<a href="approximatedp.html#model-predictive-control-mpc" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<p>In this section, we will discuss a popular control algorithm called <em>model predictive control (MPC)</em>. We will start by considering the case where the objective is to keep the state close to the origin (or more generally some point of interest, called the <em>set point</em>, or <em>fixed point</em>); this is called the <em>regulation problem</em>. Similar approaches have been developed for the problem of maintaining the state of a non-stationary system along a given state trajectory, and also, with appropriate modifications, to control problems involving disturbances. In particular, in some cases, the trajectory is treated like a sequence of set points, and the subsequently described algorithm is applied repeatedly.</p>
-<p>We will consider a deterministic system</p>
-<p><span class="math display">\[\begin{equation}
+
+The extension of the algorithm to lookahead of more than two steps is straightforward: instead of the two-step-ahead states $x_{k+2}$ we run the base policy starting from all the possible $l$-step ahead states $x_{k+l}$, etc. 
+
+An important variation for problems with a large number of stages is _truncated rollout with terminal cost approximation_. Here the rollout trajectories are obtained by running the base policy from the leaf nodes of the lookahead tree, and they are truncated after a given number of steps, while a terminal cost approximation is added to the policy cost to compensate for the resulting error. One possibility that works well for many problems is to simply set the terminal cost approximation to zero. Alternatively, the terminal cost function approximation may be obtained by problem approximation or by using some sophisticated offline training process that may involve an approximation architecture such as a neural network. 
+
+#### Model predictive control (MPC)
+
+In this section, we will discuss a popular control algorithm called _model predictive control (MPC)_. We will start by considering the case where the objective is to keep the state close to the origin (or more generally some point of interest, called the _set point_, or _fixed point_); this is called the _regulation problem_. Similar approaches have been developed for the problem of maintaining the state of a non-stationary system along a given state trajectory, and also, with appropriate modifications, to control problems involving disturbances. In particular, in some cases, the trajectory is treated like a sequence of set points, and the subsequently described algorithm is applied repeatedly. 
+
+We will consider a deterministic system
+
+\begin{equation}
 x_{k+1} = f_k(x_k,u_k)
-\end{equation}\]</span></p>
-<p>whose state <span class="math inline">\(x_k\)</span> and control <span class="math inline">\(u_k\)</span> are vectors that consist of a finite number of scalar components. The cost per stage is assumed nonnegative</p>
-<p><span class="math display">\[\begin{equation}
+\end{equation}
+
+whose state $x_k$ and control $u_k$ are vectors that consist of a finite number of scalar components. The cost per stage is assumed nonnegative
+
+\begin{equation}
 g_k(x_k,u_k) \geq 0, for \ all \ (x_k,u_k)
-\end{equation}\]</span></p>
-<p>(e.g., a quadratic cost). We impose state and control constraints</p>
-<p><span class="math display">\[\begin{equation}
+\end{equation}
+
+(e.g., a quadratic cost). We impose state and control constraints
+
+\begin{equation}
 x_k \in \mathbb X_k, u_k \in \mathbb U_k(x_k), k = 0,1,...
-\end{equation}\]</span></p>
-<p>We also assume that the system can be kept at the origin at zero cost, i.e.,</p>
-<p><span class="math display">\[\begin{equation}
-f_k(0,\bar u_k)=0,g_k(0,\bar u_k)=0
-\end{equation}\]</span></p>
-<p>for some control <span class="math inline">\(\bar u_k \in \mathbb U_k(0)\)</span>. This is a characteristic that all fixed points possess.</p>
-<p>For a given initial state <span class="math inline">\(x_0 \in \mathbb X_0\)</span>, we want to obtain a sequence <span class="math inline">\(\{u_0,u_1,...\}\)</span> such that the states and controls of the system satisfy the state and control constraints with a small total cost.</p>
-<p><strong>The MPC algorithm</strong>. Let us describe the MPC algorithm for the deterministic problem just described. At the current state <span class="math inline">\(x_k\)</span>:</p>
-<ol style="list-style-type: decimal">
-<li><p>MPC solves an <span class="math inline">\(l\)</span>-step lookahead version of the problem, which requires that <span class="math inline">\(x_{k+l}=0\)</span>.</p></li>
-<li><p>If <span class="math inline">\(\{\tilde u_k, ..., \tilde u_{k+l-1}\}\)</span> is the optimal control sequence of this problem, MPC applies <span class="math inline">\(\tilde u_k\)</span> and discards the other controls <span class="math inline">\(\tilde u_{k+1}, ..., \tilde u_{k+l-1}\)</span>.</p></li>
-<li><p>At the next stage, MPC repeats this process, once the next state <span class="math inline">\(x_{k+1}\)</span> is revealed.</p></li>
-</ol>
-<p>In some literature, this MPC algorithm is also called <em>Receding Horizon Control</em> algorithm, or RHC for short. One obvious drawback of this method is the online computation time limit. The MPC algorithm needs to solve an optimization problem online, which is time-consuming and does not guarantee a solution.</p>
-<p>To make the connection between MPC and rollout, we first recap the case of the truncated rollout algorithm. In a truncated rollout algorithm with multistep lookahead and terminal cost approximation,</p>
+\end{equation}
+
+We also assume that the system can be kept at the origin at zero cost, i.e., 
+
+\begin{equation}
+f_k(0,\bar u_k)=0,g_k(0,\bar u_k)=0 
+\end{equation}
+
+for some control $\bar u_k \in \mathbb U_k(0)$. This is a characteristic that all fixed points possess. 
+
+For a given initial state $x_0 \in \mathbb X_0$, we want to obtain a sequence $\{u_0,u_1,...\}$ such that the states and controls of the system satisfy the state and control constraints with a small total cost. 
+
+**The MPC algorithm**. Let us describe the MPC algorithm for the deterministic problem just described. At the current state $x_k$: 
+
+1. MPC solves an $l$-step lookahead version of the problem, which requires that $x_{k+l}=0$. 
+
+2. If $\{\tilde u_k, ..., \tilde u_{k+l-1}\}$ is the optimal control sequence of this problem, MPC applies $\tilde u_k$ and discards the other controls $\tilde u_{k+1}, ..., \tilde u_{k+l-1}$. 
+
+3. At the next stage, MPC repeats this process, once the next state $x_{k+1}$ is revealed. 
+
+In some literature, this MPC algorithm is also called _Receding Horizon Control_ algorithm, or RHC for short. One obvious drawback of this method is the online computation time limit. The MPC algorithm needs to solve an optimization problem online, which is time-consuming and does not guarantee a solution. 
+
+To make the connection between MPC and rollout, we first recap the case of the truncated rollout algorithm. In a truncated rollout algorithm with multistep lookahead and terminal cost approximation, 
+
 <!-- \begin{equation}
 \min_{u_k \in \mathbb U_k(x_k), ..., u_{k+l} \in \mathbb U_{k+l}(x_{k+l})} \left\{\sum_{i=k}^{k+l} g_i(x_i, u_i) + \tilde H_{k+l+1} (x_{k+l+1}) \right\}
 \end{equation} -->
-<p><span class="math display">\[\begin{equation}
+<!-- \begin{equation}
 \min_{u_k \in \mathbb U_k(x_k), ..., u_{k+l} \in \mathbb U_{k+l}(x_{k+l})} \left\{\sum_{i=k}^{k+l} g_i(x_i, u_i) + \sum_{i=k+l+1}^{k+l+m} g_i(x_i,\mu_i(x_i)) + \tilde J (x_{k+l+m+1}) \right\}
-\end{equation}\]</span></p>
-<p>such that</p>
-<p><span class="math display">\[\begin{equation}
+\end{equation}
+
+such that
+
+\begin{equation}
 x_{i+1} = f_i(x_i,u_i)
-\end{equation}\]</span></p>
-<p>The control <span class="math inline">\(u_k\)</span> will be used as the control at step <span class="math inline">\(k\)</span> (online current step). All the <span class="math inline">\(x_i\)</span> are admissible states. Here <span class="math inline">\(\tilde J\)</span> means the terminal cost approximation, which can be obtained through offline computation or sometimes be set to zero. <span class="math inline">\(l\)</span> means the number of lookahead steps, and <span class="math inline">\(m\)</span> means the number of steps that the base policy runs to evaluate the cost-to-go function <span class="math inline">\(H_{k+l+1}\)</span>. Let us discuss a special case, where the <span class="math inline">\(\tilde J\)</span> is set to zero while <span class="math inline">\(m\)</span> is also zero. So now the rollout algorithm becomes:</p>
-<p><span class="math display">\[\begin{equation}
+\end{equation} -->
+<!-- The control $u_k$ will be used as the control at step $k$ (online current step). All the $x_i$ are admissible states. Here $\tilde J$ means the terminal cost approximation, which can be obtained through offline computation or sometimes be set to zero. $l$ means the number of lookahead steps, and $m$ means the number of steps that the base policy runs to evaluate the cost-to-go function $H_{k+l+1}$. Let us discuss a special case, where the $\tilde J$ is set to zero while $m$ is also zero. So now the rollout algorithm becomes: 
+
+\begin{equation}
 \min_{u_k \in \mathbb U_k(x_k), ..., u_{k+l} \in \mathbb U_{k+l}(x_{k+l})} \sum_{i=k}^{k+l} g_i(x_i, u_i)
-\end{equation}\]</span></p>
-<p>while <span class="math inline">\(u_k\)</span> still be used as the current online control, and all other optimized controls are discarded. We can see that now it is <em>almost</em> the case of model predictive control, without the terminal state constraint (in this case the terminal state constraint is <span class="math inline">\(x_{k+l+1}=0\)</span>). This constraint is also called <em>recursive feasibility</em>, for it guarantees the optimization will not suddenly encounter a situation where the solver returns “infeasible”.</p>
+\end{equation} -->
+<!-- while $u_k$ still be used as the current online control, and all other optimized controls are discarded. We can see that now it is _almost_ the case of model predictive control, without the terminal state constraint (in this case the terminal state constraint is $x_{k+l+1}=0$). This constraint is also called _recursive feasibility_, for it guarantees the optimization will not suddenly encounter a situation where the solver returns "infeasible". -->
 </div>
 </div>
 </div>

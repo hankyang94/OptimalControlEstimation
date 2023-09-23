@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-09-20" />
+<meta name="date" content="2023-09-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -195,7 +195,7 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="3.2" data-path="approximatedp.html"><a href="approximatedp.html#model-predictive-control"><i class="fa fa-check"></i><b>3.2</b> Model Predictive Control</a>
 <ul>
-<li class="chapter" data-level="3.2.1" data-path="approximatedp.html"><a href="approximatedp.html#online-approximate-optimization"><i class="fa fa-check"></i><b>3.2.1</b> Online approximate optimization</a></li>
+<li class="chapter" data-level="3.2.1" data-path="approximatedp.html"><a href="approximatedp.html#trajectory-optimization"><i class="fa fa-check"></i><b>3.2.1</b> Trajectory Optimization</a></li>
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="approximatedp.html"><a href="approximatedp.html#policy-gradient"><i class="fa fa-check"></i><b>3.3</b> Policy Gradient</a></li>
 </ul></li>
@@ -447,7 +447,7 @@ Then <span class="math inline">\(V(t,x)\)</span> is equal to the optimal cost-to
 </div>
 <div class="proofbox">
 <div class="proof">
-<p><span id="unlabeled-div-8" class="proof"><em>Proof</em>. </span>Let <span class="math inline">\(\{\hat{u}(t) \mid t \in [0,T] \}\)</span> be any admissible control trajectory and let <span class="math inline">\(\hat{x}(t)\)</span> be the resulting state trajectory. From the “<span class="math inline">\(\min\)</span>” in <a href="continuous-time-optimal-control.html#eq:hjb-eqution-formal-1">(4.6)</a>, we know
+<p><span id="unlabeled-div-7" class="proof"><em>Proof</em>. </span>Let <span class="math inline">\(\{\hat{u}(t) \mid t \in [0,T] \}\)</span> be any admissible control trajectory and let <span class="math inline">\(\hat{x}(t)\)</span> be the resulting state trajectory. From the “<span class="math inline">\(\min\)</span>” in <a href="continuous-time-optimal-control.html#eq:hjb-eqution-formal-1">(4.6)</a>, we know
 <span class="math display">\[
 0 \leq g(\hat{x},\hat{u}) + \nabla_t V(t,\hat{x}) + \nabla_x V(t,\hat{x})^T f(\hat{x},\hat{u}) = g(\hat{x},\hat{u}) + \frac{d}{dt} V(t,\hat{x}).
 \]</span>

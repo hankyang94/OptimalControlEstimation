@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-09-20" />
+<meta name="date" content="2023-09-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -195,7 +195,7 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="3.2" data-path="approximatedp.html"><a href="approximatedp.html#model-predictive-control"><i class="fa fa-check"></i><b>3.2</b> Model Predictive Control</a>
 <ul>
-<li class="chapter" data-level="3.2.1" data-path="approximatedp.html"><a href="approximatedp.html#online-approximate-optimization"><i class="fa fa-check"></i><b>3.2.1</b> Online approximate optimization</a></li>
+<li class="chapter" data-level="3.2.1" data-path="approximatedp.html"><a href="approximatedp.html#trajectory-optimization"><i class="fa fa-check"></i><b>3.2.1</b> Trajectory Optimization</a></li>
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="approximatedp.html"><a href="approximatedp.html#policy-gradient"><i class="fa fa-check"></i><b>3.3</b> Policy Gradient</a></li>
 </ul></li>
@@ -464,7 +464,7 @@ Moreover, denoting <span class="math inline">\(\mathcal{T}\)</span> the family o
 </div>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-10" class="proof"><em>Proof</em>. </span>See Theorem 1.1 in <span class="citation">(<a href="#ref-bernard19book-observer" role="doc-biblioref">Bernard 2019</a>)</span>.</p>
+<p><span id="unlabeled-div-9" class="proof"><em>Proof</em>. </span>See Theorem 1.1 in <span class="citation">(<a href="#ref-bernard19book-observer" role="doc-biblioref">Bernard 2019</a>)</span>.</p>
 </div>
 <p>A simpler version of Theorem <a href="output-feedback.html#thm:observerdesignmeta">6.1</a> where the coordinate transformation <span class="math inline">\(T_u\)</span> is stationary and fixed for all <span class="math inline">\(u\)</span> is stated below as a corollary.</p>
 <div class="theorembox">
@@ -550,7 +550,7 @@ is an observer for <a href="output-feedback.html#eq:Luenberger-linear-template">
 </div>
 <div class="proofbox">
 <div class="proof">
-<p><span id="unlabeled-div-11" class="proof"><em>Proof</em>. </span>Define <span class="math inline">\(e(t) = \xi(t) - \hat{\xi}(t)\)</span>. In that case,
+<p><span id="unlabeled-div-10" class="proof"><em>Proof</em>. </span>Define <span class="math inline">\(e(t) = \xi(t) - \hat{\xi}(t)\)</span>. In that case,
 <span class="math display" id="eq:Luenberger-error">\[\begin{equation}
     \dot{e}(t) = [A - KC] e(t)
     \tag{6.12}
@@ -980,7 +980,7 @@ T(x) = \int_{-\infty}^0 e^{-A\tau} B(h(X(x,\tau))) d\tau.
 </div>
 </div>
 <div class="remark">
-<p><span id="unlabeled-div-12" class="remark"><em>Remark</em>. </span>The function <span class="math inline">\(T\)</span> in Theorem <a href="output-feedback.html#thm:kklautonomous">6.4</a> takes complex numbers. To simulate the observer
+<p><span id="unlabeled-div-11" class="remark"><em>Remark</em>. </span>The function <span class="math inline">\(T\)</span> in Theorem <a href="output-feedback.html#thm:kklautonomous">6.4</a> takes complex numbers. To simulate the observer
 <span class="math display">\[
 \dot{\hat{\xi}} = A \hat{\xi} + B(y),
 \]</span>
