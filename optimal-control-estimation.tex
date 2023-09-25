@@ -151,7 +151,7 @@ arc=4pt}
 
 \title{Optimal Control and Estimation}
 \author{Heng Yang}
-\date{2023-09-23}
+\date{2023-09-25}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -1333,19 +1333,13 @@ You can find a good explanation of DQN in this \href{https://www.tensorflow.org/
 
 Combine the rich features of DQN with the stable learning of FQI \citep{levine17neurips-shallow}.
 
-\hypertarget{model-predictive-control}{%
-\section{Model Predictive Control}\label{model-predictive-control}}
-
 \hypertarget{trajectory-optimization}{%
-\subsection{Trajectory Optimization}\label{trajectory-optimization}}
+\section{Trajectory Optimization}\label{trajectory-optimization}}
 
-\hypertarget{direct-collocation}{%
-\subsubsection{Direct Collocation}\label{direct-collocation}}
-
-Consider a continuous-time optimal control problem in full generality
+Consider a continuous-time optimal control problem (OCP) in full generality
 \begin{equation} 
 \begin{split}
-\min_{u(t), t \in [0,T]} & \quad  g_T(x(T)) + \int_{t = 0}^T g(x(t),u(t)) \\
+\min_{u(t), t \in [0,T]} & \quad  g_T(x(T)) + \int_{t = 0}^T g(x(t),u(t)) dt \\
 \text{subject to} & \quad \dot{x} = f(x(t),u(t)) \\
 & \quad x(0) = x_0 \\
 & \quad (x(t),u(t)) \in \mathcal{X} \times \mathcal{U} \\
@@ -1359,7 +1353,183 @@ where \(g_T\) the terminal cost, \(g\) the running cost, \(x_0\) the initial con
 \]
 Assume that all functions are differentiable.
 
-\emph{Direct collocation}, roughly speaking, is a set of techniques that transcribe the infinite-dimensional optimal control problem \eqref{eq:constrained-optimal-control} into a \emph{nonlinear constrained optimization} problem over finite-dimensional vectors. The key idea of direct collocation is to approximate the state trajectory \(x(t)\) and the control trajectory \(u(t)\) as piece-wise polynomial functions. In the following, we will describe the Hermite-Simpson collocation method.
+Our goal is to ``transcribe'' the infinite-dimensional continuous-time optimization \eqref{eq:constrained-optimal-control} into a \emph{nonlinear programming problem} (NLP) of the following form
+\begin{equation}
+\begin{split}
+\min_{v \in \mathbb{R}^{n_v}} & \quad c(v) \\
+\text{subject to} & \quad c_{\text{eq},i}(v) = 0, i =1,\dots, n_{\text{eq}} \\
+& \quad c_{\text{ineq},i}(v) \geq 0, i=1,\dots,n_{\text{ineq}},
+\end{split}
+\label{eq:ocp-nonlinear-programming}
+\end{equation}
+where \(v\) is a finite-dimensional vector variable to be optimized, \(c, c_{\text{eq},i}, c_{\text{ineq},i}\) are (continuously differentiable) objective and constraint functions. Once we have done the transcription from \eqref{eq:constrained-optimal-control} to \eqref{eq:ocp-nonlinear-programming}, then we have a good number of numerical optimization algorithms at our disposal. For example, the Matlab \href{https://www.mathworks.com/help/optim/ug/fmincon.html}{\texttt{fmincon}} provides a nice interface to many such algorithms, e.g., interior-point method and sequential quadratic programming. You have already played with a simple example of \texttt{fmincon} in Exercise \ref{exr:polygoninsidecircle}. Other well-implemented NLP algorithms include \href{https://github.com/coin-or/Ipopt}{IPOPT} and \href{http://www.sbsi-sol-optimize.com/asp/sol_product_snopt.htm}{SNOPT}. However, usually the Matlab \texttt{fmincon} gives a decent start point for trying out different algorithms before moving to commercial solvers such as SNOPT. For a more comprehensive understanding about how NLP algoithms work under the hood, I suggest reading \citep{nocedal99book-numerical}.
+
+It turns out there are multiple different ways to transcribe the optimal control problem \eqref{eq:constrained-optimal-control} as the nonlinear programming problem \eqref{eq:ocp-nonlinear-programming}. In the following, we will introduce three different formulations, direct single shooting, direct multiple shooting, and direct collocation.
+
+\hypertarget{direct-single-shooting}{%
+\subsection{Direct Single Shooting}\label{direct-single-shooting}}
+
+In direct single shooting, we transcribe the OCP to the NLP by only optimizing a sequence of control values, with the intuition being that the state values are functions of the controls by invoking the system dynamics. In particular, we follow the procedure below.
+
+\textbf{Time discretization}. We first discretize the total time window \([0,T]\) into a set of \(N\) intervals:
+\[
+0 = t_0 \leq t_1 \leq \dots \leq t_k \leq t_{k+1} \leq \dots \leq t_N = T.
+\]
+We denote
+\[
+h_k = t_{k+1} - t_k
+\]
+as the length of the \(k\)-th time interval.
+
+\textbf{Piece-wise constant control}. We will approximate the continuous-time control signal \(u(t)\) as a piece-wise constant function, i.e.,
+\[
+u(t) = u_k, \forall t \in [t_k, t_{k+1}).
+\]
+This is shown in Fig. \ref{fig:direct-single-shooting}. Let us collect all the constant control values as our decision variable to be optimized
+\begin{equation}
+v = \begin{bmatrix} u_0 \\ u_1 \\ \vdots \\ u_{N-1} \end{bmatrix} \in \mathbb{R}^{N m}.
+\label{eq:direct-single-shooting-v}
+\end{equation}
+This \(v\) will be our variable in the NLP \eqref{eq:ocp-nonlinear-programming}. Note that \(v\) has dimension \(N m\).
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.6\linewidth]{images/direct_single_shooting} 
+
+}
+
+\caption{Direct single shooting.}\label{fig:direct-single-shooting}
+\end{figure}
+
+\textbf{Dynamics integration}. It is clear that once \(v\) in \eqref{eq:direct-single-shooting-v}, i.e., the set of controls, is determined, then the state trajectory \(x(t)\) is also uniquely determined by the initial condition \(x(0) = x_0\) and the dynamics
+\[
+\dot{x}(t) = f(x(t),u(t)).
+\]
+In order to enforce the state constraint \(x(t) \in \mathcal{X}\), we will enforce the values of \(x\) at \(t_0,t_1,\dots,t_N\), i.e., \(x_k = x(t_k)\), to lie in the constraint set \(\mathcal{X}\). To do so, we need to integrate the dynamics. When the dynamics is linear, this integration can be done in closed form:
+\[
+x_{k+1} = x_k + \int_{\tau=t_k}^{t_k + h_k} A x(\tau) + B u(\tau) d\tau = e^{Ah_k} x_k + A^{-1}(e^{Ah_k} - I) B u_k.
+\]
+By running the above equation from \(k=0\) to \(k=N-1\), we obtain the values of \(x_k,k=1,\dots,N\) as functions of the control vectors \(v\), shown in Fig. \ref{fig:direct-single-shooting}. When the dynamics is nonlinear, we will need to perform the dynamics integration using numerical integration. One of the most well known family of integrators is called \href{https://en.wikipedia.org/wiki/Runge\%E2\%80\%93Kutta_methods\#Adaptive_Runge\%E2\%80\%93Kutta_methods}{``Runge-Kutta methods''}. Among the family of methods, RK45 is perhaps the most popular one. We now briefly describe how a fourth-order RK integrator, i.e., RK4, works. Suppose we have already computed \(x_k\), and we want to integrate the dynamics to obtain \(x_{k+1}\). The RK4 integrator first computes the time derivatives at a sequence of four points:
+\begin{align}
+\alpha_1 &= f(x_k, u_k) \\
+\alpha_2 &= f\left( x_k + \frac{1}{2} h_k \alpha_1, u_k \right) \\
+\alpha_3 &= f\left( x_k + \frac{1}{2} h_k \alpha_2, u_k \right) \\
+\alpha_4 &= f\left( x_k + h_k \alpha_3, u_k \right).
+\end{align}
+Then we can obtain \(x_{k+1}\) via a weighted sum of the \(\alpha_i\)'s
+\begin{equation}
+x_{k+1} = x_k + \frac{1}{6} h_k \left( \alpha_1 + 2 \alpha_2 + 2 \alpha_3 + \alpha_4 \right) = \text{RK4}(x_k, u_k).
+\label{eq:RK4-integrator}
+\end{equation}
+Notice that a naive integrator would just perform \(x_{k+1} = x_k + h_k \alpha_1\) without querying the gradients at three other points. The nice property of RK4 is that it leads to better accuracy than the naive integration. Writing the RK4 integrator recursively, we obtain
+\[
+x_{k+1} = \text{RK4}(x_k, u_k) = \text{RK4}(\text{RK4}(x_{k-1},u_{k-1}),u_k) = \text{RK4}(\text{RK4}(...(x_0,u_0))...u_k),
+\]
+where RK4 is invoked for \(k+1\) times. Clearly, each \(x_k\) is a complicated function of the sequence of controls \(v\) and the initial state \(x_0\). We will write \(x_k(v)\) to make this explict, as shown in Fig. \ref{fig:direct-single-shooting}.
+
+\textbf{Objective approximation}. We can approximate the objective of the OCP \eqref{eq:constrained-optimal-control} using trapezoidal integration:
+\[
+g_T(x(T)) + \int_{t=0}^T g(x(t),u(t)) dt \approx g_T(x_N(v)) + \sum_{k=0}^{N-1} \frac{h_k}{2}(g(x_k(v),u_k) + g(x_{k+1}(v),u_{k+1})).
+\]
+
+\textbf{Summary}. In summary, the transcribed NLP for the optimal control problem using direct single shooting would be
+\begin{equation}
+\begin{split}
+\min_{v = (u_0,\dots,u_{N-1})} & \quad g_T(x_N(v)) + \sum_{k=0}^{N-1} \frac{g(x_k(v),u_k) + g(x_{k+1}(v), u_{k+1})}{2} h_k \\
+\text{subject to} & \quad c^u_i(u_k) \geq 0, i=1,\dots,q_u, \quad k=0,\dots,N-1 \\
+& \quad c^x_i(x_k(v)) \geq 0, i=1,\dots,q_x, \quad k=1,\dots,N \\
+& \quad \phi_i(x_k(v),u_k) \geq 0, i=1,\dots, q, \quad k=0,\dots,N.
+\end{split}
+\label{eq:ocp-direct-single-shooting}
+\end{equation}
+
+\textbf{Pros and Cons}. The advantage of using direct single shooting to transcribe the OCP is clear: it leads to fewer variables because the only decision variables in \eqref{eq:ocp-direct-single-shooting} are the sequence of controls. In other transcription methods, the decision variable of the NLP typically involves the states as well. The disadvantage of direct single shooting is the complication of the function \(x_k(v)\) caused by numerical integrators such as RK4. Even though the original continuous-time dynamics \(f(x,u)\) may be simple, the RK4 function can be highly complicated due to evaluating \(\dot{x}\) at multiple other locations. Moreover, the recursion of the RK4 operator makes this complication even worse.
+
+Let us try the RK4 simulator for a simple example.
+
+\begin{example}[Propagation of Nonlinearities]
+\protect\hypertarget{exm:RK4-simulation}{}\label{exm:RK4-simulation}
+
+Consider the following dynamics
+\[
+x = \begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix}, \quad 
+\dot{x} = \begin{bmatrix} 
+10(x_2 - x_1) \\
+x_1(u - x_3) - x_2 \\
+x_1 x_2 - 3 x_3 
+\end{bmatrix}
+\]
+where \(u\) is a single scalar control. We are interested in running the RK4 simulator for \(100\) seconds (with \(h_k = 0.01\) for all \(k\)) at \(x_0 = [1,0,0]^T\) with \(u\) varying from \(0\) to \(100\), and see how the nonlinearities propagate.
+
+Fig. \ref{fig:RK4-simulate} plots \(x\) as a function of \(u\). We can clearly see the nonlinearities getting worse due to RK4.
+
+You can play with the code \href{https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/RK4_example.m}{here}.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.6\linewidth]{images/RK4-sim} 
+
+}
+
+\caption{RK4 simulation.}\label{fig:RK4-simulate}
+\end{figure}
+
+\end{example}
+
+\hypertarget{direct-multiple-shooting}{%
+\subsection{Direct Multiple Shooting}\label{direct-multiple-shooting}}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.6\linewidth]{images/direct_multiple_shooting} 
+
+}
+
+\caption{Direct multiple shooting.}\label{fig:direct-multiple-shooting}
+\end{figure}
+
+Propagation of the nonlinearities through numerical integrators motivates using \emph{direct multiple shooting} to transcribe the OCP problem into a nonlinear programming problem.
+
+Instead of only optimizing the controls, direct multiple shooting optimizes both the controls and states. The decision variable in the NLP becomes
+\[
+v = \begin{bmatrix}
+u_0 \\ u_1 \\ \vdots \\ u_{N-1} \\ x_1 \\ x_2 \\ \vdots \\ x_N \end{bmatrix} \in \mathbb{R}^{N(n+m)}.
+\]
+With the state variables also introduced in the optimization, we no longer need to recursively run the RK4 integrators. Instead, we just need to run it once and enforce
+\[
+x_{k+1} = \text{RK4}(x_k, u_k),
+\]
+i.e., the current state and the next state satisfy the dynamics constraint. This is shown in Fig. \ref{fig:direct-multiple-shooting}.
+
+In summary, the transcribed NLP for the OCP problem using direct multiple shooting becomes
+\begin{equation}
+\begin{split}
+\min_{v = (u_0,\dots,u_{N-1},x_1,\dots,x_N)} & \quad g_T(x_N) + \sum_{k=0}^{N-1} \frac{g(x_k,u_k) + g(x_{k+1},u_{k+1})}{2} h_k \\
+\text{subject to} & \quad x_{k+1} = \text{RK4}(x_k, u_k), \quad k=0,\dots,N-1 \\
+& \quad c^u_i (u_k) \geq 0, i=1,\dots,q_u, \quad k=0,\dots,N-1 \\
+& \quad c^x_i(x_k) \geq 0, i=1,\dots,q_x, \quad k=1,\dots,N \\
+& \quad \phi_i(x_k, u_k) \geq 0, i=1,\dots,q, \quad k=0,\dots,N.
+\end{split}
+\label{eq:ocp-direct-multiple-shooting}
+\end{equation}
+
+Direct multiple shooting avoids the recursion of numerical integrators such as RK4, but at the expense of introducing additional state variables in the NLP.
+
+\hypertarget{direct-collocation}{%
+\subsection{Direct Collocation}\label{direct-collocation}}
+
+In direct multiple shooting, we still need to rely on the numerical integrator RK4, which complicates the original nonlinear dynamics. In direct collocation, we will remove our dependency of RK4.
+
+The key idea of direct collocation is to approximate the state trajectory \(x(t)\) and the control trajectory \(u(t)\) as piece-wise polynomial functions. In the following, we will describe the Hermite-Simpson collocation method.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.6\linewidth]{images/direct_collocation} 
+
+}
+
+\caption{Direct collocation.}\label{fig:direct-collocation}
+\end{figure}
 
 \textbf{Time discretization}. We first discretize the total time window \([0,T]\) into a set of \(N\) intervals:
 \[
@@ -1484,6 +1654,12 @@ g_T(x_N) + \sum_{k=0}^{N-1} \frac{g(x_k,u_k) + g(x_{k+1},u_{k+1})}{2} h_k.
 \end{split}
 \label{eq:constrained-optimal-control-nlp}
 \end{equation}
+
+\hypertarget{direct-orthogonal-collocation}{%
+\subsection{Direct Orthogonal Collocation}\label{direct-orthogonal-collocation}}
+
+\hypertarget{model-predictive-control}{%
+\section{Model Predictive Control}\label{model-predictive-control}}
 
 \hypertarget{policy-gradient}{%
 \section{Policy Gradient}\label{policy-gradient}}
