@@ -335,6 +335,102 @@ Our goal is to "transcribe" the infinite-dimensional continuous-time optimizatio
 \end{equation}
 where $v$ is a finite-dimensional vector variable to be optimized, $c, c_{\text{eq},i}, c_{\text{ineq},i}$ are (continuously differentiable) objective and constraint functions. Once we have done the transcription from \@ref(eq:constrained-optimal-control) to \@ref(eq:ocp-nonlinear-programming), then we have a good number of numerical optimization algorithms at our disposal. For example, the Matlab [`fmincon`](https://www.mathworks.com/help/optim/ug/fmincon.html) provides a nice interface to many such algorithms, e.g., interior-point method and sequential quadratic programming. You have already played with a simple example of `fmincon` in Exercise \@ref(exr:polygoninsidecircle). Other well-implemented NLP algorithms include [IPOPT](https://github.com/coin-or/Ipopt) and [SNOPT](http://www.sbsi-sol-optimize.com/asp/sol_product_snopt.htm). However, usually the Matlab `fmincon` gives a decent start point for trying out different algorithms before moving to commercial solvers such as SNOPT. For a more comprehensive understanding about how NLP algoithms work under the hood, I suggest reading [@nocedal99book-numerical].
 
+Before we talk about how to transcribe the OCP into an NLP, let us use a simple example to get a taste of `fmincon`.
+
+::: {.examplebox}
+::: {.example #fmincon-example name="Fire a Canon with fmincon"}
+
+On a 2D plane, suppose we have a canon at the origin $(0,0)$, and we want to fire the canon, with control over the initial velocity $(v_1, v_2)$, so that the canon ball hits the target location $(10,10)$. 
+
+From our basic physics knowledge, we know the trajectory of the canon ball is described by
+$$
+\begin{cases}
+x_1(t) = v_1 t \\
+x_2(t) = v_2 t - \frac{1}{2}g t^2,
+\end{cases}
+$$
+where $g$ is the gravity constant. 
+
+With the trajectory of the canon ball written above, we can formulate our nonlinear programming problem (NLP) as:
+\begin{equation}
+\begin{split}
+\min_{v_1, v_2, T} & \quad \frac{1}{2} (v_1^2 + v_2^2) \\
+\text{subject to} & \quad v_1, v_2, T \geq 0 \\
+& \quad x_1(T) = v_1 T = 10 \\
+& \quad x_2(T) = v_2 T - \frac{1}{2}g T^2 = 10 
+\end{split}
+(\#eq:fire-canon)
+\end{equation}
+where our unknown variables are the initial velocities and the time $T$ at which the canon ball hits the target. In the NLP \@ref(eq:fire-canon), the first constraint asks all our varaibles to be nonnegative, the second and third constraints enforce the canon ball to hit the target.
+
+The following script formulates the NLP \@ref(eq:fire-canon) in matlab.
+
+```matlab
+clc; clear; close all;
+g = 9.8;
+x0 = [0;0;1]; % initial guess of the solution
+% define objective function
+obj = @(x) objective(x);
+% define nonlinear constraints
+nonlincon = @(x) nonlinear_con(x,g);
+% define options for fmincon
+options = optimoptions('fmincon','Algorithm','interior-point',...
+    'SpecifyObjectiveGradient',true,'SpecifyConstraintGradient',true,...
+    'checkGradients',false);
+% call fmincon
+[xopt,fopt,~,out] = fmincon(obj,x0,... % objective and initial guess
+    -eye(3),zeros(3,1),... % linear inequality constraints
+    [],[],... % no linear equality constraints
+    [],[],... % no upper and lower bounds
+    nonlincon,... % nonlinear constraints
+    options);
+fprintf("Maximum constraint violation: %3.2f.\n",out.constrviolation);
+fprintf("Objective: %3.2f.\n",fopt);
+% plot the solution
+T = xopt(3);
+t = 0:0.01:T;
+xt = xopt(1)*t;
+yt = xopt(2)*t - 0.5*g*(t.^2);
+figure;
+plot(xt,yt,'LineWidth',2);
+hold on
+scatter(10,10,100,"red",'filled','diamond');
+axis equal; grid on;
+xlabel('$x_1(t)$','FontSize',24,'Interpreter','latex');
+ylabel('$x_2(t)$','FontSize',24,'Interpreter','latex');
+ax = gca; ax.FontSize = 20;
+%% helper functions
+function [f,df] = objective(x)
+% x is our decision variable: [v1, v2, T]
+% objective function
+f = 0.5 * (x(1)^2 + x(2)^2);
+% gradient of the objective function (optional)
+df = [x(1); x(2); 0]; % column vector
+end
+
+function [c,ceq,dc,dceq] = nonlinear_con(x,g)
+% no inequality constraints
+c = []; dc = [];
+% two equality constraints
+ceq = [x(1)*x(3)-10;
+       x(2)*x(3)-0.5*g*x(3)^2-10];
+% explicit gradient of ceq
+dceq = [x(3), 0;
+        0, x(3);
+        x(1), x(2)-g*x(3)];
+end
+```
+Running the code above, we get the following trajectory
+
+```{r fire-canon-ball, out.width='70%', fig.show='hold', fig.cap='Trajectory of the canon ball obtained from fmincon.', fig.align='center', echo=FALSE}
+knitr::include_graphics('images/canon_ball.png')
+```
+
+What if you change the initial guess to `fmincon`, or add more constraints? Feel free to play with the code [here](https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/fire_canon_ball_fmincon.m).
+
+:::
+:::
+
 It turns out there are multiple different ways to transcribe the optimal control problem \@ref(eq:constrained-optimal-control) as the nonlinear programming problem \@ref(eq:ocp-nonlinear-programming). In the following, we will introduce three different formulations, direct single shooting, direct multiple shooting, and direct collocation.
 
 ### Direct Single Shooting
@@ -468,6 +564,127 @@ In summary, the transcribed NLP for the OCP problem using direct multiple shooti
 \end{equation}
 
 Direct multiple shooting avoids the recursion of numerical integrators such as RK4, but at the expense of introducing additional state variables in the NLP.
+
+Let us try direct multiple shooting on the double integrator.
+
+::: {.examplebox}
+::: {.example #multiple-shooting-double-integrator name="Direct Multiple Shooting for Minimum-Time Double Integrator"}
+
+The double integrator has continuous-time dynamics (which you have already seen in Exercise \@ref(exr:lqrconstraints)):
+$$
+\ddot{q} = u.
+$$
+In standard state-space form, the dynamics is linear
+$$
+x = \begin{bmatrix} q \\ \dot{q} \end{bmatrix}, \quad 
+\dot{x} = \begin{bmatrix} 0 & 1 \\ 0 & 0 \end{bmatrix} x + \begin{bmatrix} 0 \\ 1 \end{bmatrix} u.
+$$
+
+Let us consider the minimum-time optimal control problem
+\begin{equation}
+\begin{split}
+\min_{u(t),t \in [0,T]} & \quad T \\
+\text{subject to} & \quad \dot{x} = A x + Bu, \quad x(0) = x_0 \\
+& \quad x(T) = 0 \\
+& \quad u(t) \in [-1,1], \forall t \in [0,T].
+\end{split}
+\end{equation}
+which seeks to get from the initial condition $x_0$ to the origin as fast as possible. 
+
+You should know from our physics intuition that the optimal controller is bang-bang, i.e., the optimal control first accelerates (deaccelerates) using the maximum control and then reverses using the opposite maximum control.
+
+Let's see if we can obtain the optimal controller using direct multiple shooting.
+
+In direct multiple shooting, we will optimize the control trajectory, the state trajectory, and the final time $T$. We fix the number of intervals $N$, and discretize $[0,T]$ evenly into $N$ intervals, which leads to variables for the NLP as
+$$
+v=(T,x_0,\dots,x_{N},u_0,\dots,u_N).
+$$
+We can easily enforce the control constraints:
+$$
+u_k \in [-1,1],k=0,\dots,N,
+$$
+and the initial / terminal constraints
+$$
+x_0 = x_0, \quad x_N = 0.
+$$
+The only nontrivial constraint is the dynamics constraint:
+$$
+x_{k+1} = \text{RK4}(x_k,u_k),k=0,\dots,N-1.
+$$
+
+The following script shows how to use the Matlab integrator `ode45` to enforce the dynamics constraint. 
+
+```matlab
+function dx = double_integrator(t,states,v)
+% return xdot at the selected times t and states, using information from v
+% assume the controls in v define piece-wise constant control signal
+T = v(1); % final time
+N = (length(v) - 1) / 3; % number of knot points
+u_grid = v(2+2*N:3*N+1); % N controls
+t_grid = linspace(0,1,N)*T;
+u_t = interp1(t_grid,u_grid,t,'previous'); % piece-wise constant
+A = [0 1; 0 0];
+B = [0; 1];
+dx = A * states + B * u_t;
+end
+
+function [c,ceq] = double_integrator_nonlincon(v,initial_state)
+% enforce x_k+1 = RK45(x_k, u_k); integration done using ode45
+T = v(1); % final time
+N = (length(v) - 1) / 3; % number of knot points
+t_grid = linspace(0,1,N)*T;
+x1 = v(2:N+1); % position 
+x2 = v(2+N:2*N+1); % velocity
+% u = v(2+2*N:3*N+1); % controls
+% no inequality constraints
+c = []; 
+% equality constraints
+ceq = [];
+for i = 1:(N-1)
+    ti = t_grid(i);
+    tip1 = t_grid(i+1);
+    xi = [x1(i);x2(i)];
+    xip1 = [x1(i+1);x2(i+1)];
+    % integrate system dynamics starting from xi in [ti,tip1]
+    tt = ti:(tip1-ti)/20:tip1; % fine-grained time discretization
+    [~,sol_int] = ode45(@(t,y) double_integrator(t,y,v),tt,xi);
+    xip1_int = sol_int(end,:);
+    % enforce them to be the same
+    ceq = [ceq;
+           xip1_int(1) - xip1(1);
+           xip1_int(2) - xip1(2)];
+end
+% add initial state constraint
+ceq = [ceq;
+       x1(1) - initial_state(1);
+       x2(1) - initial_state(2)];
+
+% add terminal state constraint: land at origin
+ceq = [ceq;
+       x1(end);
+       x2(end)]; 
+end
+```
+
+I first define a function `double_integrator` that returns the continuous-time dynaimcs, and then in the nonlinear constraints function `double_integrator_nonlincon` I use `ode45` to simulate the dynamics starting at $x_k$ from $t_k$ to $t_{k+1}$:
+```matlab
+[~,sol_int] = ode45(@(t,y) double_integrator(t,y,v),tt,xi);
+```
+The solution I got from `ode45` should be equal to my decision state variable. 
+
+Running the [complete code](https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/double_integrator_multiple_shooting.m) with $x_0 = [-10;0]$ and $N=51$, I obtain the control signal in Fig. \@ref(fig:min-time-di-u-ms), which is bang-bang.
+
+```{r min-time-di-u-ms, out.width='70%', fig.show='hold', fig.cap='Optimal control signal by direct multiple shooting.', fig.align='center', echo=FALSE}
+knitr::include_graphics('images/min_time_di_u.png')
+```
+
+Using `ode45` to integrate the double integrator dynamics from $x_0$ with the controller in Fig. \@ref(fig:min-time-di-u-ms), we obtain the following state trajectory. Notice that the final state does not exactly land at the origin. This is expected due to our time discretization and imperfect dynamics integration using `ode45`. Make sure you play with the code, e.g., by changing the initial state $x_0$ and see what happens.
+
+```{r min-time-di-x-ms, out.width='70%', fig.show='hold', fig.cap='ODE45 integration with the optimal control signal found by direct multiple shooting.', fig.align='center', echo=FALSE}
+knitr::include_graphics('images/min_time_di_x.png')
+```
+:::
+:::
 
 ### Direct Collocation
 
@@ -605,6 +822,75 @@ $$
 \end{split}
 (\#eq:constrained-optimal-control-nlp)
 \end{equation}
+
+Let us apply direct collocation to the same double integrator Example \@ref(exm:multiple-shooting-double-integrator).
+
+::: {.examplebox}
+::: {.example #collocation-double-integrator name="Direct Collocation for Minimum-Time Double Integrator"}
+Consider the same minimum-time optimal control problem in Example \@ref(exm:multiple-shooting-double-integrator). 
+
+To apply direct collocation, we have our NLP variable
+$$
+v = (T,x_0,\dots,x_N,u_0,\dots,u_N).
+$$
+Similarly we can enforce the control constraints and the initial / terminal constraints. 
+
+The following script shows how to enforce the collocation constraint.
+
+```matlab
+function [c,ceq] = collocation(v,N,initial_state)
+T = v(1);
+h = T/(N-1);
+x = reshape(v(2:2*N+1),2,N);
+u = v(2*N+2:end);
+c = [];
+ceq = [];
+for k=1:N-1
+    uk = u(k);
+    ukp1 = u(k+1);
+    xk = x(:,k);
+    xkp1 = x(:,k+1);
+    fk = double_integrator(xk,uk);
+    fkp1 = double_integrator(xkp1,ukp1);
+    % collocation points
+    xkc = 0.5*(xk+xkp1) + h/8 * (fk - fkp1);
+    ukc = 0.5*(uk + ukp1);
+    dxkc = -3/(2*h) * (xk-xkp1) - 0.25*(fk + fkp1);
+    % collocation constraint
+    ceq = [ceq;
+           dxkc - double_integrator(xkc,ukc)];
+end
+ceq = [ceq;
+       x(:,1) - initial_state; % initial condition
+       x(:,end)]; % land at zero
+end
+```
+As you can see, we do not need any numerical integrator such as `ode45`. The only thing we need is the continuous-time double integrator dynamics.
+
+Running the [complete code](https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/double_integrator_collocation.m) with $x_0 = (-10,0)$ and $N=51$, we get the control signal in Fig. \@ref(fig:min-time-di-u-collocation) that is bang-bang.
+
+
+```{r min-time-di-u-collocation, out.width='70%', fig.show='hold', fig.cap='Optimal control signal by direct collocation.', fig.align='center', echo=FALSE}
+knitr::include_graphics('images/min_time_di_u_collocation.png')
+```
+
+Using `ode45` to integrate the double integrator dynamics from $x_0$ with the controller in Fig. \@ref(fig:min-time-di-u-collocation), we obtain the following state trajectory. Comparing Fig. \@ref(fig:min-time-di-x-collocation) with Fig. \@ref(fig:min-time-di-x-ms), we can observe that the terminal state of the trajectory obtained from direct collocation is more accurate than that obtained from direct multiple shooting.
+
+```{r min-time-di-x-collocation, out.width='70%', fig.show='hold', fig.cap='ODE45 integration with the optimal control signal found by direct collocation.', fig.align='center', echo=FALSE}
+knitr::include_graphics('images/min_time_di_x_collocation.png')
+```
+
+Not only is direct collocation more accurate for this example, it is also faster. This is evident because in direct multiple shooting, evaluating the nonlinear constraints requires runing `ode45`, while in direct collocation, evaluating the nonlinear constraints simply requires calling the original continuous-time dynamics. 
+
+We can easily optimize with a larger $N=101$ and get the following results.
+
+```{r min-time-di-u-x-collocation-N-100, out.width='45%', fig.show='hold', fig.cap='Direct collocation with N=101.', fig.align='center', echo=FALSE}
+knitr::include_graphics('images/min_time_di_u_collocation_N_100.png')
+knitr::include_graphics('images/min_time_di_x_collocation_N_100.png')
+```
+
+:::
+::: 
 
 ### Direct Orthogonal Collocation
 
