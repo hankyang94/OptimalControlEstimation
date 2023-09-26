@@ -5362,6 +5362,41 @@ With the above illustration, we parameterize the system with two scalars: \(x\) 
 
 \end{exercise}
 
+~
+
+\begin{exercise}[Trajectory Optimization]
+\protect\hypertarget{exr:shooting-and-collocation}{}\label{exr:shooting-and-collocation}Let us use this exercise to practice your skills in implementing trajectory optimization.
+
+Consider a dynamical system
+\[
+x = \begin{bmatrix}
+x_1 \\ x_2
+\end{bmatrix}, \quad \dot{x} = f(x,u) = \begin{bmatrix}
+(1-x_2^2)x_1 - x_2 + u \\
+x_1 
+\end{bmatrix}, \quad x(0) = x_0 = \begin{bmatrix} 0 \\ 1 \end{bmatrix}.
+\]
+
+With \(T=10\), consider the following optimal control problem
+\begin{equation}
+\begin{split}
+\min_{u(t),t \in [0,T]} & \quad \int_{t=0}^T \Vert x(t) \Vert^2 + u(t)^2 dt \\
+\text{subject to} & \quad \dot{x} = f(x,u), \quad x(0) = x_0 \\
+& \quad u(t) \in [-1,1],\forall t \in [0,T].
+\end{split}
+\end{equation}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\item
+  Solve the problem using direct multiple shooting with \(N=50\) time intervals.
+\item
+  Solve the problem using direct collocation with \(N=50\).
+\end{enumerate}
+
+Plot the optimized control signal and resulting state trajectory for both a and b. You probably want to refer to the source codes of Example \ref{exm:multiple-shooting-double-integrator} and \ref{exm:collocation-double-integrator}.
+\end{exercise}
+
 \hypertarget{acknowledgement}{%
 \chapter*{Acknowledgement}\label{acknowledgement}}
 \addcontentsline{toc}{chapter}{Acknowledgement}

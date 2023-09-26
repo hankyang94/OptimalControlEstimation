@@ -591,6 +591,34 @@ where <span class="math inline">\(\Delta\mathbf{x} = \mathbf{x}-\mathbf{x}^*\)</
 <!-- e. **(Bonus)** Will a linear controller (i.e., $f$ is linear in $\mathbf{x}$) be a good controller? Why or why not? The answer might depend on whether the end point of the pole is above the horizonal line. -->
 </div>
 </div>
+<p> </p>
+<div class="exercisebox">
+<div class="exercise">
+<p><span id="exr:shooting-and-collocation" class="exercise"><strong>Exercise 9.4  (Trajectory Optimization) </strong></span>Let us use this exercise to practice your skills in implementing trajectory optimization.</p>
+<p>Consider a dynamical system
+<span class="math display">\[
+x = \begin{bmatrix}
+x_1 \\ x_2
+\end{bmatrix}, \quad \dot{x} = f(x,u) = \begin{bmatrix}
+(1-x_2^2)x_1 - x_2 + u \\
+x_1
+\end{bmatrix}, \quad x(0) = x_0 = \begin{bmatrix} 0 \\ 1 \end{bmatrix}.
+\]</span></p>
+<p>With <span class="math inline">\(T=10\)</span>, consider the following optimal control problem
+<span class="math display">\[\begin{equation}
+\begin{split}
+\min_{u(t),t \in [0,T]} &amp; \quad \int_{t=0}^T \Vert x(t) \Vert^2 + u(t)^2 dt \\
+\text{subject to} &amp; \quad \dot{x} = f(x,u), \quad x(0) = x_0 \\
+&amp; \quad u(t) \in [-1,1],\forall t \in [0,T].
+\end{split}
+\end{equation}\]</span></p>
+<ol style="list-style-type: lower-alpha">
+<li><p>Solve the problem using direct multiple shooting with <span class="math inline">\(N=50\)</span> time intervals.</p></li>
+<li><p>Solve the problem using direct collocation with <span class="math inline">\(N=50\)</span>.</p></li>
+</ol>
+<p>Plot the optimized control signal and resulting state trajectory for both a and b. You probably want to refer to the source codes of Example <a href="approximatedp.html#exm:multiple-shooting-double-integrator">3.6</a> and <a href="approximatedp.html#exm:collocation-double-integrator">3.7</a>.</p>
+</div>
+</div>
 </div>
 <h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div id="refs" class="references csl-bib-body hanging-indent">
