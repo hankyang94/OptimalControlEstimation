@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-09-25" />
+<meta name="date" content="2023-09-26" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -653,6 +653,93 @@ Assume that all functions are differentiable.</p>
 \tag{3.10}
 \end{equation}\]</span>
 where <span class="math inline">\(v\)</span> is a finite-dimensional vector variable to be optimized, <span class="math inline">\(c, c_{\text{eq},i}, c_{\text{ineq},i}\)</span> are (continuously differentiable) objective and constraint functions. Once we have done the transcription from <a href="approximatedp.html#eq:constrained-optimal-control">(3.9)</a> to <a href="approximatedp.html#eq:ocp-nonlinear-programming">(3.10)</a>, then we have a good number of numerical optimization algorithms at our disposal. For example, the Matlab <a href="https://www.mathworks.com/help/optim/ug/fmincon.html"><code>fmincon</code></a> provides a nice interface to many such algorithms, e.g., interior-point method and sequential quadratic programming. You have already played with a simple example of <code>fmincon</code> in Exercise <a href="psets.html#exr:polygoninsidecircle">9.1</a>. Other well-implemented NLP algorithms include <a href="https://github.com/coin-or/Ipopt">IPOPT</a> and <a href="http://www.sbsi-sol-optimize.com/asp/sol_product_snopt.htm">SNOPT</a>. However, usually the Matlab <code>fmincon</code> gives a decent start point for trying out different algorithms before moving to commercial solvers such as SNOPT. For a more comprehensive understanding about how NLP algoithms work under the hood, I suggest reading <span class="citation">(<a href="#ref-nocedal99book-numerical" role="doc-biblioref">Nocedal and Wright 1999</a>)</span>.</p>
+<p>Before we talk about how to transcribe the OCP into an NLP, let us use a simple example to get a taste of <code>fmincon</code>.</p>
+<div class="examplebox">
+<div class="example">
+<p><span id="exm:fmincon-example" class="example"><strong>Example 3.4  (Fire a Canon with fmincon) </strong></span>On a 2D plane, suppose we have a canon at the origin <span class="math inline">\((0,0)\)</span>, and we want to fire the canon, with control over the initial velocity <span class="math inline">\((v_1, v_2)\)</span>, so that the canon ball hits the target location <span class="math inline">\((10,10)\)</span>.</p>
+<p>From our basic physics knowledge, we know the trajectory of the canon ball is described by
+<span class="math display">\[
+\begin{cases}
+x_1(t) = v_1 t \\
+x_2(t) = v_2 t - \frac{1}{2}g t^2,
+\end{cases}
+\]</span>
+where <span class="math inline">\(g\)</span> is the gravity constant.</p>
+<p>With the trajectory of the canon ball written above, we can formulate our nonlinear programming problem (NLP) as:
+<span class="math display" id="eq:fire-canon">\[\begin{equation}
+\begin{split}
+\min_{v_1, v_2, T} &amp; \quad \frac{1}{2} (v_1^2 + v_2^2) \\
+\text{subject to} &amp; \quad v_1, v_2, T \geq 0 \\
+&amp; \quad x_1(T) = v_1 T = 10 \\
+&amp; \quad x_2(T) = v_2 T - \frac{1}{2}g T^2 = 10
+\end{split}
+\tag{3.11}
+\end{equation}\]</span>
+where our unknown variables are the initial velocities and the time <span class="math inline">\(T\)</span> at which the canon ball hits the target. In the NLP <a href="approximatedp.html#eq:fire-canon">(3.11)</a>, the first constraint asks all our varaibles to be nonnegative, the second and third constraints enforce the canon ball to hit the target.</p>
+<p>The following script formulates the NLP <a href="approximatedp.html#eq:fire-canon">(3.11)</a> in matlab.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode matlab"><code class="sourceCode matlab"><span id="cb1-1"><a href="approximatedp.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="va">clc</span><span class="op">;</span> <span class="va">clear</span><span class="op">;</span> <span class="va">close</span> <span class="va">all</span><span class="op">;</span></span>
+<span id="cb1-2"><a href="approximatedp.html#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="va">g</span> <span class="op">=</span> <span class="fl">9.8</span><span class="op">;</span></span>
+<span id="cb1-3"><a href="approximatedp.html#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="va">x0</span> <span class="op">=</span> [<span class="fl">0</span><span class="op">;</span><span class="fl">0</span><span class="op">;</span><span class="fl">1</span>]<span class="op">;</span> <span class="co">% initial guess of the solution</span></span>
+<span id="cb1-4"><a href="approximatedp.html#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">% define objective function</span></span>
+<span id="cb1-5"><a href="approximatedp.html#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="va">obj</span> <span class="op">=</span> <span class="op">@</span>(<span class="va">x</span>) <span class="va">objective</span>(<span class="va">x</span>)<span class="op">;</span></span>
+<span id="cb1-6"><a href="approximatedp.html#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">% define nonlinear constraints</span></span>
+<span id="cb1-7"><a href="approximatedp.html#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="va">nonlincon</span> <span class="op">=</span> <span class="op">@</span>(<span class="va">x</span>) <span class="va">nonlinear_con</span>(<span class="va">x</span><span class="op">,</span><span class="va">g</span>)<span class="op">;</span></span>
+<span id="cb1-8"><a href="approximatedp.html#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">% define options for fmincon</span></span>
+<span id="cb1-9"><a href="approximatedp.html#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="va">options</span> <span class="op">=</span> <span class="va">optimoptions</span>(<span class="ss">&#39;fmincon&#39;</span><span class="op">,</span><span class="ss">&#39;Algorithm&#39;</span><span class="op">,</span><span class="ss">&#39;interior-point&#39;</span><span class="op">,...</span></span>
+<span id="cb1-10"><a href="approximatedp.html#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="ss">&#39;SpecifyObjectiveGradient&#39;</span><span class="op">,</span><span class="va">true</span><span class="op">,</span><span class="ss">&#39;SpecifyConstraintGradient&#39;</span><span class="op">,</span><span class="va">true</span><span class="op">,...</span></span>
+<span id="cb1-11"><a href="approximatedp.html#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="ss">&#39;checkGradients&#39;</span><span class="op">,</span><span class="va">false</span>)<span class="op">;</span></span>
+<span id="cb1-12"><a href="approximatedp.html#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">% call fmincon</span></span>
+<span id="cb1-13"><a href="approximatedp.html#cb1-13" aria-hidden="true" tabindex="-1"></a>[<span class="va">xopt</span><span class="op">,</span><span class="va">fopt</span><span class="op">,~,</span><span class="va">out</span>] <span class="op">=</span> <span class="va">fmincon</span>(<span class="va">obj</span><span class="op">,</span><span class="va">x0</span><span class="op">,...</span> <span class="co">% objective and initial guess</span></span>
+<span id="cb1-14"><a href="approximatedp.html#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">-</span><span class="va">eye</span>(<span class="fl">3</span>)<span class="op">,</span><span class="va">zeros</span>(<span class="fl">3</span><span class="op">,</span><span class="fl">1</span>)<span class="op">,...</span> <span class="co">% linear inequality constraints</span></span>
+<span id="cb1-15"><a href="approximatedp.html#cb1-15" aria-hidden="true" tabindex="-1"></a>    []<span class="op">,</span>[]<span class="op">,...</span> <span class="co">% no linear equality constraints</span></span>
+<span id="cb1-16"><a href="approximatedp.html#cb1-16" aria-hidden="true" tabindex="-1"></a>    []<span class="op">,</span>[]<span class="op">,...</span> <span class="co">% no upper and lower bounds</span></span>
+<span id="cb1-17"><a href="approximatedp.html#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="va">nonlincon</span><span class="op">,...</span> <span class="co">% nonlinear constraints</span></span>
+<span id="cb1-18"><a href="approximatedp.html#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="va">options</span>)<span class="op">;</span></span>
+<span id="cb1-19"><a href="approximatedp.html#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="va">fprintf</span>(<span class="st">&quot;Maximum constraint violation: %3.2f.\n&quot;</span><span class="op">,</span><span class="va">out</span>.<span class="va">constrviolation</span>)<span class="op">;</span></span>
+<span id="cb1-20"><a href="approximatedp.html#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="va">fprintf</span>(<span class="st">&quot;Objective: %3.2f.\n&quot;</span><span class="op">,</span><span class="va">fopt</span>)<span class="op">;</span></span>
+<span id="cb1-21"><a href="approximatedp.html#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co">% plot the solution</span></span>
+<span id="cb1-22"><a href="approximatedp.html#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="va">T</span> <span class="op">=</span> <span class="va">xopt</span>(<span class="fl">3</span>)<span class="op">;</span></span>
+<span id="cb1-23"><a href="approximatedp.html#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="va">t</span> <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">0.01</span><span class="op">:</span><span class="va">T</span><span class="op">;</span></span>
+<span id="cb1-24"><a href="approximatedp.html#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="va">xt</span> <span class="op">=</span> <span class="va">xopt</span>(<span class="fl">1</span>)<span class="op">*</span><span class="va">t</span><span class="op">;</span></span>
+<span id="cb1-25"><a href="approximatedp.html#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="va">yt</span> <span class="op">=</span> <span class="va">xopt</span>(<span class="fl">2</span>)<span class="op">*</span><span class="va">t</span> <span class="op">-</span> <span class="fl">0.5</span><span class="op">*</span><span class="va">g</span><span class="op">*</span>(<span class="va">t</span><span class="op">.^</span><span class="fl">2</span>)<span class="op">;</span></span>
+<span id="cb1-26"><a href="approximatedp.html#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="va">figure</span><span class="op">;</span></span>
+<span id="cb1-27"><a href="approximatedp.html#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="va">plot</span>(<span class="va">xt</span><span class="op">,</span><span class="va">yt</span><span class="op">,</span><span class="ss">&#39;LineWidth&#39;</span><span class="op">,</span><span class="fl">2</span>)<span class="op">;</span></span>
+<span id="cb1-28"><a href="approximatedp.html#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="va">hold</span> <span class="va">on</span></span>
+<span id="cb1-29"><a href="approximatedp.html#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="va">scatter</span>(<span class="fl">10</span><span class="op">,</span><span class="fl">10</span><span class="op">,</span><span class="fl">100</span><span class="op">,</span><span class="st">&quot;red&quot;</span><span class="op">,</span><span class="ss">&#39;filled&#39;</span><span class="op">,</span><span class="ss">&#39;diamond&#39;</span>)<span class="op">;</span></span>
+<span id="cb1-30"><a href="approximatedp.html#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="va">axis</span> <span class="va">equal</span><span class="op">;</span> <span class="va">grid</span> <span class="va">on</span><span class="op">;</span></span>
+<span id="cb1-31"><a href="approximatedp.html#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="va">xlabel</span>(<span class="ss">&#39;$x_1(t)$&#39;</span><span class="op">,</span><span class="ss">&#39;FontSize&#39;</span><span class="op">,</span><span class="fl">24</span><span class="op">,</span><span class="ss">&#39;Interpreter&#39;</span><span class="op">,</span><span class="ss">&#39;latex&#39;</span>)<span class="op">;</span></span>
+<span id="cb1-32"><a href="approximatedp.html#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="va">ylabel</span>(<span class="ss">&#39;$x_2(t)$&#39;</span><span class="op">,</span><span class="ss">&#39;FontSize&#39;</span><span class="op">,</span><span class="fl">24</span><span class="op">,</span><span class="ss">&#39;Interpreter&#39;</span><span class="op">,</span><span class="ss">&#39;latex&#39;</span>)<span class="op">;</span></span>
+<span id="cb1-33"><a href="approximatedp.html#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="va">ax</span> <span class="op">=</span> <span class="va">gca</span><span class="op">;</span> <span class="va">ax</span>.<span class="va">FontSize</span> <span class="op">=</span> <span class="fl">20</span><span class="op">;</span></span>
+<span id="cb1-34"><a href="approximatedp.html#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="co">%% helper functions</span></span>
+<span id="cb1-35"><a href="approximatedp.html#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> [<span class="va">f</span><span class="op">,</span><span class="va">df</span>] <span class="op">=</span> <span class="va">objective</span>(<span class="va">x</span>)</span>
+<span id="cb1-36"><a href="approximatedp.html#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="co">% x is our decision variable: [v1, v2, T]</span></span>
+<span id="cb1-37"><a href="approximatedp.html#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="co">% objective function</span></span>
+<span id="cb1-38"><a href="approximatedp.html#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="va">f</span> <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> (<span class="va">x</span>(<span class="fl">1</span>)<span class="op">^</span><span class="fl">2</span> <span class="op">+</span> <span class="va">x</span>(<span class="fl">2</span>)<span class="op">^</span><span class="fl">2</span>)<span class="op">;</span></span>
+<span id="cb1-39"><a href="approximatedp.html#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="co">% gradient of the objective function (optional)</span></span>
+<span id="cb1-40"><a href="approximatedp.html#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="va">df</span> <span class="op">=</span> [<span class="va">x</span>(<span class="fl">1</span>)<span class="op">;</span> <span class="va">x</span>(<span class="fl">2</span>)<span class="op">;</span> <span class="fl">0</span>]<span class="op">;</span> <span class="co">% column vector</span></span>
+<span id="cb1-41"><a href="approximatedp.html#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb1-42"><a href="approximatedp.html#cb1-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-43"><a href="approximatedp.html#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> [<span class="va">c</span><span class="op">,</span><span class="va">ceq</span><span class="op">,</span><span class="va">dc</span><span class="op">,</span><span class="va">dceq</span>] <span class="op">=</span> <span class="va">nonlinear_con</span>(<span class="va">x</span><span class="op">,</span><span class="va">g</span>)</span>
+<span id="cb1-44"><a href="approximatedp.html#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="co">% no inequality constraints</span></span>
+<span id="cb1-45"><a href="approximatedp.html#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="va">c</span> <span class="op">=</span> []<span class="op">;</span> <span class="va">dc</span> <span class="op">=</span> []<span class="op">;</span></span>
+<span id="cb1-46"><a href="approximatedp.html#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="co">% two equality constraints</span></span>
+<span id="cb1-47"><a href="approximatedp.html#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="va">ceq</span> <span class="op">=</span> [<span class="va">x</span>(<span class="fl">1</span>)<span class="op">*</span><span class="va">x</span>(<span class="fl">3</span>)<span class="op">-</span><span class="fl">10</span><span class="op">;</span></span>
+<span id="cb1-48"><a href="approximatedp.html#cb1-48" aria-hidden="true" tabindex="-1"></a>       <span class="va">x</span>(<span class="fl">2</span>)<span class="op">*</span><span class="va">x</span>(<span class="fl">3</span>)<span class="op">-</span><span class="fl">0.5</span><span class="op">*</span><span class="va">g</span><span class="op">*</span><span class="va">x</span>(<span class="fl">3</span>)<span class="op">^</span><span class="fl">2</span><span class="op">-</span><span class="fl">10</span>]<span class="op">;</span></span>
+<span id="cb1-49"><a href="approximatedp.html#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="co">% explicit gradient of ceq</span></span>
+<span id="cb1-50"><a href="approximatedp.html#cb1-50" aria-hidden="true" tabindex="-1"></a><span class="va">dceq</span> <span class="op">=</span> [<span class="va">x</span>(<span class="fl">3</span>)<span class="op">,</span> <span class="fl">0</span><span class="op">;</span></span>
+<span id="cb1-51"><a href="approximatedp.html#cb1-51" aria-hidden="true" tabindex="-1"></a>        <span class="fl">0</span><span class="op">,</span> <span class="va">x</span>(<span class="fl">3</span>)<span class="op">;</span></span>
+<span id="cb1-52"><a href="approximatedp.html#cb1-52" aria-hidden="true" tabindex="-1"></a>        <span class="va">x</span>(<span class="fl">1</span>)<span class="op">,</span> <span class="va">x</span>(<span class="fl">2</span>)<span class="op">-</span><span class="va">g</span><span class="op">*</span><span class="va">x</span>(<span class="fl">3</span>)]<span class="op">;</span></span>
+<span id="cb1-53"><a href="approximatedp.html#cb1-53" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div>
+<p>Running the code above, we get the following trajectory</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:fire-canon-ball"></span>
+<img src="images/canon_ball.png" alt="Trajectory of the canon ball obtained from fmincon." width="70%" />
+<p class="caption">
+Figure 3.2: Trajectory of the canon ball obtained from fmincon.
+</p>
+</div>
+<p>What if you change the initial guess to <code>fmincon</code>, or add more constraints? Feel free to play with the code <a href="https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/fire_canon_ball_fmincon.m">here</a>.</p>
+</div>
+</div>
 <p>It turns out there are multiple different ways to transcribe the optimal control problem <a href="approximatedp.html#eq:constrained-optimal-control">(3.9)</a> as the nonlinear programming problem <a href="approximatedp.html#eq:ocp-nonlinear-programming">(3.10)</a>. In the following, we will introduce three different formulations, direct single shooting, direct multiple shooting, and direct collocation.</p>
 <div id="direct-single-shooting" class="section level3 hasAnchor" number="3.2.1">
 <h3><span class="header-section-number">3.2.1</span> Direct Single Shooting<a href="approximatedp.html#direct-single-shooting" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -670,19 +757,19 @@ as the length of the <span class="math inline">\(k\)</span>-th time interval.</p
 <span class="math display">\[
 u(t) = u_k, \forall t \in [t_k, t_{k+1}).
 \]</span>
-This is shown in Fig. <a href="approximatedp.html#fig:direct-single-shooting">3.2</a>. Let us collect all the constant control values as our decision variable to be optimized
+This is shown in Fig. <a href="approximatedp.html#fig:direct-single-shooting">3.3</a>. Let us collect all the constant control values as our decision variable to be optimized
 <span class="math display" id="eq:direct-single-shooting-v">\[\begin{equation}
 v = \begin{bmatrix} u_0 \\ u_1 \\ \vdots \\ u_{N-1} \end{bmatrix} \in \mathbb{R}^{N m}.
-\tag{3.11}
+\tag{3.12}
 \end{equation}\]</span>
 This <span class="math inline">\(v\)</span> will be our variable in the NLP <a href="approximatedp.html#eq:ocp-nonlinear-programming">(3.10)</a>. Note that <span class="math inline">\(v\)</span> has dimension <span class="math inline">\(N m\)</span>.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:direct-single-shooting"></span>
 <img src="images/direct_single_shooting.png" alt="Direct single shooting." width="60%" />
 <p class="caption">
-Figure 3.2: Direct single shooting.
+Figure 3.3: Direct single shooting.
 </p>
 </div>
-<p><strong>Dynamics integration</strong>. It is clear that once <span class="math inline">\(v\)</span> in <a href="approximatedp.html#eq:direct-single-shooting-v">(3.11)</a>, i.e., the set of controls, is determined, then the state trajectory <span class="math inline">\(x(t)\)</span> is also uniquely determined by the initial condition <span class="math inline">\(x(0) = x_0\)</span> and the dynamics
+<p><strong>Dynamics integration</strong>. It is clear that once <span class="math inline">\(v\)</span> in <a href="approximatedp.html#eq:direct-single-shooting-v">(3.12)</a>, i.e., the set of controls, is determined, then the state trajectory <span class="math inline">\(x(t)\)</span> is also uniquely determined by the initial condition <span class="math inline">\(x(0) = x_0\)</span> and the dynamics
 <span class="math display">\[
 \dot{x}(t) = f(x(t),u(t)).
 \]</span>
@@ -690,7 +777,7 @@ In order to enforce the state constraint <span class="math inline">\(x(t) \in \m
 <span class="math display">\[
 x_{k+1} = x_k + \int_{\tau=t_k}^{t_k + h_k} A x(\tau) + B u(\tau) d\tau = e^{Ah_k} x_k + A^{-1}(e^{Ah_k} - I) B u_k.
 \]</span>
-By running the above equation from <span class="math inline">\(k=0\)</span> to <span class="math inline">\(k=N-1\)</span>, we obtain the values of <span class="math inline">\(x_k,k=1,\dots,N\)</span> as functions of the control vectors <span class="math inline">\(v\)</span>, shown in Fig. <a href="approximatedp.html#fig:direct-single-shooting">3.2</a>. When the dynamics is nonlinear, we will need to perform the dynamics integration using numerical integration. One of the most well known family of integrators is called <a href="https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods#Adaptive_Runge%E2%80%93Kutta_methods">“Runge-Kutta methods”</a>. Among the family of methods, RK45 is perhaps the most popular one. We now briefly describe how a fourth-order RK integrator, i.e., RK4, works. Suppose we have already computed <span class="math inline">\(x_k\)</span>, and we want to integrate the dynamics to obtain <span class="math inline">\(x_{k+1}\)</span>. The RK4 integrator first computes the time derivatives at a sequence of four points:
+By running the above equation from <span class="math inline">\(k=0\)</span> to <span class="math inline">\(k=N-1\)</span>, we obtain the values of <span class="math inline">\(x_k,k=1,\dots,N\)</span> as functions of the control vectors <span class="math inline">\(v\)</span>, shown in Fig. <a href="approximatedp.html#fig:direct-single-shooting">3.3</a>. When the dynamics is nonlinear, we will need to perform the dynamics integration using numerical integration. One of the most well known family of integrators is called <a href="https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods#Adaptive_Runge%E2%80%93Kutta_methods">“Runge-Kutta methods”</a>. Among the family of methods, RK45 is perhaps the most popular one. We now briefly describe how a fourth-order RK integrator, i.e., RK4, works. Suppose we have already computed <span class="math inline">\(x_k\)</span>, and we want to integrate the dynamics to obtain <span class="math inline">\(x_{k+1}\)</span>. The RK4 integrator first computes the time derivatives at a sequence of four points:
 <span class="math display">\[\begin{align}
 \alpha_1 &amp;= f(x_k, u_k) \\
 \alpha_2 &amp;= f\left( x_k + \frac{1}{2} h_k \alpha_1, u_k \right) \\
@@ -700,13 +787,13 @@ By running the above equation from <span class="math inline">\(k=0\)</span> to <
 Then we can obtain <span class="math inline">\(x_{k+1}\)</span> via a weighted sum of the <span class="math inline">\(\alpha_i\)</span>’s
 <span class="math display" id="eq:RK4-integrator">\[\begin{equation}
 x_{k+1} = x_k + \frac{1}{6} h_k \left( \alpha_1 + 2 \alpha_2 + 2 \alpha_3 + \alpha_4 \right) = \text{RK4}(x_k, u_k).
-\tag{3.12}
+\tag{3.13}
 \end{equation}\]</span>
 Notice that a naive integrator would just perform <span class="math inline">\(x_{k+1} = x_k + h_k \alpha_1\)</span> without querying the gradients at three other points. The nice property of RK4 is that it leads to better accuracy than the naive integration. Writing the RK4 integrator recursively, we obtain
 <span class="math display">\[
 x_{k+1} = \text{RK4}(x_k, u_k) = \text{RK4}(\text{RK4}(x_{k-1},u_{k-1}),u_k) = \text{RK4}(\text{RK4}(...(x_0,u_0))...u_k),
 \]</span>
-where RK4 is invoked for <span class="math inline">\(k+1\)</span> times. Clearly, each <span class="math inline">\(x_k\)</span> is a complicated function of the sequence of controls <span class="math inline">\(v\)</span> and the initial state <span class="math inline">\(x_0\)</span>. We will write <span class="math inline">\(x_k(v)\)</span> to make this explict, as shown in Fig. <a href="approximatedp.html#fig:direct-single-shooting">3.2</a>.</p>
+where RK4 is invoked for <span class="math inline">\(k+1\)</span> times. Clearly, each <span class="math inline">\(x_k\)</span> is a complicated function of the sequence of controls <span class="math inline">\(v\)</span> and the initial state <span class="math inline">\(x_0\)</span>. We will write <span class="math inline">\(x_k(v)\)</span> to make this explict, as shown in Fig. <a href="approximatedp.html#fig:direct-single-shooting">3.3</a>.</p>
 <p><strong>Objective approximation</strong>. We can approximate the objective of the OCP <a href="approximatedp.html#eq:constrained-optimal-control">(3.9)</a> using trapezoidal integration:
 <span class="math display">\[
 g_T(x(T)) + \int_{t=0}^T g(x(t),u(t)) dt \approx g_T(x_N(v)) + \sum_{k=0}^{N-1} \frac{h_k}{2}(g(x_k(v),u_k) + g(x_{k+1}(v),u_{k+1})).
@@ -719,13 +806,13 @@ g_T(x(T)) + \int_{t=0}^T g(x(t),u(t)) dt \approx g_T(x_N(v)) + \sum_{k=0}^{N-1} 
 &amp; \quad c^x_i(x_k(v)) \geq 0, i=1,\dots,q_x, \quad k=1,\dots,N \\
 &amp; \quad \phi_i(x_k(v),u_k) \geq 0, i=1,\dots, q, \quad k=0,\dots,N.
 \end{split}
-\tag{3.13}
+\tag{3.14}
 \end{equation}\]</span></p>
-<p><strong>Pros and Cons</strong>. The advantage of using direct single shooting to transcribe the OCP is clear: it leads to fewer variables because the only decision variables in <a href="approximatedp.html#eq:ocp-direct-single-shooting">(3.13)</a> are the sequence of controls. In other transcription methods, the decision variable of the NLP typically involves the states as well. The disadvantage of direct single shooting is the complication of the function <span class="math inline">\(x_k(v)\)</span> caused by numerical integrators such as RK4. Even though the original continuous-time dynamics <span class="math inline">\(f(x,u)\)</span> may be simple, the RK4 function can be highly complicated due to evaluating <span class="math inline">\(\dot{x}\)</span> at multiple other locations. Moreover, the recursion of the RK4 operator makes this complication even worse.</p>
+<p><strong>Pros and Cons</strong>. The advantage of using direct single shooting to transcribe the OCP is clear: it leads to fewer variables because the only decision variables in <a href="approximatedp.html#eq:ocp-direct-single-shooting">(3.14)</a> are the sequence of controls. In other transcription methods, the decision variable of the NLP typically involves the states as well. The disadvantage of direct single shooting is the complication of the function <span class="math inline">\(x_k(v)\)</span> caused by numerical integrators such as RK4. Even though the original continuous-time dynamics <span class="math inline">\(f(x,u)\)</span> may be simple, the RK4 function can be highly complicated due to evaluating <span class="math inline">\(\dot{x}\)</span> at multiple other locations. Moreover, the recursion of the RK4 operator makes this complication even worse.</p>
 <p>Let us try the RK4 simulator for a simple example.</p>
 <div class="examplebox">
 <div class="example">
-<p><span id="exm:RK4-simulation" class="example"><strong>Example 3.4  (Propagation of Nonlinearities) </strong></span>Consider the following dynamics
+<p><span id="exm:RK4-simulation" class="example"><strong>Example 3.5  (Propagation of Nonlinearities) </strong></span>Consider the following dynamics
 <span class="math display">\[
 x = \begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix}, \quad
 \dot{x} = \begin{bmatrix}
@@ -735,12 +822,12 @@ x_1 x_2 - 3 x_3
 \end{bmatrix}
 \]</span>
 where <span class="math inline">\(u\)</span> is a single scalar control. We are interested in running the RK4 simulator for <span class="math inline">\(100\)</span> seconds (with <span class="math inline">\(h_k = 0.01\)</span> for all <span class="math inline">\(k\)</span>) at <span class="math inline">\(x_0 = [1,0,0]^T\)</span> with <span class="math inline">\(u\)</span> varying from <span class="math inline">\(0\)</span> to <span class="math inline">\(100\)</span>, and see how the nonlinearities propagate.</p>
-<p>Fig. <a href="approximatedp.html#fig:RK4-simulate">3.3</a> plots <span class="math inline">\(x\)</span> as a function of <span class="math inline">\(u\)</span>. We can clearly see the nonlinearities getting worse due to RK4.</p>
+<p>Fig. <a href="approximatedp.html#fig:RK4-simulate">3.4</a> plots <span class="math inline">\(x\)</span> as a function of <span class="math inline">\(u\)</span>. We can clearly see the nonlinearities getting worse due to RK4.</p>
 <p>You can play with the code <a href="https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/RK4_example.m">here</a>.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:RK4-simulate"></span>
 <img src="images/RK4-sim.png" alt="RK4 simulation." width="60%" />
 <p class="caption">
-Figure 3.3: RK4 simulation.
+Figure 3.4: RK4 simulation.
 </p>
 </div>
 </div>
@@ -751,7 +838,7 @@ Figure 3.3: RK4 simulation.
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:direct-multiple-shooting"></span>
 <img src="images/direct_multiple_shooting.png" alt="Direct multiple shooting." width="60%" />
 <p class="caption">
-Figure 3.4: Direct multiple shooting.
+Figure 3.5: Direct multiple shooting.
 </p>
 </div>
 <p>Propagation of the nonlinearities through numerical integrators motivates using <em>direct multiple shooting</em> to transcribe the OCP problem into a nonlinear programming problem.</p>
@@ -764,7 +851,7 @@ With the state variables also introduced in the optimization, we no longer need 
 <span class="math display">\[
 x_{k+1} = \text{RK4}(x_k, u_k),
 \]</span>
-i.e., the current state and the next state satisfy the dynamics constraint. This is shown in Fig. <a href="approximatedp.html#fig:direct-multiple-shooting">3.4</a>.</p>
+i.e., the current state and the next state satisfy the dynamics constraint. This is shown in Fig. <a href="approximatedp.html#fig:direct-multiple-shooting">3.5</a>.</p>
 <p>In summary, the transcribed NLP for the OCP problem using direct multiple shooting becomes
 <span class="math display" id="eq:ocp-direct-multiple-shooting">\[\begin{equation}
 \begin{split}
@@ -774,9 +861,118 @@ i.e., the current state and the next state satisfy the dynamics constraint. This
 &amp; \quad c^x_i(x_k) \geq 0, i=1,\dots,q_x, \quad k=1,\dots,N \\
 &amp; \quad \phi_i(x_k, u_k) \geq 0, i=1,\dots,q, \quad k=0,\dots,N.
 \end{split}
-\tag{3.14}
+\tag{3.15}
 \end{equation}\]</span></p>
 <p>Direct multiple shooting avoids the recursion of numerical integrators such as RK4, but at the expense of introducing additional state variables in the NLP.</p>
+<p>Let us try direct multiple shooting on the double integrator.</p>
+<div class="examplebox">
+<div class="example">
+<p><span id="exm:multiple-shooting-double-integrator" class="example"><strong>Example 3.6  (Direct Multiple Shooting for Minimum-Time Double Integrator) </strong></span>The double integrator has continuous-time dynamics (which you have already seen in Exercise <a href="psets.html#exr:lqrconstraints">9.2</a>):
+<span class="math display">\[
+\ddot{q} = u.
+\]</span>
+In standard state-space form, the dynamics is linear
+<span class="math display">\[
+x = \begin{bmatrix} q \\ \dot{q} \end{bmatrix}, \quad
+\dot{x} = \begin{bmatrix} 0 &amp; 1 \\ 0 &amp; 0 \end{bmatrix} x + \begin{bmatrix} 0 \\ 1 \end{bmatrix} u.
+\]</span></p>
+<p>Let us consider the minimum-time optimal control problem
+<span class="math display">\[\begin{equation}
+\begin{split}
+\min_{u(t),t \in [0,T]} &amp; \quad T \\
+\text{subject to} &amp; \quad \dot{x} = A x + Bu, \quad x(0) = x_0 \\
+&amp; \quad x(T) = 0 \\
+&amp; \quad u(t) \in [-1,1], \forall t \in [0,T].
+\end{split}
+\end{equation}\]</span>
+which seeks to get from the initial condition <span class="math inline">\(x_0\)</span> to the origin as fast as possible.</p>
+<p>You should know from our physics intuition that the optimal controller is bang-bang, i.e., the optimal control first accelerates (deaccelerates) using the maximum control and then reverses using the opposite maximum control.</p>
+<p>Let’s see if we can obtain the optimal controller using direct multiple shooting.</p>
+<p>In direct multiple shooting, we will optimize the control trajectory, the state trajectory, and the final time <span class="math inline">\(T\)</span>. We fix the number of intervals <span class="math inline">\(N\)</span>, and discretize <span class="math inline">\([0,T]\)</span> evenly into <span class="math inline">\(N\)</span> intervals, which leads to variables for the NLP as
+<span class="math display">\[
+v=(T,x_0,\dots,x_{N},u_0,\dots,u_N).
+\]</span>
+We can easily enforce the control constraints:
+<span class="math display">\[
+u_k \in [-1,1],k=0,\dots,N,
+\]</span>
+and the initial / terminal constraints
+<span class="math display">\[
+x_0 = x_0, \quad x_N = 0.
+\]</span>
+The only nontrivial constraint is the dynamics constraint:
+<span class="math display">\[
+x_{k+1} = \text{RK4}(x_k,u_k),k=0,\dots,N-1.
+\]</span></p>
+<p>The following script shows how to use the Matlab integrator <code>ode45</code> to enforce the dynamics constraint.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode matlab"><code class="sourceCode matlab"><span id="cb2-1"><a href="approximatedp.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="va">dx</span> <span class="op">=</span> <span class="va">double_integrator</span>(<span class="va">t</span><span class="op">,</span><span class="va">states</span><span class="op">,</span><span class="va">v</span>)</span>
+<span id="cb2-2"><a href="approximatedp.html#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">% return xdot at the selected times t and states, using information from v</span></span>
+<span id="cb2-3"><a href="approximatedp.html#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">% assume the controls in v define piece-wise constant control signal</span></span>
+<span id="cb2-4"><a href="approximatedp.html#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="va">T</span> <span class="op">=</span> <span class="va">v</span>(<span class="fl">1</span>)<span class="op">;</span> <span class="co">% final time</span></span>
+<span id="cb2-5"><a href="approximatedp.html#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="va">N</span> <span class="op">=</span> (<span class="va">length</span>(<span class="va">v</span>) <span class="op">-</span> <span class="fl">1</span>) <span class="op">/</span> <span class="fl">3</span><span class="op">;</span> <span class="co">% number of knot points</span></span>
+<span id="cb2-6"><a href="approximatedp.html#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="va">u_grid</span> <span class="op">=</span> <span class="va">v</span>(<span class="fl">2</span><span class="op">+</span><span class="fl">2</span><span class="op">*</span><span class="va">N</span><span class="op">:</span><span class="fl">3</span><span class="op">*</span><span class="va">N</span><span class="op">+</span><span class="fl">1</span>)<span class="op">;</span> <span class="co">% N controls</span></span>
+<span id="cb2-7"><a href="approximatedp.html#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="va">t_grid</span> <span class="op">=</span> <span class="va">linspace</span>(<span class="fl">0</span><span class="op">,</span><span class="fl">1</span><span class="op">,</span><span class="va">N</span>)<span class="op">*</span><span class="va">T</span><span class="op">;</span></span>
+<span id="cb2-8"><a href="approximatedp.html#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="va">u_t</span> <span class="op">=</span> <span class="va">interp1</span>(<span class="va">t_grid</span><span class="op">,</span><span class="va">u_grid</span><span class="op">,</span><span class="va">t</span><span class="op">,</span><span class="ss">&#39;previous&#39;</span>)<span class="op">;</span> <span class="co">% piece-wise constant</span></span>
+<span id="cb2-9"><a href="approximatedp.html#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="va">A</span> <span class="op">=</span> [<span class="fl">0</span> <span class="fl">1</span><span class="op">;</span> <span class="fl">0</span> <span class="fl">0</span>]<span class="op">;</span></span>
+<span id="cb2-10"><a href="approximatedp.html#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="va">B</span> <span class="op">=</span> [<span class="fl">0</span><span class="op">;</span> <span class="fl">1</span>]<span class="op">;</span></span>
+<span id="cb2-11"><a href="approximatedp.html#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="va">dx</span> <span class="op">=</span> <span class="va">A</span> <span class="op">*</span> <span class="va">states</span> <span class="op">+</span> <span class="va">B</span> <span class="op">*</span> <span class="va">u_t</span><span class="op">;</span></span>
+<span id="cb2-12"><a href="approximatedp.html#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb2-13"><a href="approximatedp.html#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="approximatedp.html#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> [<span class="va">c</span><span class="op">,</span><span class="va">ceq</span>] <span class="op">=</span> <span class="va">double_integrator_nonlincon</span>(<span class="va">v</span><span class="op">,</span><span class="va">initial_state</span>)</span>
+<span id="cb2-15"><a href="approximatedp.html#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co">% enforce x_k+1 = RK45(x_k, u_k); integration done using ode45</span></span>
+<span id="cb2-16"><a href="approximatedp.html#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="va">T</span> <span class="op">=</span> <span class="va">v</span>(<span class="fl">1</span>)<span class="op">;</span> <span class="co">% final time</span></span>
+<span id="cb2-17"><a href="approximatedp.html#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="va">N</span> <span class="op">=</span> (<span class="va">length</span>(<span class="va">v</span>) <span class="op">-</span> <span class="fl">1</span>) <span class="op">/</span> <span class="fl">3</span><span class="op">;</span> <span class="co">% number of knot points</span></span>
+<span id="cb2-18"><a href="approximatedp.html#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="va">t_grid</span> <span class="op">=</span> <span class="va">linspace</span>(<span class="fl">0</span><span class="op">,</span><span class="fl">1</span><span class="op">,</span><span class="va">N</span>)<span class="op">*</span><span class="va">T</span><span class="op">;</span></span>
+<span id="cb2-19"><a href="approximatedp.html#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="va">x1</span> <span class="op">=</span> <span class="va">v</span>(<span class="fl">2</span><span class="op">:</span><span class="va">N</span><span class="op">+</span><span class="fl">1</span>)<span class="op">;</span> <span class="co">% position </span></span>
+<span id="cb2-20"><a href="approximatedp.html#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="va">x2</span> <span class="op">=</span> <span class="va">v</span>(<span class="fl">2</span><span class="op">+</span><span class="va">N</span><span class="op">:</span><span class="fl">2</span><span class="op">*</span><span class="va">N</span><span class="op">+</span><span class="fl">1</span>)<span class="op">;</span> <span class="co">% velocity</span></span>
+<span id="cb2-21"><a href="approximatedp.html#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="co">% u = v(2+2*N:3*N+1); % controls</span></span>
+<span id="cb2-22"><a href="approximatedp.html#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="co">% no inequality constraints</span></span>
+<span id="cb2-23"><a href="approximatedp.html#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="va">c</span> <span class="op">=</span> []<span class="op">;</span> </span>
+<span id="cb2-24"><a href="approximatedp.html#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="co">% equality constraints</span></span>
+<span id="cb2-25"><a href="approximatedp.html#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="va">ceq</span> <span class="op">=</span> []<span class="op">;</span></span>
+<span id="cb2-26"><a href="approximatedp.html#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="kw">for</span> <span class="va">i</span> <span class="op">=</span> <span class="fl">1</span><span class="op">:</span>(<span class="va">N</span><span class="op">-</span><span class="fl">1</span>)</span>
+<span id="cb2-27"><a href="approximatedp.html#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="va">ti</span> <span class="op">=</span> <span class="va">t_grid</span>(<span class="va">i</span>)<span class="op">;</span></span>
+<span id="cb2-28"><a href="approximatedp.html#cb2-28" aria-hidden="true" tabindex="-1"></a>    <span class="va">tip1</span> <span class="op">=</span> <span class="va">t_grid</span>(<span class="va">i</span><span class="op">+</span><span class="fl">1</span>)<span class="op">;</span></span>
+<span id="cb2-29"><a href="approximatedp.html#cb2-29" aria-hidden="true" tabindex="-1"></a>    <span class="va">xi</span> <span class="op">=</span> [<span class="va">x1</span>(<span class="va">i</span>)<span class="op">;</span><span class="va">x2</span>(<span class="va">i</span>)]<span class="op">;</span></span>
+<span id="cb2-30"><a href="approximatedp.html#cb2-30" aria-hidden="true" tabindex="-1"></a>    <span class="va">xip1</span> <span class="op">=</span> [<span class="va">x1</span>(<span class="va">i</span><span class="op">+</span><span class="fl">1</span>)<span class="op">;</span><span class="va">x2</span>(<span class="va">i</span><span class="op">+</span><span class="fl">1</span>)]<span class="op">;</span></span>
+<span id="cb2-31"><a href="approximatedp.html#cb2-31" aria-hidden="true" tabindex="-1"></a>    <span class="co">% integrate system dynamics starting from xi in [ti,tip1]</span></span>
+<span id="cb2-32"><a href="approximatedp.html#cb2-32" aria-hidden="true" tabindex="-1"></a>    <span class="va">tt</span> <span class="op">=</span> <span class="va">ti</span><span class="op">:</span>(<span class="va">tip1</span><span class="op">-</span><span class="va">ti</span>)<span class="op">/</span><span class="fl">20</span><span class="op">:</span><span class="va">tip1</span><span class="op">;</span> <span class="co">% fine-grained time discretization</span></span>
+<span id="cb2-33"><a href="approximatedp.html#cb2-33" aria-hidden="true" tabindex="-1"></a>    [<span class="op">~,</span><span class="va">sol_int</span>] <span class="op">=</span> <span class="va">ode45</span>(<span class="op">@</span>(<span class="va">t</span><span class="op">,</span><span class="va">y</span>) <span class="va">double_integrator</span>(<span class="va">t</span><span class="op">,</span><span class="va">y</span><span class="op">,</span><span class="va">v</span>)<span class="op">,</span><span class="va">tt</span><span class="op">,</span><span class="va">xi</span>)<span class="op">;</span></span>
+<span id="cb2-34"><a href="approximatedp.html#cb2-34" aria-hidden="true" tabindex="-1"></a>    <span class="va">xip1_int</span> <span class="op">=</span> <span class="va">sol_int</span>(<span class="kw">end</span><span class="op">,:</span>)<span class="op">;</span></span>
+<span id="cb2-35"><a href="approximatedp.html#cb2-35" aria-hidden="true" tabindex="-1"></a>    <span class="co">% enforce them to be the same</span></span>
+<span id="cb2-36"><a href="approximatedp.html#cb2-36" aria-hidden="true" tabindex="-1"></a>    <span class="va">ceq</span> <span class="op">=</span> [<span class="va">ceq</span><span class="op">;</span></span>
+<span id="cb2-37"><a href="approximatedp.html#cb2-37" aria-hidden="true" tabindex="-1"></a>           <span class="va">xip1_int</span>(<span class="fl">1</span>) <span class="op">-</span> <span class="va">xip1</span>(<span class="fl">1</span>)<span class="op">;</span></span>
+<span id="cb2-38"><a href="approximatedp.html#cb2-38" aria-hidden="true" tabindex="-1"></a>           <span class="va">xip1_int</span>(<span class="fl">2</span>) <span class="op">-</span> <span class="va">xip1</span>(<span class="fl">2</span>)]<span class="op">;</span></span>
+<span id="cb2-39"><a href="approximatedp.html#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb2-40"><a href="approximatedp.html#cb2-40" aria-hidden="true" tabindex="-1"></a><span class="co">% add initial state constraint</span></span>
+<span id="cb2-41"><a href="approximatedp.html#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="va">ceq</span> <span class="op">=</span> [<span class="va">ceq</span><span class="op">;</span></span>
+<span id="cb2-42"><a href="approximatedp.html#cb2-42" aria-hidden="true" tabindex="-1"></a>       <span class="va">x1</span>(<span class="fl">1</span>) <span class="op">-</span> <span class="va">initial_state</span>(<span class="fl">1</span>)<span class="op">;</span></span>
+<span id="cb2-43"><a href="approximatedp.html#cb2-43" aria-hidden="true" tabindex="-1"></a>       <span class="va">x2</span>(<span class="fl">1</span>) <span class="op">-</span> <span class="va">initial_state</span>(<span class="fl">2</span>)]<span class="op">;</span></span>
+<span id="cb2-44"><a href="approximatedp.html#cb2-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-45"><a href="approximatedp.html#cb2-45" aria-hidden="true" tabindex="-1"></a><span class="co">% add terminal state constraint: land at origin</span></span>
+<span id="cb2-46"><a href="approximatedp.html#cb2-46" aria-hidden="true" tabindex="-1"></a><span class="va">ceq</span> <span class="op">=</span> [<span class="va">ceq</span><span class="op">;</span></span>
+<span id="cb2-47"><a href="approximatedp.html#cb2-47" aria-hidden="true" tabindex="-1"></a>       <span class="va">x1</span>(<span class="kw">end</span>)<span class="op">;</span></span>
+<span id="cb2-48"><a href="approximatedp.html#cb2-48" aria-hidden="true" tabindex="-1"></a>       <span class="va">x2</span>(<span class="kw">end</span>)]<span class="op">;</span> </span>
+<span id="cb2-49"><a href="approximatedp.html#cb2-49" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div>
+<p>I first define a function <code>double_integrator</code> that returns the continuous-time dynaimcs, and then in the nonlinear constraints function <code>double_integrator_nonlincon</code> I use <code>ode45</code> to simulate the dynamics starting at <span class="math inline">\(x_k\)</span> from <span class="math inline">\(t_k\)</span> to <span class="math inline">\(t_{k+1}\)</span>:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode matlab"><code class="sourceCode matlab"><span id="cb3-1"><a href="approximatedp.html#cb3-1" aria-hidden="true" tabindex="-1"></a>[<span class="op">~,</span><span class="va">sol_int</span>] <span class="op">=</span> <span class="va">ode45</span>(<span class="op">@</span>(<span class="va">t</span><span class="op">,</span><span class="va">y</span>) <span class="va">double_integrator</span>(<span class="va">t</span><span class="op">,</span><span class="va">y</span><span class="op">,</span><span class="va">v</span>)<span class="op">,</span><span class="va">tt</span><span class="op">,</span><span class="va">xi</span>)<span class="op">;</span></span></code></pre></div>
+<p>The solution I got from <code>ode45</code> should be equal to my decision state variable.</p>
+<p>Running the <a href="https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/double_integrator_multiple_shooting.m">complete code</a> with <span class="math inline">\(x_0 = [-10;0]\)</span> and <span class="math inline">\(N=51\)</span>, I obtain the control signal in Fig. <a href="approximatedp.html#fig:min-time-di-u-ms">3.6</a>, which is bang-bang.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:min-time-di-u-ms"></span>
+<img src="images/min_time_di_u.png" alt="Optimal control signal by direct multiple shooting." width="70%" />
+<p class="caption">
+Figure 3.6: Optimal control signal by direct multiple shooting.
+</p>
+</div>
+<p>Using <code>ode45</code> to integrate the double integrator dynamics from <span class="math inline">\(x_0\)</span> with the controller in Fig. <a href="approximatedp.html#fig:min-time-di-u-ms">3.6</a>, we obtain the following state trajectory. Notice that the final state does not exactly land at the origin. This is expected due to our time discretization and imperfect dynamics integration using <code>ode45</code>. Make sure you play with the code, e.g., by changing the initial state <span class="math inline">\(x_0\)</span> and see what happens.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:min-time-di-x-ms"></span>
+<img src="images/min_time_di_x.png" alt="ODE45 integration with the optimal control signal found by direct multiple shooting." width="70%" />
+<p class="caption">
+Figure 3.7: ODE45 integration with the optimal control signal found by direct multiple shooting.
+</p>
+</div>
+</div>
+</div>
 </div>
 <div id="direct-collocation" class="section level3 hasAnchor" number="3.2.3">
 <h3><span class="header-section-number">3.2.3</span> Direct Collocation<a href="approximatedp.html#direct-collocation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -785,7 +981,7 @@ i.e., the current state and the next state satisfy the dynamics constraint. This
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:direct-collocation"></span>
 <img src="images/direct_collocation.png" alt="Direct collocation." width="60%" />
 <p class="caption">
-Figure 3.5: Direct collocation.
+Figure 3.8: Direct collocation.
 </p>
 </div>
 <p><strong>Time discretization</strong>. We first discretize the total time window <span class="math inline">\([0,T]\)</span> into a set of <span class="math inline">\(N\)</span> intervals:
@@ -808,7 +1004,7 @@ u_k = u(t_k),k=0,\dots,N-1.
 As a result, the entire set of knot varaibles to be optimized is
 <span class="math display" id="eq:knot-variables">\[\begin{equation}
 v = \begin{bmatrix} u_0 \\ u_1 \\ \vdots \\ u_{N-1} \\ x_1 \\ x_2 \\ \vdots \\ x_{N} \end{bmatrix}.
-\tag{3.15}
+\tag{3.16}
 \end{equation}\]</span>
 If the time-discretization is also optimized, then <span class="math inline">\(v\)</span>
 <!-- $$
@@ -819,15 +1015,15 @@ includes the time intervals as well.</p>
 <p>Specifically, in each subinterval <span class="math inline">\([t_k, t_{k+1}]\)</span>, we approximate the state trajectory as a cubic polynomial
 <span class="math display" id="eq:state-polynomial">\[\begin{equation}
 x(t) = p_{k,0} + p_{k,1}(t-t_k) + p_{k,2}(t-t_k)^2 + p_{k,3}(t - t_k)^3, \quad t \in [t_k, t_{k+1}],
-\tag{3.16}
+\tag{3.17}
 \end{equation}\]</span>
 where <span class="math inline">\(p_{k,0},p_{k,1},p_{k,2},p_{k,3} \in \mathbb{R}^n\)</span> are the coefficients of the polynomial. You would think that we would need to optimize the coefficients as well, but actually we won’t need to, as will be shown soon.
 With this parameterization, we can obtain the time derivative of <span class="math inline">\(x(t)\)</span> as
 <span class="math display" id="eq:state-polynomial-derivative">\[\begin{equation}
 \dot{x}(t) = p_{k,1} + 2 p_{k,2}(t-t_k) + 3p_{k,3}(t - t_k)^2, \quad t \in [t_k, t_{k+1}].
-\tag{3.17}
+\tag{3.18}
 \end{equation}\]</span>
-Now the key step is to write the coefficients <span class="math inline">\(p_{k,0},p_{k,1},p_{k,2},p_{k,3}\)</span> using our knot variables <a href="approximatedp.html#eq:knot-variables">(3.15)</a>. To do so, we can invoke <a href="approximatedp.html#eq:state-polynomial">(3.16)</a> and <a href="approximatedp.html#eq:state-polynomial-derivative">(3.17)</a> to obtain
+Now the key step is to write the coefficients <span class="math inline">\(p_{k,0},p_{k,1},p_{k,2},p_{k,3}\)</span> using our knot variables <a href="approximatedp.html#eq:knot-variables">(3.16)</a>. To do so, we can invoke <a href="approximatedp.html#eq:state-polynomial">(3.17)</a> and <a href="approximatedp.html#eq:state-polynomial-derivative">(3.18)</a> to obtain
 <span class="math display">\[
 \begin{bmatrix}
 x_k \\
@@ -867,9 +1063,9 @@ f(x_k,u_k) \\
 x_{k+1} \\
 f(x_{k+1}, u_{k+1})
 \end{bmatrix}.
-\tag{3.18}
+\tag{3.19}
 \end{equation}\]</span>
-Equation <a href="approximatedp.html#eq:polynomial-coefficients-closed-form">(3.18)</a> implies, using the knot variables <span class="math inline">\(v\)</span> in <a href="approximatedp.html#eq:knot-variables">(3.15)</a>, we can query the value of <span class="math inline">\(x(t)\)</span> and <span class="math inline">\(\dot{x}(t)\)</span> at any time <span class="math inline">\(t \in [0,T]\)</span>. In particular, we will query the values of <span class="math inline">\(x(t)\)</span> and <span class="math inline">\(\dot{x}(t)\)</span> at the midpoints to obtain
+Equation <a href="approximatedp.html#eq:polynomial-coefficients-closed-form">(3.19)</a> implies, using the knot variables <span class="math inline">\(v\)</span> in <a href="approximatedp.html#eq:knot-variables">(3.16)</a>, we can query the value of <span class="math inline">\(x(t)\)</span> and <span class="math inline">\(\dot{x}(t)\)</span> at any time <span class="math inline">\(t \in [0,T]\)</span>. In particular, we will query the values of <span class="math inline">\(x(t)\)</span> and <span class="math inline">\(\dot{x}(t)\)</span> at the midpoints to obtain
 <span class="math display">\[
 x_k^c = x\left( t_k + \frac{h_k}{2} \right) = \frac{1}{2} (x_k + x_{k+1}) + \frac{h_k}{8} (f(x_k,u_k) - f(x_{k+1},u_{k+1})),
 \]</span>
@@ -884,7 +1080,7 @@ u_k^c = \frac{1}{2}(u_k + u_{k+1}).
 Therefore, we can enforce the dynamics constraint at the midpoint as
 <span class="math display" id="eq:collocation-constraint">\[\begin{equation}
 \dot{x}^c_k = f(x_k^c, u_k^c).
-\tag{3.19}
+\tag{3.20}
 \end{equation}\]</span></p>
 <p><strong>Transcribe other constraints</strong>. The other constraints in the continuous-time formulation <a href="approximatedp.html#eq:constrained-optimal-control">(3.9)</a> can be transcribed to the knot variables in a straightforward way:
 <span class="math display">\[\begin{align}
@@ -905,8 +1101,69 @@ g_T(x_N) + \sum_{k=0}^{N-1} \frac{g(x_k,u_k) + g(x_{k+1},u_{k+1})}{2} h_k.
 &amp; \quad c_i^u(u_k) \geq 0,i=1,\dots,q_u, \quad k=0,\dots,N-1 \\
 &amp; \quad \phi_i (x_k,u_k) \geq 0, i=1,\dots,q, \quad k=0,\dots,N.
 \end{split}
-\tag{3.20}
+\tag{3.21}
 \end{equation}\]</span></p>
+<p>Let us apply direct collocation to the same double integrator Example <a href="approximatedp.html#exm:multiple-shooting-double-integrator">3.6</a>.</p>
+<div class="examplebox">
+<div class="example">
+<p><span id="exm:collocation-double-integrator" class="example"><strong>Example 3.7  (Direct Collocation for Minimum-Time Double Integrator) </strong></span>Consider the same minimum-time optimal control problem in Example <a href="approximatedp.html#exm:multiple-shooting-double-integrator">3.6</a>.</p>
+<p>To apply direct collocation, we have our NLP variable
+<span class="math display">\[
+v = (T,x_0,\dots,x_N,u_0,\dots,u_N).
+\]</span>
+Similarly we can enforce the control constraints and the initial / terminal constraints.</p>
+<p>The following script shows how to enforce the collocation constraint.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode matlab"><code class="sourceCode matlab"><span id="cb4-1"><a href="approximatedp.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> [<span class="va">c</span><span class="op">,</span><span class="va">ceq</span>] <span class="op">=</span> <span class="va">collocation</span>(<span class="va">v</span><span class="op">,</span><span class="va">N</span><span class="op">,</span><span class="va">initial_state</span>)</span>
+<span id="cb4-2"><a href="approximatedp.html#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="va">T</span> <span class="op">=</span> <span class="va">v</span>(<span class="fl">1</span>)<span class="op">;</span></span>
+<span id="cb4-3"><a href="approximatedp.html#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="va">h</span> <span class="op">=</span> <span class="va">T</span><span class="op">/</span>(<span class="va">N</span><span class="op">-</span><span class="fl">1</span>)<span class="op">;</span></span>
+<span id="cb4-4"><a href="approximatedp.html#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="va">x</span> <span class="op">=</span> <span class="va">reshape</span>(<span class="va">v</span>(<span class="fl">2</span><span class="op">:</span><span class="fl">2</span><span class="op">*</span><span class="va">N</span><span class="op">+</span><span class="fl">1</span>)<span class="op">,</span><span class="fl">2</span><span class="op">,</span><span class="va">N</span>)<span class="op">;</span></span>
+<span id="cb4-5"><a href="approximatedp.html#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="va">u</span> <span class="op">=</span> <span class="va">v</span>(<span class="fl">2</span><span class="op">*</span><span class="va">N</span><span class="op">+</span><span class="fl">2</span><span class="op">:</span><span class="kw">end</span>)<span class="op">;</span></span>
+<span id="cb4-6"><a href="approximatedp.html#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="va">c</span> <span class="op">=</span> []<span class="op">;</span></span>
+<span id="cb4-7"><a href="approximatedp.html#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="va">ceq</span> <span class="op">=</span> []<span class="op">;</span></span>
+<span id="cb4-8"><a href="approximatedp.html#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="kw">for</span> <span class="va">k</span><span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="va">N</span><span class="op">-</span><span class="fl">1</span></span>
+<span id="cb4-9"><a href="approximatedp.html#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="va">uk</span> <span class="op">=</span> <span class="va">u</span>(<span class="va">k</span>)<span class="op">;</span></span>
+<span id="cb4-10"><a href="approximatedp.html#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="va">ukp1</span> <span class="op">=</span> <span class="va">u</span>(<span class="va">k</span><span class="op">+</span><span class="fl">1</span>)<span class="op">;</span></span>
+<span id="cb4-11"><a href="approximatedp.html#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="va">xk</span> <span class="op">=</span> <span class="va">x</span>(<span class="op">:,</span><span class="va">k</span>)<span class="op">;</span></span>
+<span id="cb4-12"><a href="approximatedp.html#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="va">xkp1</span> <span class="op">=</span> <span class="va">x</span>(<span class="op">:,</span><span class="va">k</span><span class="op">+</span><span class="fl">1</span>)<span class="op">;</span></span>
+<span id="cb4-13"><a href="approximatedp.html#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="va">fk</span> <span class="op">=</span> <span class="va">double_integrator</span>(<span class="va">xk</span><span class="op">,</span><span class="va">uk</span>)<span class="op">;</span></span>
+<span id="cb4-14"><a href="approximatedp.html#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="va">fkp1</span> <span class="op">=</span> <span class="va">double_integrator</span>(<span class="va">xkp1</span><span class="op">,</span><span class="va">ukp1</span>)<span class="op">;</span></span>
+<span id="cb4-15"><a href="approximatedp.html#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">% collocation points</span></span>
+<span id="cb4-16"><a href="approximatedp.html#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="va">xkc</span> <span class="op">=</span> <span class="fl">0.5</span><span class="op">*</span>(<span class="va">xk</span><span class="op">+</span><span class="va">xkp1</span>) <span class="op">+</span> <span class="va">h</span><span class="op">/</span><span class="fl">8</span> <span class="op">*</span> (<span class="va">fk</span> <span class="op">-</span> <span class="va">fkp1</span>)<span class="op">;</span></span>
+<span id="cb4-17"><a href="approximatedp.html#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="va">ukc</span> <span class="op">=</span> <span class="fl">0.5</span><span class="op">*</span>(<span class="va">uk</span> <span class="op">+</span> <span class="va">ukp1</span>)<span class="op">;</span></span>
+<span id="cb4-18"><a href="approximatedp.html#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="va">dxkc</span> <span class="op">=</span> <span class="op">-</span><span class="fl">3</span><span class="op">/</span>(<span class="fl">2</span><span class="op">*</span><span class="va">h</span>) <span class="op">*</span> (<span class="va">xk</span><span class="op">-</span><span class="va">xkp1</span>) <span class="op">-</span> <span class="fl">0.25</span><span class="op">*</span>(<span class="va">fk</span> <span class="op">+</span> <span class="va">fkp1</span>)<span class="op">;</span></span>
+<span id="cb4-19"><a href="approximatedp.html#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="co">% collocation constraint</span></span>
+<span id="cb4-20"><a href="approximatedp.html#cb4-20" aria-hidden="true" tabindex="-1"></a>    <span class="va">ceq</span> <span class="op">=</span> [<span class="va">ceq</span><span class="op">;</span></span>
+<span id="cb4-21"><a href="approximatedp.html#cb4-21" aria-hidden="true" tabindex="-1"></a>           <span class="va">dxkc</span> <span class="op">-</span> <span class="va">double_integrator</span>(<span class="va">xkc</span><span class="op">,</span><span class="va">ukc</span>)]<span class="op">;</span></span>
+<span id="cb4-22"><a href="approximatedp.html#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb4-23"><a href="approximatedp.html#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="va">ceq</span> <span class="op">=</span> [<span class="va">ceq</span><span class="op">;</span></span>
+<span id="cb4-24"><a href="approximatedp.html#cb4-24" aria-hidden="true" tabindex="-1"></a>       <span class="va">x</span>(<span class="op">:,</span><span class="fl">1</span>) <span class="op">-</span> <span class="va">initial_state</span><span class="op">;</span> <span class="co">% initial condition</span></span>
+<span id="cb4-25"><a href="approximatedp.html#cb4-25" aria-hidden="true" tabindex="-1"></a>       <span class="va">x</span>(<span class="op">:,</span><span class="kw">end</span>)]<span class="op">;</span> <span class="co">% land at zero</span></span>
+<span id="cb4-26"><a href="approximatedp.html#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div>
+<p>As you can see, we do not need any numerical integrator such as <code>ode45</code>. The only thing we need is the continuous-time double integrator dynamics.</p>
+<p>Running the <a href="https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/double_integrator_collocation.m">complete code</a> with <span class="math inline">\(x_0 = (-10,0)\)</span> and <span class="math inline">\(N=51\)</span>, we get the control signal in Fig. <a href="approximatedp.html#fig:min-time-di-u-collocation">3.9</a> that is bang-bang.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:min-time-di-u-collocation"></span>
+<img src="images/min_time_di_u_collocation.png" alt="Optimal control signal by direct collocation." width="70%" />
+<p class="caption">
+Figure 3.9: Optimal control signal by direct collocation.
+</p>
+</div>
+<p>Using <code>ode45</code> to integrate the double integrator dynamics from <span class="math inline">\(x_0\)</span> with the controller in Fig. <a href="approximatedp.html#fig:min-time-di-u-collocation">3.9</a>, we obtain the following state trajectory. Comparing Fig. <a href="approximatedp.html#fig:min-time-di-x-collocation">3.10</a> with Fig. <a href="approximatedp.html#fig:min-time-di-x-ms">3.7</a>, we can observe that the terminal state of the trajectory obtained from direct collocation is more accurate than that obtained from direct multiple shooting.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:min-time-di-x-collocation"></span>
+<img src="images/min_time_di_x_collocation.png" alt="ODE45 integration with the optimal control signal found by direct collocation." width="70%" />
+<p class="caption">
+Figure 3.10: ODE45 integration with the optimal control signal found by direct collocation.
+</p>
+</div>
+<p>Not only is direct collocation more accurate for this example, it is also faster. This is evident because in direct multiple shooting, evaluating the nonlinear constraints requires runing <code>ode45</code>, while in direct collocation, evaluating the nonlinear constraints simply requires calling the original continuous-time dynamics.</p>
+<p>We can easily optimize with a larger <span class="math inline">\(N=101\)</span> and get the following results.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:min-time-di-u-x-collocation-N-100"></span>
+<img src="images/min_time_di_u_collocation_N_100.png" alt="Direct collocation with N=101." width="45%" /><img src="images/min_time_di_x_collocation_N_100.png" alt="Direct collocation with N=101." width="45%" />
+<p class="caption">
+Figure 3.11: Direct collocation with N=101.
+</p>
+</div>
+</div>
+</div>
 </div>
 <div id="direct-orthogonal-collocation" class="section level3 hasAnchor" number="3.2.4">
 <h3><span class="header-section-number">3.2.4</span> Direct Orthogonal Collocation<a href="approximatedp.html#direct-orthogonal-collocation" class="anchor-section" aria-label="Anchor link to header"></a></h3>

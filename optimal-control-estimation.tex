@@ -151,7 +151,7 @@ arc=4pt}
 
 \title{Optimal Control and Estimation}
 \author{Heng Yang}
-\date{2023-09-25}
+\date{2023-09-26}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -1364,6 +1364,106 @@ Our goal is to ``transcribe'' the infinite-dimensional continuous-time optimizat
 \end{equation}
 where \(v\) is a finite-dimensional vector variable to be optimized, \(c, c_{\text{eq},i}, c_{\text{ineq},i}\) are (continuously differentiable) objective and constraint functions. Once we have done the transcription from \eqref{eq:constrained-optimal-control} to \eqref{eq:ocp-nonlinear-programming}, then we have a good number of numerical optimization algorithms at our disposal. For example, the Matlab \href{https://www.mathworks.com/help/optim/ug/fmincon.html}{\texttt{fmincon}} provides a nice interface to many such algorithms, e.g., interior-point method and sequential quadratic programming. You have already played with a simple example of \texttt{fmincon} in Exercise \ref{exr:polygoninsidecircle}. Other well-implemented NLP algorithms include \href{https://github.com/coin-or/Ipopt}{IPOPT} and \href{http://www.sbsi-sol-optimize.com/asp/sol_product_snopt.htm}{SNOPT}. However, usually the Matlab \texttt{fmincon} gives a decent start point for trying out different algorithms before moving to commercial solvers such as SNOPT. For a more comprehensive understanding about how NLP algoithms work under the hood, I suggest reading \citep{nocedal99book-numerical}.
 
+Before we talk about how to transcribe the OCP into an NLP, let us use a simple example to get a taste of \texttt{fmincon}.
+
+\begin{example}[Fire a Canon with fmincon]
+\protect\hypertarget{exm:fmincon-example}{}\label{exm:fmincon-example}On a 2D plane, suppose we have a canon at the origin \((0,0)\), and we want to fire the canon, with control over the initial velocity \((v_1, v_2)\), so that the canon ball hits the target location \((10,10)\).
+
+From our basic physics knowledge, we know the trajectory of the canon ball is described by
+\[
+\begin{cases}
+x_1(t) = v_1 t \\
+x_2(t) = v_2 t - \frac{1}{2}g t^2,
+\end{cases}
+\]
+where \(g\) is the gravity constant.
+
+With the trajectory of the canon ball written above, we can formulate our nonlinear programming problem (NLP) as:
+\begin{equation}
+\begin{split}
+\min_{v_1, v_2, T} & \quad \frac{1}{2} (v_1^2 + v_2^2) \\
+\text{subject to} & \quad v_1, v_2, T \geq 0 \\
+& \quad x_1(T) = v_1 T = 10 \\
+& \quad x_2(T) = v_2 T - \frac{1}{2}g T^2 = 10 
+\end{split}
+\label{eq:fire-canon}
+\end{equation}
+where our unknown variables are the initial velocities and the time \(T\) at which the canon ball hits the target. In the NLP \eqref{eq:fire-canon}, the first constraint asks all our varaibles to be nonnegative, the second and third constraints enforce the canon ball to hit the target.
+
+The following script formulates the NLP \eqref{eq:fire-canon} in matlab.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\VariableTok{clc}\OperatorTok{;} \VariableTok{clear}\OperatorTok{;} \VariableTok{close} \VariableTok{all}\OperatorTok{;}
+\VariableTok{g} \OperatorTok{=} \FloatTok{9.8}\OperatorTok{;}
+\VariableTok{x0} \OperatorTok{=}\NormalTok{ [}\FloatTok{0}\OperatorTok{;}\FloatTok{0}\OperatorTok{;}\FloatTok{1}\NormalTok{]}\OperatorTok{;} \CommentTok{\% initial guess of the solution}
+\CommentTok{\% define objective function}
+\VariableTok{obj} \OperatorTok{=} \OperatorTok{@}\NormalTok{(}\VariableTok{x}\NormalTok{) }\VariableTok{objective}\NormalTok{(}\VariableTok{x}\NormalTok{)}\OperatorTok{;}
+\CommentTok{\% define nonlinear constraints}
+\VariableTok{nonlincon} \OperatorTok{=} \OperatorTok{@}\NormalTok{(}\VariableTok{x}\NormalTok{) }\VariableTok{nonlinear\_con}\NormalTok{(}\VariableTok{x}\OperatorTok{,}\VariableTok{g}\NormalTok{)}\OperatorTok{;}
+\CommentTok{\% define options for fmincon}
+\VariableTok{options} \OperatorTok{=} \VariableTok{optimoptions}\NormalTok{(}\SpecialStringTok{\textquotesingle{}fmincon\textquotesingle{}}\OperatorTok{,}\SpecialStringTok{\textquotesingle{}Algorithm\textquotesingle{}}\OperatorTok{,}\SpecialStringTok{\textquotesingle{}interior{-}point\textquotesingle{}}\OperatorTok{,...}
+    \SpecialStringTok{\textquotesingle{}SpecifyObjectiveGradient\textquotesingle{}}\OperatorTok{,}\VariableTok{true}\OperatorTok{,}\SpecialStringTok{\textquotesingle{}SpecifyConstraintGradient\textquotesingle{}}\OperatorTok{,}\VariableTok{true}\OperatorTok{,...}
+    \SpecialStringTok{\textquotesingle{}checkGradients\textquotesingle{}}\OperatorTok{,}\VariableTok{false}\NormalTok{)}\OperatorTok{;}
+\CommentTok{\% call fmincon}
+\NormalTok{[}\VariableTok{xopt}\OperatorTok{,}\VariableTok{fopt}\OperatorTok{,\textasciitilde{},}\VariableTok{out}\NormalTok{] }\OperatorTok{=} \VariableTok{fmincon}\NormalTok{(}\VariableTok{obj}\OperatorTok{,}\VariableTok{x0}\OperatorTok{,...} \CommentTok{\% objective and initial guess}
+    \OperatorTok{{-}}\VariableTok{eye}\NormalTok{(}\FloatTok{3}\NormalTok{)}\OperatorTok{,}\VariableTok{zeros}\NormalTok{(}\FloatTok{3}\OperatorTok{,}\FloatTok{1}\NormalTok{)}\OperatorTok{,...} \CommentTok{\% linear inequality constraints}
+\NormalTok{    []}\OperatorTok{,}\NormalTok{[]}\OperatorTok{,...} \CommentTok{\% no linear equality constraints}
+\NormalTok{    []}\OperatorTok{,}\NormalTok{[]}\OperatorTok{,...} \CommentTok{\% no upper and lower bounds}
+    \VariableTok{nonlincon}\OperatorTok{,...} \CommentTok{\% nonlinear constraints}
+    \VariableTok{options}\NormalTok{)}\OperatorTok{;}
+\VariableTok{fprintf}\NormalTok{(}\StringTok{"Maximum constraint violation: \%3.2f.\textbackslash{}n"}\OperatorTok{,}\VariableTok{out}\NormalTok{.}\VariableTok{constrviolation}\NormalTok{)}\OperatorTok{;}
+\VariableTok{fprintf}\NormalTok{(}\StringTok{"Objective: \%3.2f.\textbackslash{}n"}\OperatorTok{,}\VariableTok{fopt}\NormalTok{)}\OperatorTok{;}
+\CommentTok{\% plot the solution}
+\VariableTok{T} \OperatorTok{=} \VariableTok{xopt}\NormalTok{(}\FloatTok{3}\NormalTok{)}\OperatorTok{;}
+\VariableTok{t} \OperatorTok{=} \FloatTok{0}\OperatorTok{:}\FloatTok{0.01}\OperatorTok{:}\VariableTok{T}\OperatorTok{;}
+\VariableTok{xt} \OperatorTok{=} \VariableTok{xopt}\NormalTok{(}\FloatTok{1}\NormalTok{)}\OperatorTok{*}\VariableTok{t}\OperatorTok{;}
+\VariableTok{yt} \OperatorTok{=} \VariableTok{xopt}\NormalTok{(}\FloatTok{2}\NormalTok{)}\OperatorTok{*}\VariableTok{t} \OperatorTok{{-}} \FloatTok{0.5}\OperatorTok{*}\VariableTok{g}\OperatorTok{*}\NormalTok{(}\VariableTok{t}\OperatorTok{.\^{}}\FloatTok{2}\NormalTok{)}\OperatorTok{;}
+\VariableTok{figure}\OperatorTok{;}
+\VariableTok{plot}\NormalTok{(}\VariableTok{xt}\OperatorTok{,}\VariableTok{yt}\OperatorTok{,}\SpecialStringTok{\textquotesingle{}LineWidth\textquotesingle{}}\OperatorTok{,}\FloatTok{2}\NormalTok{)}\OperatorTok{;}
+\VariableTok{hold} \VariableTok{on}
+\VariableTok{scatter}\NormalTok{(}\FloatTok{10}\OperatorTok{,}\FloatTok{10}\OperatorTok{,}\FloatTok{100}\OperatorTok{,}\StringTok{"red"}\OperatorTok{,}\SpecialStringTok{\textquotesingle{}filled\textquotesingle{}}\OperatorTok{,}\SpecialStringTok{\textquotesingle{}diamond\textquotesingle{}}\NormalTok{)}\OperatorTok{;}
+\VariableTok{axis} \VariableTok{equal}\OperatorTok{;} \VariableTok{grid} \VariableTok{on}\OperatorTok{;}
+\VariableTok{xlabel}\NormalTok{(}\SpecialStringTok{\textquotesingle{}$x\_1(t)$\textquotesingle{}}\OperatorTok{,}\SpecialStringTok{\textquotesingle{}FontSize\textquotesingle{}}\OperatorTok{,}\FloatTok{24}\OperatorTok{,}\SpecialStringTok{\textquotesingle{}Interpreter\textquotesingle{}}\OperatorTok{,}\SpecialStringTok{\textquotesingle{}latex\textquotesingle{}}\NormalTok{)}\OperatorTok{;}
+\VariableTok{ylabel}\NormalTok{(}\SpecialStringTok{\textquotesingle{}$x\_2(t)$\textquotesingle{}}\OperatorTok{,}\SpecialStringTok{\textquotesingle{}FontSize\textquotesingle{}}\OperatorTok{,}\FloatTok{24}\OperatorTok{,}\SpecialStringTok{\textquotesingle{}Interpreter\textquotesingle{}}\OperatorTok{,}\SpecialStringTok{\textquotesingle{}latex\textquotesingle{}}\NormalTok{)}\OperatorTok{;}
+\VariableTok{ax} \OperatorTok{=} \VariableTok{gca}\OperatorTok{;} \VariableTok{ax}\NormalTok{.}\VariableTok{FontSize} \OperatorTok{=} \FloatTok{20}\OperatorTok{;}
+\CommentTok{\%\% helper functions}
+\KeywordTok{function}\NormalTok{ [}\VariableTok{f}\OperatorTok{,}\VariableTok{df}\NormalTok{] }\OperatorTok{=} \VariableTok{objective}\NormalTok{(}\VariableTok{x}\NormalTok{)}
+\CommentTok{\% x is our decision variable: [v1, v2, T]}
+\CommentTok{\% objective function}
+\VariableTok{f} \OperatorTok{=} \FloatTok{0.5} \OperatorTok{*}\NormalTok{ (}\VariableTok{x}\NormalTok{(}\FloatTok{1}\NormalTok{)}\OperatorTok{\^{}}\FloatTok{2} \OperatorTok{+} \VariableTok{x}\NormalTok{(}\FloatTok{2}\NormalTok{)}\OperatorTok{\^{}}\FloatTok{2}\NormalTok{)}\OperatorTok{;}
+\CommentTok{\% gradient of the objective function (optional)}
+\VariableTok{df} \OperatorTok{=}\NormalTok{ [}\VariableTok{x}\NormalTok{(}\FloatTok{1}\NormalTok{)}\OperatorTok{;} \VariableTok{x}\NormalTok{(}\FloatTok{2}\NormalTok{)}\OperatorTok{;} \FloatTok{0}\NormalTok{]}\OperatorTok{;} \CommentTok{\% column vector}
+\KeywordTok{end}
+
+\KeywordTok{function}\NormalTok{ [}\VariableTok{c}\OperatorTok{,}\VariableTok{ceq}\OperatorTok{,}\VariableTok{dc}\OperatorTok{,}\VariableTok{dceq}\NormalTok{] }\OperatorTok{=} \VariableTok{nonlinear\_con}\NormalTok{(}\VariableTok{x}\OperatorTok{,}\VariableTok{g}\NormalTok{)}
+\CommentTok{\% no inequality constraints}
+\VariableTok{c} \OperatorTok{=}\NormalTok{ []}\OperatorTok{;} \VariableTok{dc} \OperatorTok{=}\NormalTok{ []}\OperatorTok{;}
+\CommentTok{\% two equality constraints}
+\VariableTok{ceq} \OperatorTok{=}\NormalTok{ [}\VariableTok{x}\NormalTok{(}\FloatTok{1}\NormalTok{)}\OperatorTok{*}\VariableTok{x}\NormalTok{(}\FloatTok{3}\NormalTok{)}\OperatorTok{{-}}\FloatTok{10}\OperatorTok{;}
+       \VariableTok{x}\NormalTok{(}\FloatTok{2}\NormalTok{)}\OperatorTok{*}\VariableTok{x}\NormalTok{(}\FloatTok{3}\NormalTok{)}\OperatorTok{{-}}\FloatTok{0.5}\OperatorTok{*}\VariableTok{g}\OperatorTok{*}\VariableTok{x}\NormalTok{(}\FloatTok{3}\NormalTok{)}\OperatorTok{\^{}}\FloatTok{2}\OperatorTok{{-}}\FloatTok{10}\NormalTok{]}\OperatorTok{;}
+\CommentTok{\% explicit gradient of ceq}
+\VariableTok{dceq} \OperatorTok{=}\NormalTok{ [}\VariableTok{x}\NormalTok{(}\FloatTok{3}\NormalTok{)}\OperatorTok{,} \FloatTok{0}\OperatorTok{;}
+        \FloatTok{0}\OperatorTok{,} \VariableTok{x}\NormalTok{(}\FloatTok{3}\NormalTok{)}\OperatorTok{;}
+        \VariableTok{x}\NormalTok{(}\FloatTok{1}\NormalTok{)}\OperatorTok{,} \VariableTok{x}\NormalTok{(}\FloatTok{2}\NormalTok{)}\OperatorTok{{-}}\VariableTok{g}\OperatorTok{*}\VariableTok{x}\NormalTok{(}\FloatTok{3}\NormalTok{)]}\OperatorTok{;}
+\KeywordTok{end}
+\end{Highlighting}
+\end{Shaded}
+
+Running the code above, we get the following trajectory
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.7\linewidth]{images/canon_ball} 
+
+}
+
+\caption{Trajectory of the canon ball obtained from fmincon.}\label{fig:fire-canon-ball}
+\end{figure}
+
+What if you change the initial guess to \texttt{fmincon}, or add more constraints? Feel free to play with the code \href{https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/fire_canon_ball_fmincon.m}{here}.
+\end{example}
+
 It turns out there are multiple different ways to transcribe the optimal control problem \eqref{eq:constrained-optimal-control} as the nonlinear programming problem \eqref{eq:ocp-nonlinear-programming}. In the following, we will introduce three different formulations, direct single shooting, direct multiple shooting, and direct collocation.
 
 \hypertarget{direct-single-shooting}{%
@@ -1515,6 +1615,143 @@ In summary, the transcribed NLP for the OCP problem using direct multiple shooti
 
 Direct multiple shooting avoids the recursion of numerical integrators such as RK4, but at the expense of introducing additional state variables in the NLP.
 
+Let us try direct multiple shooting on the double integrator.
+
+\begin{example}[Direct Multiple Shooting for Minimum-Time Double Integrator]
+\protect\hypertarget{exm:multiple-shooting-double-integrator}{}\label{exm:multiple-shooting-double-integrator}
+
+The double integrator has continuous-time dynamics (which you have already seen in Exercise \ref{exr:lqrconstraints}):
+\[
+\ddot{q} = u.
+\]
+In standard state-space form, the dynamics is linear
+\[
+x = \begin{bmatrix} q \\ \dot{q} \end{bmatrix}, \quad 
+\dot{x} = \begin{bmatrix} 0 & 1 \\ 0 & 0 \end{bmatrix} x + \begin{bmatrix} 0 \\ 1 \end{bmatrix} u.
+\]
+
+Let us consider the minimum-time optimal control problem
+\begin{equation}
+\begin{split}
+\min_{u(t),t \in [0,T]} & \quad T \\
+\text{subject to} & \quad \dot{x} = A x + Bu, \quad x(0) = x_0 \\
+& \quad x(T) = 0 \\
+& \quad u(t) \in [-1,1], \forall t \in [0,T].
+\end{split}
+\end{equation}
+which seeks to get from the initial condition \(x_0\) to the origin as fast as possible.
+
+You should know from our physics intuition that the optimal controller is bang-bang, i.e., the optimal control first accelerates (deaccelerates) using the maximum control and then reverses using the opposite maximum control.
+
+Let's see if we can obtain the optimal controller using direct multiple shooting.
+
+In direct multiple shooting, we will optimize the control trajectory, the state trajectory, and the final time \(T\). We fix the number of intervals \(N\), and discretize \([0,T]\) evenly into \(N\) intervals, which leads to variables for the NLP as
+\[
+v=(T,x_0,\dots,x_{N},u_0,\dots,u_N).
+\]
+We can easily enforce the control constraints:
+\[
+u_k \in [-1,1],k=0,\dots,N,
+\]
+and the initial / terminal constraints
+\[
+x_0 = x_0, \quad x_N = 0.
+\]
+The only nontrivial constraint is the dynamics constraint:
+\[
+x_{k+1} = \text{RK4}(x_k,u_k),k=0,\dots,N-1.
+\]
+
+The following script shows how to use the Matlab integrator \texttt{ode45} to enforce the dynamics constraint.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{function} \VariableTok{dx} \OperatorTok{=} \VariableTok{double\_integrator}\NormalTok{(}\VariableTok{t}\OperatorTok{,}\VariableTok{states}\OperatorTok{,}\VariableTok{v}\NormalTok{)}
+\CommentTok{\% return xdot at the selected times t and states, using information from v}
+\CommentTok{\% assume the controls in v define piece{-}wise constant control signal}
+\VariableTok{T} \OperatorTok{=} \VariableTok{v}\NormalTok{(}\FloatTok{1}\NormalTok{)}\OperatorTok{;} \CommentTok{\% final time}
+\VariableTok{N} \OperatorTok{=}\NormalTok{ (}\VariableTok{length}\NormalTok{(}\VariableTok{v}\NormalTok{) }\OperatorTok{{-}} \FloatTok{1}\NormalTok{) }\OperatorTok{/} \FloatTok{3}\OperatorTok{;} \CommentTok{\% number of knot points}
+\VariableTok{u\_grid} \OperatorTok{=} \VariableTok{v}\NormalTok{(}\FloatTok{2}\OperatorTok{+}\FloatTok{2}\OperatorTok{*}\VariableTok{N}\OperatorTok{:}\FloatTok{3}\OperatorTok{*}\VariableTok{N}\OperatorTok{+}\FloatTok{1}\NormalTok{)}\OperatorTok{;} \CommentTok{\% N controls}
+\VariableTok{t\_grid} \OperatorTok{=} \VariableTok{linspace}\NormalTok{(}\FloatTok{0}\OperatorTok{,}\FloatTok{1}\OperatorTok{,}\VariableTok{N}\NormalTok{)}\OperatorTok{*}\VariableTok{T}\OperatorTok{;}
+\VariableTok{u\_t} \OperatorTok{=} \VariableTok{interp1}\NormalTok{(}\VariableTok{t\_grid}\OperatorTok{,}\VariableTok{u\_grid}\OperatorTok{,}\VariableTok{t}\OperatorTok{,}\SpecialStringTok{\textquotesingle{}previous\textquotesingle{}}\NormalTok{)}\OperatorTok{;} \CommentTok{\% piece{-}wise constant}
+\VariableTok{A} \OperatorTok{=}\NormalTok{ [}\FloatTok{0} \FloatTok{1}\OperatorTok{;} \FloatTok{0} \FloatTok{0}\NormalTok{]}\OperatorTok{;}
+\VariableTok{B} \OperatorTok{=}\NormalTok{ [}\FloatTok{0}\OperatorTok{;} \FloatTok{1}\NormalTok{]}\OperatorTok{;}
+\VariableTok{dx} \OperatorTok{=} \VariableTok{A} \OperatorTok{*} \VariableTok{states} \OperatorTok{+} \VariableTok{B} \OperatorTok{*} \VariableTok{u\_t}\OperatorTok{;}
+\KeywordTok{end}
+
+\KeywordTok{function}\NormalTok{ [}\VariableTok{c}\OperatorTok{,}\VariableTok{ceq}\NormalTok{] }\OperatorTok{=} \VariableTok{double\_integrator\_nonlincon}\NormalTok{(}\VariableTok{v}\OperatorTok{,}\VariableTok{initial\_state}\NormalTok{)}
+\CommentTok{\% enforce x\_k+1 = RK45(x\_k, u\_k); integration done using ode45}
+\VariableTok{T} \OperatorTok{=} \VariableTok{v}\NormalTok{(}\FloatTok{1}\NormalTok{)}\OperatorTok{;} \CommentTok{\% final time}
+\VariableTok{N} \OperatorTok{=}\NormalTok{ (}\VariableTok{length}\NormalTok{(}\VariableTok{v}\NormalTok{) }\OperatorTok{{-}} \FloatTok{1}\NormalTok{) }\OperatorTok{/} \FloatTok{3}\OperatorTok{;} \CommentTok{\% number of knot points}
+\VariableTok{t\_grid} \OperatorTok{=} \VariableTok{linspace}\NormalTok{(}\FloatTok{0}\OperatorTok{,}\FloatTok{1}\OperatorTok{,}\VariableTok{N}\NormalTok{)}\OperatorTok{*}\VariableTok{T}\OperatorTok{;}
+\VariableTok{x1} \OperatorTok{=} \VariableTok{v}\NormalTok{(}\FloatTok{2}\OperatorTok{:}\VariableTok{N}\OperatorTok{+}\FloatTok{1}\NormalTok{)}\OperatorTok{;} \CommentTok{\% position }
+\VariableTok{x2} \OperatorTok{=} \VariableTok{v}\NormalTok{(}\FloatTok{2}\OperatorTok{+}\VariableTok{N}\OperatorTok{:}\FloatTok{2}\OperatorTok{*}\VariableTok{N}\OperatorTok{+}\FloatTok{1}\NormalTok{)}\OperatorTok{;} \CommentTok{\% velocity}
+\CommentTok{\% u = v(2+2*N:3*N+1); \% controls}
+\CommentTok{\% no inequality constraints}
+\VariableTok{c} \OperatorTok{=}\NormalTok{ []}\OperatorTok{;} 
+\CommentTok{\% equality constraints}
+\VariableTok{ceq} \OperatorTok{=}\NormalTok{ []}\OperatorTok{;}
+\KeywordTok{for} \VariableTok{i} \OperatorTok{=} \FloatTok{1}\OperatorTok{:}\NormalTok{(}\VariableTok{N}\OperatorTok{{-}}\FloatTok{1}\NormalTok{)}
+    \VariableTok{ti} \OperatorTok{=} \VariableTok{t\_grid}\NormalTok{(}\VariableTok{i}\NormalTok{)}\OperatorTok{;}
+    \VariableTok{tip1} \OperatorTok{=} \VariableTok{t\_grid}\NormalTok{(}\VariableTok{i}\OperatorTok{+}\FloatTok{1}\NormalTok{)}\OperatorTok{;}
+    \VariableTok{xi} \OperatorTok{=}\NormalTok{ [}\VariableTok{x1}\NormalTok{(}\VariableTok{i}\NormalTok{)}\OperatorTok{;}\VariableTok{x2}\NormalTok{(}\VariableTok{i}\NormalTok{)]}\OperatorTok{;}
+    \VariableTok{xip1} \OperatorTok{=}\NormalTok{ [}\VariableTok{x1}\NormalTok{(}\VariableTok{i}\OperatorTok{+}\FloatTok{1}\NormalTok{)}\OperatorTok{;}\VariableTok{x2}\NormalTok{(}\VariableTok{i}\OperatorTok{+}\FloatTok{1}\NormalTok{)]}\OperatorTok{;}
+    \CommentTok{\% integrate system dynamics starting from xi in [ti,tip1]}
+    \VariableTok{tt} \OperatorTok{=} \VariableTok{ti}\OperatorTok{:}\NormalTok{(}\VariableTok{tip1}\OperatorTok{{-}}\VariableTok{ti}\NormalTok{)}\OperatorTok{/}\FloatTok{20}\OperatorTok{:}\VariableTok{tip1}\OperatorTok{;} \CommentTok{\% fine{-}grained time discretization}
+\NormalTok{    [}\OperatorTok{\textasciitilde{},}\VariableTok{sol\_int}\NormalTok{] }\OperatorTok{=} \VariableTok{ode45}\NormalTok{(}\OperatorTok{@}\NormalTok{(}\VariableTok{t}\OperatorTok{,}\VariableTok{y}\NormalTok{) }\VariableTok{double\_integrator}\NormalTok{(}\VariableTok{t}\OperatorTok{,}\VariableTok{y}\OperatorTok{,}\VariableTok{v}\NormalTok{)}\OperatorTok{,}\VariableTok{tt}\OperatorTok{,}\VariableTok{xi}\NormalTok{)}\OperatorTok{;}
+    \VariableTok{xip1\_int} \OperatorTok{=} \VariableTok{sol\_int}\NormalTok{(}\KeywordTok{end}\OperatorTok{,:}\NormalTok{)}\OperatorTok{;}
+    \CommentTok{\% enforce them to be the same}
+    \VariableTok{ceq} \OperatorTok{=}\NormalTok{ [}\VariableTok{ceq}\OperatorTok{;}
+           \VariableTok{xip1\_int}\NormalTok{(}\FloatTok{1}\NormalTok{) }\OperatorTok{{-}} \VariableTok{xip1}\NormalTok{(}\FloatTok{1}\NormalTok{)}\OperatorTok{;}
+           \VariableTok{xip1\_int}\NormalTok{(}\FloatTok{2}\NormalTok{) }\OperatorTok{{-}} \VariableTok{xip1}\NormalTok{(}\FloatTok{2}\NormalTok{)]}\OperatorTok{;}
+\KeywordTok{end}
+\CommentTok{\% add initial state constraint}
+\VariableTok{ceq} \OperatorTok{=}\NormalTok{ [}\VariableTok{ceq}\OperatorTok{;}
+       \VariableTok{x1}\NormalTok{(}\FloatTok{1}\NormalTok{) }\OperatorTok{{-}} \VariableTok{initial\_state}\NormalTok{(}\FloatTok{1}\NormalTok{)}\OperatorTok{;}
+       \VariableTok{x2}\NormalTok{(}\FloatTok{1}\NormalTok{) }\OperatorTok{{-}} \VariableTok{initial\_state}\NormalTok{(}\FloatTok{2}\NormalTok{)]}\OperatorTok{;}
+
+\CommentTok{\% add terminal state constraint: land at origin}
+\VariableTok{ceq} \OperatorTok{=}\NormalTok{ [}\VariableTok{ceq}\OperatorTok{;}
+       \VariableTok{x1}\NormalTok{(}\KeywordTok{end}\NormalTok{)}\OperatorTok{;}
+       \VariableTok{x2}\NormalTok{(}\KeywordTok{end}\NormalTok{)]}\OperatorTok{;} 
+\KeywordTok{end}
+\end{Highlighting}
+\end{Shaded}
+
+I first define a function \texttt{double\_integrator} that returns the continuous-time dynaimcs, and then in the nonlinear constraints function \texttt{double\_integrator\_nonlincon} I use \texttt{ode45} to simulate the dynamics starting at \(x_k\) from \(t_k\) to \(t_{k+1}\):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{[}\OperatorTok{\textasciitilde{},}\VariableTok{sol\_int}\NormalTok{] }\OperatorTok{=} \VariableTok{ode45}\NormalTok{(}\OperatorTok{@}\NormalTok{(}\VariableTok{t}\OperatorTok{,}\VariableTok{y}\NormalTok{) }\VariableTok{double\_integrator}\NormalTok{(}\VariableTok{t}\OperatorTok{,}\VariableTok{y}\OperatorTok{,}\VariableTok{v}\NormalTok{)}\OperatorTok{,}\VariableTok{tt}\OperatorTok{,}\VariableTok{xi}\NormalTok{)}\OperatorTok{;}
+\end{Highlighting}
+\end{Shaded}
+
+The solution I got from \texttt{ode45} should be equal to my decision state variable.
+
+Running the \href{https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/double_integrator_multiple_shooting.m}{complete code} with \(x_0 = [-10;0]\) and \(N=51\), I obtain the control signal in Fig. \ref{fig:min-time-di-u-ms}, which is bang-bang.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.7\linewidth]{images/min_time_di_u} 
+
+}
+
+\caption{Optimal control signal by direct multiple shooting.}\label{fig:min-time-di-u-ms}
+\end{figure}
+
+Using \texttt{ode45} to integrate the double integrator dynamics from \(x_0\) with the controller in Fig. \ref{fig:min-time-di-u-ms}, we obtain the following state trajectory. Notice that the final state does not exactly land at the origin. This is expected due to our time discretization and imperfect dynamics integration using \texttt{ode45}. Make sure you play with the code, e.g., by changing the initial state \(x_0\) and see what happens.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.7\linewidth]{images/min_time_di_x} 
+
+}
+
+\caption{ODE45 integration with the optimal control signal found by direct multiple shooting.}\label{fig:min-time-di-x-ms}
+\end{figure}
+
+\end{example}
+
 \hypertarget{direct-collocation}{%
 \subsection{Direct Collocation}\label{direct-collocation}}
 
@@ -1654,6 +1891,91 @@ g_T(x_N) + \sum_{k=0}^{N-1} \frac{g(x_k,u_k) + g(x_{k+1},u_{k+1})}{2} h_k.
 \end{split}
 \label{eq:constrained-optimal-control-nlp}
 \end{equation}
+
+Let us apply direct collocation to the same double integrator Example \ref{exm:multiple-shooting-double-integrator}.
+
+\begin{example}[Direct Collocation for Minimum-Time Double Integrator]
+\protect\hypertarget{exm:collocation-double-integrator}{}\label{exm:collocation-double-integrator}
+
+Consider the same minimum-time optimal control problem in Example \ref{exm:multiple-shooting-double-integrator}.
+
+To apply direct collocation, we have our NLP variable
+\[
+v = (T,x_0,\dots,x_N,u_0,\dots,u_N).
+\]
+Similarly we can enforce the control constraints and the initial / terminal constraints.
+
+The following script shows how to enforce the collocation constraint.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{function}\NormalTok{ [}\VariableTok{c}\OperatorTok{,}\VariableTok{ceq}\NormalTok{] }\OperatorTok{=} \VariableTok{collocation}\NormalTok{(}\VariableTok{v}\OperatorTok{,}\VariableTok{N}\OperatorTok{,}\VariableTok{initial\_state}\NormalTok{)}
+\VariableTok{T} \OperatorTok{=} \VariableTok{v}\NormalTok{(}\FloatTok{1}\NormalTok{)}\OperatorTok{;}
+\VariableTok{h} \OperatorTok{=} \VariableTok{T}\OperatorTok{/}\NormalTok{(}\VariableTok{N}\OperatorTok{{-}}\FloatTok{1}\NormalTok{)}\OperatorTok{;}
+\VariableTok{x} \OperatorTok{=} \VariableTok{reshape}\NormalTok{(}\VariableTok{v}\NormalTok{(}\FloatTok{2}\OperatorTok{:}\FloatTok{2}\OperatorTok{*}\VariableTok{N}\OperatorTok{+}\FloatTok{1}\NormalTok{)}\OperatorTok{,}\FloatTok{2}\OperatorTok{,}\VariableTok{N}\NormalTok{)}\OperatorTok{;}
+\VariableTok{u} \OperatorTok{=} \VariableTok{v}\NormalTok{(}\FloatTok{2}\OperatorTok{*}\VariableTok{N}\OperatorTok{+}\FloatTok{2}\OperatorTok{:}\KeywordTok{end}\NormalTok{)}\OperatorTok{;}
+\VariableTok{c} \OperatorTok{=}\NormalTok{ []}\OperatorTok{;}
+\VariableTok{ceq} \OperatorTok{=}\NormalTok{ []}\OperatorTok{;}
+\KeywordTok{for} \VariableTok{k}\OperatorTok{=}\FloatTok{1}\OperatorTok{:}\VariableTok{N}\OperatorTok{{-}}\FloatTok{1}
+    \VariableTok{uk} \OperatorTok{=} \VariableTok{u}\NormalTok{(}\VariableTok{k}\NormalTok{)}\OperatorTok{;}
+    \VariableTok{ukp1} \OperatorTok{=} \VariableTok{u}\NormalTok{(}\VariableTok{k}\OperatorTok{+}\FloatTok{1}\NormalTok{)}\OperatorTok{;}
+    \VariableTok{xk} \OperatorTok{=} \VariableTok{x}\NormalTok{(}\OperatorTok{:,}\VariableTok{k}\NormalTok{)}\OperatorTok{;}
+    \VariableTok{xkp1} \OperatorTok{=} \VariableTok{x}\NormalTok{(}\OperatorTok{:,}\VariableTok{k}\OperatorTok{+}\FloatTok{1}\NormalTok{)}\OperatorTok{;}
+    \VariableTok{fk} \OperatorTok{=} \VariableTok{double\_integrator}\NormalTok{(}\VariableTok{xk}\OperatorTok{,}\VariableTok{uk}\NormalTok{)}\OperatorTok{;}
+    \VariableTok{fkp1} \OperatorTok{=} \VariableTok{double\_integrator}\NormalTok{(}\VariableTok{xkp1}\OperatorTok{,}\VariableTok{ukp1}\NormalTok{)}\OperatorTok{;}
+    \CommentTok{\% collocation points}
+    \VariableTok{xkc} \OperatorTok{=} \FloatTok{0.5}\OperatorTok{*}\NormalTok{(}\VariableTok{xk}\OperatorTok{+}\VariableTok{xkp1}\NormalTok{) }\OperatorTok{+} \VariableTok{h}\OperatorTok{/}\FloatTok{8} \OperatorTok{*}\NormalTok{ (}\VariableTok{fk} \OperatorTok{{-}} \VariableTok{fkp1}\NormalTok{)}\OperatorTok{;}
+    \VariableTok{ukc} \OperatorTok{=} \FloatTok{0.5}\OperatorTok{*}\NormalTok{(}\VariableTok{uk} \OperatorTok{+} \VariableTok{ukp1}\NormalTok{)}\OperatorTok{;}
+    \VariableTok{dxkc} \OperatorTok{=} \OperatorTok{{-}}\FloatTok{3}\OperatorTok{/}\NormalTok{(}\FloatTok{2}\OperatorTok{*}\VariableTok{h}\NormalTok{) }\OperatorTok{*}\NormalTok{ (}\VariableTok{xk}\OperatorTok{{-}}\VariableTok{xkp1}\NormalTok{) }\OperatorTok{{-}} \FloatTok{0.25}\OperatorTok{*}\NormalTok{(}\VariableTok{fk} \OperatorTok{+} \VariableTok{fkp1}\NormalTok{)}\OperatorTok{;}
+    \CommentTok{\% collocation constraint}
+    \VariableTok{ceq} \OperatorTok{=}\NormalTok{ [}\VariableTok{ceq}\OperatorTok{;}
+           \VariableTok{dxkc} \OperatorTok{{-}} \VariableTok{double\_integrator}\NormalTok{(}\VariableTok{xkc}\OperatorTok{,}\VariableTok{ukc}\NormalTok{)]}\OperatorTok{;}
+\KeywordTok{end}
+\VariableTok{ceq} \OperatorTok{=}\NormalTok{ [}\VariableTok{ceq}\OperatorTok{;}
+       \VariableTok{x}\NormalTok{(}\OperatorTok{:,}\FloatTok{1}\NormalTok{) }\OperatorTok{{-}} \VariableTok{initial\_state}\OperatorTok{;} \CommentTok{\% initial condition}
+       \VariableTok{x}\NormalTok{(}\OperatorTok{:,}\KeywordTok{end}\NormalTok{)]}\OperatorTok{;} \CommentTok{\% land at zero}
+\KeywordTok{end}
+\end{Highlighting}
+\end{Shaded}
+
+As you can see, we do not need any numerical integrator such as \texttt{ode45}. The only thing we need is the continuous-time double integrator dynamics.
+
+Running the \href{https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/double_integrator_collocation.m}{complete code} with \(x_0 = (-10,0)\) and \(N=51\), we get the control signal in Fig. \ref{fig:min-time-di-u-collocation} that is bang-bang.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.7\linewidth]{images/min_time_di_u_collocation} 
+
+}
+
+\caption{Optimal control signal by direct collocation.}\label{fig:min-time-di-u-collocation}
+\end{figure}
+
+Using \texttt{ode45} to integrate the double integrator dynamics from \(x_0\) with the controller in Fig. \ref{fig:min-time-di-u-collocation}, we obtain the following state trajectory. Comparing Fig. \ref{fig:min-time-di-x-collocation} with Fig. \ref{fig:min-time-di-x-ms}, we can observe that the terminal state of the trajectory obtained from direct collocation is more accurate than that obtained from direct multiple shooting.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.7\linewidth]{images/min_time_di_x_collocation} 
+
+}
+
+\caption{ODE45 integration with the optimal control signal found by direct collocation.}\label{fig:min-time-di-x-collocation}
+\end{figure}
+
+Not only is direct collocation more accurate for this example, it is also faster. This is evident because in direct multiple shooting, evaluating the nonlinear constraints requires runing \texttt{ode45}, while in direct collocation, evaluating the nonlinear constraints simply requires calling the original continuous-time dynamics.
+
+We can easily optimize with a larger \(N=101\) and get the following results.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.45\linewidth]{images/min_time_di_u_collocation_N_100} \includegraphics[width=0.45\linewidth]{images/min_time_di_x_collocation_N_100} 
+
+}
+
+\caption{Direct collocation with N=101.}\label{fig:min-time-di-u-x-collocation-N-100}
+\end{figure}
+
+\end{example}
 
 \hypertarget{direct-orthogonal-collocation}{%
 \subsection{Direct Orthogonal Collocation}\label{direct-orthogonal-collocation}}
