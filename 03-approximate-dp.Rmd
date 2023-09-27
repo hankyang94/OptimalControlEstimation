@@ -892,6 +892,8 @@ knitr::include_graphics('images/min_time_di_x_collocation_N_100.png')
 :::
 ::: 
 
+If you are interested in direct collocation, there is a nice tutorial with Matlab examples in [@kelly17siam-trajopt].
+
 ### Direct Orthogonal Collocation
 
 ## Model Predictive Control
