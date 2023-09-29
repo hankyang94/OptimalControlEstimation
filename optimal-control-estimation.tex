@@ -5399,6 +5399,8 @@ With \(T=10\), consider the following optimal control problem
 Plot the optimized control signal and resulting state trajectory for both a and b. You probably want to refer to the source codes of Example \ref{exm:multiple-shooting-double-integrator} and \ref{exm:collocation-double-integrator}.
 \end{exercise}
 
+~
+
 \begin{exercise}[Policy Iteration of Shortest Path]
 \protect\hypertarget{exr:shortest-path}{}\label{exr:shortest-path}
 
@@ -5409,7 +5411,7 @@ In Example \ref{exm:gridworld}, we used value iteration to solve the shortest pa
 \item
   Initialize the policy \(\pi_0\).
 \item
-  For \(k=0,1,2,\ldots\), compute \(Q^{\pi_k}\) via \eqref{eq:bellman-consistency-Qpi-linearsystem}. Then update policy by greedy method \(\pi_{k+1}=\pi_{Q^{\pi_k}}\) (see \eqref{eq:def-pi-Q} for the definition of \(\pi_Q\)).
+  For \(k=0,1,2,\ldots\), compute \(Q_{\pi_k}\) via \eqref{eq:bellman-consistency-Qpi-linearsystem}. Then update policy by greedy method \(\pi_{k+1}=\pi_{Q^{\pi_k}}\) (see \eqref{eq:def-pi-Q} for the definition of \(\pi_Q\)).
 \end{enumerate}
 
 Now try to solve the following problems.
@@ -5425,7 +5427,7 @@ Now try to solve the following problems.
 \item
   (Bonus) Beyond iterative algorithms, there is another formulation of the problem in linear programming. Try to implement the following problem:
   \[\max_{J} \sum_{x}J(x),\quad s.t. J(x)\le g(x,u) + \gamma\sum_{x'}P(x'|x,u)J(x'),\ \forall x,u.\]
-  What can you find? (Hint: formulate the problem as linear programming,)
+  What can you find? (Hint: formulate the problem as a linear programming problem.)
 \end{enumerate}
 
 \end{exercise}
