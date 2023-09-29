@@ -5343,10 +5343,10 @@ With the above illustration, we parameterize the system with two scalars: \(x\) 
 \item
   Translate the equations in (a) into the basic state-space dynamics form
   \begin{equation}
-  \dot{\mathbf{x}}=f(\mathbf{x}, \mathbf{u}).
+  \dot{\mathbf{x}}=F(\mathbf{x}, \mathbf{u}).
   \label{eq:ex-cartpole-3}
   \end{equation}
-  What are \(\mathbf{x},\mathbf{u},f\) here?
+  What are \(\mathbf{x},\mathbf{u},F\) here?
   (Hint: try \(\mathbf{x}=[x,\theta,\dot{x},\dot{\theta}]^\top\).)
 \item
   Linearize the dynamics in (b) around the unstable equilibrium where \(\theta^*=\pi\) and \(x^*=\dot{x}^*=\dot{\theta}^*=0.\) (i.e., the pole is in the upright position and the cart stay at zero.) The result should be in the form of
@@ -5356,7 +5356,7 @@ With the above illustration, we parameterize the system with two scalars: \(x\) 
   \end{equation}
   where \(\Delta\mathbf{x} = \mathbf{x}-\mathbf{x}^*\) and \(\Delta\mathbf{u}=\mathbf{u}-\mathbf{u}^*\).
 \item
-  Define the linearization error \(e(\mathbf{x}, \mathbf{u}):=\|f(\mathbf{x}, \mathbf{u}) - (A\Delta\mathbf{x}+B\Delta\mathbf{u})\|^2\). Simulate the original system \eqref{eq:ex-cartpole-3} and the linearized system \eqref{eq:ex-cartpole-4} with the same initial condition. How does the linearization error change over time? Provide at least three different initialization results.
+  Define the linearization error \(e(\mathbf{x}, \mathbf{u}):=\|F(\mathbf{x}, \mathbf{u}) - (A\Delta\mathbf{x}+B\Delta\mathbf{u})\|^2\). Simulate the original system \eqref{eq:ex-cartpole-3} and the linearized system \eqref{eq:ex-cartpole-4} with the same initial condition. How does the linearization error change over time? Provide at least three different initialization results.
   (Hints: (i) Sanity check: intuitively the error should not depend on the initial location \(x\), and it should have symmetry. Is that true in your simulation? (ii) In the same unstable position, how does push/pull (positive/negative) force change the results?)
 \item
   Convert the continuous-time dynamics in \eqref{eq:ex-cartpole-4} to discrete-time with a fixed time-discretization. Then design an LQR controller to stabilize the cart-pole at the unstable equilibrium. Does the LQR controller succeed for all initial conditions you tested? (Hint: try several initial conditions where the end point of the pole is above or below the horizontal line.) You may want to take a look at the LQR example for the simple pendulum in Example \ref{exm:lqr-pendulum-stabilization}.

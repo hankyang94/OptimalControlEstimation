@@ -573,10 +573,10 @@ where $\mathbf{q}=\begin{bmatrix}x\\ \theta \end{bmatrix}$, $\mathbf{u}=\begin{b
 <ol start="2" style="list-style-type: lower-alpha">
 <li><p>Translate the equations in (a) into the basic state-space dynamics form
 <span class="math display" id="eq:ex-cartpole-3">\[\begin{equation}
-\dot{\mathbf{x}}=f(\mathbf{x}, \mathbf{u}).
+\dot{\mathbf{x}}=F(\mathbf{x}, \mathbf{u}).
 \tag{9.6}
 \end{equation}\]</span>
-What are <span class="math inline">\(\mathbf{x},\mathbf{u},f\)</span> here?
+What are <span class="math inline">\(\mathbf{x},\mathbf{u},F\)</span> here?
 (Hint: try <span class="math inline">\(\mathbf{x}=[x,\theta,\dot{x},\dot{\theta}]^\top\)</span>.)</p></li>
 <li><p>Linearize the dynamics in (b) around the unstable equilibrium where <span class="math inline">\(\theta^*=\pi\)</span> and <span class="math inline">\(x^*=\dot{x}^*=\dot{\theta}^*=0.\)</span> (i.e., the pole is in the upright position and the cart stay at zero.) The result should be in the form of
 <span class="math display" id="eq:ex-cartpole-4">\[\begin{equation}
@@ -584,7 +584,7 @@ What are <span class="math inline">\(\mathbf{x},\mathbf{u},f\)</span> here?
 \tag{9.7}
 \end{equation}\]</span>
 where <span class="math inline">\(\Delta\mathbf{x} = \mathbf{x}-\mathbf{x}^*\)</span> and <span class="math inline">\(\Delta\mathbf{u}=\mathbf{u}-\mathbf{u}^*\)</span>.</p></li>
-<li><p>Define the linearization error <span class="math inline">\(e(\mathbf{x}, \mathbf{u}):=\|f(\mathbf{x}, \mathbf{u}) - (A\Delta\mathbf{x}+B\Delta\mathbf{u})\|^2\)</span>. Simulate the original system <a href="psets.html#eq:ex-cartpole-3">(9.6)</a> and the linearized system <a href="psets.html#eq:ex-cartpole-4">(9.7)</a> with the same initial condition. How does the linearization error change over time? Provide at least three different initialization results.<br>
+<li><p>Define the linearization error <span class="math inline">\(e(\mathbf{x}, \mathbf{u}):=\|F(\mathbf{x}, \mathbf{u}) - (A\Delta\mathbf{x}+B\Delta\mathbf{u})\|^2\)</span>. Simulate the original system <a href="psets.html#eq:ex-cartpole-3">(9.6)</a> and the linearized system <a href="psets.html#eq:ex-cartpole-4">(9.7)</a> with the same initial condition. How does the linearization error change over time? Provide at least three different initialization results.<br>
 (Hints: (i) Sanity check: intuitively the error should not depend on the initial location <span class="math inline">\(x\)</span>, and it should have symmetry. Is that true in your simulation? <br>(ii) In the same unstable position, how does push/pull (positive/negative) force change the results?)</p></li>
 <li><p>Convert the continuous-time dynamics in <a href="psets.html#eq:ex-cartpole-4">(9.7)</a> to discrete-time with a fixed time-discretization. Then design an LQR controller to stabilize the cart-pole at the unstable equilibrium. Does the LQR controller succeed for all initial conditions you tested? (Hint: try several initial conditions where the end point of the pole is above or below the horizontal line.) You may want to take a look at the LQR example for the simple pendulum in Example <a href="exactdp.html#exm:lqr-pendulum-stabilization">2.1</a>.</p></li>
 </ol>
