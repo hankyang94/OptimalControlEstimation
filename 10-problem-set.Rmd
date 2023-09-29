@@ -297,6 +297,7 @@ Plot the optimized control signal and resulting state trajectory for both a and 
 :::
 :::
 
+&nbsp;
 
 ::: {.exercisebox}
 ::: {.exercise #shortest-path name="Policy Iteration of Shortest Path"}
@@ -304,7 +305,7 @@ In Example \@ref(exm:gridworld), we used value iteration to solve the shortest p
 
 1. Initialize the policy $\pi_0$.
 
-2. For $k=0,1,2,\ldots$, compute $Q^{\pi_k}$ via \@ref(eq:bellman-consistency-Qpi-linearsystem). Then update policy by greedy method $\pi_{k+1}=\pi_{Q^{\pi_k}}$ (see \@ref(eq:def-pi-Q) for the definition of $\pi_Q$).
+2. For $k=0,1,2,\ldots$, compute $Q_{\pi_k}$ via \@ref(eq:bellman-consistency-Qpi-linearsystem). Then update policy by greedy method $\pi_{k+1}=\pi_{Q^{\pi_k}}$ (see \@ref(eq:def-pi-Q) for the definition of $\pi_Q$).
 
 Now try to solve the following problems.
 
@@ -316,7 +317,7 @@ c. If it is allowed to go diagonally (for example, from (4,4) to (3,5)), how wil
 
 d. (Bonus) Beyond iterative algorithms, there is another formulation of the problem in linear programming. Try to implement the following problem:
 $$\max_{J} \sum_{x}J(x),\quad s.t. J(x)\le g(x,u) + \gamma\sum_{x'}P(x'|x,u)J(x'),\ \forall x,u.$$
-What can you find? (Hint: formulate the problem as linear programming,)
+What can you find? (Hint: formulate the problem as a linear programming problem.)
 :::
 :::
 
