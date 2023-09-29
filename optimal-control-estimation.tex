@@ -151,7 +151,7 @@ arc=4pt}
 
 \title{Optimal Control and Estimation}
 \author{Heng Yang}
-\date{2023-09-27}
+\date{2023-09-29}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -5397,6 +5397,37 @@ With \(T=10\), consider the following optimal control problem
 \end{enumerate}
 
 Plot the optimized control signal and resulting state trajectory for both a and b. You probably want to refer to the source codes of Example \ref{exm:multiple-shooting-double-integrator} and \ref{exm:collocation-double-integrator}.
+\end{exercise}
+
+\begin{exercise}[Policy Iteration of Shortest Path]
+\protect\hypertarget{exr:shortest-path}{}\label{exr:shortest-path}
+
+In Example \ref{exm:gridworld}, we used value iteration to solve the shortest path problem with obstacles. In this exercise, we will implement policy iteration. Instead of value iteration that updates the Q-function by \(Q^{(k+1)} = \mathcal{T}Q^{(k)}\) where \(\mathcal{T}\) is the Bellman optimality operator defined in \eqref{eq:bellman-optimality-operator}, we use a different update rule:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Initialize the policy \(\pi_0\).
+\item
+  For \(k=0,1,2,\ldots\), compute \(Q^{\pi_k}\) via \eqref{eq:bellman-consistency-Qpi-linearsystem}. Then update policy by greedy method \(\pi_{k+1}=\pi_{Q^{\pi_k}}\) (see \eqref{eq:def-pi-Q} for the definition of \(\pi_Q\)).
+\end{enumerate}
+
+Now try to solve the following problems.
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\item
+  With the same obstacles in Fig. \ref{fig:grid-world}, implement the above policy iteration algorithm. Can you recover the cost-to-go and shortest path found in the example?
+\item
+  We designed the cost function \(g\) to be \(20\) when there is an obstacle. Is there a lower bound on this value, such that the shortest path with any starting point will still avoid obstacles? If yes, how will the lower bound change with different obstacle structures? (Bonus) With the assumption that the grids are connected, give a conjecture on the maximum of the lower bound.
+\item
+  If it is allowed to go diagonally (for example, from (4,4) to (3,5)), how will the results change?
+\item
+  (Bonus) Beyond iterative algorithms, there is another formulation of the problem in linear programming. Try to implement the following problem:
+  \[\max_{J} \sum_{x}J(x),\quad s.t. J(x)\le g(x,u) + \gamma\sum_{x'}P(x'|x,u)J(x'),\ \forall x,u.\]
+  What can you find? (Hint: formulate the problem as linear programming,)
+\end{enumerate}
+
 \end{exercise}
 
 \hypertarget{acknowledgement}{%

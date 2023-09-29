@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-09-27" />
+<meta name="date" content="2023-09-29" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -617,6 +617,24 @@ x_1
 <li><p>Solve the problem using direct collocation with <span class="math inline">\(N=50\)</span>.</p></li>
 </ol>
 <p>Plot the optimized control signal and resulting state trajectory for both a and b. You probably want to refer to the source codes of Example <a href="approximatedp.html#exm:multiple-shooting-double-integrator">3.6</a> and <a href="approximatedp.html#exm:collocation-double-integrator">3.7</a>.</p>
+</div>
+</div>
+<div class="exercisebox">
+<div class="exercise">
+<p><span id="exr:shortest-path" class="exercise"><strong>Exercise 9.5  (Policy Iteration of Shortest Path) </strong></span>In Example <a href="exactdp.html#exm:gridworld">2.2</a>, we used value iteration to solve the shortest path problem with obstacles. In this exercise, we will implement policy iteration. Instead of value iteration that updates the Q-function by <span class="math inline">\(Q^{(k+1)} = \mathcal{T}Q^{(k)}\)</span> where <span class="math inline">\(\mathcal{T}\)</span> is the Bellman optimality operator defined in <a href="exactdp.html#eq:bellman-optimality-operator">(2.27)</a>, we use a different update rule:</p>
+<ol style="list-style-type: decimal">
+<li><p>Initialize the policy <span class="math inline">\(\pi_0\)</span>.</p></li>
+<li><p>For <span class="math inline">\(k=0,1,2,\ldots\)</span>, compute <span class="math inline">\(Q^{\pi_k}\)</span> via <a href="exactdp.html#eq:bellman-consistency-Qpi-linearsystem">(2.24)</a>. Then update policy by greedy method <span class="math inline">\(\pi_{k+1}=\pi_{Q^{\pi_k}}\)</span> (see <a href="exactdp.html#eq:def-pi-Q">(2.26)</a> for the definition of <span class="math inline">\(\pi_Q\)</span>).</p></li>
+</ol>
+<p>Now try to solve the following problems.</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>With the same obstacles in Fig. <a href="exactdp.html#fig:grid-world">2.3</a>, implement the above policy iteration algorithm. Can you recover the cost-to-go and shortest path found in the example?</p></li>
+<li><p>We designed the cost function <span class="math inline">\(g\)</span> to be <span class="math inline">\(20\)</span> when there is an obstacle. Is there a lower bound on this value, such that the shortest path with any starting point will still avoid obstacles? If yes, how will the lower bound change with different obstacle structures? (Bonus) With the assumption that the grids are connected, give a conjecture on the maximum of the lower bound.</p></li>
+<li><p>If it is allowed to go diagonally (for example, from (4,4) to (3,5)), how will the results change?</p></li>
+<li><p>(Bonus) Beyond iterative algorithms, there is another formulation of the problem in linear programming. Try to implement the following problem:
+<span class="math display">\[\max_{J} \sum_{x}J(x),\quad s.t. J(x)\le g(x,u) + \gamma\sum_{x&#39;}P(x&#39;|x,u)J(x&#39;),\ \forall x,u.\]</span>
+What can you find? (Hint: formulate the problem as linear programming,)</p></li>
+</ol>
 </div>
 </div>
 </div>
