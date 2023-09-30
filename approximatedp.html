@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-09-29" />
+<meta name="date" content="2023-09-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -199,6 +199,8 @@ div.csl-indent {
 <li class="chapter" data-level="3.2.2" data-path="approximatedp.html"><a href="approximatedp.html#direct-multiple-shooting"><i class="fa fa-check"></i><b>3.2.2</b> Direct Multiple Shooting</a></li>
 <li class="chapter" data-level="3.2.3" data-path="approximatedp.html"><a href="approximatedp.html#direct-collocation"><i class="fa fa-check"></i><b>3.2.3</b> Direct Collocation</a></li>
 <li class="chapter" data-level="3.2.4" data-path="approximatedp.html"><a href="approximatedp.html#direct-orthogonal-collocation"><i class="fa fa-check"></i><b>3.2.4</b> Direct Orthogonal Collocation</a></li>
+<li class="chapter" data-level="3.2.5" data-path="approximatedp.html"><a href="approximatedp.html#failure-of-open-loop-control"><i class="fa fa-check"></i><b>3.2.5</b> Failure of Open-Loop Control</a></li>
+<li class="chapter" data-level="3.2.6" data-path="approximatedp.html"><a href="approximatedp.html#lqr-trajectory-tracking"><i class="fa fa-check"></i><b>3.2.6</b> LQR Trajectory Tracking</a></li>
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="approximatedp.html"><a href="approximatedp.html#model-predictive-control"><i class="fa fa-check"></i><b>3.3</b> Model Predictive Control</a></li>
 <li class="chapter" data-level="3.4" data-path="approximatedp.html"><a href="approximatedp.html#policy-gradient"><i class="fa fa-check"></i><b>3.4</b> Policy Gradient</a></li>
@@ -1169,9 +1171,129 @@ Figure 3.11: Direct collocation with N=101.
 <div id="direct-orthogonal-collocation" class="section level3 hasAnchor" number="3.2.4">
 <h3><span class="header-section-number">3.2.4</span> Direct Orthogonal Collocation<a href="approximatedp.html#direct-orthogonal-collocation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 </div>
+<div id="failure-of-open-loop-control" class="section level3 hasAnchor" number="3.2.5">
+<h3><span class="header-section-number">3.2.5</span> Failure of Open-Loop Control<a href="approximatedp.html#failure-of-open-loop-control" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Trajectory optimization produces very satisfying trajectories when the nonlinear programming algorithms work as expected, as shown by the previous Examples <a href="approximatedp.html#exm:collocation-double-integrator">3.7</a> and <a href="approximatedp.html#exm:multiple-shooting-double-integrator">3.6</a> on the double integrator system.</p>
+<p>However, does this imply that if we simply run the planned controls on a real system, i.e., doing <em>open-loop control</em>, the trajectory will behave as planned?</p>
+<p>Unfortunately the answer is No, for two major reasons.</p>
+<ol style="list-style-type: decimal">
+<li><p>Trajectory optimization only produces an <em>approximate</em> solution to the optimal control problem (OCP) <a href="approximatedp.html#eq:constrained-optimal-control">(3.9)</a>, regardless of what transcription method is used (such as multiple shooting and direct collocation). This means every <span class="math inline">\(u_k\)</span> we obtained is an approximation to the true optimal controller <span class="math inline">\(u(t_k)\)</span>, and the approximation errors will accumulate as the dynamical system is evolving.</p></li>
+<li><p>Even the OCP <a href="approximatedp.html#eq:constrained-optimal-control">(3.9)</a> is an imperfect approximation of the true control task. This is due to we assumed we have perfect knowledge of the system dynamics
+<span class="math display">\[
+\dot{x} = f(x(t),u(t)),
+\]</span>
+which rarely holds in practice. For example, in the double integrator example, there is always friction between the mass and the ground. A more realistic assumption is that the system dynamics is
+<span class="math display">\[
+\dot{x} = f(x(t),u(t)) + w_t,
+\]</span>
+where <span class="math inline">\(w_t\)</span> is some unknown disturbance, or modeling error.</p></li>
+</ol>
+<p>Let us observe the failure of open-loop control on our favorite pendulum example.</p>
+<div class="examplebox">
+<div class="example">
+<p><span id="exm:pendulum-collocation-failure" class="example"><strong>Example 3.8  (Failure of Open-Loop Control on A Simple Pendulum) </strong></span>Consider an “ideal” pendulum dynamics model
+<span class="math display">\[
+x = \begin{bmatrix} \theta \\ \dot{\theta} \end{bmatrix}, \quad \dot{x} = f(x,u) = \begin{bmatrix} \dot{\theta} \\ - \frac{1}{ml^2} (b \dot{\theta} + mgl \sin \theta) + \frac{1}{ml^2} u \end{bmatrix},
+\]</span>
+with <span class="math inline">\(m=1,l=1,g=9.8,b=0.1\)</span>. We enforce control saturation
+<span class="math display">\[
+u \in [-u_{\max}, u_{\max}]
+\]</span>
+with <span class="math inline">\(u_{\max} = 4.9\)</span>.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:pendulum-model-failure"></span>
+<img src="images/pendulum-drawing.png" alt="Simple pendulum." width="40%" />
+<p class="caption">
+Figure 3.12: Simple pendulum.
+</p>
+</div>
+<p>Consider the optimal control problem with <span class="math inline">\(T=10\)</span>
+<span class="math display" id="eq:pendulum-swingup-ocp">\[\begin{equation}
+\begin{split} \min_{u(t), t \in [0,T]} &amp; \quad \int_{t=0}^T (\cos \theta(t) + 1)^2 + \sin^2\theta(t) + \dot{\theta}^2(t) + u^2 dt \\
+\text{subject to} &amp; \quad \dot{x} = f(x(t),u(t)) \\
+&amp; \quad x(0) = [0,0]^T, \quad x(T) = [\pi,0]^T, \\
+&amp; \quad u(t) \in [-u_{\max},u_{\max}],
+\end{split}
+\tag{3.22}
+\end{equation}\]</span>
+where we start from the initial state <span class="math inline">\([0,0]^T\)</span>, i.e., the bottomright position, and we want to swing up the pendulum to the final state <span class="math inline">\([\pi,0]^T\)</span>, i.e., the upright position. The cost function in <a href="approximatedp.html#eq:pendulum-swingup-ocp">(3.22)</a> penalizes the deviation of the state trajectory from the target state (the target state has <span class="math inline">\(\cos \theta = -1\)</span>, <span class="math inline">\(\sin \theta = 0\)</span> and <span class="math inline">\(\dot{\theta} = 0\)</span>), together with the magnitude of control.</p>
+<p><strong>Trajectory optimization with direct collocation</strong>. We perform trajectory optimization for the OCP <a href="approximatedp.html#eq:pendulum-swingup-ocp">(3.22)</a> with direct collocation. We choose <span class="math inline">\(N=101\)</span> break points with <span class="math inline">\(h=0.1\)</span> equal interval to discretize the time.</p>
+<p>The result of trajectory optimization is shown in Fig. <a href="approximatedp.html#fig:pendulum-swingup-trajopt-collocation">3.13</a>. We can see that the pendulum is perfectly swung up to <span class="math inline">\([\pi,0]^T\)</span> and stabilized there.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:pendulum-swingup-trajopt-collocation"></span>
+<img src="images/pendulum_trajopt_result.png" alt="Pendulum swing-up with direct collocation" width="80%" />
+<p class="caption">
+Figure 3.13: Pendulum swing-up with direct collocation
+</p>
+</div>
+<p><strong>Deploy the optimized plan</strong>. We then deploy the optimized controls in Fig. <a href="approximatedp.html#fig:pendulum-swingup-trajopt-collocation">3.13</a> on the “ideal” pendulum. We deploy the control every <span class="math inline">\(0.1\)</span> seconds with zero-order hold, and use Matlab <code>ode89</code> to integrate the pendulum dynamics.</p>
+<p>Fig. <a href="approximatedp.html#fig:pendulum-swingup-trajopt-collocation-deploy">3.14</a> shows the true trajectory of the pendulum. Unfortunately, the pendulum swing-up and stabilization is unsuccessful.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:pendulum-swingup-trajopt-collocation-deploy"></span>
+<img src="images/pendulum_trajopt_deploy.png" alt="Deploy optimized controls" width="80%" />
+<p class="caption">
+Figure 3.14: Deploy optimized controls
+</p>
+</div>
+<p><strong>Adding noise</strong>. What if the true pendulum dynamics is
+<span class="math display">\[
+x = \begin{bmatrix} \theta \\ \dot{\theta} \end{bmatrix}, \quad \dot{x} = f(x,u) = \begin{bmatrix} \dot{\theta} \\ - \frac{1}{ml^2} (b \dot{\theta} + mgl \sin \theta) + \frac{1}{ml^2} u \end{bmatrix} + \begin{bmatrix} 0 \\ 1 \end{bmatrix}.
+\]</span>
+That is, there is a constant unmodelled angular acceleration of <span class="math inline">\(1\)</span>, which maybe come from some unknown external force.</p>
+<p>Fig. <a href="approximatedp.html#fig:pendulum-swingup-trajopt-collocation-deploy-noise">3.15</a> shows the trajectory of the pendulum with the optimized controlls. We can clearly see the unmodelled dynamics makes the performance much worse.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:pendulum-swingup-trajopt-collocation-deploy-noise"></span>
+<img src="images/pendulum_trajopt_deploy_noise.png" alt="Deploy optimized controls on a system with disturbance" width="80%" />
+<p class="caption">
+Figure 3.15: Deploy optimized controls on a system with disturbance
+</p>
+</div>
+<p>You can play with the code <a href="https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/pendulum_mpc/pendulum_open_loop.m">here</a>.</p>
+</div>
+</div>
+<p>The failure of open-loop control motivates feedback control.</p>
+</div>
+<div id="lqr-trajectory-tracking" class="section level3 hasAnchor" number="3.2.6">
+<h3><span class="header-section-number">3.2.6</span> LQR Trajectory Tracking<a href="approximatedp.html#lqr-trajectory-tracking" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+</div>
 </div>
 <div id="model-predictive-control" class="section level2 hasAnchor" number="3.3">
 <h2><span class="header-section-number">3.3</span> Model Predictive Control<a href="approximatedp.html#model-predictive-control" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="examplebox">
+<div class="example">
+<p><span id="exm:mpc-pendulum-swingup" class="example"><strong>Example 3.9  (Pendulum Swingup with Model Predictive Control) </strong></span>Consider again the pendulum swingup task in Example <a href="approximatedp.html#exm:pendulum-collocation-failure">3.8</a>.</p>
+<p>This time, we will apply MPC to this task.</p>
+<p>Again, we discretize the time windown <span class="math inline">\([0,T]\)</span> into <span class="math inline">\(N-1 = 100\)</span> equal intervals with <span class="math inline">\(h = 0.1\)</span>. At each timestep <span class="math inline">\(t_k = kh\)</span>, <span class="math inline">\(k=0,\dots,N-1\)</span>, we first measure the current state of the pendulum as <span class="math inline">\(x_k\)</span>, then solve the following OCP with planning horizon <span class="math inline">\(H=5\)</span>
+<span class="math display" id="eq:pendulum-swingup-mpc-subroutine">\[\begin{equation}
+\begin{split} \min_{u(t), t \in [0,H]} &amp; \quad \int_{t=0}^H (\cos \theta(t) + 1)^2 + \sin^2\theta(t) + \dot{\theta}^2(t) + u^2 dt \\
+\text{subject to} &amp; \quad \dot{x} = f(x(t),u(t)) \\
+&amp; \quad x(0) = x_k, \quad x(H) = [\pi,0]^T, \\
+&amp; \quad u(t) \in [-u_{\max},u_{\max}].
+\end{split}
+\tag{3.23}
+\end{equation}\]</span>
+We solve the OCP <a href="approximatedp.html#eq:pendulum-swingup-mpc-subroutine">(3.23)</a> using trajectory optimization with direct collocation (using <span class="math inline">\(M\)</span> break points), which gives us a sequence of controls
+<span class="math display">\[
+u_{k,1},\dots,u_{k,M},
+\]</span>
+we deploy the first control <span class="math inline">\(u_{k,1}\)</span> to the pendulum system.</p>
+<p><strong>MPC results</strong>. Fig. <a href="approximatedp.html#fig:pendulum-swingup-mpc-noise-free">3.16</a> shows the control and state trajectories when using MPC to swing up the pendulum. We can see that it works very well.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:pendulum-swingup-mpc-noise-free"></span>
+<img src="images/pendulum_mpc_noise_free.png" alt="MPC for pendulum swing-up" width="80%" />
+<p class="caption">
+Figure 3.16: MPC for pendulum swing-up
+</p>
+</div>
+<p><strong>Robustness to noise</strong>. MPC is naturally robust to modelling errors and noises. When the true system dynamics is
+<span class="math display">\[
+x = \begin{bmatrix} \theta \\ \dot{\theta} \end{bmatrix}, \quad \dot{x} = f(x,u) = \begin{bmatrix} \dot{\theta} \\ - \frac{1}{ml^2} (b \dot{\theta} + mgl \sin \theta) + \frac{1}{ml^2} u \end{bmatrix} + \begin{bmatrix} 0 \\ 1 \end{bmatrix}.
+\]</span>
+The MPC controller still works very well, as shown in Fig. <a href="approximatedp.html#fig:pendulum-swingup-mpc-noise">3.17</a>!</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:pendulum-swingup-mpc-noise"></span>
+<img src="images/pendulum_mpc_noise.png" alt="MPC for pendulum swing-up with noise" width="80%" />
+<p class="caption">
+Figure 3.17: MPC for pendulum swing-up with noise
+</p>
+</div>
+<p>Feel free to play with the code <a href="https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/pendulum_mpc/pendulum_mpc.m">here</a>.</p>
+</div>
+</div>
 <!-- ## Approximation in value space
 
 Let us first recap the iteration process of the generic form of DP as mentioned in theorem \@ref(thm:dynamicprogramming). We can obtain the cost-to-go function $J_k$, which means the cost-to-go value at time $k$, thereby defining corresponding control $u_k$ or policy $\mu_k$. 

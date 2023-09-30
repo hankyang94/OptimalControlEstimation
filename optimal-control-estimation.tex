@@ -151,7 +151,7 @@ arc=4pt}
 
 \title{Optimal Control and Estimation}
 \author{Heng Yang}
-\date{2023-09-29}
+\date{2023-09-30}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -1982,8 +1982,166 @@ If you are interested in direct collocation, there is a nice tutorial with Matla
 \hypertarget{direct-orthogonal-collocation}{%
 \subsection{Direct Orthogonal Collocation}\label{direct-orthogonal-collocation}}
 
+\hypertarget{failure-of-open-loop-control}{%
+\subsection{Failure of Open-Loop Control}\label{failure-of-open-loop-control}}
+
+Trajectory optimization produces very satisfying trajectories when the nonlinear programming algorithms work as expected, as shown by the previous Examples \ref{exm:collocation-double-integrator} and \ref{exm:multiple-shooting-double-integrator} on the double integrator system.
+
+However, does this imply that if we simply run the planned controls on a real system, i.e., doing \emph{open-loop control}, the trajectory will behave as planned?
+
+Unfortunately the answer is No, for two major reasons.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Trajectory optimization only produces an \emph{approximate} solution to the optimal control problem (OCP) \eqref{eq:constrained-optimal-control}, regardless of what transcription method is used (such as multiple shooting and direct collocation). This means every \(u_k\) we obtained is an approximation to the true optimal controller \(u(t_k)\), and the approximation errors will accumulate as the dynamical system is evolving.
+\item
+  Even the OCP \eqref{eq:constrained-optimal-control} is an imperfect approximation of the true control task. This is due to we assumed we have perfect knowledge of the system dynamics
+  \[
+  \dot{x} = f(x(t),u(t)),
+  \]
+  which rarely holds in practice. For example, in the double integrator example, there is always friction between the mass and the ground. A more realistic assumption is that the system dynamics is
+  \[
+  \dot{x} = f(x(t),u(t)) + w_t,
+  \]
+  where \(w_t\) is some unknown disturbance, or modeling error.
+\end{enumerate}
+
+Let us observe the failure of open-loop control on our favorite pendulum example.
+
+\begin{example}[Failure of Open-Loop Control on A Simple Pendulum]
+\protect\hypertarget{exm:pendulum-collocation-failure}{}\label{exm:pendulum-collocation-failure}Consider an ``ideal'' pendulum dynamics model
+\[
+x = \begin{bmatrix} \theta \\ \dot{\theta} \end{bmatrix}, \quad \dot{x} = f(x,u) = \begin{bmatrix} \dot{\theta} \\ - \frac{1}{ml^2} (b \dot{\theta} + mgl \sin \theta) + \frac{1}{ml^2} u \end{bmatrix},
+\]
+with \(m=1,l=1,g=9.8,b=0.1\). We enforce control saturation
+\[
+u \in [-u_{\max}, u_{\max}]
+\]
+with \(u_{\max} = 4.9\).
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.4\linewidth]{images/pendulum-drawing} 
+
+}
+
+\caption{Simple pendulum.}\label{fig:pendulum-model-failure}
+\end{figure}
+
+Consider the optimal control problem with \(T=10\)
+\begin{equation}
+\begin{split} \min_{u(t), t \in [0,T]} & \quad \int_{t=0}^T (\cos \theta(t) + 1)^2 + \sin^2\theta(t) + \dot{\theta}^2(t) + u^2 dt \\
+\text{subject to} & \quad \dot{x} = f(x(t),u(t)) \\
+& \quad x(0) = [0,0]^T, \quad x(T) = [\pi,0]^T, \\
+& \quad u(t) \in [-u_{\max},u_{\max}],
+\end{split}
+\label{eq:pendulum-swingup-ocp}
+\end{equation}
+where we start from the initial state \([0,0]^T\), i.e., the bottomright position, and we want to swing up the pendulum to the final state \([\pi,0]^T\), i.e., the upright position. The cost function in \eqref{eq:pendulum-swingup-ocp} penalizes the deviation of the state trajectory from the target state (the target state has \(\cos \theta = -1\), \(\sin \theta = 0\) and \(\dot{\theta} = 0\)), together with the magnitude of control.
+
+\textbf{Trajectory optimization with direct collocation}. We perform trajectory optimization for the OCP \eqref{eq:pendulum-swingup-ocp} with direct collocation. We choose \(N=101\) break points with \(h=0.1\) equal interval to discretize the time.
+
+The result of trajectory optimization is shown in Fig. \ref{fig:pendulum-swingup-trajopt-collocation}. We can see that the pendulum is perfectly swung up to \([\pi,0]^T\) and stabilized there.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.8\linewidth]{images/pendulum_trajopt_result} 
+
+}
+
+\caption{Pendulum swing-up with direct collocation}\label{fig:pendulum-swingup-trajopt-collocation}
+\end{figure}
+
+\textbf{Deploy the optimized plan}. We then deploy the optimized controls in Fig. \ref{fig:pendulum-swingup-trajopt-collocation} on the ``ideal'' pendulum. We deploy the control every \(0.1\) seconds with zero-order hold, and use Matlab \texttt{ode89} to integrate the pendulum dynamics.
+
+Fig. \ref{fig:pendulum-swingup-trajopt-collocation-deploy} shows the true trajectory of the pendulum. Unfortunately, the pendulum swing-up and stabilization is unsuccessful.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.8\linewidth]{images/pendulum_trajopt_deploy} 
+
+}
+
+\caption{Deploy optimized controls}\label{fig:pendulum-swingup-trajopt-collocation-deploy}
+\end{figure}
+
+\textbf{Adding noise}. What if the true pendulum dynamics is
+\[
+x = \begin{bmatrix} \theta \\ \dot{\theta} \end{bmatrix}, \quad \dot{x} = f(x,u) = \begin{bmatrix} \dot{\theta} \\ - \frac{1}{ml^2} (b \dot{\theta} + mgl \sin \theta) + \frac{1}{ml^2} u \end{bmatrix} + \begin{bmatrix} 0 \\ 1 \end{bmatrix}.
+\]
+That is, there is a constant unmodelled angular acceleration of \(1\), which maybe come from some unknown external force.
+
+Fig. \ref{fig:pendulum-swingup-trajopt-collocation-deploy-noise} shows the trajectory of the pendulum with the optimized controlls. We can clearly see the unmodelled dynamics makes the performance much worse.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.8\linewidth]{images/pendulum_trajopt_deploy_noise} 
+
+}
+
+\caption{Deploy optimized controls on a system with disturbance}\label{fig:pendulum-swingup-trajopt-collocation-deploy-noise}
+\end{figure}
+
+You can play with the code \href{https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/pendulum_mpc/pendulum_open_loop.m}{here}.
+\end{example}
+
+The failure of open-loop control motivates feedback control.
+
+\hypertarget{lqr-trajectory-tracking}{%
+\subsection{LQR Trajectory Tracking}\label{lqr-trajectory-tracking}}
+
 \hypertarget{model-predictive-control}{%
 \section{Model Predictive Control}\label{model-predictive-control}}
+
+\begin{example}[Pendulum Swingup with Model Predictive Control]
+\protect\hypertarget{exm:mpc-pendulum-swingup}{}\label{exm:mpc-pendulum-swingup}Consider again the pendulum swingup task in Example \ref{exm:pendulum-collocation-failure}.
+
+This time, we will apply MPC to this task.
+
+Again, we discretize the time windown \([0,T]\) into \(N-1 = 100\) equal intervals with \(h = 0.1\). At each timestep \(t_k = kh\), \(k=0,\dots,N-1\), we first measure the current state of the pendulum as \(x_k\), then solve the following OCP with planning horizon \(H=5\)
+\begin{equation}
+\begin{split} \min_{u(t), t \in [0,H]} & \quad \int_{t=0}^H (\cos \theta(t) + 1)^2 + \sin^2\theta(t) + \dot{\theta}^2(t) + u^2 dt \\
+\text{subject to} & \quad \dot{x} = f(x(t),u(t)) \\
+& \quad x(0) = x_k, \quad x(H) = [\pi,0]^T, \\
+& \quad u(t) \in [-u_{\max},u_{\max}].
+\end{split}
+\label{eq:pendulum-swingup-mpc-subroutine}
+\end{equation}
+We solve the OCP \eqref{eq:pendulum-swingup-mpc-subroutine} using trajectory optimization with direct collocation (using \(M\) break points), which gives us a sequence of controls
+\[
+u_{k,1},\dots,u_{k,M},
+\]
+we deploy the first control \(u_{k,1}\) to the pendulum system.
+
+\textbf{MPC results}. Fig. \ref{fig:pendulum-swingup-mpc-noise-free} shows the control and state trajectories when using MPC to swing up the pendulum. We can see that it works very well.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.8\linewidth]{images/pendulum_mpc_noise_free} 
+
+}
+
+\caption{MPC for pendulum swing-up}\label{fig:pendulum-swingup-mpc-noise-free}
+\end{figure}
+
+\textbf{Robustness to noise}. MPC is naturally robust to modelling errors and noises. When the true system dynamics is
+\[
+x = \begin{bmatrix} \theta \\ \dot{\theta} \end{bmatrix}, \quad \dot{x} = f(x,u) = \begin{bmatrix} \dot{\theta} \\ - \frac{1}{ml^2} (b \dot{\theta} + mgl \sin \theta) + \frac{1}{ml^2} u \end{bmatrix} + \begin{bmatrix} 0 \\ 1 \end{bmatrix}.
+\]
+The MPC controller still works very well, as shown in Fig. \ref{fig:pendulum-swingup-mpc-noise}!
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.8\linewidth]{images/pendulum_mpc_noise} 
+
+}
+
+\caption{MPC for pendulum swing-up with noise}\label{fig:pendulum-swingup-mpc-noise}
+\end{figure}
+
+Feel free to play with the code \href{https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/pendulum_mpc/pendulum_mpc.m}{here}.
+\end{example}
 
 \hypertarget{policy-gradient}{%
 \section{Policy Gradient}\label{policy-gradient}}
