@@ -1298,6 +1298,7 @@ Figure 3.16: Receding horizon control
 </p>
 </div>
 <p>It is worth noting that RHS effectively introduces feedback control, because the controller <span class="math inline">\(u_{t,0}\)</span> in <a href="approximatedp.html#eq:receding-horizon-control">(3.25)</a> depends on <span class="math inline">\(x(t)\)</span> via the open-loop optimal control problem <a href="approximatedp.html#eq:optimal-control-problem-mpc-open-loop">(3.24)</a>.</p>
+<p>Trajectory optimization and model predictive control are the workhorse for control of highly dynamic robots. For example, here is a <a href="https://youtu.be/EGABAx52GKI?feature=shared">talk by Scott Kuindersma</a> on how trajectory optimization and model predictive control enable a diverse set of behaviors of Boston Dynamics’s humanoid robot.</p>
 <div id="turn-trajectory-optimization-into-feedback-control" class="section level3 hasAnchor" number="3.3.1">
 <h3><span class="header-section-number">3.3.1</span> Turn Trajectory Optimization into Feedback Control<a href="approximatedp.html#turn-trajectory-optimization-into-feedback-control" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Let us turn our trajectory optimization algorithm in Example <a href="approximatedp.html#exm:pendulum-collocation-failure">3.8</a> into a feedback controller through receding horizon control.</p>
