@@ -151,7 +151,7 @@ arc=4pt}
 
 \title{Optimal Control and Estimation}
 \author{Heng Yang}
-\date{2023-09-30}
+\date{2023-10-02}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -2094,6 +2094,57 @@ The failure of open-loop control motivates feedback control.
 \hypertarget{model-predictive-control}{%
 \section{Model Predictive Control}\label{model-predictive-control}}
 
+The model predictive control framework leverages the idea of \emph{receding horizon control} (RHC) to turn an open-loop controller into a closed-loop controller, i.e., a feedback controller.
+
+For example, suppose we have an optimal control problem with horizon \(T\):
+\begin{equation}
+\begin{split}
+\min_{u(t), t \in [0,T]} & \quad g_T(x(T)) + \int_{t=0}^T g(x(t),u(t)) dt \\
+\text{subject to} & \quad \dot{x} = f(x(t),u(t)), \quad x(0) = x_0 \\
+& (x(t),u(t)) \in \mathcal{X} \times \mathcal{U}, \quad x(T) \in \mathcal{X}_T 
+\end{split}
+\label{eq:optimal-control-problem-mpc}
+\end{equation}
+where \(\dot{x} = f(x(t),u(t))\) is the best ``ideal'' model we have about our system.
+
+The idea of RHC is as follows. At time \(t\), we obtain a measurement of the current state of the system, denoted as \(x_t\), and we solve the following OCP with horizon \(H < T\):
+\begin{equation}
+\begin{split}
+\min_{u(\tau), \tau \in [0,H]} & \quad g_t(x(H)) + \int_{\tau = 0}^H g(x(\tau),u(\tau)) d\tau \\
+\text{subject to} & \quad  \dot{x} = f(x(\tau),u(\tau)), \quad x(0) = x_t \\
+& \quad (x(t),u(t)) \in \mathcal{X} \times \mathcal{U}, \quad x(H) \in \mathcal{X}_{t}
+\end{split}
+\label{eq:optimal-control-problem-mpc-open-loop}
+\end{equation}
+where notice that I used a different notation for the terminal cost \(g_t\) (as supposed to \(g_T\) in \eqref{eq:optimal-control-problem-mpc}), and the terminal constraint \(\mathcal{X}_t\) (as supposed to \(\mathcal{X}_T\) in \eqref{eq:optimal-control-problem-mpc-open-loop}). Using a different terminal cost and terminal constraint is meant to make the problem \eqref{eq:optimal-control-problem-mpc-open-loop} always feasible.
+
+Suppose we solve the open-loop control problem \eqref{eq:optimal-control-problem-mpc-open-loop} using trajectory optimization with \(N\) time intervals and obtained the following solution
+\[
+u_{t,0},u_{t,1},\dots,u_{t,N}.
+\]
+Then RHS will only take the first control \(u_{t,0}\) and apply it to the system. Therefore, the closed-loop dynamics is effectively
+\begin{equation}
+\dot{x} = f(x(t),u_{t,0}),
+\label{eq:receding-horizon-control}
+\end{equation}
+where \(u_{t,0}\) is the first control solution to the OCP \eqref{eq:optimal-control-problem-mpc-open-loop}.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.8\linewidth]{images/receding_horizon_control} 
+
+}
+
+\caption{Receding horizon control}\label{fig:receding-horizon-control}
+\end{figure}
+
+It is worth noting that RHS effectively introduces feedback control, because the controller \(u_{t,0}\) in \eqref{eq:receding-horizon-control} depends on \(x(t)\) via the open-loop optimal control problem \eqref{eq:optimal-control-problem-mpc-open-loop}.
+
+\hypertarget{turn-trajectory-optimization-into-feedback-control}{%
+\subsection{Turn Trajectory Optimization into Feedback Control}\label{turn-trajectory-optimization-into-feedback-control}}
+
+Let us turn our trajectory optimization algorithm in Example \ref{exm:pendulum-collocation-failure} into a feedback controller through receding horizon control.
+
 \begin{example}[Pendulum Swingup with Model Predictive Control]
 \protect\hypertarget{exm:mpc-pendulum-swingup}{}\label{exm:mpc-pendulum-swingup}Consider again the pendulum swingup task in Example \ref{exm:pendulum-collocation-failure}.
 
@@ -2142,6 +2193,22 @@ The MPC controller still works very well, as shown in Fig. \ref{fig:pendulum-swi
 
 Feel free to play with the code \href{https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/pendulum_mpc/pendulum_mpc.m}{here}.
 \end{example}
+
+\textbf{Software tools}. Matlab implements a nice package for nonlinear MPC, you can refer to the \href{https://www.mathworks.com/help/mpc/ug/nonlinear-mpc.html}{documentation and examples}. In Python, the \href{https://www.do-mpc.com/en/latest/}{do-mpc package} is quite popular.
+
+However, it is important to recognize that trajectory optimization for the nonconvex open-loop optimal control problen \eqref{eq:optimal-control-problem-mpc-open-loop} (a) only guarantees a locally optimal solution and hence can be brittle, (b) can be time-consuming when the problem is high-dimensional.
+
+In fact, MPC was originally developed in the context of chemical plant control \citep{borrelli17book-mpc}, which has linear system dyanmics, as we will introduce in the following section.
+
+\hypertarget{basic-formulation-for-linear-systems}{%
+\subsection{Basic Formulation for Linear Systems}\label{basic-formulation-for-linear-systems}}
+
+We have seen the superior practical performance of MPC in Example \ref{exm:mpc-pendulum-swingup}, now let us introduce the basic formulation of MPC for linear systems and study its theoretical properties.
+
+\hypertarget{explicit-mpc}{%
+\subsection{Explicit MPC}\label{explicit-mpc}}
+
+See the original paper \citep{bemporad02automatica-explicit}, and check out Matlab's \href{https://www.mathworks.com/help/mpc/explicit-mpc-design.html}{explict MPC design}.
 
 \hypertarget{policy-gradient}{%
 \section{Policy Gradient}\label{policy-gradient}}

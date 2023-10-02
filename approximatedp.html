@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-09-30" />
+<meta name="date" content="2023-10-02" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -202,7 +202,12 @@ div.csl-indent {
 <li class="chapter" data-level="3.2.5" data-path="approximatedp.html"><a href="approximatedp.html#failure-of-open-loop-control"><i class="fa fa-check"></i><b>3.2.5</b> Failure of Open-Loop Control</a></li>
 <li class="chapter" data-level="3.2.6" data-path="approximatedp.html"><a href="approximatedp.html#lqr-trajectory-tracking"><i class="fa fa-check"></i><b>3.2.6</b> LQR Trajectory Tracking</a></li>
 </ul></li>
-<li class="chapter" data-level="3.3" data-path="approximatedp.html"><a href="approximatedp.html#model-predictive-control"><i class="fa fa-check"></i><b>3.3</b> Model Predictive Control</a></li>
+<li class="chapter" data-level="3.3" data-path="approximatedp.html"><a href="approximatedp.html#model-predictive-control"><i class="fa fa-check"></i><b>3.3</b> Model Predictive Control</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="approximatedp.html"><a href="approximatedp.html#turn-trajectory-optimization-into-feedback-control"><i class="fa fa-check"></i><b>3.3.1</b> Turn Trajectory Optimization into Feedback Control</a></li>
+<li class="chapter" data-level="3.3.2" data-path="approximatedp.html"><a href="approximatedp.html#basic-formulation-for-linear-systems"><i class="fa fa-check"></i><b>3.3.2</b> Basic Formulation for Linear Systems</a></li>
+<li class="chapter" data-level="3.3.3" data-path="approximatedp.html"><a href="approximatedp.html#explicit-mpc"><i class="fa fa-check"></i><b>3.3.3</b> Explicit MPC</a></li>
+</ul></li>
 <li class="chapter" data-level="3.4" data-path="approximatedp.html"><a href="approximatedp.html#policy-gradient"><i class="fa fa-check"></i><b>3.4</b> Policy Gradient</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html"><i class="fa fa-check"></i><b>4</b> Continuous-time Optimal Control</a>
@@ -1255,6 +1260,47 @@ Figure 3.15: Deploy optimized controls on a system with disturbance
 </div>
 <div id="model-predictive-control" class="section level2 hasAnchor" number="3.3">
 <h2><span class="header-section-number">3.3</span> Model Predictive Control<a href="approximatedp.html#model-predictive-control" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The model predictive control framework leverages the idea of <em>receding horizon control</em> (RHC) to turn an open-loop controller into a closed-loop controller, i.e., a feedback controller.</p>
+<p>For example, suppose we have an optimal control problem with horizon <span class="math inline">\(T\)</span>:
+<span class="math display" id="eq:optimal-control-problem-mpc">\[\begin{equation}
+\begin{split}
+\min_{u(t), t \in [0,T]} &amp; \quad g_T(x(T)) + \int_{t=0}^T g(x(t),u(t)) dt \\
+\text{subject to} &amp; \quad \dot{x} = f(x(t),u(t)), \quad x(0) = x_0 \\
+&amp; (x(t),u(t)) \in \mathcal{X} \times \mathcal{U}, \quad x(T) \in \mathcal{X}_T
+\end{split}
+\tag{3.23}
+\end{equation}\]</span>
+where <span class="math inline">\(\dot{x} = f(x(t),u(t))\)</span> is the best “ideal” model we have about our system.</p>
+<p>The idea of RHC is as follows. At time <span class="math inline">\(t\)</span>, we obtain a measurement of the current state of the system, denoted as <span class="math inline">\(x_t\)</span>, and we solve the following OCP with horizon <span class="math inline">\(H &lt; T\)</span>:
+<span class="math display" id="eq:optimal-control-problem-mpc-open-loop">\[\begin{equation}
+\begin{split}
+\min_{u(\tau), \tau \in [0,H]} &amp; \quad g_t(x(H)) + \int_{\tau = 0}^H g(x(\tau),u(\tau)) d\tau \\
+\text{subject to} &amp; \quad  \dot{x} = f(x(\tau),u(\tau)), \quad x(0) = x_t \\
+&amp; \quad (x(t),u(t)) \in \mathcal{X} \times \mathcal{U}, \quad x(H) \in \mathcal{X}_{t}
+\end{split}
+\tag{3.24}
+\end{equation}\]</span>
+where notice that I used a different notation for the terminal cost <span class="math inline">\(g_t\)</span> (as supposed to <span class="math inline">\(g_T\)</span> in <a href="approximatedp.html#eq:optimal-control-problem-mpc">(3.23)</a>), and the terminal constraint <span class="math inline">\(\mathcal{X}_t\)</span> (as supposed to <span class="math inline">\(\mathcal{X}_T\)</span> in <a href="approximatedp.html#eq:optimal-control-problem-mpc-open-loop">(3.24)</a>). Using a different terminal cost and terminal constraint is meant to make the problem <a href="approximatedp.html#eq:optimal-control-problem-mpc-open-loop">(3.24)</a> always feasible.</p>
+<p>Suppose we solve the open-loop control problem <a href="approximatedp.html#eq:optimal-control-problem-mpc-open-loop">(3.24)</a> using trajectory optimization with <span class="math inline">\(N\)</span> time intervals and obtained the following solution
+<span class="math display">\[
+u_{t,0},u_{t,1},\dots,u_{t,N}.
+\]</span>
+Then RHS will only take the first control <span class="math inline">\(u_{t,0}\)</span> and apply it to the system. Therefore, the closed-loop dynamics is effectively
+<span class="math display" id="eq:receding-horizon-control">\[\begin{equation}
+\dot{x} = f(x(t),u_{t,0}),
+\tag{3.25}
+\end{equation}\]</span>
+where <span class="math inline">\(u_{t,0}\)</span> is the first control solution to the OCP <a href="approximatedp.html#eq:optimal-control-problem-mpc-open-loop">(3.24)</a>.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:receding-horizon-control"></span>
+<img src="images/receding_horizon_control.png" alt="Receding horizon control" width="80%" />
+<p class="caption">
+Figure 3.16: Receding horizon control
+</p>
+</div>
+<p>It is worth noting that RHS effectively introduces feedback control, because the controller <span class="math inline">\(u_{t,0}\)</span> in <a href="approximatedp.html#eq:receding-horizon-control">(3.25)</a> depends on <span class="math inline">\(x(t)\)</span> via the open-loop optimal control problem <a href="approximatedp.html#eq:optimal-control-problem-mpc-open-loop">(3.24)</a>.</p>
+<div id="turn-trajectory-optimization-into-feedback-control" class="section level3 hasAnchor" number="3.3.1">
+<h3><span class="header-section-number">3.3.1</span> Turn Trajectory Optimization into Feedback Control<a href="approximatedp.html#turn-trajectory-optimization-into-feedback-control" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Let us turn our trajectory optimization algorithm in Example <a href="approximatedp.html#exm:pendulum-collocation-failure">3.8</a> into a feedback controller through receding horizon control.</p>
 <div class="examplebox">
 <div class="example">
 <p><span id="exm:mpc-pendulum-swingup" class="example"><strong>Example 3.9  (Pendulum Swingup with Model Predictive Control) </strong></span>Consider again the pendulum swingup task in Example <a href="approximatedp.html#exm:pendulum-collocation-failure">3.8</a>.</p>
@@ -1266,34 +1312,45 @@ Figure 3.15: Deploy optimized controls on a system with disturbance
 &amp; \quad x(0) = x_k, \quad x(H) = [\pi,0]^T, \\
 &amp; \quad u(t) \in [-u_{\max},u_{\max}].
 \end{split}
-\tag{3.23}
+\tag{3.26}
 \end{equation}\]</span>
-We solve the OCP <a href="approximatedp.html#eq:pendulum-swingup-mpc-subroutine">(3.23)</a> using trajectory optimization with direct collocation (using <span class="math inline">\(M\)</span> break points), which gives us a sequence of controls
+We solve the OCP <a href="approximatedp.html#eq:pendulum-swingup-mpc-subroutine">(3.26)</a> using trajectory optimization with direct collocation (using <span class="math inline">\(M\)</span> break points), which gives us a sequence of controls
 <span class="math display">\[
 u_{k,1},\dots,u_{k,M},
 \]</span>
 we deploy the first control <span class="math inline">\(u_{k,1}\)</span> to the pendulum system.</p>
-<p><strong>MPC results</strong>. Fig. <a href="approximatedp.html#fig:pendulum-swingup-mpc-noise-free">3.16</a> shows the control and state trajectories when using MPC to swing up the pendulum. We can see that it works very well.</p>
+<p><strong>MPC results</strong>. Fig. <a href="approximatedp.html#fig:pendulum-swingup-mpc-noise-free">3.17</a> shows the control and state trajectories when using MPC to swing up the pendulum. We can see that it works very well.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:pendulum-swingup-mpc-noise-free"></span>
 <img src="images/pendulum_mpc_noise_free.png" alt="MPC for pendulum swing-up" width="80%" />
 <p class="caption">
-Figure 3.16: MPC for pendulum swing-up
+Figure 3.17: MPC for pendulum swing-up
 </p>
 </div>
 <p><strong>Robustness to noise</strong>. MPC is naturally robust to modelling errors and noises. When the true system dynamics is
 <span class="math display">\[
 x = \begin{bmatrix} \theta \\ \dot{\theta} \end{bmatrix}, \quad \dot{x} = f(x,u) = \begin{bmatrix} \dot{\theta} \\ - \frac{1}{ml^2} (b \dot{\theta} + mgl \sin \theta) + \frac{1}{ml^2} u \end{bmatrix} + \begin{bmatrix} 0 \\ 1 \end{bmatrix}.
 \]</span>
-The MPC controller still works very well, as shown in Fig. <a href="approximatedp.html#fig:pendulum-swingup-mpc-noise">3.17</a>!</p>
+The MPC controller still works very well, as shown in Fig. <a href="approximatedp.html#fig:pendulum-swingup-mpc-noise">3.18</a>!</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:pendulum-swingup-mpc-noise"></span>
 <img src="images/pendulum_mpc_noise.png" alt="MPC for pendulum swing-up with noise" width="80%" />
 <p class="caption">
-Figure 3.17: MPC for pendulum swing-up with noise
+Figure 3.18: MPC for pendulum swing-up with noise
 </p>
 </div>
 <p>Feel free to play with the code <a href="https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/pendulum_mpc/pendulum_mpc.m">here</a>.</p>
 </div>
 </div>
+<p><strong>Software tools</strong>. Matlab implements a nice package for nonlinear MPC, you can refer to the <a href="https://www.mathworks.com/help/mpc/ug/nonlinear-mpc.html">documentation and examples</a>. In Python, the <a href="https://www.do-mpc.com/en/latest/">do-mpc package</a> is quite popular.</p>
+<p>However, it is important to recognize that trajectory optimization for the nonconvex open-loop optimal control problen <a href="approximatedp.html#eq:optimal-control-problem-mpc-open-loop">(3.24)</a> (a) only guarantees a locally optimal solution and hence can be brittle, (b) can be time-consuming when the problem is high-dimensional.</p>
+<p>In fact, MPC was originally developed in the context of chemical plant control <span class="citation">(<a href="#ref-borrelli17book-mpc" role="doc-biblioref">Borrelli, Bemporad, and Morari 2017</a>)</span>, which has linear system dyanmics, as we will introduce in the following section.</p>
+</div>
+<div id="basic-formulation-for-linear-systems" class="section level3 hasAnchor" number="3.3.2">
+<h3><span class="header-section-number">3.3.2</span> Basic Formulation for Linear Systems<a href="approximatedp.html#basic-formulation-for-linear-systems" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We have seen the superior practical performance of MPC in Example <a href="approximatedp.html#exm:mpc-pendulum-swingup">3.9</a>, now let us introduce the basic formulation of MPC for linear systems and study its theoretical properties.</p>
+</div>
+<div id="explicit-mpc" class="section level3 hasAnchor" number="3.3.3">
+<h3><span class="header-section-number">3.3.3</span> Explicit MPC<a href="approximatedp.html#explicit-mpc" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>See the original paper <span class="citation">(<a href="#ref-bemporad02automatica-explicit" role="doc-biblioref">Bemporad et al. 2002</a>)</span>, and check out Matlab’s <a href="https://www.mathworks.com/help/mpc/explicit-mpc-design.html">explict MPC design</a>.</p>
 <!-- ## Approximation in value space
 
 Let us first recap the iteration process of the generic form of DP as mentioned in theorem \@ref(thm:dynamicprogramming). We can obtain the cost-to-go function $J_k$, which means the cost-to-go value at time $k$, thereby defining corresponding control $u_k$ or policy $\mu_k$. 
@@ -1520,6 +1577,7 @@ x_{i+1} = f_i(x_i,u_i)
 \end{equation} -->
 <!-- while $u_k$ still be used as the current online control, and all other optimized controls are discarded. We can see that now it is _almost_ the case of model predictive control, without the terminal state constraint (in this case the terminal state constraint is $x_{k+l+1}=0$). This constraint is also called _recursive feasibility_, for it guarantees the optimization will not suddenly encounter a situation where the solver returns "infeasible". -->
 </div>
+</div>
 <div id="policy-gradient" class="section level2 hasAnchor" number="3.4">
 <h2><span class="header-section-number">3.4</span> Policy Gradient<a href="approximatedp.html#policy-gradient" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <!-- ## Approximation in policy space
@@ -1562,6 +1620,12 @@ It is possible for a suboptimal control scheme to employ both types of approxima
 </div>
 <h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-bemporad02automatica-explicit" class="csl-entry">
+Bemporad, Alberto, Manfred Morari, Vivek Dua, and Efstratios N Pistikopoulos. 2002. <span>“The Explicit Linear Quadratic Regulator for Constrained Systems.”</span> <em>Automatica</em> 38 (1): 3–20.
+</div>
+<div id="ref-borrelli17book-mpc" class="csl-entry">
+Borrelli, Francesco, Alberto Bemporad, and Manfred Morari. 2017. <em>Predictive Control for Linear and Hybrid Systems</em>. Cambridge University Press.
+</div>
 <div id="ref-kelly17siam-trajopt" class="csl-entry">
 Kelly, Matthew. 2017. <span>“An Introduction to Trajectory Optimization: How to Do Your Own Direct Collocation.”</span> <em>SIAM Review</em> 59 (4): 849–904.
 </div>
