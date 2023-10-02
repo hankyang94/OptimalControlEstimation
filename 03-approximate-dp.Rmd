@@ -1027,6 +1027,8 @@ knitr::include_graphics('images/receding_horizon_control.png')
 
 It is worth noting that RHS effectively introduces feedback control, because the controller $u_{t,0}$ in \@ref(eq:receding-horizon-control) depends on $x(t)$ via the open-loop optimal control problem \@ref(eq:optimal-control-problem-mpc-open-loop).
 
+Trajectory optimization and model predictive control are the workhorse for control of highly dynamic robots. For example, here is a [talk by Scott Kuindersma](https://youtu.be/EGABAx52GKI?feature=shared) on how trajectory optimization and model predictive control enable a diverse set of behaviors of Boston Dynamics's humanoid robot.
+
 
 ### Turn Trajectory Optimization into Feedback Control
 
