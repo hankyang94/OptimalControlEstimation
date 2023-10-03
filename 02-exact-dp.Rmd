@@ -103,7 +103,7 @@ The recursion \@ref(eq:finite-discrete-lqr-riccati) is called the _discrete-time
 Proposition \@ref(prp:discretetimefinitehorizonlqrsolution) states that, to evaluate the optimal policy \@ref(eq:lqr-solution-control), one can first run the backwards Riccati equation \@ref(eq:finite-discrete-lqr-riccati) to compute all the positive definite matrices $S_k$, and then compute the gain matrices $K_k$. For systems of reasonable dimensions, evalutating the matrix inversion in \@ref(eq:finite-discrete-lqr-riccati) should be fairly efficient.
 
 
-### Infinite-Horizon LQR
+### Infinite-Horizon LQR {#infinite-horizon-lqr}
 
 In many robotics applications, it is often more useful to study the infinite-horizon LQR problem
 \begin{align}

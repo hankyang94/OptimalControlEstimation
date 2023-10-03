@@ -1,4 +1,4 @@
-# Approximate Dynamic Programming {#approximatedp}
+# Approximate Optimal Control {#approximatedp}
 
 _Thanks to [Jiarui Li](https://jrli.org/) for contributing to this Chapter._
 
@@ -1086,6 +1086,100 @@ In fact, MPC was originally developed in the context of chemical plant control [
 
 We have seen the superior practical performance of MPC in Example \@ref(exm:mpc-pendulum-swingup), now let us introduce the basic formulation of MPC for linear systems and study its theoretical properties.
 
+Consider the problem of regulating the following discrete-time linear system to the origin
+\begin{equation}
+x_{t+1} = A x_t + B u_t,
+(\#eq:mpc-linear-system)
+\end{equation}
+where the state $x_t$ and control $u_t$ are constrained to lie in the following polyheral sets (see Definition \@ref(def:polyhedra))
+\begin{split}
+x_t \in \mathcal{X} = \left\{ x \in \mathbb{R}^n \mid C x \leq c \right\}, \quad C \in \mathbb{R}^{l_x \times n}, c \in \mathbb{R}^{l_x}, \\
+u_t \in \mathcal{U} = \left\{ u \in \mathbb{R}^m \mid D u \leq d \right\}, \quad D \in \mathbb{R}^{l_u \times m}, d \in \mathbb{R}^{l_u}.
+\end{split}
+We assume $\mathcal{X}$ contains the origin $0$.
+
+We can formulate the following optimal control problem to regulate the system to the origin
+\begin{equation}
+\begin{split}
+J^\star(x_0) = \min_{u_t,t=0,\dots} & \quad \sum_{t=0}^{\infty} x_t^T Q x_t + u_t^T R u_t \\
+\text{subject to} & \quad x_{t+1} = A x_t + B u_t, \\
+& \quad (u_t,x_t) \in \mathcal{U} \times \mathcal{X}, \forall t = 0,\dots
+\end{split}
+(\#eq:infinite-horizon-lqr-constraints)
+\end{equation}
+with $Q \succeq 0, R \succ 0$.
+Had we not included the constraints $(u_t,x_t) \in \mathcal{U} \times \mathcal{X}$, then problem \@ref(eq:infinite-horizon-lqr-constraints) is exactly the infinite-horizon LQR problem in Section \@ref(infinite-horizon-lqr), for which we know the optimal controller is $u_t = - K x_t$ with $K$ computed in closed-form as \@ref(eq:infinite-horizon-lqr-control).
+
+However, in the presence of constraints, problem \@ref(eq:infinite-horizon-lqr-constraints) does not admit a simple closed-form solution. In fact, problem \@ref(eq:infinite-horizon-lqr-constraints) is commonly referred to as the _contrained LQR_ (CLQR) problem and it is known that the optimal controller is _piece-wise affine_, see Theorem 11.4 in [@borrelli17book-mpc]. We have asked you to numerically play with a toy example of CLQR in Exercise \@ref(exr:lqrconstraints).
+
+**Receding horizon control**. Leveraging the receding horizon control framework, we can approach problem \@ref(eq:infinite-horizon-lqr-constraints) by online solving convex optimization problems. 
+
+At time $t$, suppose we can measure the current state of the system $x_t$, then we solve the following optimal control problem with a finite horizon $N$
+\begin{equation}
+\begin{split}
+J_t^\star(x_t) = \min_{u(0),\dots,u(N-1)} & \quad x(N)^T P x(N) + \sum_{k=0}^{N-1} x(k)^T Q x(k) + u(k)^T R u(k) \\
+\text{subject to} & \quad x(k+1) = A x(k) + B u(k), k =0, \dots, N-1, \quad x(0) = x_t \\
+& \quad (x(k),u(k)) \in \mathcal{X} \times \mathcal{U}, k=0,\dots,N-1 \\
+& \quad x(N) \in \mathcal{X}_f,
+\end{split}
+(\#eq:linear-mpc-subroutine)
+\end{equation}
+and $P,Q \succeq 0, R \succ 0$.
+I hope you could pay attention to the notation in \@ref(eq:linear-mpc-subroutine). I used $x_t, u_t$ to denote the state and control for the original linear system \@ref(eq:mpc-linear-system) at time $t$, as well as in the CLQR problem \@ref(eq:infinite-horizon-lqr-constraints). However, in every subproblem \@ref(eq:linear-mpc-subroutine) of RHS at time $t$, I used $x(k),u(k)$, with $k$ as the time step, to denote the state and control in the finite-horizon optimal control problem starting at $x_t$, with $x_t = x(0)$ ($k$ is the shifted time horizon in RHS that always starts at zero). In addition to the difference in notation between \@ref(eq:linear-mpc-subroutine) and \@ref(eq:infinite-horizon-lqr-constraints), problem \@ref(eq:linear-mpc-subroutine) is also different in the following two ways:
+
+1. Terminal cost $P$: in the objective of problem \@ref(eq:linear-mpc-subroutine), there is an additional terminal cost $x(N)^T P x(N)$.
+
+2. Terminal constraint set $\mathcal{X}_f$: problem \@ref(eq:linear-mpc-subroutine) has an additional constraint that the final state $x(N)$ must belong to the set $\mathcal{X}_f$. We assume $\mathcal{X}_f$ is also polyheral (and convex).
+
+We will see that it is crucial to design the terminal cost matrix $P$ and terminal constraint set $\mathcal{X}_f$.
+
+Above all, problem \@ref(eq:linear-mpc-subroutine) is a convex optimization problem that we know how to solve efficiently (you have solved such convex optimization problems in Exercise \@ref(exr:lqrconstraints)).
+
+Let $u^\star(0),\dots,u^\star(N-1)$ be the optimal solution of problem \@ref(eq:linear-mpc-subroutine), the RHS framework will only apply the first control u^\star(0) to the system, and hence the closed-loop system is
+$$
+x_{t+1} = A x_t + u^\star_{x_t}(0) = f_{\mathrm{cl}}(x_t),
+$$
+where I have used $u^\star_{x_t}(0)$ to make it explicit that the control is the first optimal control of solving \@ref(eq:linear-mpc-subroutine) with an initial state $x_t$. The following algorithm summarizes the receding horizon control algorithm.
+
+---
+
+**Algorithm**:  Online Receding Horizon Control
+
+---
+
+**Input:** State $x_t$ at time $t$
+
+**Output:** Control $u^\star_{x_t}(0)$
+
+  1. Solve problem \@ref(eq:linear-mpc-subroutine) to get the optimal controls $u^\star(0), \dots, u^\star(N-1)$
+  2. **if** the problem is infeasible, **then** stop
+  3. **else** **return** $u^\star_{x_t}(0) = u^\star(0)$
+
+---
+
+Let's apply RHS to the double integrator example. We will see that if $P$ and $\mathcal{X}_f$ are not chosen properly, then the subproblem \@ref(eq:linear-mpc-subroutine) does get infeasible.
+
+::: {.examplebox}
+::: {.example #double-integrator-mpc name="Receding Horizon Control for Double Integrator"}
+Consider the discrete-time double integrator dynamics
+$$
+x_{t+1} = \begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix} x_t + \begin{bmatrix} 0 \\ 1 \end{bmatrix} u_t,
+$$
+subject to control constraint
+$$
+u \in \mathcal{U} = [-0.5,0.5],
+$$
+and state constraint 
+$$
+x \in \mathcal{X} = [-5, 5] \times [-5, 5].
+$$
+In the RHS subproblem \@ref(eq:linear-mpc-subroutine), we use $N = 3$, $P = Q = I$, $R=10$, and $\mathcal{X}_f = \mathbb{R}^2$ (i.e., there is not terminal constraint).
+
+
+
+
+:::
+:::
 
 
 
