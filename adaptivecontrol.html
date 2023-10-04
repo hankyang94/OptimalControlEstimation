@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-10-02" />
+<meta name="date" content="2023-10-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -183,7 +183,7 @@ div.csl-indent {
 <li class="chapter" data-level="2.2.3" data-path="exactdp.html"><a href="exactdp.html#value-iteration-with-barycentric-interpolation"><i class="fa fa-check"></i><b>2.2.3</b> Value Iteration with Barycentric Interpolation</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="approximatedp.html"><a href="approximatedp.html"><i class="fa fa-check"></i><b>3</b> Approximate Dynamic Programming</a>
+<li class="chapter" data-level="3" data-path="approximatedp.html"><a href="approximatedp.html"><i class="fa fa-check"></i><b>3</b> Approximate Optimal Control</a>
 <ul>
 <li class="chapter" data-level="3.1" data-path="approximatedp.html"><a href="approximatedp.html#fitted-value-iteration"><i class="fa fa-check"></i><b>3.1</b> Fitted Value Iteration</a>
 <ul>
@@ -205,8 +205,11 @@ div.csl-indent {
 <li class="chapter" data-level="3.3" data-path="approximatedp.html"><a href="approximatedp.html#model-predictive-control"><i class="fa fa-check"></i><b>3.3</b> Model Predictive Control</a>
 <ul>
 <li class="chapter" data-level="3.3.1" data-path="approximatedp.html"><a href="approximatedp.html#turn-trajectory-optimization-into-feedback-control"><i class="fa fa-check"></i><b>3.3.1</b> Turn Trajectory Optimization into Feedback Control</a></li>
-<li class="chapter" data-level="3.3.2" data-path="approximatedp.html"><a href="approximatedp.html#basic-formulation-for-linear-systems"><i class="fa fa-check"></i><b>3.3.2</b> Basic Formulation for Linear Systems</a></li>
-<li class="chapter" data-level="3.3.3" data-path="approximatedp.html"><a href="approximatedp.html#explicit-mpc"><i class="fa fa-check"></i><b>3.3.3</b> Explicit MPC</a></li>
+<li class="chapter" data-level="3.3.2" data-path="approximatedp.html"><a href="approximatedp.html#controllability-reachability-and-invariance"><i class="fa fa-check"></i><b>3.3.2</b> Controllability, Reachability, and Invariance</a></li>
+<li class="chapter" data-level="3.3.3" data-path="approximatedp.html"><a href="approximatedp.html#basic-formulation-for-linear-systems"><i class="fa fa-check"></i><b>3.3.3</b> Basic Formulation for Linear Systems</a></li>
+<li class="chapter" data-level="3.3.4" data-path="approximatedp.html"><a href="approximatedp.html#persistent-feasibility"><i class="fa fa-check"></i><b>3.3.4</b> Persistent Feasibility</a></li>
+<li class="chapter" data-level="3.3.5" data-path="approximatedp.html"><a href="approximatedp.html#stability"><i class="fa fa-check"></i><b>3.3.5</b> Stability</a></li>
+<li class="chapter" data-level="3.3.6" data-path="approximatedp.html"><a href="approximatedp.html#explicit-mpc"><i class="fa fa-check"></i><b>3.3.6</b> Explicit MPC</a></li>
 </ul></li>
 <li class="chapter" data-level="3.4" data-path="approximatedp.html"><a href="approximatedp.html#policy-gradient"><i class="fa fa-check"></i><b>3.4</b> Policy Gradient</a></li>
 </ul></li>
@@ -219,9 +222,9 @@ div.csl-indent {
 <li class="chapter" data-level="4.5" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#infinite-horizon-problems"><i class="fa fa-check"></i><b>4.5</b> Infinite-Horizon Problems</a></li>
 <li class="chapter" data-level="4.6" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#viscosity-solution"><i class="fa fa-check"></i><b>4.6</b> Viscosity Solution</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="stability.html"><a href="stability.html"><i class="fa fa-check"></i><b>5</b> Stability Analysis</a>
+<li class="chapter" data-level="5" data-path="approximatedp.html"><a href="approximatedp.html#stability"><i class="fa fa-check"></i><b>5</b> Stability Analysis</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="stability.html"><a href="stability.html#autonomous-systems"><i class="fa fa-check"></i><b>5.1</b> Autonomous Systems</a>
+<li class="chapter" data-level="5.1" data-path="stability.html"><a href="stability.html"><i class="fa fa-check"></i><b>5.1</b> Autonomous Systems</a>
 <ul>
 <li class="chapter" data-level="5.1.1" data-path="stability.html"><a href="stability.html#concepts-of-stability"><i class="fa fa-check"></i><b>5.1.1</b> Concepts of Stability</a></li>
 <li class="chapter" data-level="5.1.2" data-path="stability.html"><a href="stability.html#stability-by-linearization"><i class="fa fa-check"></i><b>5.1.2</b> Stability by Linearization</a></li>
@@ -377,7 +380,7 @@ div.csl-indent {
 </ol>
 <p>The control law design at the first step typically requires the designer to know what a good controller is if the true parameters were actually known, e.g., from feedback linearization (Appendix <a href="feedbacklinearization.html#feedbacklinearization">F</a>), sliding control (Appendix <a href="slidingcontrol.html#slidingcontrol">G</a>) etc.</p>
 <p>The design of the adaptation law typically comes from analyzing the dynamics of the tracking error, which as we will see often appears in the form of Lemma <a href="adaptivecontrol.html#lem:adaptivecontrolbasic">8.1</a>.</p>
-<p>The convergence of the closed-loop system is usually analyzed with the help of a Lyapunov-like function introduced in Chapter <a href="stability.html#stability">5</a>.</p>
+<p>The convergence of the closed-loop system is usually analyzed with the help of a Lyapunov-like function introduced in Chapter <a href="approximatedp.html#stability">3.3.5</a>.</p>
 <div class="lemma">
 <p><span id="lem:adaptivecontrolbasic" class="lemma"><strong>Lemma 8.1  (Basic Lemma) </strong></span>Let two signals <span class="math inline">\(e(t)\)</span> and <span class="math inline">\(\phi(t)\)</span> be related by
 <span class="math display" id="eq:acbasiclemmaephi">\[\begin{equation}
@@ -396,7 +399,7 @@ with <span class="math inline">\(\gamma &gt; 0\)</span> a positive constant, the
 \]</span></p>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-15" class="proof"><em>Proof</em>. </span>Let the state-space representation of <a href="adaptivecontrol.html#eq:acbasiclemmaephi">(8.1)</a> be
+<p><span id="unlabeled-div-18" class="proof"><em>Proof</em>. </span>Let the state-space representation of <a href="adaptivecontrol.html#eq:acbasiclemmaephi">(8.1)</a> be
 <span class="math display" id="eq:acbasiclemmastatespace">\[\begin{equation}
 \dot{x} = A x + b [k \phi^T v], \quad e = c^T x.
 \tag{8.3}
@@ -676,7 +679,7 @@ where <span class="math inline">\(\Gamma \in \mathbb{S}^m_{++}\)</span> is a con
 <p><span id="lem:skewsymmetricmanipulator" class="lemma"><strong>Lemma 8.2  </strong></span>For the manipulator dynamics <a href="adaptivecontrol.html#eq:ac-mrac-manipulator-dynamics">(8.21)</a>, there exists a way to define <span class="math inline">\(C\)</span> such that <span class="math inline">\(\dot{H} - 2C\)</span> is skew-symmetric.</p>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-16" class="proof"><em>Proof</em>. </span>See Section 9.1, page 399-402 in <span class="citation">(<a href="#ref-slotine91book-applied" role="doc-biblioref">Slotine, Li, et al. 1991</a>)</span>. You should also check if this is true for the planar two-link manipulator dynamics in Example <a href="adaptivecontrol.html#exm:planartwolinkmanipulator">8.1</a>.</p>
+<p><span id="unlabeled-div-19" class="proof"><em>Proof</em>. </span>See Section 9.1, page 399-402 in <span class="citation">(<a href="#ref-slotine91book-applied" role="doc-biblioref">Slotine, Li, et al. 1991</a>)</span>. You should also check if this is true for the planar two-link manipulator dynamics in Example <a href="adaptivecontrol.html#exm:planartwolinkmanipulator">8.1</a>.</p>
 </div>
 <p>With Lemma <a href="adaptivecontrol.html#lem:skewsymmetricmanipulator">8.2</a>, the time derivative of <span class="math inline">\(V\)</span> in <a href="adaptivecontrol.html#eq:ac-mrac-manipulator-controller-unknownparam-lyapunov">(8.25)</a> reads
 <span class="math display" id="eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative" id="eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative-3" id="eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative-2" id="eq:ac-mrac-manipulator-controller-unknownparam-lyapunov-derivative-1">\[\begin{align}

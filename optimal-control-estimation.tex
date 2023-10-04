@@ -151,7 +151,7 @@ arc=4pt}
 
 \title{Optimal Control and Estimation}
 \author{Heng Yang}
-\date{2023-10-02}
+\date{2023-10-04}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -1047,7 +1047,7 @@ You can find the Matlab code \href{https://github.com/ComputationalRobotics/Opti
 \end{example}
 
 \hypertarget{approximatedp}{%
-\chapter{Approximate Dynamic Programming}\label{approximatedp}}
+\chapter{Approximate Optimal Control}\label{approximatedp}}
 
 \emph{Thanks to \href{https://jrli.org/}{Jiarui Li} for contributing to this Chapter.}
 
@@ -2200,12 +2200,480 @@ Feel free to play with the code \href{https://github.com/ComputationalRobotics/O
 
 However, it is important to recognize that trajectory optimization for the nonconvex open-loop optimal control problen \eqref{eq:optimal-control-problem-mpc-open-loop} (a) only guarantees a locally optimal solution and hence can be brittle, (b) can be time-consuming when the problem is high-dimensional.
 
-In fact, MPC was originally developed in the context of chemical plant control \citep{borrelli17book-mpc}, which has linear system dyanmics, as we will introduce in the following section.
+In fact, MPC was originally developed in the context of chemical plant control \citep{borrelli17book-mpc}, which has linear system dyanmics, as we will introduce soon. Before we introduce the MPC formulation and understand its theoretical properties, we need to take a detour and introduce various important notions of sets.
+
+\hypertarget{controllability-reachability-and-invariance}{%
+\subsection{Controllability, Reachability, and Invariance}\label{controllability-reachability-and-invariance}}
+
+Consider the autonomous system
+\begin{equation}
+x_{t+1} = f_a(x_t)
+\label{eq:mpc-autonomous-system}
+\end{equation}
+and the controlled system
+\begin{equation}
+x_{t+1} = f(x_t, u_t)
+\label{eq:mpc-controlled-system}
+\end{equation}
+for \(t \geq 0\). Both systems are subject to state and input constraints
+\begin{equation}
+x_t \in \mathcal{X}, \quad u_t \in \mathcal{U}, \forall t \geq 0,
+\label{eq:mpc-state-control-constraint}
+\end{equation}
+with \(\mathcal{X}\) and \(\mathcal{U}\) both being polyhedral sets (see Definition \ref{def:polyhedra})
+\begin{equation}
+\begin{split}
+x_t \in \mathcal{X} = \left\{ x \in \mathbb{R}^n \mid C x \leq c \right\}, \quad C \in \mathbb{R}^{l_x \times n}, c \in \mathbb{R}^{l_x}, \\
+u_t \in \mathcal{U} = \left\{ u \in \mathbb{R}^m \mid D u \leq d \right\}, \quad D \in \mathbb{R}^{l_u \times m}, d \in \mathbb{R}^{l_u}.
+\end{split}
+\label{eq:mpc-polyhedral-definition}
+\end{equation}
+
+We are going to make a few definitions.
+
+\hypertarget{controllable-and-reachable-sets}{%
+\subsubsection{Controllable and Reachable Sets}\label{controllable-and-reachable-sets}}
+
+\begin{definition}[Precursor Set]
+\protect\hypertarget{def:precursor-set}{}\label{def:precursor-set}For the autonomous system \eqref{eq:mpc-autonomous-system}, we define the precursor set to a set \(\mathcal{S}\) as
+\[
+\text{Pre}(\mathcal{S}) = \left\{ x \in \mathbb{R}^n \mid f_a(x) \in \mathcal{S} \right\}.
+\]
+In words, \(\text{Pre}(\mathcal{S})\) is the set of states which evolve into the target set \(\mathcal{S}\) in one time step.
+
+For the controlled system \eqref{eq:mpc-controlled-system}, we define the precursor set to the set \(\mathcal{S}\) as
+\[
+\text{Pre}(\mathcal{S}) = \left\{ x \in \mathbb{R}^n : \exists u \in \mathcal{U} \text{  s.t. } f(x,u) \in \mathcal{S} \right\}.
+\]
+In words, \(\text{Pre}(\mathcal{S})\) is the set of states that can be driven into the target set \(\mathcal{S}\) while satisfying control and state constraints.
+\end{definition}
+
+A related concept is the successor set.
+
+\begin{definition}[Successor Set]
+\protect\hypertarget{def:successor-set}{}\label{def:successor-set}For the autonomous system \eqref{eq:mpc-autonomous-system}, we define the successor set to a set \(\mathcal{S}\) as
+\[
+\text{Suc}(\mathcal{S}) = \left\{ x \in \mathbb{R}^n \mid \exists x' \in \mathcal{S} \text{ s.t. } x = f_a(x')\right\}.
+\]
+In words, the states in \(\mathcal{S}\) get mapped into the states in \(\text{Suc}(\mathcal{S})\) after one time step.
+
+For the controlled system \eqref{eq:mpc-controlled-system}, we define the successor set to the set \(\mathcal{S}\) as
+\[
+\text{Suc}(\mathcal{S}) = \left\{ x \in \mathbb{R}^n \mid \exists x' \in \mathcal{S}, \exists u' \in \mathcal{U} \text{ s.t. } x = f(x',u'). \right\}
+\]
+In words, the states in \(\mathcal{S}\) get mapped into the states in \(\text{Suc}(\mathcal{S})\) after one time step while satisfying the control constraints.
+\end{definition}
+
+The \(N\)-step controllable set is defined by iterating \(\text{Pre}(\cdot)\) computations.
+
+\begin{definition}[N-Step Controllable Set]
+\protect\hypertarget{def:controllable-set}{}\label{def:controllable-set}
+
+Let \(\mathcal{S} \subseteq \mathcal{X}\) be a target set. The \(N\)-step controllable set \(\mathcal{K}_{N}(\mathcal{S})\) of the system \eqref{eq:mpc-autonomous-system} or \eqref{eq:mpc-controlled-system} subject to the constraints \eqref{eq:mpc-state-control-constraint} is defined recursively as:
+\[
+\mathcal{K}_0 (\mathcal{S}) = \mathcal{S}, \quad \mathcal{K}_{i}(\mathcal{S}) = \text{Pre}(\mathcal{K}_{i-1}(\mathcal{S})) \cap \mathcal{X}, i=1,\dots,N.
+\]
+
+According to this definition, given any \(x_0 \in \mathcal{K}_N(\mathcal{S})\):
+
+\begin{itemize}
+\item
+  For the autonomous system \eqref{eq:mpc-autonomous-system}, its state will evolve into the target set \(\mathcal{S}\) in \(N\) steps while satisfying state constraints
+\item
+  For the controlled system \eqref{eq:mpc-controlled-system}, there exists a sequence of admissible controls (i.e., satisfying control constraints) such that its state will evolve into the target set \(\mathcal{S}\) in \(N\) steps while satisfying state constraints.
+\end{itemize}
+
+\end{definition}
+
+Similarly, the \(N\)-step reachable set is defined by iterating \(\text{Suc}(\cdot)\) computations.
+
+\begin{definition}[N-Step Reachable Set]
+\protect\hypertarget{def:reachable-set}{}\label{def:reachable-set}
+
+Let \(\mathcal{X}_0 \subseteq \mathcal{X}\) be an initial set. The \(N\)-step reachable set \(\mathcal{R}_N (\mathcal{X}_0)\) of the system \eqref{eq:mpc-autonomous-system} or \eqref{eq:mpc-controlled-system} subject to the constraints \eqref{eq:mpc-state-control-constraint} is defined recursively as:
+\[
+\mathcal{R}_0(\mathcal{X}_0) = \mathcal{X}_0, \quad \mathcal{R}_{i}(\mathcal{X}_0) = \text{Suc}(\mathcal{R}_{i-1}(\mathcal{X}_0)) \cap \mathcal{X}, i=1,\dots,N.
+\]
+
+According to this definition, given any \(x_0 \in \mathcal{X}_0\):
+
+\begin{itemize}
+\item
+  For the autonomous system \eqref{eq:mpc-autonomous-system}, its state will evolve into \(\mathcal{R}_N(\mathcal{X}_0)\) in \(N\) steps while satisfying state constraints
+\item
+  For the controlled system \eqref{eq:mpc-controlled-system}, there exists a sequence of admissible controls (i.e., satisfying control constraints) such that its state will evolve into \(\mathcal{R}_N(\mathcal{X}_0)\) in \(N\) steps while satisfying state constraints.
+\end{itemize}
+
+\end{definition}
+
+\hypertarget{computation-of-controllable-and-reachable-sets}{%
+\subsubsection{Computation of Controllable and Reachable Sets}\label{computation-of-controllable-and-reachable-sets}}
+
+\hypertarget{invariant-sets}{%
+\subsubsection{Invariant Sets}\label{invariant-sets}}
+
+\begin{definition}[Positive Invariant Set]
+\protect\hypertarget{def:positive-invariant-set}{}\label{def:positive-invariant-set}A set \(\mathcal{O} \subseteq \mathcal{X}\) is said to be a positive invariant set for the autonomous system \eqref{eq:mpc-autonomous-system} subject to the constraints in \eqref{eq:mpc-state-control-constraint} if
+\[
+x_0 \in \mathcal{O} \Longrightarrow x_t \in \mathcal{O}, \forall t \geq 0.
+\]
+That is, if the system starts in \(\mathcal{O}\), it stays in \(\mathcal{O}\) for all future timesteps.
+\end{definition}
+
+The maximal positive invariant set is the largest positive invariant set.
+
+\begin{definition}[Maximal Positive Invariant Set]
+\protect\hypertarget{def:maximal-positive-invariant-set}{}\label{def:maximal-positive-invariant-set}A set \(\mathcal{O}_{\infty} \subseteq \mathcal{X}\) is said to be the maximal positive invariant set for the autonomous system \eqref{eq:mpc-autonomous-system} subject to the constraints in \eqref{eq:mpc-state-control-constraint} if (a) \(\mathcal{O}_{\infty}\) is positive invariant and (b) \(\mathcal{O}_{\infty}\) contains all the invariant sets contained in \(\mathcal{X}\).
+\end{definition}
+
+Essentially, the (maximal) positive invariant set is the set of initial conditions under which the system does not blow up.
+
+For the controlled system \eqref{eq:mpc-controlled-system}, we have the similar notion of a control invariant set.
+
+\begin{definition}[Control Invariant Set]
+\protect\hypertarget{def:control-invariant-set}{}\label{def:control-invariant-set}A set \(\mathcal{C} \subseteq \mathcal{X}\) is said to be a control invariant set for the controlled system \eqref{eq:mpc-controlled-system} subject to the constraints in \eqref{eq:mpc-state-control-constraint} if
+\[
+x_0 \in \mathcal{C} \Longrightarrow \exists u_t \in \mathcal{U} \text{ s.t. } f(x_t,u_t) \in \mathcal{C}, \forall t \geq 0
+\]
+That is, if the system starts in \(\mathcal{C}\), it can be controlled to stay in \(\mathcal{C}\) for all future time steps.
+\end{definition}
+
+The maximal control invariant set is the largest control invariant set.
+
+\begin{definition}[Maximal Control Invariant Set]
+\protect\hypertarget{def:maximal-control-invariant-set}{}\label{def:maximal-control-invariant-set}A set \(\mathcal{C}_{\infty} \subseteq \mathcal{X}\) is said to be the maximal control invariant set for the controlled system \eqref{eq:mpc-controlled-system} subject to the constraints in \eqref{eq:mpc-state-control-constraint} if (a) \(\mathcal{C}_{\infty}\) is control invariant, and (b) \(\mathcal{C}_{\infty}\) contains all control invariant sets contained in \(\mathcal{X}\).
+\end{definition}
+
+Essentially, the (maximal) control invariant set is the set of initial conditions under which the system can be controlled to not blow up.
+
+\hypertarget{computation-of-invariant-sets}{%
+\subsubsection{Computation of Invariant Sets}\label{computation-of-invariant-sets}}
 
 \hypertarget{basic-formulation-for-linear-systems}{%
 \subsection{Basic Formulation for Linear Systems}\label{basic-formulation-for-linear-systems}}
 
-We have seen the superior practical performance of MPC in Example \ref{exm:mpc-pendulum-swingup}, now let us introduce the basic formulation of MPC for linear systems and study its theoretical properties.
+We are now ready to introduce the basic formulation of MPC for linear systems and study its theoretical properties.
+
+Consider the problem of regulating the following discrete-time linear system to the origin
+\begin{equation}
+x_{t+1} = A x_t + B u_t,
+\label{eq:mpc-linear-system}
+\end{equation}
+where the state \(x_t\) and control \(u_t\) are constrained to lie in polyhedral sets \(\mathcal{X}\) and \(\mathcal{U}\), respectively.
+We assume \(\mathcal{X}\) contains the origin \(0\).
+
+We can formulate the following optimal control problem to regulate the system to the origin
+\begin{equation}
+\begin{split}
+J^\star(x_0) = \min_{u_t,t=0,\dots} & \quad \sum_{t=0}^{\infty} x_t^T Q x_t + u_t^T R u_t \\
+\text{subject to} & \quad x_{t+1} = A x_t + B u_t, \\
+& \quad (u_t,x_t) \in \mathcal{U} \times \mathcal{X}, \forall t = 0,\dots
+\end{split}
+\label{eq:infinite-horizon-lqr-constraints}
+\end{equation}
+with \(Q \succeq 0, R \succ 0\).
+Had we not included the constraints \((u_t,x_t) \in \mathcal{U} \times \mathcal{X}\), then problem \eqref{eq:infinite-horizon-lqr-constraints} is exactly the infinite-horizon LQR problem in Section \ref{infinite-horizon-lqr}, for which we know the optimal controller is \(u_t = - K x_t\) with \(K\) computed in closed-form as \eqref{eq:infinite-horizon-lqr-control}.
+
+However, in the presence of constraints, problem \eqref{eq:infinite-horizon-lqr-constraints} does not admit a simple closed-form solution. In fact, problem \eqref{eq:infinite-horizon-lqr-constraints} is commonly referred to as the \emph{contrained LQR} (CLQR) problem and it is known that the optimal controller is \emph{piece-wise affine}, see Theorem 11.4 in \citep{borrelli17book-mpc}. We have asked you to numerically play with a toy example of CLQR in Exercise \ref{exr:lqrconstraints}.
+
+\textbf{Receding horizon control}. Leveraging the receding horizon control framework, we can approach problem \eqref{eq:infinite-horizon-lqr-constraints} by online solving convex optimization problems.
+
+At time \(t\), suppose we can measure the current state of the system \(x_t\), then we solve the following optimal control problem with a finite horizon \(N\)
+\begin{equation}
+\begin{split}
+J_t^\star(x_t) = \min_{u(0),\dots,u(N-1)} & \quad p(x(N)) + \sum_{k=0}^{N-1} q(x(k),u(k)) \\
+\text{subject to} & \quad x(k+1) = A x(k) + B u(k), k =0, \dots, N-1, \quad x(0) = x_t \\
+& \quad (x(k),u(k)) \in \mathcal{X} \times \mathcal{U}, k=0,\dots,N-1 \\
+& \quad x(N) \in \mathcal{X}_f,
+\end{split}
+\label{eq:linear-mpc-subroutine}
+\end{equation}
+and \(p(x)\), \(q(x,u)\) convex functions. For example, a simple choice is \(p(x) = x^T P x\) and \(q = x^T Q x + u^T R u\) with \(P,Q\succeq 0\) and \(R \succ 0\).
+I hope you could pay attention to the notation in \eqref{eq:linear-mpc-subroutine}. I used \(x_t, u_t\) to denote the state and control for the original linear system \eqref{eq:mpc-linear-system} at time \(t\), as well as in the CLQR problem \eqref{eq:infinite-horizon-lqr-constraints}. However, in every subproblem \eqref{eq:linear-mpc-subroutine} of RHS at time \(t\), I used \(x(k),u(k)\), with \(k\) as the time step, to denote the state and control in the finite-horizon optimal control problem starting at \(x_t\), with \(x_t = x(0)\) (\(k\) is the shifted time horizon in RHS that always starts at zero). In addition to the difference in notation between \eqref{eq:linear-mpc-subroutine} and \eqref{eq:infinite-horizon-lqr-constraints}, problem \eqref{eq:linear-mpc-subroutine} is also different in the following two ways:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Terminal cost \(p(x)\): in the objective of problem \eqref{eq:linear-mpc-subroutine}, there is an additional terminal cost \(p(x(N))\).
+\item
+  Terminal constraint set \(\mathcal{X}_f\): problem \eqref{eq:linear-mpc-subroutine} has an additional constraint that the final state \(x(N)\) must belong to the set \(\mathcal{X}_f\). We assume \(\mathcal{X}_f\) is also polyheral (and convex).
+\end{enumerate}
+
+\textbf{Feasible sets}. We denote as \(\mathcal{X}_0 \subseteq \mathcal{X}\) the set of initial states \(x_t\) such that the RHC subproblem \eqref{eq:linear-mpc-subroutine} is feasible, i.e.,
+\begin{equation}
+\begin{split}
+\mathcal{X}_0 = \{ x(0) \in \mathbb{R}^n \mid \exists (u(0),\dots,u(N-1)) \text{ such that } x(k) \in \mathcal{X},u(k) \in \mathcal{U},k=0,\dots,N-1, \\ x(N) \in \mathcal{X}_f \text{ with } x(k+1) = A x(k) + B u(k), k=0,\dots,N-1 \}.
+\end{split}
+\end{equation}
+Similarly, we denote as \(\mathcal{X}_i\) the set of states such that the RHC subproblem is feasible from step \(k=i\):
+\begin{equation}
+\begin{split}
+\mathcal{X}_i = \{ x(i) \in \mathcal{R}^n \mid \exists (u(i),\dots,u(N-1)) \text{ such that } x(k) \in \mathcal{X}, u(k) \in \mathcal{U}, k=i,\dots,N-1, \\ x(N) \in \mathcal{X}_f \text{ with } x(k+1) = A x(k) + B u(k), k=i,\dots,N-1 \}.
+\end{split}
+\end{equation}
+Clearly, by definition we have
+\[
+\mathcal{X}_N = \mathcal{X}_f,
+\]
+and
+\[
+\mathcal{X}_i = \{ x \in \mathcal{X} \mid \exists u \in \mathcal{U} \text{ such that } A x + Bu \in \mathcal{X}_{i+1} \},i=0,\dots,N-1,
+\]
+or written in a compact way as
+\begin{equation}
+\mathcal{X}_i = \text{Pre}(\mathcal{X}_{i+1}) \cap \mathcal{X}.
+\label{eq:mpc-feasible-set-recursion}
+\end{equation}
+
+\textbf{Algorithm}. Above all, problem \eqref{eq:linear-mpc-subroutine} is a convex optimization problem that we know how to solve efficiently (you have solved such convex optimization problems in Exercise \ref{exr:lqrconstraints}).
+
+Let \(u^\star(0),\dots,u^\star(N-1)\) be the optimal solution of problem \eqref{eq:linear-mpc-subroutine} when it is feasible, the RHS framework will only apply the first control \(u^\star(0)\) to the system, and hence the closed-loop system is
+\begin{equation}
+x_{t+1} = A x_t + u^\star_{x_t}(0) = f_{\mathrm{cl}}(x_t),
+\label{eq:mpc-closed-loop}
+\end{equation}
+where I have used \(u^\star_{x_t}(0)\) to make it explicit that the control is the first optimal control of solving \eqref{eq:linear-mpc-subroutine} with an initial state \(x_t\). The following algorithm summarizes the receding horizon control algorithm.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\textbf{Algorithm}: Online Receding Horizon Control
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\textbf{Input:} State \(x_t\) at time \(t\)
+
+\textbf{Output:} Control \(u^\star_{x_t}(0)\)
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Solve problem \eqref{eq:linear-mpc-subroutine} to get the optimal controls \(u^\star(0), \dots, u^\star(N-1)\)
+\item
+  \textbf{if} the problem is infeasible, \textbf{then} stop
+\item
+  \textbf{else} \textbf{return} \(u^\star_{x_t}(0) = u^\star(0)\)
+\end{enumerate}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\textbf{RHC main questions}. Two main questions arise regarding the RHC controller.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Persistent feasibility}. If the RHC algorithm starts at a state \(x_0\) for which the convex optimization \eqref{eq:linear-mpc-subroutine} is feasible, i.e., \(x_0 \in \mathcal{X}_0\), will the convex optimization \eqref{eq:linear-mpc-subroutine} remain feasible for all future time steps?
+\item
+  \textbf{Stability}. Assuming the convex optimization is always feasible. Will the closed-loop system \eqref{eq:mpc-closed-loop} (induced by the RHC controller) converge to the desired origin \(x=0\)?
+\end{enumerate}
+
+Let us use a couple of examples to illustrate that, in general, the answers to the above two questions are both NO.
+
+\begin{example}[Receding Horizon Control for Double Integrator]
+\protect\hypertarget{exm:double-integrator-mpc}{}\label{exm:double-integrator-mpc}
+
+Consider the discrete-time double integrator dynamics
+\[
+x_{t+1} = \begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix} x_t + \begin{bmatrix} 0 \\ 1 \end{bmatrix} u_t,
+\]
+subject to control constraint
+\[
+u \in \mathcal{U} = [-0.5,0.5],
+\]
+and state constraint
+\[
+x \in \mathcal{X} = [-5, 5] \times [-5, 5].
+\]
+In the RHS subproblem \eqref{eq:linear-mpc-subroutine}, we use \(N = 3\), \(p(x) = x^T P x\), \(q(x,u) = x^T Q x + u^T R u\) with \(P = Q = I\), \(R=10\), and \(\mathcal{X}_f = \mathbb{R}^2\) (i.e., there is not terminal constraint). The subproblem is implemented using CVX in Matlab.
+
+Fig. \ref{fig:double-integrator-mpc-two-initial-states} shows the state trajectory of executing RHC starting at \(x_0 = [-4.5;2]\) and \(x_0 = [-4.5;3]\), respectively.
+
+We can see that when the initial state is \(x_0 = [-4.5;2]\), the trajectory successfully converges to the origin (the blue line). However, when the initial state is \(x_0 = [-4.5;3]\), RHC fails in the third iteration because the subproblem becomes infeasible (the red line).
+
+You can find code for this example \href{https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/double_integrator_mpc/double_integrator_mpc.m}{here}.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.7\linewidth]{images/double_integrator_mpc_two_initial_states} 
+
+}
+
+\caption{Receding horizon control for the double integrator with two initial states.}\label{fig:double-integrator-mpc-two-initial-states}
+\end{figure}
+
+\end{example}
+
+We now show another example, adapted from \citep{borrelli17book-mpc} where the design of \(N\), \(p(x)\) and \(q(x,u)\) affects the closed-loop performance.
+
+\begin{example}[RHC Performance Affected by Parameters]
+\protect\hypertarget{exm:mpc-linear-design-choice}{}\label{exm:mpc-linear-design-choice}
+
+Consider the system
+\[
+x_{t+1} = \begin{bmatrix}
+2 & 1 \\ 0 & 0.5
+\end{bmatrix} x_t + \begin{bmatrix} 1 \\ 0 \end{bmatrix} u_t,
+\]
+with control constraint
+\[
+u \in \mathcal{U} = [-1,1],
+\]
+and state constraint
+\[
+x \in \mathcal{X} = [-10,10] \times [-10,10].
+\]
+
+In the RHC problem \eqref{eq:linear-mpc-subroutine}, we choose \(p(x) = x^T P x\), \(q(x,u) = x^T Q x + u^T R u\). We fix \(P=0\), \(Q = I\), and \(\mathcal{X}_f = \mathbb{R}^2\), but vary \(N\) and \(R\):
+
+\begin{itemize}
+\item
+  Setting 1: \(N=2\), \(R = 10\);
+\item
+  Setting 2: \(N=3\), \(R = 2\);
+\item
+  Setting 3: \(N=4\), \(R=1\).
+\end{itemize}
+
+Fig. \ref{fig:mpc-linear-effect-parameters} shows the closed-loop trajectories of three different settings. As we can see, the closed-loop performance depends on the parameters in a very complicated manner.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.8\linewidth]{images/mpc_linear_effect_parameter} 
+
+}
+
+\caption{Closed-loop trajectories for different settings of horizon N and weight R. Boxes (circles) are initial points leading to feasible (infeasible) closed-loop trajectories.}\label{fig:mpc-linear-effect-parameters}
+\end{figure}
+
+\end{example}
+
+\hypertarget{persistent-feasibility}{%
+\subsection{Persistent Feasibility}\label{persistent-feasibility}}
+
+Under what conditions can we guarantee the RHC subproblem \eqref{eq:linear-mpc-subroutine} is always feasible?
+
+There are various sets here of interest for answering this question.
+
+\begin{itemize}
+\item
+  \(\mathcal{C}_{\infty}\): The maximal control invariant set \(\mathcal{C}_{\infty}\) is only affected by the system dynamics \eqref{eq:mpc-linear-system} and the constraint sets \(\mathcal{X} \times \mathcal{U}\). It is the largest set over which we can expect \emph{any} controller to work, because otherwise the system trajectory will blow up.
+\item
+  \(\mathcal{X}_0\): The set of states at which the RHC subproblem \eqref{eq:linear-mpc-subroutine} is feasible. The set \(\mathcal{X}_0\) depends on the system dynamics, the constraint sets \(\mathcal{X} \times \mathcal{U}\), as well as the RHC horizon \(N\) and the terminal constraint set \(\mathcal{X}_f\). It is worth noting that it does not depend on the objective function in \eqref{eq:linear-mpc-subroutine} (i.e., \(P,Q,R\)).
+\item
+  \(\mathcal{O}_{\infty}\): The maximal positive invariant set for the closed-loop system \eqref{eq:mpc-closed-loop} induced by the RHC control law. This depends on the RHC controller and hence it depends on the system dynamics, the constraint set \(\mathcal{X} \times \mathcal{U}\), \(N\), \(\mathcal{X}_f\) and the objective function of \eqref{eq:linear-mpc-subroutine} \(P,Q,R\).
+\end{itemize}
+
+A few relationships between these sets are easy to observe.
+
+\begin{itemize}
+\item
+  \(\mathcal{O}_{\infty} \subseteq \mathcal{X}_0\). Any state \(x \in \mathcal{O}_{\infty}\) needs to stay in \(\mathcal{O}_{\infty}\) for all future time steps. Thus, the subproblem \eqref{eq:linear-mpc-subroutine} must be feasible for any \(x \in \mathcal{O}_{\infty}\), otherwise the closed-loop system \eqref{eq:mpc-closed-loop} is not even well defined.
+\item
+  \(\mathcal{O}_{\infty} \subseteq \mathcal{C}_{\infty}\). The set \(\mathcal{O}_{\infty}\) is control invariant because there exists a controller (specifically, the RHC controller) that makes it positive invariant. Therefore, \(\mathcal{O}_{\infty}\) must belong to the maximal control invariant set \(\mathcal{C}_{\infty}\).
+\end{itemize}
+
+We can now state necessary and sufficient conditions guaranteeing persistent feasibility.
+
+\begin{lemma}[Sufficient and Necessary Condition for Persistent Feasibility]
+\protect\hypertarget{lem:sufficient-necessary-feasibility}{}\label{lem:sufficient-necessary-feasibility}The RHC subproblem \eqref{eq:linear-mpc-subroutine} is persistently feasible if and only if \(\mathcal{X}_0 = \mathcal{O}_{\infty}\).
+\end{lemma}
+
+\begin{proof}
+We have already argued that \(\mathcal{O}_{\infty} \subseteq \mathcal{X}_0\). It remains to show \(\mathcal{X}_0 \subseteq \mathcal{O}_{\infty}\). By definition, \(\mathcal{X}_0\) is persistently feasible implies that
+\[
+x \in \mathcal{X}_0 \Longrightarrow f_{\mathrm{cl}}^t(x) \in \mathcal{X}_0, \forall t
+\]
+where \(f_{\mathrm{cl}}^t\) means applying the closed-loop dynamics \(f_{\mathrm{cl}}\) in \eqref{eq:mpc-closed-loop} \(t\) times. This shows that \(\mathcal{X}_0\) is a positive invariant set for the closed-loop system, and hence \(\mathcal{X}_0 \subseteq \mathcal{O}_{\infty}\).
+\end{proof}
+
+We argued that \(\mathcal{X}_0\) does not depend on the RHC parameters \(P,Q,R\) but \(\mathcal{O}_{\infty}\) does. Therefore, in general only some \(P,Q,R\) are allowed for persistent feasibility to hold. Due to the complicated relationship between \(P,Q,R\) and \(\mathcal{O}_{\infty}\), it is generally difficult to design \(P,Q,R\) such that RHC has persistent feasibility.
+
+We now state a sufficient condition for persistent feasibility to hold.
+
+\begin{lemma}[Sufficient Condition for Persistent Feasibility]
+\protect\hypertarget{lem:sufficient-feasibility}{}\label{lem:sufficient-feasibility}Consider the RHC subproblem \eqref{eq:linear-mpc-subroutine} with \(N \geq 1\). If \(\mathcal{X}_1\) is a control invariant set for the linear system \eqref{eq:mpc-linear-system}, then the RHC controller is persistently feasible.
+\end{lemma}
+
+\begin{proof}
+If \(\mathcal{X}_1\) is control invariant, then by definition \(\mathcal{X}_1 \subseteq \text{Pre}(\mathcal{X}_1)\). Since \(\mathcal{X}_1 \subseteq \mathcal{X}\), we have
+\[
+\mathcal{X}_1 \subseteq \text{Pre}(\mathcal{X}_1) \cap \mathcal{X} = \mathcal{X}_0.
+\]
+where the last equality in the equation above is due to \eqref{eq:mpc-feasible-set-recursion}.
+Now pick any \(x_0 \in \mathcal{X}_0\), the set of controls that make \(x_0\) feasible is denoted as
+\[
+U = \{ u(0),\dots,u(N-1) \mid x(0)=x_0, x(k) \in \mathcal{X},k=0,\dots,N-1,x(N) \in \mathcal{X}_f \}.
+\]
+The RHC will pick some control sequence from \(U\), say \(\hat{u}(0),\dots,\hat{u}(N-1)\) and apply the first control \(\hat{u}(0)\) to the system, which will bring the system to a new state
+\[
+x_1 = A x_0 + B \hat{u}(0).
+\]
+Observe that \(x_1 \in \mathcal{X}_1\) by definition. Since \(\mathcal{X}_1 \subseteq \mathcal{X}_0\), we have \(x_1 \in \mathcal{X}_0\). This proves that the RHC is persistently feasible, i.e., starting with any \(x_0 \in \mathcal{X}_0\), the RHC subproblem \eqref{eq:linear-mpc-subroutine} is always feasible.
+\end{proof}
+
+Lemma \ref{lem:sufficient-feasibility} states that if \(\mathcal{X}_1\) is control invariant, then the RHC subproblem is persistently feasible. An immediate result of this Lemma is that when \(N=1\), then \(\mathcal{X}_1 = \mathcal{X}_f\). Therefore, if we choose the terminal constraint set \(\mathcal{X}_f\) to be control invariant, then RHC is has persistent feasibility.
+
+The next theorem states that when \(N \geq 1\), as long as we choose the terminal constraint set \(\mathcal{X}_f\) to be control invariant, then persistent feasibility also holds.
+
+\begin{theorem}[Control Invariant Terminal Constraint Set Guarantees Persistent Feasibility]
+\protect\hypertarget{thm:sufficient-feasibility-terminal}{}\label{thm:sufficient-feasibility-terminal}Consider the RHC subproblem \eqref{eq:linear-mpc-subroutine} with \(N \geq 1\). If \(\mathcal{X}_f\) is a control invariant set for the linear system \eqref{eq:mpc-linear-system}, then the RHC controller is persistently feasible.
+\end{theorem}
+
+\begin{proof}
+We will prove that \(\mathcal{X}_f\) being control invariant implies
+\[
+\mathcal{X}_{N-1}, \mathcal{X}_{N-2},\dots,\mathcal{X}_1
+\]
+are all control invariant, and then by Lemma \ref{lem:sufficient-feasibility}, we can guarantee persistent feasibility. Fig. \ref{fig:mpc-nested-control-invariant-set} shows the nested control invariant sets when \(\mathcal{X}_f\) is control invariant.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.8\linewidth]{images/mpc_nested_control_invariant_set} 
+
+}
+
+\caption{Nested control invariant sets.}\label{fig:mpc-nested-control-invariant-set}
+\end{figure}
+
+It suffices to show \(\mathcal{X}_{i+1}\) being control invariant leads to \(\mathcal{X}_i\) being control invariant. First, by \(\mathcal{X}_{i+1}\) control invariant, we have \(\mathcal{X}_{i+1} \subseteq \text{Pre}(\mathcal{X}_i) \cap \mathcal{X} = \mathcal{X}_i\). Now pick any \(x_{i} \in \mathcal{X}_{i}\), for any feasible \(\hat{u}(0),\dots,\hat{u}(N-1)\), applying the first control \(\hat{u}(0)\) brings the system to a new state
+\[
+x_{i+1} = A x_i + B \hat{u}(0) \in \mathcal{X}_{i+1} \subseteq \mathcal{X}_i.
+\]
+This shows \(\mathcal{X}_i\) is control invariant.
+\end{proof}
+
+Persistent feasibility does not guarantee the closed-loop system will converge to the origin. In fact, from Theorem \ref{thm:sufficient-feasibility-terminal}, it is clear that if the system starts at \(x_0 \in \mathcal{X}_0\), then we can only guarantee \(x_t \in \mathcal{X}_1\) for all \(t \geq 0\).
+
+\hypertarget{stability}{%
+\subsection{Stability}\label{stability}}
+
+We now answer the question of how can we guarantee the RHC controller will drive the system to the desired origin.
+
+\begin{theorem}[Sufficient Condition for Stability]
+\protect\hypertarget{thm:mpc-stability}{}\label{thm:mpc-stability}Consider the linear system \eqref{eq:mpc-linear-system}, and the RHC algorithm \eqref{eq:linear-mpc-subroutine}. Assume that
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  The stage cost \(q(x,u)\) and terminal cost \(p(x)\) are continuous and positive definite functions.
+\item
+  The sets \(\mathcal{X}\), \(\mathcal{X}_f\) and \(\mathcal{U}\) contain the origin in their interior and are closed.
+\item
+  \(\mathcal{X}_f \subseteq \mathcal{X}\) is control invariant.
+\item
+  For any \(x \in \mathcal{X}_f\), the following inequality holds
+  \begin{equation}
+  \min_{u \in \mathcal{U}, A x + Bu \in \mathcal{X}_f} \left( - p(x) + q(x,u) + p(Ax + Bu) \right) \leq 0.
+  \label{eq:mpc-stability-lyapunov}
+  \end{equation}
+\end{enumerate}
+
+Then, the origin of the closed-loop system \eqref{eq:mpc-closed-loop} is asymptotically stable with domain of attraction \(\mathcal{X}_0\). In words, for any \(x_0 \in \mathcal{X}_0\), if the closed-loop system \eqref{eq:mpc-closed-loop} starts at \(x_0\), then the system trajectory converges to the origin as \(t\) tends to infinity.
+\end{theorem}
+
+Let us interpret Theorem \ref{thm:mpc-stability} before proving it. It should be clear that the first three assumptions are easy to satisfy. For example, if we choose \(p(x) = x^T P x\) and \(q(x,u) = x^T Q x + u^T R u\) with \(P, Q, R \succ 0\), then assumption 1 is satisfied. Usually \(\mathcal{X}\) and \(\mathcal{U}\) are both polyhedral sets containing the origin in the interior, so assumption 2 also holds naturally. Finding a control invariant set \(\mathcal{X}_f\) is not a trivial task but there exists numerical algorithms for this task. After we find a control invariant \(\mathcal{X}_f\), by Theorem \ref{thm:sufficient-feasibility-terminal}, we know persistent feasibility will hold.
+
+Assumption 4 needs some work.
 
 \hypertarget{explicit-mpc}{%
 \subsection{Explicit MPC}\label{explicit-mpc}}
