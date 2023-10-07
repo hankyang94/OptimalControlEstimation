@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-10-04" />
+<meta name="date" content="2023-10-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -1433,9 +1433,84 @@ In words, the states in <span class="math inline">\(\mathcal{S}\)</span> get map
 </ul>
 </div>
 </div>
+<p>In the literature, the controllable set is often referred to as the <em>backwards reachable set</em>.</p>
 </div>
 <div id="computation-of-controllable-and-reachable-sets" class="section level4 hasAnchor" number="3.3.2.2">
 <h4><span class="header-section-number">3.3.2.2</span> Computation of Controllable and Reachable Sets<a href="approximatedp.html#computation-of-controllable-and-reachable-sets" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>For a linear time-invariant system, when the state constraint set <span class="math inline">\(\mathcal{X}\)</span>, control constraint set <span class="math inline">\(\mathcal{U}\)</span>, the target set <span class="math inline">\(\mathcal{S}\)</span>, and the initial set <span class="math inline">\(\mathcal{X}_0\)</span> are all polytopes, then the <span class="math inline">\(N\)</span>-step controllable set <span class="math inline">\(\mathcal{K}_{N}(\mathcal{S})\)</span> and the <span class="math inline">\(N\)</span>-step reachable set <span class="math inline">\(\mathcal{R}_{N}(\mathcal{X}_0)\)</span> are both polytopes and can be computed exactly and efficiently.</p>
+<p>We will not describe the underlying algorithm for computing <span class="math inline">\(\mathcal{K}_{N}(\mathcal{S})\)</span> and <span class="math inline">\(\mathcal{R}_{N}(\mathcal{X}_0)\)</span> (these details can be found in <span class="citation">(<a href="#ref-borrelli17book-mpc" role="doc-biblioref">Borrelli, Bemporad, and Morari 2017</a>)</span> and they are not very difficult to understand, so I suggest you to read them), but we now show you how to use the <a href="https://www.mpt3.org/">Multi-Parametric Toolbox (MPT)</a> to compute them.</p>
+<div class="examplebox">
+<div class="example">
+<p><span id="exm:compute-controllable-reachable-sets" class="example"><strong>Example 3.10  (Compute Controllable and Reachable Sets) </strong></span>Consider a linear system
+<span class="math display">\[
+x_{t+1} = \begin{bmatrix} 1.5 &amp; 0 \\ 1 &amp; -1.5 \end{bmatrix} x_t + \begin{bmatrix} 1 \\ 0 \end{bmatrix} u_t
+\]</span>
+with state and control constraints
+<span class="math display">\[
+\mathcal{X} = [-10,10]^2, \quad \mathcal{U} = [-5,5].
+\]</span>
+Given <span class="math inline">\(\mathcal{S} = \mathcal{X}_0 = [-1,1]^2\)</span>, I want to compute <span class="math inline">\(\mathcal{K}_i(\mathcal{S})\)</span> and <span class="math inline">\(\mathcal{R}_i(\mathcal{X}_0)\)</span>, for <span class="math inline">\(i=0,1,2,3,4\)</span>.</p>
+<p><strong>Dynamical system</strong>. We first define the linear time-invariant system as follows.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode matlab"><code class="sourceCode matlab"><span id="cb5-1"><a href="approximatedp.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="va">A</span> <span class="op">=</span> [<span class="fl">1.5</span><span class="op">,</span> <span class="fl">0</span><span class="op">;</span> <span class="fl">1</span><span class="op">,</span> <span class="op">-</span><span class="fl">1.5</span>]<span class="op">;</span> <span class="va">B</span> <span class="op">=</span> [<span class="fl">1</span><span class="op">;</span> <span class="fl">0</span>]<span class="op">;</span></span>
+<span id="cb5-2"><a href="approximatedp.html#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="va">sys</span> <span class="op">=</span> <span class="va">LTISystem</span>(<span class="ss">&#39;A&#39;</span><span class="op">,</span><span class="va">A</span><span class="op">,</span><span class="ss">&#39;B&#39;</span><span class="op">,</span><span class="va">B</span>)<span class="op">;</span></span></code></pre></div>
+<p>We then define the state and control constraints.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode matlab"><code class="sourceCode matlab"><span id="cb6-1"><a href="approximatedp.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="va">calX</span> <span class="op">=</span> <span class="va">Polyhedron</span>(<span class="ss">&#39;A&#39;</span><span class="op">,...</span></span>
+<span id="cb6-2"><a href="approximatedp.html#cb6-2" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">1</span><span class="op">,</span><span class="fl">0</span><span class="op">;</span><span class="fl">0</span><span class="op">,</span><span class="fl">1</span><span class="op">;-</span><span class="fl">1</span><span class="op">,</span><span class="fl">0</span><span class="op">;</span><span class="fl">0</span><span class="op">,-</span><span class="fl">1</span>]<span class="op">,</span> <span class="op">...</span></span>
+<span id="cb6-3"><a href="approximatedp.html#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="ss">&#39;b&#39;</span><span class="op">,</span>[<span class="fl">10</span><span class="op">;</span><span class="fl">10</span><span class="op">;</span><span class="fl">10</span><span class="op">;</span><span class="fl">10</span>])<span class="op">;</span></span>
+<span id="cb6-4"><a href="approximatedp.html#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="va">calU</span> <span class="op">=</span> <span class="va">Polyhedron</span>(<span class="ss">&#39;A&#39;</span><span class="op">,</span>[<span class="fl">1</span><span class="op">;-</span><span class="fl">1</span>]<span class="op">,</span><span class="ss">&#39;b&#39;</span><span class="op">,</span>[<span class="fl">5</span><span class="op">;</span><span class="fl">5</span>])<span class="op">;</span></span></code></pre></div>
+<p>Note that in the MPT toolbox, to define a polytope <span class="math inline">\(P = \{ x \in \mathbb{R}^n \mid A x \leq b \}\)</span>, we just need to call the <code>Polyhedron</code> function with inputs <code>A</code> and <code>b</code>.</p>
+<p><strong>Controllable sets</strong>. We have from Definition <a href="approximatedp.html#def:controllable-set">3.3</a> the recursion
+<span class="math display">\[
+\mathcal{K}_0(\mathcal{S}) = \mathcal{S}, \quad \mathcal{K}_i(\mathcal{S}) = \text{Pre}(\mathcal{K}_{i-1}(\mathcal{S})) \cap \mathcal{X}.
+\]</span>
+To implement the above set operation, we need two functions, one for the “<span class="math inline">\(\cap\)</span>” intersection operation, and the other for the “<span class="math inline">\(\text{Pre}(\cdot)\)</span>” precursor set operation. These two functions are both available through MPT.</p>
+<ul>
+<li><p><code>intersect(P,S)</code> computes the intersection of two sets <code>P</code> and <code>S</code>, both defined as polytopes.</p></li>
+<li><p><code>system.reachableSet('X', X, 'U', U, 'N', 1, 'direction', 'backwards')</code> computes the one-step backwards reachable set (which is just the precursor set) of the <code>system</code> with target set <code>X</code> and control constraints <code>U</code>.</p></li>
+</ul>
+<p>Using these two functions, the following code snippet computes recursively the controllable sets for <span class="math inline">\(N\)</span> steps.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode matlab"><code class="sourceCode matlab"><span id="cb7-1"><a href="approximatedp.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">% target set</span></span>
+<span id="cb7-2"><a href="approximatedp.html#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="va">S</span> <span class="op">=</span> <span class="va">Polyhedron</span>(<span class="ss">&#39;A&#39;</span><span class="op">,</span>[<span class="fl">1</span><span class="op">,</span><span class="fl">0</span><span class="op">;</span><span class="fl">0</span><span class="op">,</span><span class="fl">1</span><span class="op">;-</span><span class="fl">1</span><span class="op">,</span><span class="fl">0</span><span class="op">;</span><span class="fl">0</span><span class="op">,-</span><span class="fl">1</span>]<span class="op">,</span><span class="ss">&#39;b&#39;</span><span class="op">,</span>[<span class="fl">1</span><span class="op">;</span><span class="fl">1</span><span class="op">;</span><span class="fl">1</span><span class="op">;</span><span class="fl">1</span>])<span class="op">;</span></span>
+<span id="cb7-3"><a href="approximatedp.html#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="va">K</span> <span class="op">=</span> [<span class="va">S</span>]<span class="op">;</span></span>
+<span id="cb7-4"><a href="approximatedp.html#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="va">N</span> <span class="op">=</span> <span class="fl">4</span><span class="op">;</span></span>
+<span id="cb7-5"><a href="approximatedp.html#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="kw">for</span> <span class="va">i</span> <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">N</span></span>
+<span id="cb7-6"><a href="approximatedp.html#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="va">Si</span> <span class="op">=</span> <span class="va">sys</span>.<span class="va">reachableSet</span>(<span class="ss">&#39;X&#39;</span><span class="op">,</span><span class="va">K</span>(<span class="va">i</span>)<span class="op">,</span><span class="ss">&#39;U&#39;</span><span class="op">,</span><span class="va">calU</span><span class="op">,</span><span class="ss">&#39;N&#39;</span><span class="op">,</span><span class="fl">1</span><span class="op">,</span><span class="ss">&#39;direction&#39;</span><span class="op">,</span><span class="ss">&#39;backwards&#39;</span>)<span class="op">;</span></span>
+<span id="cb7-7"><a href="approximatedp.html#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="va">K</span> <span class="op">=</span> [<span class="va">K</span><span class="op">;</span> <span class="va">intersect</span>(<span class="va">Si</span><span class="op">,</span><span class="va">calX</span>)]<span class="op">;</span></span>
+<span id="cb7-8"><a href="approximatedp.html#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div>
+Fig. <a href="approximatedp.html#fig:controllable-set-example">3.19</a> plots the controllable sets computed by running the above code.
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:controllable-set-example"></span>
+<img src="images/controllable_set_overlap.png" alt="Computation of controllable sets using MPT. The bottom plot shifts the sets horizontally for better visualization." width="60%" /><img src="images/controllable_set_shift.png" alt="Computation of controllable sets using MPT. The bottom plot shifts the sets horizontally for better visualization." width="60%" />
+<p class="caption">
+Figure 3.19: Computation of controllable sets using MPT. The bottom plot shifts the sets horizontally for better visualization.
+</p>
+</div>
+<p><strong>Reachable sets</strong>. We have Definition <a href="approximatedp.html#def:reachable-set">3.4</a> the recursion
+<span class="math display">\[
+\mathcal{R}_0(\mathcal{X}_0) = \mathcal{X}_0, \quad \mathcal{X}_i(\mathcal{X}_0) = \text{Suc}(\mathcal{R}_{i-1}(\mathcal{X}_0)) \cap \mathcal{X}.
+\]</span>
+To implement the recursion above, we need “<span class="math inline">\(\cap\)</span>” set intersection, which is available via <code>intersect(P,S)</code>, and the “<span class="math inline">\(\text{Suc}(\cdot)\)</span>” successor set operation, which is available as</p>
+<ul>
+<li><code>system.reachableSet('X', X, 'U', U, 'N', 1, 'direction', 'forward')</code> computes the one-step forward reachable set (which is just the successor set) of the <code>system</code> with initial set <code>X</code> and control constraints <code>U</code>.</li>
+</ul>
+<p>Therefore, we can compute the reachable sets recursively using the following code snippet</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode matlab"><code class="sourceCode matlab"><span id="cb8-1"><a href="approximatedp.html#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">% initial set</span></span>
+<span id="cb8-2"><a href="approximatedp.html#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="va">X0</span> <span class="op">=</span> <span class="va">Polyhedron</span>(<span class="ss">&#39;A&#39;</span><span class="op">,</span>[<span class="fl">1</span><span class="op">,</span><span class="fl">0</span><span class="op">;</span><span class="fl">0</span><span class="op">,</span><span class="fl">1</span><span class="op">;-</span><span class="fl">1</span><span class="op">,</span><span class="fl">0</span><span class="op">;</span><span class="fl">0</span><span class="op">,-</span><span class="fl">1</span>]<span class="op">,</span><span class="ss">&#39;b&#39;</span><span class="op">,</span>[<span class="fl">1</span><span class="op">;</span><span class="fl">1</span><span class="op">;</span><span class="fl">1</span><span class="op">;</span><span class="fl">1</span>])<span class="op">;</span></span>
+<span id="cb8-3"><a href="approximatedp.html#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="va">R</span> <span class="op">=</span> [<span class="va">X0</span>]<span class="op">;</span></span>
+<span id="cb8-4"><a href="approximatedp.html#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="va">N</span> <span class="op">=</span> <span class="fl">4</span><span class="op">;</span></span>
+<span id="cb8-5"><a href="approximatedp.html#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="kw">for</span> <span class="va">i</span> <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">N</span></span>
+<span id="cb8-6"><a href="approximatedp.html#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="va">Ri</span> <span class="op">=</span> <span class="va">sys</span>.<span class="va">reachableSet</span>(<span class="ss">&#39;X&#39;</span><span class="op">,</span><span class="va">R</span>(<span class="va">i</span>)<span class="op">,</span><span class="ss">&#39;U&#39;</span><span class="op">,</span><span class="va">calU</span><span class="op">,</span><span class="ss">&#39;N&#39;</span><span class="op">,</span><span class="fl">1</span><span class="op">,</span><span class="ss">&#39;direction&#39;</span><span class="op">,</span><span class="ss">&#39;forward&#39;</span>)<span class="op">;</span></span>
+<span id="cb8-7"><a href="approximatedp.html#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="va">R</span> <span class="op">=</span> [<span class="va">R</span><span class="op">;</span> <span class="va">intersect</span>(<span class="va">Ri</span><span class="op">,</span><span class="va">calX</span>)]<span class="op">;</span></span>
+<span id="cb8-8"><a href="approximatedp.html#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div>
+<p>Fig. <a href="approximatedp.html#fig:reachable-set-example">3.20</a> plots the reachable sets computed by running the above code.</p>
+<p>Feel free to play with the code <a href="https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/mpt_examples/controllable_reachable_sets.m">here</a>. Note that you need to <a href="https://www.mpt3.org/Main/Installation">install the MPT toolbox</a> before running the code.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:reachable-set-example"></span>
+<img src="images/reachable_set_overlap.png" alt="Computation of reachable sets using MPT. The bottom plot shifts the sets horizontally for better visualization." width="60%" /><img src="images/reachable_set_shift.png" alt="Computation of reachable sets using MPT. The bottom plot shifts the sets horizontally for better visualization." width="60%" />
+<p class="caption">
+Figure 3.20: Computation of reachable sets using MPT. The bottom plot shifts the sets horizontally for better visualization.
+</p>
+</div>
+</div>
+</div>
 </div>
 <div id="invariant-sets" class="section level4 hasAnchor" number="3.3.2.3">
 <h4><span class="header-section-number">3.3.2.3</span> Invariant Sets<a href="approximatedp.html#invariant-sets" class="anchor-section" aria-label="Anchor link to header"></a></h4>
@@ -1472,9 +1547,107 @@ That is, if the system starts in <span class="math inline">\(\mathcal{C}\)</span
 </div>
 </div>
 <p>Essentially, the (maximal) control invariant set is the set of initial conditions under which the system can be controlled to not blow up.</p>
+<p>We now state a necessary and sufficient condition for a set to be positive invariant and control invariant.</p>
+<div class="theorembox">
+<div class="theorem">
+<p><span id="thm:geometric-condition-for-invariance" class="theorem"><strong>Theorem 3.1  (Geometric Condition for Invariance) </strong></span>For the autonomous system <a href="approximatedp.html#eq:mpc-autonomous-system">(3.27)</a> subject to the constraint <a href="approximatedp.html#eq:mpc-state-control-constraint">(3.29)</a>, a set <span class="math inline">\(\mathcal{O} \subseteq \mathcal{X}\)</span> is positive invariant if and only if
+<span class="math display" id="eq:positive-invariant-geometric">\[\begin{equation}
+\mathcal{O} \subseteq \text{Pre}(\mathcal{O}).
+\tag{3.31}
+\end{equation}\]</span></p>
+<p>Similarly, for the controlled system <a href="approximatedp.html#eq:mpc-controlled-system">(3.28)</a> subject to the constraint <a href="approximatedp.html#eq:mpc-state-control-constraint">(3.29)</a>, a set <span class="math inline">\(\mathcal{C}\)</span> is control invariant if and only if
+<span class="math display" id="eq:control-invariant-geometric">\[\begin{equation}
+\mathcal{C} \subseteq \text{Pre}(\mathcal{C}).
+\tag{3.32}
+\end{equation}\]</span></p>
+</div>
+</div>
+<div class="proofbox">
+<div class="proof">
+<p><span id="unlabeled-div-7" class="proof"><em>Proof</em>. </span>We only prove <a href="approximatedp.html#eq:positive-invariant-geometric">(3.31)</a> since <a href="approximatedp.html#eq:control-invariant-geometric">(3.32)</a> can be proved using similar arguments.</p>
+<ul>
+<li><p>“<span class="math inline">\(\Leftarrow\)</span>”: we want to show <span class="math inline">\(\mathcal{O}\)</span> is positive invariant if <a href="approximatedp.html#eq:positive-invariant-geometric">(3.31)</a> holds. We prove this by contradiction. If <span class="math inline">\(\mathcal{O}\)</span> is not positive invariant, the <span class="math inline">\(\exists \hat{x} \in \mathcal{O}\)</span> such that <span class="math inline">\(f_a(\hat{x}) \not\in \mathcal{O}\)</span>. This implies we have found <span class="math inline">\(\hat{x} \in \mathcal{O}\)</span> but <span class="math inline">\(\hat{x} \not\in \text{Pre}(\mathcal{O})\)</span>, contradicting <a href="approximatedp.html#eq:positive-invariant-geometric">(3.31)</a>.</p></li>
+<li><p>“<span class="math inline">\(\Rightarrow\)</span>”: we want to show <a href="approximatedp.html#eq:positive-invariant-geometric">(3.31)</a> holds if <span class="math inline">\(\mathcal{O}\)</span> is positive invariant. We prove this by contradiction. Suppose <a href="approximatedp.html#eq:positive-invariant-geometric">(3.31)</a> does not hold, then <span class="math inline">\(\exists \hat{x}\)</span> such that <span class="math inline">\(\hat{x} \in \mathcal{O}\)</span> but <span class="math inline">\(\hat{x} \not\in \text{Pre}(\mathcal{O})\)</span>. This implies we have found <span class="math inline">\(\hat{x} \in \mathcal{O}\)</span> that does not remain in <span class="math inline">\(\mathcal{O}\)</span> in the next step, contradicting <span class="math inline">\(\mathcal{O}\)</span> being positive invariant.</p></li>
+</ul>
+<p>This shows that <a href="approximatedp.html#eq:positive-invariant-geometric">(3.31)</a> is a sufficient and necessary condition.</p>
+</div>
+</div>
+<p>Theorem <a href="approximatedp.html#thm:geometric-condition-for-invariance">3.1</a> immediately suggests an algoithm for computing (control) invariant sets, as we will describe in the next section.</p>
 </div>
 <div id="computation-of-invariant-sets" class="section level4 hasAnchor" number="3.3.2.4">
 <h4><span class="header-section-number">3.3.2.4</span> Computation of Invariant Sets<a href="approximatedp.html#computation-of-invariant-sets" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Observe that the geometric conditions <a href="approximatedp.html#eq:positive-invariant-geometric">(3.31)</a> and <a href="approximatedp.html#eq:control-invariant-geometric">(3.32)</a> are equivalent to the following conditions
+<span class="math display">\[
+\mathcal{O} = \text{Pre}(\mathcal{O}) \cap \mathcal{O}, \quad \mathcal{C} = \text{Pre}(\mathcal{C}) \cap \mathcal{C}.
+\]</span></p>
+<p>Based on the equation above, we can design an algoithm that iteratively evaluates <span class="math inline">\(\text{Pre}(\mathcal{\Omega}) \cap \mathcal{\Omega}\)</span> until it converges.</p>
+<hr />
+<p><strong>Algorithm</strong>: Computation of <span class="math inline">\(\mathcal{O}_{\infty}\)</span></p>
+<hr />
+<p><strong>Input:</strong> <span class="math inline">\(f_a\)</span>, <span class="math inline">\(\mathcal{X}\)</span></p>
+<p><strong>Output:</strong> <span class="math inline">\(\mathcal{O}_{\infty}\)</span></p>
+<p>   <span class="math inline">\(\Omega_0 \leftarrow \mathcal{X}\)</span>, <span class="math inline">\(k=0\)</span></p>
+<p>   <strong>Repeat</strong></p>
+<p>     <span class="math inline">\(\Omega_{k+1} \leftarrow \text{Pre}(\Omega_k) \cap \Omega_k\)</span></p>
+<p>     <span class="math inline">\(k \leftarrow k+1\)</span></p>
+<p>   <strong>Until</strong> <span class="math inline">\(\Omega_{k+1} = \Omega_k\)</span>.</p>
+<p>   <span class="math inline">\(\mathcal{O}_{\infty} \leftarrow \Omega_k\)</span></p>
+<hr />
+<p>The algorithm above generates a sequence of sets <span class="math inline">\(\{ \Omega_k \}\)</span> satisfying <span class="math inline">\(\Omega_{k+1} \subseteq \Omega_k\)</span> for any <span class="math inline">\(k\)</span>, and it terminates when <span class="math inline">\(\Omega_{k+1} = \Omega_k\)</span>. If it terminates, then <span class="math inline">\(\Omega_k\)</span> is the maximal positive invariant set <span class="math inline">\(\mathcal{O}_{\infty}\)</span>. If <span class="math inline">\(\Omega_k = \emptyset\)</span> for some intege <span class="math inline">\(k\)</span> then <span class="math inline">\(\mathcal{O}_{\infty} = \emptyset\)</span>.</p>
+<p>In general, the algoithm above may never terminate. If the algoithm does not terminate in a finite number of iterations, then it can be proven that <span class="citation">(<a href="#ref-kolmanovsky98mpe-theory" role="doc-biblioref">Kolmanovsky, Gilbert, et al. 1998</a>)</span>
+<span class="math display">\[
+\mathcal{O}_{\infty} = \lim_{k \rightarrow \infty} \Omega_k.
+\]</span></p>
+<p>Conditions for finite time termination of the algoithm can be found in <span class="citation">(<a href="#ref-gilbert91tac-linear" role="doc-biblioref">Gilbert and Tan 1991</a>)</span>. A simple sufficient condition requires the dynamics <span class="math inline">\(f_a\)</span> to be linear and stable, and the constraint set <span class="math inline">\(\mathcal{X}\)</span> to be bounded and contain the origin.</p>
+<p>The same algoithm can be used to compute the maximal control invariant set <span class="math inline">\(\mathcal{C}_{\infty}\)</span>.</p>
+<hr />
+<p><strong>Algorithm</strong>: Computation of <span class="math inline">\(\mathcal{C}_{\infty}\)</span></p>
+<hr />
+<p><strong>Input:</strong> <span class="math inline">\(f\)</span>, <span class="math inline">\(\mathcal{X}\)</span>, <span class="math inline">\(\mathcal{U}\)</span></p>
+<p><strong>Output:</strong> <span class="math inline">\(\mathcal{C}_{\infty}\)</span></p>
+<p>   <span class="math inline">\(\Omega_0 \leftarrow \mathcal{X}\)</span>, <span class="math inline">\(k=0\)</span></p>
+<p>   <strong>Repeat</strong></p>
+<p>     <span class="math inline">\(\Omega_{k+1} \leftarrow \text{Pre}(\Omega_k) \cap \Omega_k\)</span></p>
+<p>     <span class="math inline">\(k \leftarrow k+1\)</span></p>
+<p>   <strong>Until</strong> <span class="math inline">\(\Omega_{k+1} = \Omega_k\)</span>.</p>
+<p>   <span class="math inline">\(\mathcal{C}_{\infty} \leftarrow \Omega_k\)</span></p>
+<hr />
+<p>Similarly, the above algoithm generates <span class="math inline">\(\{\Omega_k \}\)</span> such that <span class="math inline">\(\Omega_{k+1} \subseteq \Omega_k\)</span> for any <span class="math inline">\(k\)</span>. If the algoithm terminates, then <span class="math inline">\(\Omega_k = \mathcal{C}_{\infty}\)</span>.</p>
+<p>In general, the algoithm may never terminate. If the algoithm does not terminate, then in general convergence is not guaranteed
+<span class="math display">\[
+\mathcal{C}_{\infty} \neq \lim_{k \rightarrow \infty} \Omega_k.
+\]</span>
+The work in <span class="citation">(<a href="#ref-bertsekas72tac-infinite" role="doc-biblioref">Bertsekas 1972</a>)</span> reports examples of nonlinear systems for which the above equation can be observed. A sufficient condition for the convergence of <span class="math inline">\(\Omega_k\)</span> to <span class="math inline">\(\mathcal{C}_{\infty}\)</span> as <span class="math inline">\(k \rightarrow \infty\)</span> requires the polyhedral sets <span class="math inline">\(\mathcal{X}\)</span> and <span class="math inline">\(\mathcal{U}\)</span> to be bounded and the system <span class="math inline">\(f(x,u)\)</span> to be continuous <span class="citation">(<a href="#ref-bertsekas72tac-infinite" role="doc-biblioref">Bertsekas 1972</a>)</span>.</p>
+<p>Let us apply the algoithm to compute the maximal control invariant set for the linear system in Example <a href="approximatedp.html#exm:compute-controllable-reachable-sets">3.10</a>.</p>
+<div class="examplebox">
+<div class="example">
+<p><span id="exm:compute-control-invariant-set" class="example"><strong>Example 3.11  (Computation of the Maximal Control Invariant Set) </strong></span>Consider the linear system in Example <a href="approximatedp.html#exm:compute-controllable-reachable-sets">3.10</a> with same state constraint and control constraint.</p>
+<p>The following code snippet shows how to apply the iterative algorithm introduced above to compute the maximal control invariant set.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode matlab"><code class="sourceCode matlab"><span id="cb9-1"><a href="approximatedp.html#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="va">Omega</span> <span class="op">=</span> [<span class="va">calX</span>]<span class="op">;</span></span>
+<span id="cb9-2"><a href="approximatedp.html#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">while</span> <span class="va">true</span></span>
+<span id="cb9-3"><a href="approximatedp.html#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="va">last_Omega</span> <span class="op">=</span> <span class="va">Omega</span>(<span class="kw">end</span>)<span class="op">;</span></span>
+<span id="cb9-4"><a href="approximatedp.html#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="va">pre_omega</span> <span class="op">=</span> <span class="va">sys</span>.<span class="va">reachableSet</span>(<span class="ss">&#39;X&#39;</span><span class="op">,</span><span class="va">last_Omega</span><span class="op">,</span><span class="ss">&#39;U&#39;</span><span class="op">,</span><span class="va">calU</span><span class="op">,</span><span class="ss">&#39;N&#39;</span><span class="op">,</span><span class="fl">1</span><span class="op">,...</span></span>
+<span id="cb9-5"><a href="approximatedp.html#cb9-5" aria-hidden="true" tabindex="-1"></a>        <span class="ss">&#39;direction&#39;</span><span class="op">,</span><span class="ss">&#39;backwards&#39;</span>)<span class="op">;</span></span>
+<span id="cb9-6"><a href="approximatedp.html#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="va">new_Omega</span> <span class="op">=</span> <span class="va">intersect</span>(<span class="va">pre_omega</span><span class="op">,</span><span class="va">last_Omega</span>)<span class="op">;</span></span>
+<span id="cb9-7"><a href="approximatedp.html#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="va">Omega</span> <span class="op">=</span> [<span class="va">Omega</span><span class="op">;</span><span class="va">new_Omega</span>]<span class="op">;</span></span>
+<span id="cb9-8"><a href="approximatedp.html#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">if</span> <span class="va">new_Omega</span> <span class="op">==</span> <span class="va">last_Omega</span></span>
+<span id="cb9-9"><a href="approximatedp.html#cb9-9" aria-hidden="true" tabindex="-1"></a>        <span class="va">fprintf</span>(<span class="st">&quot;Converged to maximal control invariant set.\n&quot;</span>)<span class="op">;</span></span>
+<span id="cb9-10"><a href="approximatedp.html#cb9-10" aria-hidden="true" tabindex="-1"></a>        <span class="kw">break</span><span class="op">;</span></span>
+<span id="cb9-11"><a href="approximatedp.html#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span>
+<span id="cb9-12"><a href="approximatedp.html#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div>
+<p>The algoithm converges in 37 iterations and Fig. <a href="approximatedp.html#fig:max-control-invariant-set">3.21</a> plots the sequence of sets generated by the algorithm.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:max-control-invariant-set"></span>
+<img src="images/maximal_control_invariant_set.png" alt="Maximal control invariant set." width="60%" />
+<p class="caption">
+Figure 3.21: Maximal control invariant set.
+</p>
+</div>
+<p>The MPT toolbox actually implements this algoithm for us to use directly. If we use</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode matlab"><code class="sourceCode matlab"><span id="cb10-1"><a href="approximatedp.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="va">C</span> <span class="op">=</span> <span class="va">sys</span>.<span class="va">invariantSet</span>(<span class="ss">&#39;X&#39;</span><span class="op">,</span> <span class="va">calX</span><span class="op">,</span> <span class="ss">&#39;U&#39;</span><span class="op">,</span> <span class="va">calU</span>)<span class="op">;</span></span></code></pre></div>
+<p>we get the same result as before.</p>
+<p>You can play with the code <a href="https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/mpt_examples/maximal_control_invariant_set.m">here</a>.</p>
+</div>
+</div>
 </div>
 </div>
 <div id="basic-formulation-for-linear-systems" class="section level3 hasAnchor" number="3.3.3">
@@ -1483,7 +1656,7 @@ That is, if the system starts in <span class="math inline">\(\mathcal{C}\)</span
 <p>Consider the problem of regulating the following discrete-time linear system to the origin
 <span class="math display" id="eq:mpc-linear-system">\[\begin{equation}
 x_{t+1} = A x_t + B u_t,
-\tag{3.31}
+\tag{3.33}
 \end{equation}\]</span>
 where the state <span class="math inline">\(x_t\)</span> and control <span class="math inline">\(u_t\)</span> are constrained to lie in polyhedral sets <span class="math inline">\(\mathcal{X}\)</span> and <span class="math inline">\(\mathcal{U}\)</span>, respectively.
 We assume <span class="math inline">\(\mathcal{X}\)</span> contains the origin <span class="math inline">\(0\)</span>.</p>
@@ -1494,12 +1667,12 @@ J^\star(x_0) = \min_{u_t,t=0,\dots} &amp; \quad \sum_{t=0}^{\infty} x_t^T Q x_t 
 \text{subject to} &amp; \quad x_{t+1} = A x_t + B u_t, \\
 &amp; \quad (u_t,x_t) \in \mathcal{U} \times \mathcal{X}, \forall t = 0,\dots
 \end{split}
-\tag{3.32}
+\tag{3.34}
 \end{equation}\]</span>
 with <span class="math inline">\(Q \succeq 0, R \succ 0\)</span>.
-Had we not included the constraints <span class="math inline">\((u_t,x_t) \in \mathcal{U} \times \mathcal{X}\)</span>, then problem <a href="approximatedp.html#eq:infinite-horizon-lqr-constraints">(3.32)</a> is exactly the infinite-horizon LQR problem in Section <a href="exactdp.html#infinite-horizon-lqr">2.1.1</a>, for which we know the optimal controller is <span class="math inline">\(u_t = - K x_t\)</span> with <span class="math inline">\(K\)</span> computed in closed-form as <a href="exactdp.html#eq:infinite-horizon-lqr-control">(2.12)</a>.</p>
-<p>However, in the presence of constraints, problem <a href="approximatedp.html#eq:infinite-horizon-lqr-constraints">(3.32)</a> does not admit a simple closed-form solution. In fact, problem <a href="approximatedp.html#eq:infinite-horizon-lqr-constraints">(3.32)</a> is commonly referred to as the <em>contrained LQR</em> (CLQR) problem and it is known that the optimal controller is <em>piece-wise affine</em>, see Theorem 11.4 in <span class="citation">(<a href="#ref-borrelli17book-mpc" role="doc-biblioref">Borrelli, Bemporad, and Morari 2017</a>)</span>. We have asked you to numerically play with a toy example of CLQR in Exercise <a href="psets.html#exr:lqrconstraints">9.2</a>.</p>
-<p><strong>Receding horizon control</strong>. Leveraging the receding horizon control framework, we can approach problem <a href="approximatedp.html#eq:infinite-horizon-lqr-constraints">(3.32)</a> by online solving convex optimization problems.</p>
+Had we not included the constraints <span class="math inline">\((u_t,x_t) \in \mathcal{U} \times \mathcal{X}\)</span>, then problem <a href="approximatedp.html#eq:infinite-horizon-lqr-constraints">(3.34)</a> is exactly the infinite-horizon LQR problem in Section <a href="exactdp.html#infinite-horizon-lqr">2.1.1</a>, for which we know the optimal controller is <span class="math inline">\(u_t = - K x_t\)</span> with <span class="math inline">\(K\)</span> computed in closed-form as <a href="exactdp.html#eq:infinite-horizon-lqr-control">(2.12)</a>.</p>
+<p>However, in the presence of constraints, problem <a href="approximatedp.html#eq:infinite-horizon-lqr-constraints">(3.34)</a> does not admit a simple closed-form solution. In fact, problem <a href="approximatedp.html#eq:infinite-horizon-lqr-constraints">(3.34)</a> is commonly referred to as the <em>contrained LQR</em> (CLQR) problem and it is known that the optimal controller is <em>piece-wise affine</em>, see Theorem 11.4 in <span class="citation">(<a href="#ref-borrelli17book-mpc" role="doc-biblioref">Borrelli, Bemporad, and Morari 2017</a>)</span>. We have asked you to numerically play with a toy example of CLQR in Exercise <a href="psets.html#exr:lqrconstraints">9.2</a>.</p>
+<p><strong>Receding horizon control</strong>. Leveraging the receding horizon control framework, we can approach problem <a href="approximatedp.html#eq:infinite-horizon-lqr-constraints">(3.34)</a> by online solving convex optimization problems.</p>
 <p>At time <span class="math inline">\(t\)</span>, suppose we can measure the current state of the system <span class="math inline">\(x_t\)</span>, then we solve the following optimal control problem with a finite horizon <span class="math inline">\(N\)</span>
 <span class="math display" id="eq:linear-mpc-subroutine">\[\begin{equation}
 \begin{split}
@@ -1508,25 +1681,29 @@ J_t^\star(x_t) = \min_{u(0),\dots,u(N-1)} &amp; \quad p(x(N)) + \sum_{k=0}^{N-1}
 &amp; \quad (x(k),u(k)) \in \mathcal{X} \times \mathcal{U}, k=0,\dots,N-1 \\
 &amp; \quad x(N) \in \mathcal{X}_f,
 \end{split}
-\tag{3.33}
+\tag{3.35}
 \end{equation}\]</span>
 and <span class="math inline">\(p(x)\)</span>, <span class="math inline">\(q(x,u)\)</span> convex functions. For example, a simple choice is <span class="math inline">\(p(x) = x^T P x\)</span> and <span class="math inline">\(q = x^T Q x + u^T R u\)</span> with <span class="math inline">\(P,Q\succeq 0\)</span> and <span class="math inline">\(R \succ 0\)</span>.
-I hope you could pay attention to the notation in <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.33)</a>. I used <span class="math inline">\(x_t, u_t\)</span> to denote the state and control for the original linear system <a href="approximatedp.html#eq:mpc-linear-system">(3.31)</a> at time <span class="math inline">\(t\)</span>, as well as in the CLQR problem <a href="approximatedp.html#eq:infinite-horizon-lqr-constraints">(3.32)</a>. However, in every subproblem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.33)</a> of RHS at time <span class="math inline">\(t\)</span>, I used <span class="math inline">\(x(k),u(k)\)</span>, with <span class="math inline">\(k\)</span> as the time step, to denote the state and control in the finite-horizon optimal control problem starting at <span class="math inline">\(x_t\)</span>, with <span class="math inline">\(x_t = x(0)\)</span> (<span class="math inline">\(k\)</span> is the shifted time horizon in RHS that always starts at zero). In addition to the difference in notation between <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.33)</a> and <a href="approximatedp.html#eq:infinite-horizon-lqr-constraints">(3.32)</a>, problem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.33)</a> is also different in the following two ways:</p>
+I hope you could pay attention to the notation in <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.35)</a>. I used <span class="math inline">\(x_t, u_t\)</span> to denote the state and control for the original linear system <a href="approximatedp.html#eq:mpc-linear-system">(3.33)</a> at time <span class="math inline">\(t\)</span>, as well as in the CLQR problem <a href="approximatedp.html#eq:infinite-horizon-lqr-constraints">(3.34)</a>. However, in every subproblem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.35)</a> of RHS at time <span class="math inline">\(t\)</span>, I used <span class="math inline">\(x(k),u(k)\)</span>, with <span class="math inline">\(k\)</span> as the time step, to denote the state and control in the finite-horizon optimal control problem starting at <span class="math inline">\(x_t\)</span>, with <span class="math inline">\(x_t = x(0)\)</span> (<span class="math inline">\(k\)</span> is the shifted time horizon in RHS that always starts at zero). In addition to the difference in notation between <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.35)</a> and <a href="approximatedp.html#eq:infinite-horizon-lqr-constraints">(3.34)</a>, problem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.35)</a> is also different in the following two ways:</p>
 <ol style="list-style-type: decimal">
-<li><p>Terminal cost <span class="math inline">\(p(x)\)</span>: in the objective of problem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.33)</a>, there is an additional terminal cost <span class="math inline">\(p(x(N))\)</span>.</p></li>
-<li><p>Terminal constraint set <span class="math inline">\(\mathcal{X}_f\)</span>: problem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.33)</a> has an additional constraint that the final state <span class="math inline">\(x(N)\)</span> must belong to the set <span class="math inline">\(\mathcal{X}_f\)</span>. We assume <span class="math inline">\(\mathcal{X}_f\)</span> is also polyheral (and convex).</p></li>
+<li><p>Terminal cost <span class="math inline">\(p(x)\)</span>: in the objective of problem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.35)</a>, there is an additional terminal cost <span class="math inline">\(p(x(N))\)</span>.</p></li>
+<li><p>Terminal constraint set <span class="math inline">\(\mathcal{X}_f\)</span>: problem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.35)</a> has an additional constraint that the final state <span class="math inline">\(x(N)\)</span> must belong to the set <span class="math inline">\(\mathcal{X}_f\)</span>. We assume <span class="math inline">\(\mathcal{X}_f\)</span> is also polyheral (and convex).</p></li>
 </ol>
-<p><strong>Feasible sets</strong>. We denote as <span class="math inline">\(\mathcal{X}_0 \subseteq \mathcal{X}\)</span> the set of initial states <span class="math inline">\(x_t\)</span> such that the RHC subproblem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.33)</a> is feasible, i.e.,
-<span class="math display">\[\begin{equation}
+<p><strong>Feasible sets</strong>. We denote as <span class="math inline">\(\mathcal{X}_0 \subseteq \mathcal{X}\)</span> the set of initial states <span class="math inline">\(x_t\)</span> such that the RHC subproblem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.35)</a> is feasible, i.e.,
+<span class="math display" id="eq:definition-calX-0">\[\begin{equation}
+\hspace{-14mm}
 \begin{split}
 \mathcal{X}_0 = \{ x(0) \in \mathbb{R}^n \mid \exists (u(0),\dots,u(N-1)) \text{ such that } x(k) \in \mathcal{X},u(k) \in \mathcal{U},k=0,\dots,N-1, \\ x(N) \in \mathcal{X}_f \text{ with } x(k+1) = A x(k) + B u(k), k=0,\dots,N-1 \}.
 \end{split}
+\tag{3.36}
 \end{equation}\]</span>
 Similarly, we denote as <span class="math inline">\(\mathcal{X}_i\)</span> the set of states such that the RHC subproblem is feasible from step <span class="math inline">\(k=i\)</span>:
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:definition-calX-i">\[\begin{equation}
+\hspace{-14mm}
 \begin{split}
-\mathcal{X}_i = \{ x(i) \in \mathcal{R}^n \mid \exists (u(i),\dots,u(N-1)) \text{ such that } x(k) \in \mathcal{X}, u(k) \in \mathcal{U}, k=i,\dots,N-1, \\ x(N) \in \mathcal{X}_f \text{ with } x(k+1) = A x(k) + B u(k), k=i,\dots,N-1 \}.
+\mathcal{X}_i = \{ x(i) \in \mathbb{R}^n \mid \exists (u(i),\dots,u(N-1)) \text{ such that } x(k) \in \mathcal{X}, u(k) \in \mathcal{U}, k=i,\dots,N-1, \\ x(N) \in \mathcal{X}_f \text{ with } x(k+1) = A x(k) + B u(k), k=i,\dots,N-1 \}.
 \end{split}
+\tag{3.37}
 \end{equation}\]</span>
 Clearly, by definition we have
 <span class="math display">\[
@@ -1539,35 +1716,13 @@ and
 or written in a compact way as
 <span class="math display" id="eq:mpc-feasible-set-recursion">\[\begin{equation}
 \mathcal{X}_i = \text{Pre}(\mathcal{X}_{i+1}) \cap \mathcal{X}.
-\tag{3.34}
-\end{equation}\]</span></p>
-<p><strong>Algorithm</strong>. Above all, problem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.33)</a> is a convex optimization problem that we know how to solve efficiently (you have solved such convex optimization problems in Exercise <a href="psets.html#exr:lqrconstraints">9.2</a>).</p>
-<p>Let <span class="math inline">\(u^\star(0),\dots,u^\star(N-1)\)</span> be the optimal solution of problem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.33)</a> when it is feasible, the RHS framework will only apply the first control <span class="math inline">\(u^\star(0)\)</span> to the system, and hence the closed-loop system is
-<span class="math display" id="eq:mpc-closed-loop">\[\begin{equation}
-x_{t+1} = A x_t + u^\star_{x_t}(0) = f_{\mathrm{cl}}(x_t),
-\tag{3.35}
+\tag{3.38}
 \end{equation}\]</span>
-where I have used <span class="math inline">\(u^\star_{x_t}(0)\)</span> to make it explicit that the control is the first optimal control of solving <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.33)</a> with an initial state <span class="math inline">\(x_t\)</span>. The following algorithm summarizes the receding horizon control algorithm.</p>
-<hr />
-<p><strong>Algorithm</strong>: Online Receding Horizon Control</p>
-<hr />
-<p><strong>Input:</strong> State <span class="math inline">\(x_t\)</span> at time <span class="math inline">\(t\)</span></p>
-<p><strong>Output:</strong> Control <span class="math inline">\(u^\star_{x_t}(0)\)</span></p>
-<ol style="list-style-type: decimal">
-<li>Solve problem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.33)</a> to get the optimal controls <span class="math inline">\(u^\star(0), \dots, u^\star(N-1)\)</span></li>
-<li><strong>if</strong> the problem is infeasible, <strong>then</strong> stop</li>
-<li><strong>else</strong> <strong>return</strong> <span class="math inline">\(u^\star_{x_t}(0) = u^\star(0)\)</span></li>
-</ol>
-<hr />
-<p><strong>RHC main questions</strong>. Two main questions arise regarding the RHC controller.</p>
-<ol style="list-style-type: decimal">
-<li><p><strong>Persistent feasibility</strong>. If the RHC algorithm starts at a state <span class="math inline">\(x_0\)</span> for which the convex optimization <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.33)</a> is feasible, i.e., <span class="math inline">\(x_0 \in \mathcal{X}_0\)</span>, will the convex optimization <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.33)</a> remain feasible for all future time steps?</p></li>
-<li><p><strong>Stability</strong>. Assuming the convex optimization is always feasible. Will the closed-loop system <a href="approximatedp.html#eq:mpc-closed-loop">(3.35)</a> (induced by the RHC controller) converge to the desired origin <span class="math inline">\(x=0\)</span>?</p></li>
-</ol>
-<p>Let us use a couple of examples to illustrate that, in general, the answers to the above two questions are both NO.</p>
+Note that from equation <a href="approximatedp.html#eq:mpc-feasible-set-recursion">(3.38)</a> we have that, if we pick <span class="math inline">\(x_i \in \mathcal{X}_i\)</span> and let <span class="math inline">\(U(x_i)\)</span> be the set of feasible controls at <span class="math inline">\(x_i\)</span>, then pick any <span class="math inline">\((u(0),\dots,u(N-1)) \in U(x_i)\)</span> and apply <span class="math inline">\(u(0)\)</span> to the system to get <span class="math inline">\(x_{i+1} = A x_i + B u(0)\)</span>, we have <span class="math inline">\(x_{i+1} \in \mathcal{X}_{i+1}\)</span>.</p>
+<p>Since the definitions <a href="approximatedp.html#eq:definition-calX-0">(3.36)</a> and <a href="approximatedp.html#eq:definition-calX-i">(3.37)</a> are rather abstract, let us visualize them using the double integrator example.</p>
 <div class="examplebox">
 <div class="example">
-<p><span id="exm:double-integrator-mpc" class="example"><strong>Example 3.10  (Receding Horizon Control for Double Integrator) </strong></span>Consider the discrete-time double integrator dynamics
+<p><span id="exm:compute-calXi-double-integrator" class="example"><strong>Example 3.12  (Double Integrator RHC Feasible Sets) </strong></span>Consider the discrete-time double integrator dynamics
 <span class="math display">\[
 x_{t+1} = \begin{bmatrix} 1 &amp; 1 \\ 0 &amp; 1 \end{bmatrix} x_t + \begin{bmatrix} 0 \\ 1 \end{bmatrix} u_t,
 \]</span>
@@ -1579,14 +1734,71 @@ and state constraint
 <span class="math display">\[
 x \in \mathcal{X} = [-5, 5] \times [-5, 5].
 \]</span>
-In the RHS subproblem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.33)</a>, we use <span class="math inline">\(N = 3\)</span>, <span class="math inline">\(p(x) = x^T P x\)</span>, <span class="math inline">\(q(x,u) = x^T Q x + u^T R u\)</span> with <span class="math inline">\(P = Q = I\)</span>, <span class="math inline">\(R=10\)</span>, and <span class="math inline">\(\mathcal{X}_f = \mathbb{R}^2\)</span> (i.e., there is not terminal constraint). The subproblem is implemented using CVX in Matlab.</p>
-<p>Fig. <a href="approximatedp.html#fig:double-integrator-mpc-two-initial-states">3.19</a> shows the state trajectory of executing RHC starting at <span class="math inline">\(x_0 = [-4.5;2]\)</span> and <span class="math inline">\(x_0 = [-4.5;3]\)</span>, respectively.</p>
+We use <span class="math inline">\(N=3\)</span> and visualize the feasible sets <a href="approximatedp.html#eq:definition-calX-0">(3.36)</a> and <a href="approximatedp.html#eq:definition-calX-i">(3.37)</a> for two choices of <span class="math inline">\(\mathcal{X}_f\)</span>.</p>
+<p><strong>Choice 1</strong>. <span class="math inline">\(\mathcal{X}_f = \mathcal{X}\)</span> is the full state space. We use the recursion <a href="approximatedp.html#eq:mpc-feasible-set-recursion">(3.38)</a> to compute the feasible sets <span class="math inline">\(\mathcal{X}_i\)</span> for <span class="math inline">\(i=0,1,2,3\)</span>. Fig. <a href="approximatedp.html#fig:double-integrator-feasible-set-1">3.22</a> plots the feasible sets. Observe that in this case <span class="math inline">\(\mathcal{X}_0 \subset \mathcal{X}_1 \subset \mathcal{X}_2 \subset \mathcal{X}_3\)</span>. This creates a concern: suppose the RHC starts at <span class="math inline">\(x_0 \in \mathcal{X}_0\)</span> that is feasible, in the next iteration we have <span class="math inline">\(x_1 \in \mathcal{X}_1\)</span>. However, since <span class="math inline">\(\mathcal{X}_1\)</span> is larger than <span class="math inline">\(\mathcal{X}_0\)</span>, <span class="math inline">\(x_1\)</span> is not guaranteed to be feasible.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:double-integrator-feasible-set-1"></span>
+<img src="images/double_integrator_feaset_1.png" alt="Feasible sets of the double integrator receding horizon controller without terminal constraint." width="60%" />
+<p class="caption">
+Figure 3.22: Feasible sets of the double integrator receding horizon controller without terminal constraint.
+</p>
+</div>
+<p><strong>Choice 2</strong>. <span class="math inline">\(\mathcal{X}_f = \{(0,0)\}\)</span> is the origin. Fig. <a href="approximatedp.html#fig:double-integrator-feasible-set-2">3.23</a> plots the feasible sets. Observe that in this case <span class="math inline">\(\mathcal{X}_3 \subset \mathcal{X}_2 \subset \mathcal{X}_1 \subset \mathcal{X}_0\)</span>. This is a nice case, because if RHC starts at <span class="math inline">\(x_0 \in \mathcal{X}_0\)</span> that is feasible, in the next iteration we have <span class="math inline">\(x_1 \in \mathcal{X}_1 \subset \mathcal{X}_0\)</span>, which implies that <span class="math inline">\(x_1\)</span> is guaranteed to remain feasible!</p>
+<p>In fact, as we will soon show, in the first choice the RHC does suffer from infeasibility.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:double-integrator-feasible-set-2"></span>
+<img src="images/double_integrator_feaset_2.png" alt="Feasible sets of the double integrator receding horizon controller with terminal constraint." width="60%" />
+<p class="caption">
+Figure 3.23: Feasible sets of the double integrator receding horizon controller with terminal constraint.
+</p>
+</div>
+<p>The code for this example can be found <a href="https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/mpt_examples/double_integrator_feasible_sets.m">here</a>.</p>
+</div>
+</div>
+<p><strong>Algorithm</strong>. Above all, problem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.35)</a> is a convex optimization problem that we know how to solve efficiently (you have solved such convex optimization problems in Exercise <a href="psets.html#exr:lqrconstraints">9.2</a>).</p>
+<p>Let <span class="math inline">\(u^\star(0),\dots,u^\star(N-1)\)</span> be the optimal solution of problem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.35)</a> when it is feasible, the RHS framework will only apply the first control <span class="math inline">\(u^\star(0)\)</span> to the system, and hence the closed-loop system is
+<span class="math display" id="eq:mpc-closed-loop">\[\begin{equation}
+x_{t+1} = A x_t + u^\star_{x_t}(0) = f_{\mathrm{cl}}(x_t),
+\tag{3.39}
+\end{equation}\]</span>
+where I have used <span class="math inline">\(u^\star_{x_t}(0)\)</span> to make it explicit that the control is the first optimal control of solving <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.35)</a> with an initial state <span class="math inline">\(x_t\)</span>. The following algorithm summarizes the receding horizon control algorithm.</p>
+<hr />
+<p><strong>Algorithm</strong>: Online Receding Horizon Control</p>
+<hr />
+<p><strong>Input:</strong> State <span class="math inline">\(x_t\)</span> at time <span class="math inline">\(t\)</span></p>
+<p><strong>Output:</strong> Control <span class="math inline">\(u^\star_{x_t}(0)\)</span></p>
+<ol style="list-style-type: decimal">
+<li>Solve problem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.35)</a> to get the optimal controls <span class="math inline">\(u^\star(0), \dots, u^\star(N-1)\)</span></li>
+<li><strong>if</strong> the problem is infeasible, <strong>then</strong> stop</li>
+<li><strong>else</strong> <strong>return</strong> <span class="math inline">\(u^\star_{x_t}(0) = u^\star(0)\)</span></li>
+</ol>
+<hr />
+<p><strong>RHC main questions</strong>. Two main questions arise regarding the RHC controller.</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Persistent feasibility</strong>. If the RHC algorithm starts at a state <span class="math inline">\(x_0\)</span> for which the convex optimization <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.35)</a> is feasible, i.e., <span class="math inline">\(x_0 \in \mathcal{X}_0\)</span>, will the convex optimization <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.35)</a> remain feasible for all future time steps?</p></li>
+<li><p><strong>Stability</strong>. Assuming the convex optimization is always feasible. Will the closed-loop system <a href="approximatedp.html#eq:mpc-closed-loop">(3.39)</a> (induced by the RHC controller) converge to the desired origin <span class="math inline">\(x=0\)</span>?</p></li>
+</ol>
+<p>Let us use a couple of examples to illustrate that, in general, the answers to the above two questions are both NO.</p>
+<div class="examplebox">
+<div class="example">
+<p><span id="exm:double-integrator-mpc" class="example"><strong>Example 3.13  (Receding Horizon Control for Double Integrator) </strong></span>Consider the discrete-time double integrator dynamics
+<span class="math display">\[
+x_{t+1} = \begin{bmatrix} 1 &amp; 1 \\ 0 &amp; 1 \end{bmatrix} x_t + \begin{bmatrix} 0 \\ 1 \end{bmatrix} u_t,
+\]</span>
+subject to control constraint
+<span class="math display">\[
+u \in \mathcal{U} = [-0.5,0.5],
+\]</span>
+and state constraint
+<span class="math display">\[
+x \in \mathcal{X} = [-5, 5] \times [-5, 5].
+\]</span>
+In the RHS subproblem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.35)</a>, we use <span class="math inline">\(N = 3\)</span>, <span class="math inline">\(p(x) = x^T P x\)</span>, <span class="math inline">\(q(x,u) = x^T Q x + u^T R u\)</span> with <span class="math inline">\(P = Q = I\)</span>, <span class="math inline">\(R=10\)</span>, and <span class="math inline">\(\mathcal{X}_f = \mathbb{R}^2\)</span> (i.e., there is not terminal constraint). The subproblem is implemented using CVX in Matlab.</p>
+<p>Fig. <a href="approximatedp.html#fig:double-integrator-mpc-two-initial-states">3.24</a> shows the state trajectory of executing RHC starting at <span class="math inline">\(x_0 = [-4.5;2]\)</span> and <span class="math inline">\(x_0 = [-4.5;3]\)</span>, respectively.</p>
 <p>We can see that when the initial state is <span class="math inline">\(x_0 = [-4.5;2]\)</span>, the trajectory successfully converges to the origin (the blue line). However, when the initial state is <span class="math inline">\(x_0 = [-4.5;3]\)</span>, RHC fails in the third iteration because the subproblem becomes infeasible (the red line).</p>
 <p>You can find code for this example <a href="https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/double_integrator_mpc/double_integrator_mpc.m">here</a>.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:double-integrator-mpc-two-initial-states"></span>
 <img src="images/double_integrator_mpc_two_initial_states.png" alt="Receding horizon control for the double integrator with two initial states." width="70%" />
 <p class="caption">
-Figure 3.19: Receding horizon control for the double integrator with two initial states.
+Figure 3.24: Receding horizon control for the double integrator with two initial states.
 </p>
 </div>
 </div>
@@ -1594,7 +1806,7 @@ Figure 3.19: Receding horizon control for the double integrator with two initial
 <p>We now show another example, adapted from <span class="citation">(<a href="#ref-borrelli17book-mpc" role="doc-biblioref">Borrelli, Bemporad, and Morari 2017</a>)</span> where the design of <span class="math inline">\(N\)</span>, <span class="math inline">\(p(x)\)</span> and <span class="math inline">\(q(x,u)\)</span> affects the closed-loop performance.</p>
 <div class="examplebox">
 <div class="example">
-<p><span id="exm:mpc-linear-design-choice" class="example"><strong>Example 3.11  (RHC Performance Affected by Parameters) </strong></span>Consider the system
+<p><span id="exm:mpc-linear-design-choice" class="example"><strong>Example 3.14  (RHC Performance Affected by Parameters) </strong></span>Consider the system
 <span class="math display">\[
 x_{t+1} = \begin{bmatrix}
 2 &amp; 1 \\ 0 &amp; 0.5
@@ -1608,17 +1820,17 @@ and state constraint
 <span class="math display">\[
 x \in \mathcal{X} = [-10,10] \times [-10,10].
 \]</span></p>
-<p>In the RHC problem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.33)</a>, we choose <span class="math inline">\(p(x) = x^T P x\)</span>, <span class="math inline">\(q(x,u) = x^T Q x + u^T R u\)</span>. We fix <span class="math inline">\(P=0\)</span>, <span class="math inline">\(Q = I\)</span>, and <span class="math inline">\(\mathcal{X}_f = \mathbb{R}^2\)</span>, but vary <span class="math inline">\(N\)</span> and <span class="math inline">\(R\)</span>:</p>
+<p>In the RHC problem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.35)</a>, we choose <span class="math inline">\(p(x) = x^T P x\)</span>, <span class="math inline">\(q(x,u) = x^T Q x + u^T R u\)</span>. We fix <span class="math inline">\(P=0\)</span>, <span class="math inline">\(Q = I\)</span>, and <span class="math inline">\(\mathcal{X}_f = \mathbb{R}^2\)</span>, but vary <span class="math inline">\(N\)</span> and <span class="math inline">\(R\)</span>:</p>
 <ul>
 <li><p>Setting 1: <span class="math inline">\(N=2\)</span>, <span class="math inline">\(R = 10\)</span>;</p></li>
 <li><p>Setting 2: <span class="math inline">\(N=3\)</span>, <span class="math inline">\(R = 2\)</span>;</p></li>
 <li><p>Setting 3: <span class="math inline">\(N=4\)</span>, <span class="math inline">\(R=1\)</span>.</p></li>
 </ul>
-<p>Fig. <a href="approximatedp.html#fig:mpc-linear-effect-parameters">3.20</a> shows the closed-loop trajectories of three different settings. As we can see, the closed-loop performance depends on the parameters in a very complicated manner.</p>
+<p>Fig. <a href="approximatedp.html#fig:mpc-linear-effect-parameters">3.25</a> shows the closed-loop trajectories of three different settings. As we can see, the closed-loop performance depends on the parameters in a very complicated manner.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:mpc-linear-effect-parameters"></span>
 <img src="images/mpc_linear_effect_parameter.png" alt="Closed-loop trajectories for different settings of horizon N and weight R. Boxes (circles) are initial points leading to feasible (infeasible) closed-loop trajectories." width="80%" />
 <p class="caption">
-Figure 3.20: Closed-loop trajectories for different settings of horizon N and weight R. Boxes (circles) are initial points leading to feasible (infeasible) closed-loop trajectories.
+Figure 3.25: Closed-loop trajectories for different settings of horizon N and weight R. Boxes (circles) are initial points leading to feasible (infeasible) closed-loop trajectories.
 </p>
 </div>
 </div>
@@ -1626,47 +1838,47 @@ Figure 3.20: Closed-loop trajectories for different settings of horizon N and we
 </div>
 <div id="persistent-feasibility" class="section level3 hasAnchor" number="3.3.4">
 <h3><span class="header-section-number">3.3.4</span> Persistent Feasibility<a href="approximatedp.html#persistent-feasibility" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>Under what conditions can we guarantee the RHC subproblem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.33)</a> is always feasible?</p>
+<p>Under what conditions can we guarantee the RHC subproblem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.35)</a> is always feasible?</p>
 <p>There are various sets here of interest for answering this question.</p>
 <ul>
-<li><p><span class="math inline">\(\mathcal{C}_{\infty}\)</span>: The maximal control invariant set <span class="math inline">\(\mathcal{C}_{\infty}\)</span> is only affected by the system dynamics <a href="approximatedp.html#eq:mpc-linear-system">(3.31)</a> and the constraint sets <span class="math inline">\(\mathcal{X} \times \mathcal{U}\)</span>. It is the largest set over which we can expect <em>any</em> controller to work, because otherwise the system trajectory will blow up.</p></li>
-<li><p><span class="math inline">\(\mathcal{X}_0\)</span>: The set of states at which the RHC subproblem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.33)</a> is feasible. The set <span class="math inline">\(\mathcal{X}_0\)</span> depends on the system dynamics, the constraint sets <span class="math inline">\(\mathcal{X} \times \mathcal{U}\)</span>, as well as the RHC horizon <span class="math inline">\(N\)</span> and the terminal constraint set <span class="math inline">\(\mathcal{X}_f\)</span>. It is worth noting that it does not depend on the objective function in <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.33)</a> (i.e., <span class="math inline">\(P,Q,R\)</span>).</p></li>
-<li><p><span class="math inline">\(\mathcal{O}_{\infty}\)</span>: The maximal positive invariant set for the closed-loop system <a href="approximatedp.html#eq:mpc-closed-loop">(3.35)</a> induced by the RHC control law. This depends on the RHC controller and hence it depends on the system dynamics, the constraint set <span class="math inline">\(\mathcal{X} \times \mathcal{U}\)</span>, <span class="math inline">\(N\)</span>, <span class="math inline">\(\mathcal{X}_f\)</span> and the objective function of <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.33)</a> <span class="math inline">\(P,Q,R\)</span>.</p></li>
+<li><p><span class="math inline">\(\mathcal{C}_{\infty}\)</span>: The maximal control invariant set <span class="math inline">\(\mathcal{C}_{\infty}\)</span> is only affected by the system dynamics <a href="approximatedp.html#eq:mpc-linear-system">(3.33)</a> and the constraint sets <span class="math inline">\(\mathcal{X} \times \mathcal{U}\)</span>. It is the largest set over which we can expect <em>any</em> controller to work, because otherwise the system trajectory will blow up.</p></li>
+<li><p><span class="math inline">\(\mathcal{X}_0\)</span>: The set of states at which the RHC subproblem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.35)</a> is feasible. The set <span class="math inline">\(\mathcal{X}_0\)</span> depends on the system dynamics, the constraint sets <span class="math inline">\(\mathcal{X} \times \mathcal{U}\)</span>, as well as the RHC horizon <span class="math inline">\(N\)</span> and the terminal constraint set <span class="math inline">\(\mathcal{X}_f\)</span>. It is worth noting that it does not depend on the objective function in <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.35)</a> (i.e., <span class="math inline">\(P,Q,R\)</span>).</p></li>
+<li><p><span class="math inline">\(\mathcal{O}_{\infty}\)</span>: The maximal positive invariant set for the closed-loop system <a href="approximatedp.html#eq:mpc-closed-loop">(3.39)</a> induced by the RHC control law. This depends on the RHC controller and hence it depends on the system dynamics, the constraint set <span class="math inline">\(\mathcal{X} \times \mathcal{U}\)</span>, <span class="math inline">\(N\)</span>, <span class="math inline">\(\mathcal{X}_f\)</span> and the objective function of <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.35)</a> <span class="math inline">\(P,Q,R\)</span>.</p></li>
 </ul>
 <p>A few relationships between these sets are easy to observe.</p>
 <ul>
-<li><p><span class="math inline">\(\mathcal{O}_{\infty} \subseteq \mathcal{X}_0\)</span>. Any state <span class="math inline">\(x \in \mathcal{O}_{\infty}\)</span> needs to stay in <span class="math inline">\(\mathcal{O}_{\infty}\)</span> for all future time steps. Thus, the subproblem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.33)</a> must be feasible for any <span class="math inline">\(x \in \mathcal{O}_{\infty}\)</span>, otherwise the closed-loop system <a href="approximatedp.html#eq:mpc-closed-loop">(3.35)</a> is not even well defined.</p></li>
+<li><p><span class="math inline">\(\mathcal{O}_{\infty} \subseteq \mathcal{X}_0\)</span>. Any state <span class="math inline">\(x \in \mathcal{O}_{\infty}\)</span> needs to stay in <span class="math inline">\(\mathcal{O}_{\infty}\)</span> for all future time steps. Thus, the subproblem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.35)</a> must be feasible for any <span class="math inline">\(x \in \mathcal{O}_{\infty}\)</span>, otherwise the closed-loop system <a href="approximatedp.html#eq:mpc-closed-loop">(3.39)</a> is not even well defined.</p></li>
 <li><p><span class="math inline">\(\mathcal{O}_{\infty} \subseteq \mathcal{C}_{\infty}\)</span>. The set <span class="math inline">\(\mathcal{O}_{\infty}\)</span> is control invariant because there exists a controller (specifically, the RHC controller) that makes it positive invariant. Therefore, <span class="math inline">\(\mathcal{O}_{\infty}\)</span> must belong to the maximal control invariant set <span class="math inline">\(\mathcal{C}_{\infty}\)</span>.</p></li>
 </ul>
 <p>We can now state necessary and sufficient conditions guaranteeing persistent feasibility.</p>
 <div class="theorembox">
 <div class="lemma">
-<p><span id="lem:sufficient-necessary-feasibility" class="lemma"><strong>Lemma 3.1  (Sufficient and Necessary Condition for Persistent Feasibility) </strong></span>The RHC subproblem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.33)</a> is persistently feasible if and only if <span class="math inline">\(\mathcal{X}_0 = \mathcal{O}_{\infty}\)</span>.</p>
+<p><span id="lem:sufficient-necessary-feasibility" class="lemma"><strong>Lemma 3.1  (Sufficient and Necessary Condition for Persistent Feasibility) </strong></span>The RHC subproblem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.35)</a> is persistently feasible if and only if <span class="math inline">\(\mathcal{X}_0 = \mathcal{O}_{\infty}\)</span>.</p>
 </div>
 </div>
 <div class="proofbox">
 <div class="proof">
-<p><span id="unlabeled-div-7" class="proof"><em>Proof</em>. </span>We have already argued that <span class="math inline">\(\mathcal{O}_{\infty} \subseteq \mathcal{X}_0\)</span>. It remains to show <span class="math inline">\(\mathcal{X}_0 \subseteq \mathcal{O}_{\infty}\)</span>. By definition, <span class="math inline">\(\mathcal{X}_0\)</span> is persistently feasible implies that
+<p><span id="unlabeled-div-8" class="proof"><em>Proof</em>. </span>We have already argued that <span class="math inline">\(\mathcal{O}_{\infty} \subseteq \mathcal{X}_0\)</span>. It remains to show <span class="math inline">\(\mathcal{X}_0 \subseteq \mathcal{O}_{\infty}\)</span>. By definition, <span class="math inline">\(\mathcal{X}_0\)</span> is persistently feasible implies that
 <span class="math display">\[
 x \in \mathcal{X}_0 \Longrightarrow f_{\mathrm{cl}}^t(x) \in \mathcal{X}_0, \forall t
 \]</span>
-where <span class="math inline">\(f_{\mathrm{cl}}^t\)</span> means applying the closed-loop dynamics <span class="math inline">\(f_{\mathrm{cl}}\)</span> in <a href="approximatedp.html#eq:mpc-closed-loop">(3.35)</a> <span class="math inline">\(t\)</span> times. This shows that <span class="math inline">\(\mathcal{X}_0\)</span> is a positive invariant set for the closed-loop system, and hence <span class="math inline">\(\mathcal{X}_0 \subseteq \mathcal{O}_{\infty}\)</span>.</p>
+where <span class="math inline">\(f_{\mathrm{cl}}^t\)</span> means applying the closed-loop dynamics <span class="math inline">\(f_{\mathrm{cl}}\)</span> in <a href="approximatedp.html#eq:mpc-closed-loop">(3.39)</a> <span class="math inline">\(t\)</span> times. This shows that <span class="math inline">\(\mathcal{X}_0\)</span> is a positive invariant set for the closed-loop system, and hence <span class="math inline">\(\mathcal{X}_0 \subseteq \mathcal{O}_{\infty}\)</span>.</p>
 </div>
 </div>
 <p>We argued that <span class="math inline">\(\mathcal{X}_0\)</span> does not depend on the RHC parameters <span class="math inline">\(P,Q,R\)</span> but <span class="math inline">\(\mathcal{O}_{\infty}\)</span> does. Therefore, in general only some <span class="math inline">\(P,Q,R\)</span> are allowed for persistent feasibility to hold. Due to the complicated relationship between <span class="math inline">\(P,Q,R\)</span> and <span class="math inline">\(\mathcal{O}_{\infty}\)</span>, it is generally difficult to design <span class="math inline">\(P,Q,R\)</span> such that RHC has persistent feasibility.</p>
 <p>We now state a sufficient condition for persistent feasibility to hold.</p>
 <div class="theorembox">
 <div class="lemma">
-<p><span id="lem:sufficient-feasibility" class="lemma"><strong>Lemma 3.2  (Sufficient Condition for Persistent Feasibility) </strong></span>Consider the RHC subproblem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.33)</a> with <span class="math inline">\(N \geq 1\)</span>. If <span class="math inline">\(\mathcal{X}_1\)</span> is a control invariant set for the linear system <a href="approximatedp.html#eq:mpc-linear-system">(3.31)</a>, then the RHC controller is persistently feasible.</p>
+<p><span id="lem:sufficient-feasibility" class="lemma"><strong>Lemma 3.2  (Sufficient Condition for Persistent Feasibility) </strong></span>Consider the RHC subproblem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.35)</a> with <span class="math inline">\(N \geq 1\)</span>. If <span class="math inline">\(\mathcal{X}_1\)</span> is a control invariant set for the linear system <a href="approximatedp.html#eq:mpc-linear-system">(3.33)</a>, then the RHC controller is persistently feasible.</p>
 </div>
 </div>
 <div class="proofbox">
 <div class="proof">
-<p><span id="unlabeled-div-8" class="proof"><em>Proof</em>. </span>If <span class="math inline">\(\mathcal{X}_1\)</span> is control invariant, then by definition <span class="math inline">\(\mathcal{X}_1 \subseteq \text{Pre}(\mathcal{X}_1)\)</span>. Since <span class="math inline">\(\mathcal{X}_1 \subseteq \mathcal{X}\)</span>, we have
+<p><span id="unlabeled-div-9" class="proof"><em>Proof</em>. </span>If <span class="math inline">\(\mathcal{X}_1\)</span> is control invariant, then by definition <span class="math inline">\(\mathcal{X}_1 \subseteq \text{Pre}(\mathcal{X}_1)\)</span>. Since <span class="math inline">\(\mathcal{X}_1 \subseteq \mathcal{X}\)</span>, we have
 <span class="math display">\[
 \mathcal{X}_1 \subseteq \text{Pre}(\mathcal{X}_1) \cap \mathcal{X} = \mathcal{X}_0.
 \]</span>
-where the last equality in the equation above is due to <a href="approximatedp.html#eq:mpc-feasible-set-recursion">(3.34)</a>.
+where the last equality in the equation above is due to <a href="approximatedp.html#eq:mpc-feasible-set-recursion">(3.38)</a>.
 Now pick any <span class="math inline">\(x_0 \in \mathcal{X}_0\)</span>, the set of controls that make <span class="math inline">\(x_0\)</span> feasible is denoted as
 <span class="math display">\[
 U = \{ u(0),\dots,u(N-1) \mid x(0)=x_0, x(k) \in \mathcal{X},k=0,\dots,N-1,x(N) \in \mathcal{X}_f \}.
@@ -1675,27 +1887,27 @@ The RHC will pick some control sequence from <span class="math inline">\(U\)</sp
 <span class="math display">\[
 x_1 = A x_0 + B \hat{u}(0).
 \]</span>
-Observe that <span class="math inline">\(x_1 \in \mathcal{X}_1\)</span> by definition. Since <span class="math inline">\(\mathcal{X}_1 \subseteq \mathcal{X}_0\)</span>, we have <span class="math inline">\(x_1 \in \mathcal{X}_0\)</span>. This proves that the RHC is persistently feasible, i.e., starting with any <span class="math inline">\(x_0 \in \mathcal{X}_0\)</span>, the RHC subproblem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.33)</a> is always feasible.</p>
+Observe that <span class="math inline">\(x_1 \in \mathcal{X}_1\)</span> by definition. Since <span class="math inline">\(\mathcal{X}_1 \subseteq \mathcal{X}_0\)</span>, we have <span class="math inline">\(x_1 \in \mathcal{X}_0\)</span>. This proves that the RHC is persistently feasible, i.e., starting with any <span class="math inline">\(x_0 \in \mathcal{X}_0\)</span>, the RHC subproblem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.35)</a> is always feasible.</p>
 </div>
 </div>
 <p>Lemma <a href="approximatedp.html#lem:sufficient-feasibility">3.2</a> states that if <span class="math inline">\(\mathcal{X}_1\)</span> is control invariant, then the RHC subproblem is persistently feasible. An immediate result of this Lemma is that when <span class="math inline">\(N=1\)</span>, then <span class="math inline">\(\mathcal{X}_1 = \mathcal{X}_f\)</span>. Therefore, if we choose the terminal constraint set <span class="math inline">\(\mathcal{X}_f\)</span> to be control invariant, then RHC is has persistent feasibility.</p>
 <p>The next theorem states that when <span class="math inline">\(N \geq 1\)</span>, as long as we choose the terminal constraint set <span class="math inline">\(\mathcal{X}_f\)</span> to be control invariant, then persistent feasibility also holds.</p>
 <div class="theorembox">
 <div class="theorem">
-<p><span id="thm:sufficient-feasibility-terminal" class="theorem"><strong>Theorem 3.1  (Control Invariant Terminal Constraint Set Guarantees Persistent Feasibility) </strong></span>Consider the RHC subproblem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.33)</a> with <span class="math inline">\(N \geq 1\)</span>. If <span class="math inline">\(\mathcal{X}_f\)</span> is a control invariant set for the linear system <a href="approximatedp.html#eq:mpc-linear-system">(3.31)</a>, then the RHC controller is persistently feasible.</p>
+<p><span id="thm:sufficient-feasibility-terminal" class="theorem"><strong>Theorem 3.2  (Control Invariant Terminal Constraint Set Guarantees Persistent Feasibility) </strong></span>Consider the RHC subproblem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.35)</a> with <span class="math inline">\(N \geq 1\)</span>. If <span class="math inline">\(\mathcal{X}_f\)</span> is a control invariant set for the linear system <a href="approximatedp.html#eq:mpc-linear-system">(3.33)</a>, then the RHC controller is persistently feasible.</p>
 </div>
 </div>
 <div class="proofbox">
 <div class="proof">
-<p><span id="unlabeled-div-9" class="proof"><em>Proof</em>. </span>We will prove that <span class="math inline">\(\mathcal{X}_f\)</span> being control invariant implies
+<p><span id="unlabeled-div-10" class="proof"><em>Proof</em>. </span>We will prove that <span class="math inline">\(\mathcal{X}_f\)</span> being control invariant implies
 <span class="math display">\[
 \mathcal{X}_{N-1}, \mathcal{X}_{N-2},\dots,\mathcal{X}_1
 \]</span>
-are all control invariant, and then by Lemma <a href="approximatedp.html#lem:sufficient-feasibility">3.2</a>, we can guarantee persistent feasibility. Fig. <a href="approximatedp.html#fig:mpc-nested-control-invariant-set">3.21</a> shows the nested control invariant sets when <span class="math inline">\(\mathcal{X}_f\)</span> is control invariant.</p>
+are all control invariant, and then by Lemma <a href="approximatedp.html#lem:sufficient-feasibility">3.2</a>, we can guarantee persistent feasibility. Fig. <a href="approximatedp.html#fig:mpc-nested-control-invariant-set">3.26</a> shows the nested control invariant sets when <span class="math inline">\(\mathcal{X}_f\)</span> is control invariant.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:mpc-nested-control-invariant-set"></span>
 <img src="images/mpc_nested_control_invariant_set.png" alt="Nested control invariant sets." width="80%" />
 <p class="caption">
-Figure 3.21: Nested control invariant sets.
+Figure 3.26: Nested control invariant sets.
 </p>
 </div>
 <p>It suffices to show <span class="math inline">\(\mathcal{X}_{i+1}\)</span> being control invariant leads to <span class="math inline">\(\mathcal{X}_i\)</span> being control invariant. First, by <span class="math inline">\(\mathcal{X}_{i+1}\)</span> control invariant, we have <span class="math inline">\(\mathcal{X}_{i+1} \subseteq \text{Pre}(\mathcal{X}_i) \cap \mathcal{X} = \mathcal{X}_i\)</span>. Now pick any <span class="math inline">\(x_{i} \in \mathcal{X}_{i}\)</span>, for any feasible <span class="math inline">\(\hat{u}(0),\dots,\hat{u}(N-1)\)</span>, applying the first control <span class="math inline">\(\hat{u}(0)\)</span> brings the system to a new state
@@ -1705,14 +1917,14 @@ x_{i+1} = A x_i + B \hat{u}(0) \in \mathcal{X}_{i+1} \subseteq \mathcal{X}_i.
 This shows <span class="math inline">\(\mathcal{X}_i\)</span> is control invariant.</p>
 </div>
 </div>
-<p>Persistent feasibility does not guarantee the closed-loop system will converge to the origin. In fact, from Theorem <a href="approximatedp.html#thm:sufficient-feasibility-terminal">3.1</a>, it is clear that if the system starts at <span class="math inline">\(x_0 \in \mathcal{X}_0\)</span>, then we can only guarantee <span class="math inline">\(x_t \in \mathcal{X}_1\)</span> for all <span class="math inline">\(t \geq 0\)</span>.</p>
+<p>Persistent feasibility does not guarantee the closed-loop system will converge to the origin. In fact, from Theorem <a href="approximatedp.html#thm:sufficient-feasibility-terminal">3.2</a>, it is clear that if the system starts at <span class="math inline">\(x_0 \in \mathcal{X}_0\)</span>, then we can only guarantee <span class="math inline">\(x_t \in \mathcal{X}_1\)</span> for all <span class="math inline">\(t \geq 0\)</span>.</p>
 </div>
 <div id="stability" class="section level3 hasAnchor" number="3.3.5">
 <h3><span class="header-section-number">3.3.5</span> Stability<a href="approximatedp.html#stability" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>We now answer the question of how can we guarantee the RHC controller will drive the system to the desired origin.</p>
 <div class="theorembox">
 <div class="theorem">
-<p><span id="thm:mpc-stability" class="theorem"><strong>Theorem 3.2  (Sufficient Condition for Stability) </strong></span>Consider the linear system <a href="approximatedp.html#eq:mpc-linear-system">(3.31)</a>, and the RHC algorithm <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.33)</a>. Assume that</p>
+<p><span id="thm:mpc-stability" class="theorem"><strong>Theorem 3.3  (Sufficient Condition for Stability) </strong></span>Consider the linear system <a href="approximatedp.html#eq:mpc-linear-system">(3.33)</a>, and the RHC algorithm <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.35)</a>. Assume that</p>
 <ol style="list-style-type: decimal">
 <li><p>The stage cost <span class="math inline">\(q(x,u)\)</span> and terminal cost <span class="math inline">\(p(x)\)</span> are continuous and positive definite functions.</p></li>
 <li><p>The sets <span class="math inline">\(\mathcal{X}\)</span>, <span class="math inline">\(\mathcal{X}_f\)</span> and <span class="math inline">\(\mathcal{U}\)</span> contain the origin in their interior and are closed.</p></li>
@@ -1720,13 +1932,13 @@ This shows <span class="math inline">\(\mathcal{X}_i\)</span> is control invaria
 <li><p>For any <span class="math inline">\(x \in \mathcal{X}_f\)</span>, the following inequality holds
 <span class="math display" id="eq:apprinv-rollout-3" id="eq:apprinv-cost-improvement" id="eq:apprinv-rollout-2" id="eq:apprinv-rollout" id="eq:apprinv-fvi-2" id="eq:apprinv-fvi-1" id="eq:apprinv-dp" id="eq:mpc-stability-lyapunov">\[\begin{equation}
 \min_{u \in \mathcal{U}, A x + Bu \in \mathcal{X}_f} \left( - p(x) + q(x,u) + p(Ax + Bu) \right) \leq 0.
-\tag{3.36}
+\tag{3.40}
 \end{equation}\]</span></p></li>
 </ol>
-<p>Then, the origin of the closed-loop system <a href="approximatedp.html#eq:mpc-closed-loop">(3.35)</a> is asymptotically stable with domain of attraction <span class="math inline">\(\mathcal{X}_0\)</span>. In words, for any <span class="math inline">\(x_0 \in \mathcal{X}_0\)</span>, if the closed-loop system <a href="approximatedp.html#eq:mpc-closed-loop">(3.35)</a> starts at <span class="math inline">\(x_0\)</span>, then the system trajectory converges to the origin as <span class="math inline">\(t\)</span> tends to infinity.</p>
+<p>Then, the origin of the closed-loop system <a href="approximatedp.html#eq:mpc-closed-loop">(3.39)</a> is asymptotically stable with domain of attraction <span class="math inline">\(\mathcal{X}_0\)</span>. In words, for any <span class="math inline">\(x_0 \in \mathcal{X}_0\)</span>, if the closed-loop system <a href="approximatedp.html#eq:mpc-closed-loop">(3.39)</a> starts at <span class="math inline">\(x_0\)</span>, then the system trajectory converges to the origin as <span class="math inline">\(t\)</span> tends to infinity.</p>
 </div>
 </div>
-<p>Let us interpret Theorem <a href="approximatedp.html#thm:mpc-stability">3.2</a> before proving it. It should be clear that the first three assumptions are easy to satisfy. For example, if we choose <span class="math inline">\(p(x) = x^T P x\)</span> and <span class="math inline">\(q(x,u) = x^T Q x + u^T R u\)</span> with <span class="math inline">\(P, Q, R \succ 0\)</span>, then assumption 1 is satisfied. Usually <span class="math inline">\(\mathcal{X}\)</span> and <span class="math inline">\(\mathcal{U}\)</span> are both polyhedral sets containing the origin in the interior, so assumption 2 also holds naturally. Finding a control invariant set <span class="math inline">\(\mathcal{X}_f\)</span> is not a trivial task but there exists numerical algorithms for this task. After we find a control invariant <span class="math inline">\(\mathcal{X}_f\)</span>, by Theorem <a href="approximatedp.html#thm:sufficient-feasibility-terminal">3.1</a>, we know persistent feasibility will hold.</p>
+<p>Let us interpret Theorem <a href="approximatedp.html#thm:mpc-stability">3.3</a> before proving it. It should be clear that the first three assumptions are easy to satisfy. For example, if we choose <span class="math inline">\(p(x) = x^T P x\)</span> and <span class="math inline">\(q(x,u) = x^T Q x + u^T R u\)</span> with <span class="math inline">\(P, Q, R \succ 0\)</span>, then assumption 1 is satisfied. Usually <span class="math inline">\(\mathcal{X}\)</span> and <span class="math inline">\(\mathcal{U}\)</span> are both polyhedral sets containing the origin in the interior, so assumption 2 also holds naturally. Finding a control invariant set <span class="math inline">\(\mathcal{X}_f\)</span> is not a trivial task but there exists numerical algorithms for this task. After we find a control invariant <span class="math inline">\(\mathcal{X}_f\)</span>, by Theorem <a href="approximatedp.html#thm:sufficient-feasibility-terminal">3.2</a>, we know persistent feasibility will hold.</p>
 <p>Assumption 4 needs some work.</p>
 </div>
 <div id="explicit-mpc" class="section level3 hasAnchor" number="3.3.6">
@@ -1744,7 +1956,7 @@ By using the _approximation in value space_ methods, we could replace the optima
 
 \begin{align}
 \tilde{J}_k(x_k) &= \min_{u_k \in \mathbb{U}_k (x_k)} \displaystyle \mathbb{E} \displaystyle \left\{g_k(x_k,u_k,w_k) + \tilde J_{k+1} (f_k(x_k,u_k,w_k) ) \right\} \\
-\tilde{\mu}_k(x_k) &= \arg \min_{u_k \in \mathbb{U}_k (x_k)} \displaystyle \mathbb{E} \displaystyle \left\{g_k(x_k,u_k,w_k) + \tilde J_{k+1} (f_k(x_k,u_k,w_k) ) \right\} \tag{3.37}
+\tilde{\mu}_k(x_k) &= \arg \min_{u_k \in \mathbb{U}_k (x_k)} \displaystyle \mathbb{E} \displaystyle \left\{g_k(x_k,u_k,w_k) + \tilde J_{k+1} (f_k(x_k,u_k,w_k) ) \right\} \tag{3.41}
 \end{align}
 
 The major issue in value space approximation is how to compute the approximate cost-to-go functions $\tilde J_{k+1}$ in \@ref(eq:apprinv-dp). We will consider three types of methods: 
@@ -1781,10 +1993,10 @@ In order to train those weights, we can use some cost functions to measure the a
 Value iteration could be viewed as a special form of dynamic programming, where the parameter vectors $r_k$ are determined sequentially, starting from the end of the horizon and proceeding backward. The algorithm samples the state space for each stage $k$ and generates a large number of states $x_k^s$, $s=1,...,q$. It then determines sequentially the parameter vectors $r_k$ to obtain a good "least square fit" to the DP algorithm. 
 
 \begin{equation}
-\beta_k^s=\min_{u \in \mathbb U_k(x_k^s)} E \displaystyle \left\{g(x_k^s,u,w_k) + \tilde J_{k+1} (f_k(x_k^s,u,w_k),r_{k+1}) \right\} \tag{3.38}
+\beta_k^s=\min_{u \in \mathbb U_k(x_k^s)} E \displaystyle \left\{g(x_k^s,u,w_k) + \tilde J_{k+1} (f_k(x_k^s,u,w_k),r_{k+1}) \right\} \tag{3.42}
 \end{equation}
 \begin{equation}
-r_k = \arg \min_r \sum_{s=1}^q (\tilde J_k(x_k^s,r) - \beta_k^s)^2 \tag{3.39}
+r_k = \arg \min_r \sum_{s=1}^q (\tilde J_k(x_k^s,r) - \beta_k^s)^2 \tag{3.43}
 \end{equation}
 
 The next question is how to choose the most suitable class of functions, which is called _approximation architecture_. It is obvious that approximation architecture can greatly affect the performance of the approximation and the difficulty of training. The most popular architecture is _neural networks_, which are widely used in _reinforcement learning_, but the optimization process is difficult and the optimality is not guaranteed. We will start with a simpler linear feature-based approximation architecture. 
@@ -1804,13 +2016,13 @@ The policy $\bar \pi=\{\bar\mu_0,...,\bar\mu_{N-1}\}$ thus obtained is called th
 **Definition 3.1 (One-step Rollout Algorithm)** We can get an improved policy from the base policy $\pi$
 
 \begin{equation}
-\bar\mu_k(x_k) = \arg\min_{u_k\in\mathbb U_k(x_k)} E\left\{g_k(x_k,u_k,w_k)+\tilde J_{k+1}(f_k(x_k,u_k,w_k))\right\} \tag{3.40}
+\bar\mu_k(x_k) = \arg\min_{u_k\in\mathbb U_k(x_k)} E\left\{g_k(x_k,u_k,w_k)+\tilde J_{k+1}(f_k(x_k,u_k,w_k))\right\} \tag{3.44}
 \end{equation}
 
 where $\tilde J_{k+1}$ is the corresponding cost-to-go function of the base policy $\pi$. If we use $H_{k+1}$ to represent the cost-to-go function of the base policy $\pi$, the rollout algorithm will be: 
 
 \begin{equation}
-\bar\mu_k(x_k) = \arg\min_{u_k\in\mathbb U_k(x_k)} E\left\{g_k(x_k,u_k,w_k)+H_{k+1}(f_k(x_k,u_k,w_k))\right\} \tag{3.41}
+\bar\mu_k(x_k) = \arg\min_{u_k\in\mathbb U_k(x_k)} E\left\{g_k(x_k,u_k,w_k)+H_{k+1}(f_k(x_k,u_k,w_k))\right\} \tag{3.45}
 \end{equation}
 
 In the control system, after the current state $x_k$ is revealed, we calculate the cost-to-go function $H_{k+1}$ of the known base policy $\pi$ and conduct one-step lookahead minimization to find $\bar\mu_k(x_k)$ and feed it into the system immediately. 
@@ -1840,7 +2052,7 @@ so now the sequential improvement property could also be written as:
 We will now show that the rollout algorithm obtained with a base policy with sequential improvement property yields no worse cost than the base policy. In particular, consider the rollout policy $\tilde \pi = \{\tilde \mu_0, ..., \tilde \mu_{N-1}\}$, and let $J_{k, \tilde \pi} (x_k)$ denote the cost obtained with $\tilde \pi$ starting from $x_k$. We claim that 
 
 \begin{equation}
-J_{k,\tilde \pi} (x_k) \leq H_k(x_k), for \ all \ x_k \ and \ k \tag{3.42}
+J_{k,\tilde \pi} (x_k) \leq H_k(x_k), for \ all \ x_k \ and \ k \tag{3.46}
 \end{equation}
 :::
 :::
@@ -1875,7 +2087,7 @@ This completes the induction proof of the cost improvement property \@ref(eq:app
 In most cases, we will use the approximate version of the cost-to-go $\tilde H_{k+1}$ to simplify the calculation. So the rollout algorithm will be: 
 
 \begin{equation}
-\bar\mu_k(x_k) = \arg\min_{u_k\in\mathbb U_k(x_k)} E\left\{g_k(x_k,u_k,w_k)+\tilde H_{k+1}(f_k(x_k,u_k,w_k))\right\} \tag{3.43}
+\bar\mu_k(x_k) = \arg\min_{u_k\in\mathbb U_k(x_k)} E\left\{g_k(x_k,u_k,w_k)+\tilde H_{k+1}(f_k(x_k,u_k,w_k))\right\} \tag{3.47}
 \end{equation}
 
 There are two variants to handle the computational difficulties, deterministic case, and stochastic case. 
@@ -2004,11 +2216,20 @@ It is possible for a suboptimal control scheme to employ both types of approxima
 <div id="ref-bemporad02automatica-explicit" class="csl-entry">
 Bemporad, Alberto, Manfred Morari, Vivek Dua, and Efstratios N Pistikopoulos. 2002. <span>“The Explicit Linear Quadratic Regulator for Constrained Systems.”</span> <em>Automatica</em> 38 (1): 3–20.
 </div>
+<div id="ref-bertsekas72tac-infinite" class="csl-entry">
+Bertsekas, Dimitri. 1972. <span>“Infinite Time Reachability of State-Space Regions by Using Feedback Control.”</span> <em>IEEE Transactions on Automatic Control</em> 17 (5): 604–13.
+</div>
 <div id="ref-borrelli17book-mpc" class="csl-entry">
 Borrelli, Francesco, Alberto Bemporad, and Manfred Morari. 2017. <em>Predictive Control for Linear and Hybrid Systems</em>. Cambridge University Press.
 </div>
+<div id="ref-gilbert91tac-linear" class="csl-entry">
+Gilbert, Elmer G, and K Tin Tan. 1991. <span>“Linear Systems with State and Control Constraints: The Theory and Application of Maximal Output Admissible Sets.”</span> <em>IEEE Transactions on Automatic Control</em> 36 (9): 1008–20.
+</div>
 <div id="ref-kelly17siam-trajopt" class="csl-entry">
 Kelly, Matthew. 2017. <span>“An Introduction to Trajectory Optimization: How to Do Your Own Direct Collocation.”</span> <em>SIAM Review</em> 59 (4): 849–904.
+</div>
+<div id="ref-kolmanovsky98mpe-theory" class="csl-entry">
+Kolmanovsky, Ilya, Elmer G Gilbert, et al. 1998. <span>“Theory and Computation of Disturbance Invariant Sets for Discrete-Time Linear Systems.”</span> <em>Mathematical Problems in Engineering</em> 4: 317–67.
 </div>
 <div id="ref-levine17neurips-shallow" class="csl-entry">
 Levine, Nir, Tom Zahavy, Daniel J Mankowitz, Aviv Tamar, and Shie Mannor. 2017. <span>“Shallow Updates for Deep Reinforcement Learning.”</span> <em>Advances in Neural Information Processing Systems</em> 30.

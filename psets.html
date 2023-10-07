@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-10-04" />
+<meta name="date" content="2023-10-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -481,43 +481,43 @@ where <span class="math inline">\(u_k\)</span> can be seen as the angle spanned 
 <ol start="7" style="list-style-type: lower-alpha">
 <li>I have provided most of the code necessary for solving <a href="psets.html#eq:polygon-circle-convexoptmization">(9.2)</a> below. Please fill in the definition of the function <code>perimeter(u)</code>, and then run the code in Matlab. Show your results for <span class="math inline">\(N=3,10,100\)</span>. Do the solutions obtained from <code>fmincon</code> verify our claim?</li>
 </ol>
-<div class="sourceCode" id="cb5"><pre class="sourceCode matlab"><code class="sourceCode matlab"><span id="cb5-1"><a href="psets.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="va">clc</span><span class="op">;</span> <span class="va">clear</span><span class="op">;</span> <span class="va">close</span> <span class="va">all</span><span class="op">;</span></span>
-<span id="cb5-2"><a href="psets.html#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">% number of points to be placed</span></span>
-<span id="cb5-3"><a href="psets.html#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="va">N</span> <span class="op">=</span> <span class="fl">10</span><span class="op">;</span></span>
-<span id="cb5-4"><a href="psets.html#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">% define the objective function</span></span>
-<span id="cb5-5"><a href="psets.html#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">% fmincon assumes minimization</span></span>
-<span id="cb5-6"><a href="psets.html#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">% We minimize the negative perimeter so as to maximize the perimeter</span></span>
-<span id="cb5-7"><a href="psets.html#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="va">objective</span> <span class="op">=</span> <span class="op">@</span>(<span class="va">u</span>) <span class="op">-</span><span class="fl">1</span><span class="op">*</span><span class="va">perimeter</span>(<span class="va">u</span>)<span class="op">;</span></span>
-<span id="cb5-8"><a href="psets.html#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">% choose which algorithm to use for solving</span></span>
-<span id="cb5-9"><a href="psets.html#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="va">options</span> <span class="op">=</span> <span class="va">optimoptions</span>(<span class="ss">&#39;fmincon&#39;</span><span class="op">,</span> <span class="ss">&#39;Algorithm&#39;</span><span class="op">,</span> <span class="ss">&#39;interior-point&#39;</span>)<span class="op">;</span></span>
-<span id="cb5-10"><a href="psets.html#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">% supply an initial guess</span></span>
-<span id="cb5-11"><a href="psets.html#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">% since this is a convex problem, we can use any initial guess</span></span>
-<span id="cb5-12"><a href="psets.html#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="va">u0</span> <span class="op">=</span> <span class="va">rand</span>(<span class="va">N</span><span class="op">,</span><span class="fl">1</span>)<span class="op">;</span></span>
-<span id="cb5-13"><a href="psets.html#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">% solve</span></span>
-<span id="cb5-14"><a href="psets.html#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="va">uopt</span> <span class="op">=</span> <span class="va">fmincon</span>(<span class="va">objective</span><span class="op">,</span><span class="va">u0</span><span class="op">,...</span> <span class="co">% objective and initial guess</span></span>
-<span id="cb5-15"><a href="psets.html#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="op">-</span><span class="va">eye</span>(<span class="va">N</span>)<span class="op">,</span><span class="va">zeros</span>(<span class="va">N</span><span class="op">,</span><span class="fl">1</span>)<span class="op">,...</span> <span class="co">% linear inequality constraints</span></span>
-<span id="cb5-16"><a href="psets.html#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="va">ones</span>(<span class="fl">1</span><span class="op">,</span><span class="va">N</span>)<span class="op">,</span><span class="fl">2</span><span class="op">*</span><span class="va">pi</span><span class="op">,...</span> <span class="co">% linear equality constraints</span></span>
-<span id="cb5-17"><a href="psets.html#cb5-17" aria-hidden="true" tabindex="-1"></a>    []<span class="op">,</span>[]<span class="op">,</span>[]<span class="op">,...</span> <span class="co">% we do not have lower/upper bounds and nonlinear constraints</span></span>
-<span id="cb5-18"><a href="psets.html#cb5-18" aria-hidden="true" tabindex="-1"></a>    <span class="va">options</span>)<span class="op">;</span></span>
-<span id="cb5-19"><a href="psets.html#cb5-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-20"><a href="psets.html#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co">% plot the solution</span></span>
-<span id="cb5-21"><a href="psets.html#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="va">x</span> <span class="op">=</span> <span class="va">zeros</span>(<span class="va">N</span><span class="op">,</span><span class="fl">1</span>)<span class="op">;</span></span>
-<span id="cb5-22"><a href="psets.html#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="kw">for</span> <span class="va">k</span> <span class="op">=</span> <span class="fl">2</span><span class="op">:</span><span class="va">N</span></span>
-<span id="cb5-23"><a href="psets.html#cb5-23" aria-hidden="true" tabindex="-1"></a>    <span class="va">x</span>(<span class="va">k</span>) <span class="op">=</span> <span class="va">x</span>(<span class="va">k</span><span class="op">-</span><span class="fl">1</span>) <span class="op">+</span> <span class="va">uopt</span>(<span class="va">k</span><span class="op">-</span><span class="fl">1</span>)<span class="op">;</span></span>
-<span id="cb5-24"><a href="psets.html#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
-<span id="cb5-25"><a href="psets.html#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="va">figure</span><span class="op">;</span></span>
-<span id="cb5-26"><a href="psets.html#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="co">% plot a circle</span></span>
-<span id="cb5-27"><a href="psets.html#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="va">viscircles</span>([<span class="fl">0</span><span class="op">,</span><span class="fl">0</span>]<span class="op">,</span><span class="fl">1</span>)<span class="op">;</span></span>
-<span id="cb5-28"><a href="psets.html#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="va">hold</span> <span class="va">on</span></span>
-<span id="cb5-29"><a href="psets.html#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="co">% scatter the placed points</span></span>
-<span id="cb5-30"><a href="psets.html#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="va">scatter</span>(<span class="va">cos</span>(<span class="va">x</span>)<span class="op">,</span><span class="va">sin</span>(<span class="va">x</span>)<span class="op">,</span><span class="ss">&#39;blue&#39;</span><span class="op">,</span><span class="ss">&#39;filled&#39;</span>)<span class="op">;</span></span>
-<span id="cb5-31"><a href="psets.html#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="va">axis</span> <span class="va">equal</span><span class="op">;</span></span>
-<span id="cb5-32"><a href="psets.html#cb5-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-33"><a href="psets.html#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="co">%% helper functions</span></span>
-<span id="cb5-34"><a href="psets.html#cb5-34" aria-hidden="true" tabindex="-1"></a><span class="co">% The objective function</span></span>
-<span id="cb5-35"><a href="psets.html#cb5-35" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="va">f</span> <span class="op">=</span> <span class="va">perimeter</span>(<span class="va">u</span>)</span>
-<span id="cb5-36"><a href="psets.html#cb5-36" aria-hidden="true" tabindex="-1"></a><span class="co">% </span><span class="al">TODO</span><span class="co">: define the perimeter function here.</span></span>
-<span id="cb5-37"><a href="psets.html#cb5-37" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode matlab"><code class="sourceCode matlab"><span id="cb11-1"><a href="psets.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="va">clc</span><span class="op">;</span> <span class="va">clear</span><span class="op">;</span> <span class="va">close</span> <span class="va">all</span><span class="op">;</span></span>
+<span id="cb11-2"><a href="psets.html#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">% number of points to be placed</span></span>
+<span id="cb11-3"><a href="psets.html#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="va">N</span> <span class="op">=</span> <span class="fl">10</span><span class="op">;</span></span>
+<span id="cb11-4"><a href="psets.html#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">% define the objective function</span></span>
+<span id="cb11-5"><a href="psets.html#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co">% fmincon assumes minimization</span></span>
+<span id="cb11-6"><a href="psets.html#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co">% We minimize the negative perimeter so as to maximize the perimeter</span></span>
+<span id="cb11-7"><a href="psets.html#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="va">objective</span> <span class="op">=</span> <span class="op">@</span>(<span class="va">u</span>) <span class="op">-</span><span class="fl">1</span><span class="op">*</span><span class="va">perimeter</span>(<span class="va">u</span>)<span class="op">;</span></span>
+<span id="cb11-8"><a href="psets.html#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co">% choose which algorithm to use for solving</span></span>
+<span id="cb11-9"><a href="psets.html#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="va">options</span> <span class="op">=</span> <span class="va">optimoptions</span>(<span class="ss">&#39;fmincon&#39;</span><span class="op">,</span> <span class="ss">&#39;Algorithm&#39;</span><span class="op">,</span> <span class="ss">&#39;interior-point&#39;</span>)<span class="op">;</span></span>
+<span id="cb11-10"><a href="psets.html#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co">% supply an initial guess</span></span>
+<span id="cb11-11"><a href="psets.html#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co">% since this is a convex problem, we can use any initial guess</span></span>
+<span id="cb11-12"><a href="psets.html#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="va">u0</span> <span class="op">=</span> <span class="va">rand</span>(<span class="va">N</span><span class="op">,</span><span class="fl">1</span>)<span class="op">;</span></span>
+<span id="cb11-13"><a href="psets.html#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="co">% solve</span></span>
+<span id="cb11-14"><a href="psets.html#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="va">uopt</span> <span class="op">=</span> <span class="va">fmincon</span>(<span class="va">objective</span><span class="op">,</span><span class="va">u0</span><span class="op">,...</span> <span class="co">% objective and initial guess</span></span>
+<span id="cb11-15"><a href="psets.html#cb11-15" aria-hidden="true" tabindex="-1"></a>    <span class="op">-</span><span class="va">eye</span>(<span class="va">N</span>)<span class="op">,</span><span class="va">zeros</span>(<span class="va">N</span><span class="op">,</span><span class="fl">1</span>)<span class="op">,...</span> <span class="co">% linear inequality constraints</span></span>
+<span id="cb11-16"><a href="psets.html#cb11-16" aria-hidden="true" tabindex="-1"></a>    <span class="va">ones</span>(<span class="fl">1</span><span class="op">,</span><span class="va">N</span>)<span class="op">,</span><span class="fl">2</span><span class="op">*</span><span class="va">pi</span><span class="op">,...</span> <span class="co">% linear equality constraints</span></span>
+<span id="cb11-17"><a href="psets.html#cb11-17" aria-hidden="true" tabindex="-1"></a>    []<span class="op">,</span>[]<span class="op">,</span>[]<span class="op">,...</span> <span class="co">% we do not have lower/upper bounds and nonlinear constraints</span></span>
+<span id="cb11-18"><a href="psets.html#cb11-18" aria-hidden="true" tabindex="-1"></a>    <span class="va">options</span>)<span class="op">;</span></span>
+<span id="cb11-19"><a href="psets.html#cb11-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-20"><a href="psets.html#cb11-20" aria-hidden="true" tabindex="-1"></a><span class="co">% plot the solution</span></span>
+<span id="cb11-21"><a href="psets.html#cb11-21" aria-hidden="true" tabindex="-1"></a><span class="va">x</span> <span class="op">=</span> <span class="va">zeros</span>(<span class="va">N</span><span class="op">,</span><span class="fl">1</span>)<span class="op">;</span></span>
+<span id="cb11-22"><a href="psets.html#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="kw">for</span> <span class="va">k</span> <span class="op">=</span> <span class="fl">2</span><span class="op">:</span><span class="va">N</span></span>
+<span id="cb11-23"><a href="psets.html#cb11-23" aria-hidden="true" tabindex="-1"></a>    <span class="va">x</span>(<span class="va">k</span>) <span class="op">=</span> <span class="va">x</span>(<span class="va">k</span><span class="op">-</span><span class="fl">1</span>) <span class="op">+</span> <span class="va">uopt</span>(<span class="va">k</span><span class="op">-</span><span class="fl">1</span>)<span class="op">;</span></span>
+<span id="cb11-24"><a href="psets.html#cb11-24" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb11-25"><a href="psets.html#cb11-25" aria-hidden="true" tabindex="-1"></a><span class="va">figure</span><span class="op">;</span></span>
+<span id="cb11-26"><a href="psets.html#cb11-26" aria-hidden="true" tabindex="-1"></a><span class="co">% plot a circle</span></span>
+<span id="cb11-27"><a href="psets.html#cb11-27" aria-hidden="true" tabindex="-1"></a><span class="va">viscircles</span>([<span class="fl">0</span><span class="op">,</span><span class="fl">0</span>]<span class="op">,</span><span class="fl">1</span>)<span class="op">;</span></span>
+<span id="cb11-28"><a href="psets.html#cb11-28" aria-hidden="true" tabindex="-1"></a><span class="va">hold</span> <span class="va">on</span></span>
+<span id="cb11-29"><a href="psets.html#cb11-29" aria-hidden="true" tabindex="-1"></a><span class="co">% scatter the placed points</span></span>
+<span id="cb11-30"><a href="psets.html#cb11-30" aria-hidden="true" tabindex="-1"></a><span class="va">scatter</span>(<span class="va">cos</span>(<span class="va">x</span>)<span class="op">,</span><span class="va">sin</span>(<span class="va">x</span>)<span class="op">,</span><span class="ss">&#39;blue&#39;</span><span class="op">,</span><span class="ss">&#39;filled&#39;</span>)<span class="op">;</span></span>
+<span id="cb11-31"><a href="psets.html#cb11-31" aria-hidden="true" tabindex="-1"></a><span class="va">axis</span> <span class="va">equal</span><span class="op">;</span></span>
+<span id="cb11-32"><a href="psets.html#cb11-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-33"><a href="psets.html#cb11-33" aria-hidden="true" tabindex="-1"></a><span class="co">%% helper functions</span></span>
+<span id="cb11-34"><a href="psets.html#cb11-34" aria-hidden="true" tabindex="-1"></a><span class="co">% The objective function</span></span>
+<span id="cb11-35"><a href="psets.html#cb11-35" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="va">f</span> <span class="op">=</span> <span class="va">perimeter</span>(<span class="va">u</span>)</span>
+<span id="cb11-36"><a href="psets.html#cb11-36" aria-hidden="true" tabindex="-1"></a><span class="co">% </span><span class="al">TODO</span><span class="co">: define the perimeter function here.</span></span>
+<span id="cb11-37"><a href="psets.html#cb11-37" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div>
 </div>
 </div>
 <p> </p>
