@@ -1181,12 +1181,100 @@ According to this definition, given any $x_0 \in \mathcal{X}_0$:
 :::
 :::
 
+In the literature, the controllable set is often referred to as the _backwards reachable set_.
+
 #### Computation of Controllable and Reachable Sets
+
+For a linear time-invariant system, when the state constraint set $\mathcal{X}$, control constraint set $\mathcal{U}$, the target set $\mathcal{S}$, and the initial set $\mathcal{X}_0$ are all polytopes, then the $N$-step controllable set $\mathcal{K}_{N}(\mathcal{S})$ and the $N$-step reachable set $\mathcal{R}_{N}(\mathcal{X}_0)$ are both polytopes and can be computed exactly and efficiently. 
+
+We will not describe the underlying algorithm for computing $\mathcal{K}_{N}(\mathcal{S})$ and $\mathcal{R}_{N}(\mathcal{X}_0)$ (these details can be found in [@borrelli17book-mpc] and they are not very difficult to understand, so I suggest you to read them), but we now show you how to use the [Multi-Parametric Toolbox (MPT)](https://www.mpt3.org/) to compute them.
+
+::: {.examplebox}
+::: {.example #compute-controllable-reachable-sets name="Compute Controllable and Reachable Sets"}
+Consider a linear system 
+$$
+x_{t+1} = \begin{bmatrix} 1.5 & 0 \\ 1 & -1.5 \end{bmatrix} x_t + \begin{bmatrix} 1 \\ 0 \end{bmatrix} u_t
+$$
+with state and control constraints
+$$
+\mathcal{X} = [-10,10]^2, \quad \mathcal{U} = [-5,5].
+$$
+Given $\mathcal{S} = \mathcal{X}_0 = [-1,1]^2$, I want to compute $\mathcal{K}_i(\mathcal{S})$ and $\mathcal{R}_i(\mathcal{X}_0)$, for $i=0,1,2,3,4$.
+
+**Dynamical system**. We first define the linear time-invariant system as follows.
+```matlab
+A = [1.5, 0; 1, -1.5]; B = [1; 0];
+sys = LTISystem('A',A,'B',B);
+```
+We then define the state and control constraints.
+```matlab
+calX = Polyhedron('A',...
+    [1,0;0,1;-1,0;0,-1], ...
+    'b',[10;10;10;10]);
+calU = Polyhedron('A',[1;-1],'b',[5;5]);
+```
+Note that in the MPT toolbox, to define a polytope $P = \{ x \in \mathbb{R}^n \mid A x \leq b \}$, we just need to call the `Polyhedron` function with inputs `A` and `b`.
+
+**Controllable sets**. We have from Definition \@ref(def:controllable-set) the recursion 
+$$
+\mathcal{K}_0(\mathcal{S}) = \mathcal{S}, \quad \mathcal{K}_i(\mathcal{S}) = \text{Pre}(\mathcal{K}_{i-1}(\mathcal{S})) \cap \mathcal{X}.
+$$
+To implement the above set operation, we need two functions, one for the "$\cap$" intersection operation, and the other for the "$\text{Pre}(\cdot)$" precursor set operation. These two functions are both available through MPT.
+
+- `intersect(P,S)` computes the intersection of two sets `P` and `S`, both defined as polytopes.
+
+- `system.reachableSet('X', X, 'U', U, 'N', 1, 'direction', 'backwards')` computes the one-step backwards reachable set (which is just the precursor set) of the `system` with target set `X` and control constraints `U`.
+
+Using these two functions, the following code snippet computes recursively the controllable sets for $N$ steps.
+```matlab
+% target set
+S = Polyhedron('A',[1,0;0,1;-1,0;0,-1],'b',[1;1;1;1]);
+K = [S];
+N = 4;
+for i = 1:N
+    Si = sys.reachableSet('X',K(i),'U',calU,'N',1,'direction','backwards');
+    K = [K; intersect(Si,calX)];
+end
+```
+Fig. \@ref(fig:controllable-set-example) plots the controllable sets computed by running the above code.
+```{r controllable-set-example, out.width='60%', fig.show='hold', fig.cap='Computation of controllable sets using MPT. The bottom plot shifts the sets horizontally for better visualization.', fig.align='center', echo=FALSE}
+knitr::include_graphics('images/controllable_set_overlap.png')
+knitr::include_graphics('images/controllable_set_shift.png')
+```
+
+**Reachable sets**. We have Definition \@ref(def:reachable-set) the recursion
+$$
+\mathcal{R}_0(\mathcal{X}_0) = \mathcal{X}_0, \quad \mathcal{X}_i(\mathcal{X}_0) = \text{Suc}(\mathcal{R}_{i-1}(\mathcal{X}_0)) \cap \mathcal{X}.
+$$
+To implement the recursion above, we need "$\cap$" set intersection, which is available via `intersect(P,S)`, and the "$\text{Suc}(\cdot)$" successor set operation, which is available as
+
+- `system.reachableSet('X', X, 'U', U, 'N', 1, 'direction', 'forward')` computes the one-step forward reachable set (which is just the successor set) of the `system` with initial set `X` and control constraints `U`.
+
+Therefore, we can compute the reachable sets recursively using the following code snippet
+
+```matlab
+% initial set
+X0 = Polyhedron('A',[1,0;0,1;-1,0;0,-1],'b',[1;1;1;1]);
+R = [X0];
+N = 4;
+for i = 1:N
+    Ri = sys.reachableSet('X',R(i),'U',calU,'N',1,'direction','forward');
+    R = [R; intersect(Ri,calX)];
+end
+```
+Fig. \@ref(fig:reachable-set-example) plots the reachable sets computed by running the above code.
+
+Feel free to play with the code [here](https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/mpt_examples/controllable_reachable_sets.m). Note that you need to [install the MPT toolbox](https://www.mpt3.org/Main/Installation) before running the code.
+
+```{r reachable-set-example, out.width='60%', fig.show='hold', fig.cap='Computation of reachable sets using MPT. The bottom plot shifts the sets horizontally for better visualization.', fig.align='center', echo=FALSE}
+knitr::include_graphics('images/reachable_set_overlap.png')
+knitr::include_graphics('images/reachable_set_shift.png')
+```
+:::
+:::
 
 
 #### Invariant Sets
-
-
 
 ::: {.definitionbox}
 ::: {.definition #positive-invariant-set name="Positive Invariant Set"}
@@ -1230,8 +1318,152 @@ A set $\mathcal{C}_{\infty} \subseteq \mathcal{X}$ is said to be the maximal con
 
 Essentially, the (maximal) control invariant set is the set of initial conditions under which the system can be controlled to not blow up. 
 
+We now state a necessary and sufficient condition for a set to be positive invariant and control invariant.
+
+::: {.theorembox}
+::: {.theorem #geometric-condition-for-invariance name="Geometric Condition for Invariance"}
+For the autonomous system \@ref(eq:mpc-autonomous-system) subject to the constraint \@ref(eq:mpc-state-control-constraint), a set $\mathcal{O} \subseteq \mathcal{X}$ is positive invariant if and only if
+\begin{equation}
+\mathcal{O} \subseteq \text{Pre}(\mathcal{O}).
+(\#eq:positive-invariant-geometric)
+\end{equation}
+
+Similarly, for the controlled system \@ref(eq:mpc-controlled-system) subject to the constraint \@ref(eq:mpc-state-control-constraint), a set $\mathcal{C}$ is control invariant if and only if 
+\begin{equation}
+\mathcal{C} \subseteq \text{Pre}(\mathcal{C}).
+(\#eq:control-invariant-geometric)
+\end{equation}
+:::
+:::
+::: {.proofbox}
+::: {.proof}
+We only prove \@ref(eq:positive-invariant-geometric) since \@ref(eq:control-invariant-geometric) can be proved using similar arguments.
+
+- "$\Leftarrow$": we want to show $\mathcal{O}$ is positive invariant if \@ref(eq:positive-invariant-geometric) holds. We prove this by contradiction. If $\mathcal{O}$ is not positive invariant, the $\exists \hat{x} \in \mathcal{O}$ such that $f_a(\hat{x}) \not\in \mathcal{O}$. This implies we have found $\hat{x} \in \mathcal{O}$ but $\hat{x} \not\in \text{Pre}(\mathcal{O})$, contradicting \@ref(eq:positive-invariant-geometric).
+
+- "$\Rightarrow$": we want to show \@ref(eq:positive-invariant-geometric) holds if $\mathcal{O}$ is positive invariant. We prove this by contradiction. Suppose \@ref(eq:positive-invariant-geometric) does not hold, then $\exists \hat{x}$ such that $\hat{x} \in \mathcal{O}$ but $\hat{x} \not\in \text{Pre}(\mathcal{O})$. This implies we have found $\hat{x} \in \mathcal{O}$ that does not remain in $\mathcal{O}$ in the next step, contradicting $\mathcal{O}$ being positive invariant.
+
+This shows that \@ref(eq:positive-invariant-geometric) is a sufficient and necessary condition.
+:::
+:::
+
+Theorem \@ref(thm:geometric-condition-for-invariance) immediately suggests an algoithm for computing (control) invariant sets, as we will describe in the next section.
+
 #### Computation of Invariant Sets 
 
+Observe that the geometric conditions \@ref(eq:positive-invariant-geometric) and \@ref(eq:control-invariant-geometric) are equivalent to the following conditions 
+$$
+\mathcal{O} = \text{Pre}(\mathcal{O}) \cap \mathcal{O}, \quad \mathcal{C} = \text{Pre}(\mathcal{C}) \cap \mathcal{C}.
+$$
+
+Based on the equation above, we can design an algoithm that iteratively evaluates $\text{Pre}(\mathcal{\Omega}) \cap \mathcal{\Omega}$ until it converges.
+
+---
+
+**Algorithm**:  Computation of $\mathcal{O}_{\infty}$
+
+---
+
+**Input:** $f_a$, $\mathcal{X}$
+
+**Output:** $\mathcal{O}_{\infty}$
+    
+&nbsp;&nbsp; $\Omega_0 \leftarrow \mathcal{X}$, $k=0$
+
+&nbsp;&nbsp; **Repeat**
+
+&nbsp;&nbsp;&nbsp;&nbsp; $\Omega_{k+1} \leftarrow \text{Pre}(\Omega_k) \cap \Omega_k$ 
+
+&nbsp;&nbsp;&nbsp;&nbsp; $k \leftarrow k+1$
+
+&nbsp;&nbsp; **Until** $\Omega_{k+1} = \Omega_k$.
+
+&nbsp;&nbsp; $\mathcal{O}_{\infty} \leftarrow \Omega_k$
+
+---
+
+The algorithm above generates a sequence of sets $\{ \Omega_k \}$ satisfying $\Omega_{k+1} \subseteq \Omega_k$ for any $k$, and it terminates when $\Omega_{k+1} = \Omega_k$. If it terminates, then $\Omega_k$ is the maximal positive invariant set $\mathcal{O}_{\infty}$. If $\Omega_k = \emptyset$ for some intege $k$ then $\mathcal{O}_{\infty} = \emptyset$.
+
+In general, the algoithm above may never terminate. If the algoithm does not terminate in a finite number of iterations, then it can be proven that [@kolmanovsky98mpe-theory]
+$$
+\mathcal{O}_{\infty} = \lim_{k \rightarrow \infty} \Omega_k.
+$$
+
+Conditions for finite time termination of the algoithm can be found in [@gilbert91tac-linear]. A simple sufficient condition requires the dynamics $f_a$ to be linear and stable, and the constraint set $\mathcal{X}$ to be bounded and contain the origin.
+
+The same algoithm can be used to compute the maximal control invariant set $\mathcal{C}_{\infty}$.
+
+---
+
+**Algorithm**:  Computation of $\mathcal{C}_{\infty}$
+
+---
+
+**Input:** $f$, $\mathcal{X}$, $\mathcal{U}$
+
+**Output:** $\mathcal{C}_{\infty}$
+    
+&nbsp;&nbsp; $\Omega_0 \leftarrow \mathcal{X}$, $k=0$
+
+&nbsp;&nbsp; **Repeat**
+
+&nbsp;&nbsp;&nbsp;&nbsp; $\Omega_{k+1} \leftarrow \text{Pre}(\Omega_k) \cap \Omega_k$ 
+
+&nbsp;&nbsp;&nbsp;&nbsp; $k \leftarrow k+1$
+
+&nbsp;&nbsp; **Until** $\Omega_{k+1} = \Omega_k$.
+
+&nbsp;&nbsp; $\mathcal{C}_{\infty} \leftarrow \Omega_k$
+
+---
+
+Similarly, the above algoithm generates $\{\Omega_k \}$ such that $\Omega_{k+1} \subseteq \Omega_k$ for any $k$. If the algoithm terminates, then $\Omega_k = \mathcal{C}_{\infty}$.
+
+In general, the algoithm may never terminate. If the algoithm does not terminate, then in general convergence is not guaranteed
+$$
+\mathcal{C}_{\infty} \neq \lim_{k \rightarrow \infty} \Omega_k.
+$$
+The work in [@bertsekas72tac-infinite] reports examples of nonlinear systems for which the above equation can be observed. A sufficient condition for the convergence of $\Omega_k$ to $\mathcal{C}_{\infty}$ as $k \rightarrow \infty$ requires the polyhedral sets $\mathcal{X}$ and $\mathcal{U}$ to be bounded and the system $f(x,u)$ to be continuous [@bertsekas72tac-infinite]. 
+
+Let us apply the algoithm to compute the maximal control invariant set for the linear system in Example \@ref(exm:compute-controllable-reachable-sets).
+
+::: {.examplebox}
+::: {.example #compute-control-invariant-set name="Computation of the Maximal Control Invariant Set"}
+Consider the linear system in Example \@ref(exm:compute-controllable-reachable-sets) with same state constraint and control constraint. 
+
+The following code snippet shows how to apply the iterative algorithm introduced above to compute the maximal control invariant set.
+```matlab
+Omega = [calX];
+while true
+    last_Omega = Omega(end);
+    pre_omega = sys.reachableSet('X',last_Omega,'U',calU,'N',1,...
+        'direction','backwards');
+    new_Omega = intersect(pre_omega,last_Omega);
+    Omega = [Omega;new_Omega];
+    if new_Omega == last_Omega
+        fprintf("Converged to maximal control invariant set.\n");
+        break;
+    end
+end
+```
+
+The algoithm converges in 37 iterations and Fig. \@ref(fig:max-control-invariant-set) plots the sequence of sets generated by the algorithm.
+
+```{r max-control-invariant-set, out.width='60%', fig.show='hold', fig.cap='Maximal control invariant set.', fig.align='center', echo=FALSE}
+knitr::include_graphics('images/maximal_control_invariant_set.png')
+```
+
+The MPT toolbox actually implements this algoithm for us to use directly. If we use
+```matlab
+C = sys.invariantSet('X', calX, 'U', calU);
+```
+we get the same result as before.
+
+You can play with the code [here](https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/mpt_examples/maximal_control_invariant_set.m).
+
+
+:::
+:::
 
 ### Basic Formulation for Linear Systems
 
@@ -1280,15 +1512,19 @@ I hope you could pay attention to the notation in \@ref(eq:linear-mpc-subroutine
 
 **Feasible sets**. We denote as $\mathcal{X}_0 \subseteq \mathcal{X}$ the set of initial states $x_t$ such that the RHC subproblem \@ref(eq:linear-mpc-subroutine) is feasible, i.e., 
 \begin{equation}
+\hspace{-14mm}
 \begin{split}
 \mathcal{X}_0 = \{ x(0) \in \mathbb{R}^n \mid \exists (u(0),\dots,u(N-1)) \text{ such that } x(k) \in \mathcal{X},u(k) \in \mathcal{U},k=0,\dots,N-1, \\ x(N) \in \mathcal{X}_f \text{ with } x(k+1) = A x(k) + B u(k), k=0,\dots,N-1 \}.
 \end{split}
+(\#eq:definition-calX-0)
 \end{equation}
 Similarly, we denote as $\mathcal{X}_i$ the set of states such that the RHC subproblem is feasible from step $k=i$:
 \begin{equation}
+\hspace{-14mm}
 \begin{split}
-\mathcal{X}_i = \{ x(i) \in \mathcal{R}^n \mid \exists (u(i),\dots,u(N-1)) \text{ such that } x(k) \in \mathcal{X}, u(k) \in \mathcal{U}, k=i,\dots,N-1, \\ x(N) \in \mathcal{X}_f \text{ with } x(k+1) = A x(k) + B u(k), k=i,\dots,N-1 \}.
+\mathcal{X}_i = \{ x(i) \in \mathbb{R}^n \mid \exists (u(i),\dots,u(N-1)) \text{ such that } x(k) \in \mathcal{X}, u(k) \in \mathcal{U}, k=i,\dots,N-1, \\ x(N) \in \mathcal{X}_f \text{ with } x(k+1) = A x(k) + B u(k), k=i,\dots,N-1 \}.
 \end{split}
+(\#eq:definition-calX-i)
 \end{equation}
 Clearly, by definition we have 
 $$
@@ -1303,6 +1539,44 @@ or written in a compact way as
 \mathcal{X}_i = \text{Pre}(\mathcal{X}_{i+1}) \cap \mathcal{X}.
 (\#eq:mpc-feasible-set-recursion)
 \end{equation}
+Note that from equation \@ref(eq:mpc-feasible-set-recursion) we have that, if we pick $x_i \in \mathcal{X}_i$ and let $U(x_i)$ be the set of feasible controls at $x_i$, then pick any $(u(0),\dots,u(N-1)) \in U(x_i)$ and apply $u(0)$ to the system to get $x_{i+1} = A x_i + B u(0)$, we have $x_{i+1} \in \mathcal{X}_{i+1}$.
+
+Since the definitions \@ref(eq:definition-calX-0) and \@ref(eq:definition-calX-i) are rather abstract, let us visualize them using the double integrator example.
+
+::: {.examplebox}
+::: {.example #compute-calXi-double-integrator name="Double Integrator RHC Feasible Sets"}
+Consider the discrete-time double integrator dynamics
+$$
+x_{t+1} = \begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix} x_t + \begin{bmatrix} 0 \\ 1 \end{bmatrix} u_t,
+$$
+subject to control constraint
+$$
+u \in \mathcal{U} = [-0.5,0.5],
+$$
+and state constraint 
+$$
+x \in \mathcal{X} = [-5, 5] \times [-5, 5].
+$$
+We use $N=3$ and visualize the feasible sets \@ref(eq:definition-calX-0) and \@ref(eq:definition-calX-i) for two choices of $\mathcal{X}_f$.
+
+**Choice 1**. $\mathcal{X}_f = \mathcal{X}$ is the full state space. We use the recursion \@ref(eq:mpc-feasible-set-recursion) to compute the feasible sets $\mathcal{X}_i$ for $i=0,1,2,3$. Fig. \@ref(fig:double-integrator-feasible-set-1) plots the feasible sets. Observe that in this case $\mathcal{X}_0 \subset \mathcal{X}_1 \subset \mathcal{X}_2 \subset \mathcal{X}_3$. This creates a concern: suppose the RHC starts at $x_0 \in \mathcal{X}_0$ that is feasible, in the next iteration we have $x_1 \in \mathcal{X}_1$. However, since $\mathcal{X}_1$ is larger than $\mathcal{X}_0$, $x_1$ is not guaranteed to be feasible. 
+
+```{r double-integrator-feasible-set-1, out.width='60%', fig.show='hold', fig.cap='Feasible sets of the double integrator receding horizon controller without terminal constraint.', fig.align='center', echo=FALSE}
+knitr::include_graphics('images/double_integrator_feaset_1.png')
+```
+
+**Choice 2**. $\mathcal{X}_f = \{(0,0)\}$ is the origin. Fig. \@ref(fig:double-integrator-feasible-set-2) plots the feasible sets. Observe that in this case $\mathcal{X}_3 \subset \mathcal{X}_2 \subset \mathcal{X}_1 \subset \mathcal{X}_0$. This is a nice case, because if RHC starts at $x_0 \in \mathcal{X}_0$ that is feasible, in the next iteration we have $x_1 \in \mathcal{X}_1 \subset \mathcal{X}_0$, which implies that $x_1$ is guaranteed to remain feasible! 
+
+In fact, as we will soon show, in the first choice the RHC does suffer from infeasibility.
+
+```{r double-integrator-feasible-set-2, out.width='60%', fig.show='hold', fig.cap='Feasible sets of the double integrator receding horizon controller with terminal constraint.', fig.align='center', echo=FALSE}
+knitr::include_graphics('images/double_integrator_feaset_2.png')
+```
+
+The code for this example can be found [here](https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/mpt_examples/double_integrator_feasible_sets.m).
+
+:::
+:::
 
 
 **Algorithm**. Above all, problem \@ref(eq:linear-mpc-subroutine) is a convex optimization problem that we know how to solve efficiently (you have solved such convex optimization problems in Exercise \@ref(exr:lqrconstraints)).
