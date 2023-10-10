@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-10-07" />
+<meta name="date" content="2023-10-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -208,7 +208,7 @@ div.csl-indent {
 <li class="chapter" data-level="3.3.2" data-path="approximatedp.html"><a href="approximatedp.html#controllability-reachability-and-invariance"><i class="fa fa-check"></i><b>3.3.2</b> Controllability, Reachability, and Invariance</a></li>
 <li class="chapter" data-level="3.3.3" data-path="approximatedp.html"><a href="approximatedp.html#basic-formulation-for-linear-systems"><i class="fa fa-check"></i><b>3.3.3</b> Basic Formulation for Linear Systems</a></li>
 <li class="chapter" data-level="3.3.4" data-path="approximatedp.html"><a href="approximatedp.html#persistent-feasibility"><i class="fa fa-check"></i><b>3.3.4</b> Persistent Feasibility</a></li>
-<li class="chapter" data-level="3.3.5" data-path="approximatedp.html"><a href="approximatedp.html#stability"><i class="fa fa-check"></i><b>3.3.5</b> Stability</a></li>
+<li class="chapter" data-level="3.3.5" data-path="approximatedp.html"><a href="approximatedp.html#mpc-stability"><i class="fa fa-check"></i><b>3.3.5</b> Stability</a></li>
 <li class="chapter" data-level="3.3.6" data-path="approximatedp.html"><a href="approximatedp.html#explicit-mpc"><i class="fa fa-check"></i><b>3.3.6</b> Explicit MPC</a></li>
 </ul></li>
 <li class="chapter" data-level="3.4" data-path="approximatedp.html"><a href="approximatedp.html#policy-gradient"><i class="fa fa-check"></i><b>3.4</b> Policy Gradient</a></li>
@@ -222,9 +222,9 @@ div.csl-indent {
 <li class="chapter" data-level="4.5" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#infinite-horizon-problems"><i class="fa fa-check"></i><b>4.5</b> Infinite-Horizon Problems</a></li>
 <li class="chapter" data-level="4.6" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#viscosity-solution"><i class="fa fa-check"></i><b>4.6</b> Viscosity Solution</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="approximatedp.html"><a href="approximatedp.html#stability"><i class="fa fa-check"></i><b>5</b> Stability Analysis</a>
+<li class="chapter" data-level="5" data-path="stability.html"><a href="stability.html"><i class="fa fa-check"></i><b>5</b> Stability Analysis</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="stability.html"><a href="stability.html"><i class="fa fa-check"></i><b>5.1</b> Autonomous Systems</a>
+<li class="chapter" data-level="5.1" data-path="stability.html"><a href="stability.html#autonomous-systems"><i class="fa fa-check"></i><b>5.1</b> Autonomous Systems</a>
 <ul>
 <li class="chapter" data-level="5.1.1" data-path="stability.html"><a href="stability.html#concepts-of-stability"><i class="fa fa-check"></i><b>5.1.1</b> Concepts of Stability</a></li>
 <li class="chapter" data-level="5.1.2" data-path="stability.html"><a href="stability.html#stability-by-linearization"><i class="fa fa-check"></i><b>5.1.2</b> Stability by Linearization</a></li>
@@ -478,7 +478,7 @@ Moreover, denoting <span class="math inline">\(\mathcal{T}\)</span> the family o
 </div>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-13" class="proof"><em>Proof</em>. </span>See Theorem 1.1 in <span class="citation">(<a href="#ref-bernard19book-observer" role="doc-biblioref">Bernard 2019</a>)</span>.</p>
+<p><span id="unlabeled-div-14" class="proof"><em>Proof</em>. </span>See Theorem 1.1 in <span class="citation">(<a href="#ref-bernard19book-observer" role="doc-biblioref">Bernard 2019</a>)</span>.</p>
 </div>
 <p>A simpler version of Theorem <a href="output-feedback.html#thm:observerdesignmeta">6.1</a> where the coordinate transformation <span class="math inline">\(T_u\)</span> is stationary and fixed for all <span class="math inline">\(u\)</span> is stated below as a corollary.</p>
 <div class="theorembox">
@@ -564,7 +564,7 @@ is an observer for <a href="output-feedback.html#eq:Luenberger-linear-template">
 </div>
 <div class="proofbox">
 <div class="proof">
-<p><span id="unlabeled-div-14" class="proof"><em>Proof</em>. </span>Define <span class="math inline">\(e(t) = \xi(t) - \hat{\xi}(t)\)</span>. In that case,
+<p><span id="unlabeled-div-15" class="proof"><em>Proof</em>. </span>Define <span class="math inline">\(e(t) = \xi(t) - \hat{\xi}(t)\)</span>. In that case,
 <span class="math display" id="eq:Luenberger-error">\[\begin{equation}
     \dot{e}(t) = [A - KC] e(t)
     \tag{6.12}
@@ -994,7 +994,7 @@ T(x) = \int_{-\infty}^0 e^{-A\tau} B(h(X(x,\tau))) d\tau.
 </div>
 </div>
 <div class="remark">
-<p><span id="unlabeled-div-15" class="remark"><em>Remark</em>. </span>The function <span class="math inline">\(T\)</span> in Theorem <a href="output-feedback.html#thm:kklautonomous">6.4</a> takes complex numbers. To simulate the observer
+<p><span id="unlabeled-div-16" class="remark"><em>Remark</em>. </span>The function <span class="math inline">\(T\)</span> in Theorem <a href="output-feedback.html#thm:kklautonomous">6.4</a> takes complex numbers. To simulate the observer
 <span class="math display">\[
 \dot{\hat{\xi}} = A \hat{\xi} + B(y),
 \]</span>

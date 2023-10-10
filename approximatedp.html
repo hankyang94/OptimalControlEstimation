@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-10-07" />
+<meta name="date" content="2023-10-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -208,7 +208,7 @@ div.csl-indent {
 <li class="chapter" data-level="3.3.2" data-path="approximatedp.html"><a href="approximatedp.html#controllability-reachability-and-invariance"><i class="fa fa-check"></i><b>3.3.2</b> Controllability, Reachability, and Invariance</a></li>
 <li class="chapter" data-level="3.3.3" data-path="approximatedp.html"><a href="approximatedp.html#basic-formulation-for-linear-systems"><i class="fa fa-check"></i><b>3.3.3</b> Basic Formulation for Linear Systems</a></li>
 <li class="chapter" data-level="3.3.4" data-path="approximatedp.html"><a href="approximatedp.html#persistent-feasibility"><i class="fa fa-check"></i><b>3.3.4</b> Persistent Feasibility</a></li>
-<li class="chapter" data-level="3.3.5" data-path="approximatedp.html"><a href="approximatedp.html#stability"><i class="fa fa-check"></i><b>3.3.5</b> Stability</a></li>
+<li class="chapter" data-level="3.3.5" data-path="approximatedp.html"><a href="approximatedp.html#mpc-stability"><i class="fa fa-check"></i><b>3.3.5</b> Stability</a></li>
 <li class="chapter" data-level="3.3.6" data-path="approximatedp.html"><a href="approximatedp.html#explicit-mpc"><i class="fa fa-check"></i><b>3.3.6</b> Explicit MPC</a></li>
 </ul></li>
 <li class="chapter" data-level="3.4" data-path="approximatedp.html"><a href="approximatedp.html#policy-gradient"><i class="fa fa-check"></i><b>3.4</b> Policy Gradient</a></li>
@@ -222,9 +222,9 @@ div.csl-indent {
 <li class="chapter" data-level="4.5" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#infinite-horizon-problems"><i class="fa fa-check"></i><b>4.5</b> Infinite-Horizon Problems</a></li>
 <li class="chapter" data-level="4.6" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#viscosity-solution"><i class="fa fa-check"></i><b>4.6</b> Viscosity Solution</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="approximatedp.html"><a href="approximatedp.html#stability"><i class="fa fa-check"></i><b>5</b> Stability Analysis</a>
+<li class="chapter" data-level="5" data-path="stability.html"><a href="stability.html"><i class="fa fa-check"></i><b>5</b> Stability Analysis</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="stability.html"><a href="stability.html"><i class="fa fa-check"></i><b>5.1</b> Autonomous Systems</a>
+<li class="chapter" data-level="5.1" data-path="stability.html"><a href="stability.html#autonomous-systems"><i class="fa fa-check"></i><b>5.1</b> Autonomous Systems</a>
 <ul>
 <li class="chapter" data-level="5.1.1" data-path="stability.html"><a href="stability.html#concepts-of-stability"><i class="fa fa-check"></i><b>5.1.1</b> Concepts of Stability</a></li>
 <li class="chapter" data-level="5.1.2" data-path="stability.html"><a href="stability.html#stability-by-linearization"><i class="fa fa-check"></i><b>5.1.2</b> Stability by Linearization</a></li>
@@ -1574,8 +1574,8 @@ That is, if the system starts in <span class="math inline">\(\mathcal{C}\)</span
 </div>
 <p>Theorem <a href="approximatedp.html#thm:geometric-condition-for-invariance">3.1</a> immediately suggests an algoithm for computing (control) invariant sets, as we will describe in the next section.</p>
 </div>
-<div id="computation-of-invariant-sets" class="section level4 hasAnchor" number="3.3.2.4">
-<h4><span class="header-section-number">3.3.2.4</span> Computation of Invariant Sets<a href="approximatedp.html#computation-of-invariant-sets" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div id="mpc-compute-control-invariant-set" class="section level4 hasAnchor" number="3.3.2.4">
+<h4><span class="header-section-number">3.3.2.4</span> Computation of Invariant Sets<a href="approximatedp.html#mpc-compute-control-invariant-set" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>Observe that the geometric conditions <a href="approximatedp.html#eq:positive-invariant-geometric">(3.31)</a> and <a href="approximatedp.html#eq:control-invariant-geometric">(3.32)</a> are equivalent to the following conditions
 <span class="math display">\[
 \mathcal{O} = \text{Pre}(\mathcal{O}) \cap \mathcal{O}, \quad \mathcal{C} = \text{Pre}(\mathcal{C}) \cap \mathcal{C}.
@@ -1839,6 +1839,7 @@ Figure 3.25: Closed-loop trajectories for different settings of horizon N and we
 <div id="persistent-feasibility" class="section level3 hasAnchor" number="3.3.4">
 <h3><span class="header-section-number">3.3.4</span> Persistent Feasibility<a href="approximatedp.html#persistent-feasibility" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Under what conditions can we guarantee the RHC subproblem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.35)</a> is always feasible?</p>
+<p>Intuitively, we will show that, by designing the terminal constraint set <span class="math inline">\(\mathcal{X}_f\)</span>, we can guarantee the configuration of the feasible sets will look like choice 2 in Example <a href="approximatedp.html#exm:compute-calXi-double-integrator">3.12</a>.</p>
 <p>There are various sets here of interest for answering this question.</p>
 <ul>
 <li><p><span class="math inline">\(\mathcal{C}_{\infty}\)</span>: The maximal control invariant set <span class="math inline">\(\mathcal{C}_{\infty}\)</span> is only affected by the system dynamics <a href="approximatedp.html#eq:mpc-linear-system">(3.33)</a> and the constraint sets <span class="math inline">\(\mathcal{X} \times \mathcal{U}\)</span>. It is the largest set over which we can expect <em>any</em> controller to work, because otherwise the system trajectory will blow up.</p></li>
@@ -1919,8 +1920,8 @@ This shows <span class="math inline">\(\mathcal{X}_i\)</span> is control invaria
 </div>
 <p>Persistent feasibility does not guarantee the closed-loop system will converge to the origin. In fact, from Theorem <a href="approximatedp.html#thm:sufficient-feasibility-terminal">3.2</a>, it is clear that if the system starts at <span class="math inline">\(x_0 \in \mathcal{X}_0\)</span>, then we can only guarantee <span class="math inline">\(x_t \in \mathcal{X}_1\)</span> for all <span class="math inline">\(t \geq 0\)</span>.</p>
 </div>
-<div id="stability" class="section level3 hasAnchor" number="3.3.5">
-<h3><span class="header-section-number">3.3.5</span> Stability<a href="approximatedp.html#stability" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="mpc-stability" class="section level3 hasAnchor" number="3.3.5">
+<h3><span class="header-section-number">3.3.5</span> Stability<a href="approximatedp.html#mpc-stability" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>We now answer the question of how can we guarantee the RHC controller will drive the system to the desired origin.</p>
 <div class="theorembox">
 <div class="theorem">
@@ -1930,7 +1931,7 @@ This shows <span class="math inline">\(\mathcal{X}_i\)</span> is control invaria
 <li><p>The sets <span class="math inline">\(\mathcal{X}\)</span>, <span class="math inline">\(\mathcal{X}_f\)</span> and <span class="math inline">\(\mathcal{U}\)</span> contain the origin in their interior and are closed.</p></li>
 <li><p><span class="math inline">\(\mathcal{X}_f \subseteq \mathcal{X}\)</span> is control invariant.</p></li>
 <li><p>For any <span class="math inline">\(x \in \mathcal{X}_f\)</span>, the following inequality holds
-<span class="math display" id="eq:apprinv-rollout-3" id="eq:apprinv-cost-improvement" id="eq:apprinv-rollout-2" id="eq:apprinv-rollout" id="eq:apprinv-fvi-2" id="eq:apprinv-fvi-1" id="eq:apprinv-dp" id="eq:mpc-stability-lyapunov">\[\begin{equation}
+<span class="math display" id="eq:mpc-stability-lyapunov">\[\begin{equation}
 \min_{u \in \mathcal{U}, A x + Bu \in \mathcal{X}_f} \left( - p(x) + q(x,u) + p(Ax + Bu) \right) \leq 0.
 \tag{3.40}
 \end{equation}\]</span></p></li>
@@ -1938,8 +1939,90 @@ This shows <span class="math inline">\(\mathcal{X}_i\)</span> is control invaria
 <p>Then, the origin of the closed-loop system <a href="approximatedp.html#eq:mpc-closed-loop">(3.39)</a> is asymptotically stable with domain of attraction <span class="math inline">\(\mathcal{X}_0\)</span>. In words, for any <span class="math inline">\(x_0 \in \mathcal{X}_0\)</span>, if the closed-loop system <a href="approximatedp.html#eq:mpc-closed-loop">(3.39)</a> starts at <span class="math inline">\(x_0\)</span>, then the system trajectory converges to the origin as <span class="math inline">\(t\)</span> tends to infinity.</p>
 </div>
 </div>
-<p>Let us interpret Theorem <a href="approximatedp.html#thm:mpc-stability">3.3</a> before proving it. It should be clear that the first three assumptions are easy to satisfy. For example, if we choose <span class="math inline">\(p(x) = x^T P x\)</span> and <span class="math inline">\(q(x,u) = x^T Q x + u^T R u\)</span> with <span class="math inline">\(P, Q, R \succ 0\)</span>, then assumption 1 is satisfied. Usually <span class="math inline">\(\mathcal{X}\)</span> and <span class="math inline">\(\mathcal{U}\)</span> are both polyhedral sets containing the origin in the interior, so assumption 2 also holds naturally. Finding a control invariant set <span class="math inline">\(\mathcal{X}_f\)</span> is not a trivial task but there exists numerical algorithms for this task. After we find a control invariant <span class="math inline">\(\mathcal{X}_f\)</span>, by Theorem <a href="approximatedp.html#thm:sufficient-feasibility-terminal">3.2</a>, we know persistent feasibility will hold.</p>
-<p>Assumption 4 needs some work.</p>
+<p>Let us interpret Theorem <a href="approximatedp.html#thm:mpc-stability">3.3</a> before proving it. It should be clear that the first three assumptions are easy to satisfy. For example, if we choose <span class="math inline">\(p(x) = x^T P x\)</span> and <span class="math inline">\(q(x,u) = x^T Q x + u^T R u\)</span> with <span class="math inline">\(P, Q, R \succ 0\)</span>, then assumption 1 is satisfied. Usually <span class="math inline">\(\mathcal{X}\)</span> and <span class="math inline">\(\mathcal{U}\)</span> are both polyhedral sets containing the origin in the interior, so assumption 2 also holds naturally. Finding a control invariant set <span class="math inline">\(\mathcal{X}_f\)</span> is not a trivial task but there exists numerical algorithms for this task (e.g., using the algorithms introduced in Section <a href="approximatedp.html#mpc-compute-control-invariant-set">3.3.2.4</a>). After we find a control invariant <span class="math inline">\(\mathcal{X}_f\)</span>, by Theorem <a href="approximatedp.html#thm:sufficient-feasibility-terminal">3.2</a>, we know persistent feasibility will hold.</p>
+<p>We now prove the theorem by showing that Assumption 4 guarantees stability. Before we show the proof, we need the concept of a <em>Lyapunov function</em>. Below we introduce Lyapunov function for a discrete-time dynamical system, but we will study more details of Lyapunov function for continuous-time dynamical systems in Chapter <a href="stability.html#stability">5</a>.</p>
+<div class="theorembox">
+<div class="lemma">
+<p><span id="lem:lyapunov-stability-discrete-time" class="lemma"><strong>Lemma 3.3  (Discrete-time Lyapunov Function) </strong></span>Consider the discrete-time autonomous system <a href="approximatedp.html#eq:mpc-autonomous-system">(3.27)</a>, restated below for convenience:
+<span class="math display">\[
+x_{t+1} = f_a(x_t),
+\]</span>
+and assume <span class="math inline">\(x=0\)</span> is an equilibrium point of the system, i.e., <span class="math inline">\(0 = f_a (0)\)</span> (if the system starts at the origin, it stays at the origin). Let <span class="math inline">\(\Omega \subset \mathbb{R}^n\)</span> be a closed and bounded set containing the origin.
+If there exists a function <span class="math inline">\(V: \mathbb{R}^n \rightarrow \mathbb{R}\)</span> that is (a) continuous at the origin, (b) finite for every <span class="math inline">\(x \in \Omega\)</span>, and (c) satisfies</p>
+<ol style="list-style-type: decimal">
+<li><p><span class="math inline">\(V\)</span> is positive definite: <span class="math inline">\(V(0) = 0\)</span> and <span class="math inline">\(V(x) &gt; 0,\forall x \in \Omega \backslash \{ 0\}\)</span>,</p></li>
+<li><p><span class="math inline">\(V(x_{t+1}) - V(x_t) \leq - \alpha(x_t) &lt; 0\)</span> for any <span class="math inline">\(x_t \in \Omega \backslash \{ 0\}\)</span>,</p></li>
+</ol>
+<p>where <span class="math inline">\(\alpha: \mathbb{R}^n \rightarrow \mathbb{R}\)</span> is a continuous positive definite function. Then <span class="math inline">\(x=0\)</span> is asymptotically stable in <span class="math inline">\(\Omega\)</span>, i.e, if the system starts within <span class="math inline">\(\Omega\)</span>, then its trajectory tends to <span class="math inline">\(0\)</span> as <span class="math inline">\(t \rightarrow \infty\)</span>.</p>
+<p>A function <span class="math inline">\(V\)</span> satisfying the conditions above is called a Lyapunov function for the system.</p>
+</div>
+</div>
+<p>One can think of the Lyapunov function <span class="math inline">\(V\)</span> as an energy function for the system <a href="approximatedp.html#eq:mpc-autonomous-system">(3.27)</a> that maps a system state to a single scalar. Condition 1 in Lemma <a href="approximatedp.html#lem:lyapunov-stability-discrete-time">3.3</a> states that <span class="math inline">\(V\)</span> (the energy function) is strictly positive except at the origin. Condition 2 in Lemma <a href="approximatedp.html#lem:lyapunov-stability-discrete-time">3.3</a> states that, the system energy <span class="math inline">\(V\)</span> is strictly decreasing along any system trajectory. Therefore, we conclude that <span class="math inline">\(V\)</span> must converge to <span class="math inline">\(V=0\)</span>, and hence any state trajectory must converge to the origin.</p>
+<p>We will now use Lemma <a href="approximatedp.html#lem:lyapunov-stability-discrete-time">3.3</a> to prove RHC stability under Theorem <a href="approximatedp.html#thm:mpc-stability">3.3</a>.</p>
+<div class="proofbox">
+<div class="proof">
+<p><span id="unlabeled-div-11" class="proof"><em>Proof</em>. </span>Our goal is to prove that the optimal cost of the RHC problem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.35)</a>, <span class="math inline">\(J_t^\star(x_t)\)</span>, is a Lyapunov function for the closed-loop system <a href="approximatedp.html#eq:mpc-closed-loop">(3.39)</a> on the domain <span class="math inline">\(\mathcal{X}_0\)</span>. Then using Lemma <a href="approximatedp.html#lem:lyapunov-stability-discrete-time">3.3</a> we can conclude that the closed-loop system <a href="approximatedp.html#eq:mpc-closed-loop">(3.39)</a> will converge to the origin.</p>
+<p><strong>Positive definite</strong>. Clearly, we have <span class="math inline">\(J_t^\star(0) = 0\)</span> by the positive definiteness of <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> and the fact that <span class="math inline">\(x=0\)</span> is an equilibrium point of the linear system <a href="approximatedp.html#eq:mpc-linear-system">(3.33)</a>. For <span class="math inline">\(x_t \neq 0\)</span>, it is also clear that <span class="math inline">\(J_t^\star(x) &gt; 0\)</span>. Therefore, <span class="math inline">\(J_t^\star(x)\)</span> is positive definite on <span class="math inline">\(\mathcal{X}_0\)</span>.</p>
+<p><strong>Strictly decrease</strong>. It suffices to show <span class="math inline">\(J_1^\star(x_1) - J_0^\star(x_0) &lt; 0\)</span> because the constraints of the RHC problem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.35)</a> is time-invariant. Pick any <span class="math inline">\(x_0 \in \mathcal{X}_0\)</span>, and let
+<span class="math display" id="eq:mpc-stability-proof-control-1">\[\begin{equation}
+\left( u^\star(0),u^\star(1),\dots,u^\star(N-1) \right)
+\tag{3.41}
+\end{equation}\]</span>
+be an optimal control trajectory to problem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.35)</a>. Denote
+<span class="math display" id="eq:mpc-stability-proof-state-1">\[\begin{equation}
+\left( x_0,x(1),\dots,x(N) \right)
+\tag{3.42}
+\end{equation}\]</span>
+as the associated optimal state trajectory for problem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.35)</a>. The RHC controller will apply <span class="math inline">\(u^\star(0)\)</span> to the system, leading to the next state
+<span class="math display">\[
+x_1 = x(1) = A x_0 + B u^\star(0).
+\]</span>
+Then we will solve problem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.35)</a> to get <span class="math inline">\(J^\star_1(x_1)\)</span>, and we want to show <span class="math inline">\(J^\star_1(x_1) &lt; J^\star_0(x_0)\)</span>. Towards this, we will construct a feasible solution to <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.35)</a> starting at <span class="math inline">\(x_1\)</span>, and hence an upper bound on <span class="math inline">\(J^\star_1(x_1)\)</span>. Consider the control sequence
+<span class="math display" id="eq:mpc-stability-proof-control-2">\[\begin{equation}
+\left( u^\star(1),\dots,u^\star(N-1),v \right)
+\tag{3.43}
+\end{equation}\]</span>
+which is different from the control sequence in <a href="approximatedp.html#eq:mpc-stability-proof-control-1">(3.41)</a> by removing <span class="math inline">\(u^\star(0)\)</span> and appending <span class="math inline">\(v\)</span>. The corresponding state trajectory to <a href="approximatedp.html#eq:mpc-stability-proof-control-2">(3.43)</a> is
+<span class="math display" id="eq:mpc-stability-proof-state-2">\[\begin{equation}
+\left( x_1 = x(1), x(2),\dots,x(N), Ax(N) + Bv \right)
+\tag{3.44}
+\end{equation}\]</span>
+which is different from the state trajectory in <a href="approximatedp.html#eq:mpc-stability-proof-state-1">(3.42)</a> by removing <span class="math inline">\(x_0\)</span> and appending <span class="math inline">\(A x(N) + Bv\)</span>. Since <span class="math inline">\(x(N) \in \mathcal{X}_f\)</span> and <span class="math inline">\(\mathcal{X}_f\)</span> is control invariant, there exists <span class="math inline">\(v\)</span> such that <span class="math inline">\(Ax(N) + Bv \in \mathcal{X}_f\)</span> and the corresponding control trajectory <a href="approximatedp.html#eq:mpc-stability-proof-control-2">(3.43)</a> is feasible. Applying the control trajectory <a href="approximatedp.html#eq:mpc-stability-proof-control-2">(3.43)</a> to the optimization problem <a href="approximatedp.html#eq:linear-mpc-subroutine">(3.35)</a> will lead to the total cost
+<span class="math display">\[
+J_1(x_1) = J_0^\star(x_0) - q(x_0,u^\star(0)) \underbrace{- p(x(N)) + q(x(N),v) + p(Ax(N) + Bv)}_{s(x(N),v)}.
+\]</span>
+Now by assumption 4 in Theorem <a href="approximatedp.html#thm:mpc-stability">3.3</a>, we can choose <span class="math inline">\(v\)</span> such that the sum <span class="math inline">\(s(x(N),v) \leq 0\)</span>. Consequently, we have
+<span class="math display">\[
+J_1^\star(x_1) \leq J_1(x_1) \leq J_0^\star(x_0) - q(x_0,u^\star(0)),
+\]</span>
+which leads to
+<span class="math display">\[
+J_1^\star(x_1) - J_0^\star(x_0) \leq - q(x_0,u^\star(0)).
+\]</span>
+Because the choice of <span class="math inline">\(x_0\)</span> was arbitrary, we conclude that <span class="math inline">\(J_t^\star(x_t)\)</span> strictly decreases along any system trajectory that starts within <span class="math inline">\(\mathcal{X}_0\)</span>.</p>
+<p><strong>Continuity at the origin</strong>. We will show that <span class="math inline">\(J_0^\star(x) \leq p(x)\)</span> for any <span class="math inline">\(x \in \mathcal{X}_f\)</span>. With this argument, since <span class="math inline">\(p(x)\)</span> is positive definite and continuous, then <span class="math inline">\(J_0^\star(x)\)</span> must be continuous at the origin. We now prove <span class="math inline">\(J_0^\star(x) \leq p(x)\)</span> for any <span class="math inline">\(x \in \mathcal{X}_f\)</span>. Since <span class="math inline">\(\mathcal{X}_f\)</span> is control invariant, pick any <span class="math inline">\(x \in \mathcal{X}_f\)</span>, there exists a sequence of controls <span class="math inline">\((u(0),u(1),\dots,u(N-1))\)</span> such that the state trajectory <span class="math inline">\((x(0)=x,x(1),\dots,x(N))\)</span> stays in <span class="math inline">\(\mathcal{X}_f\)</span>. Such a control sequence lead to an upper bound on <span class="math inline">\(J^\star_0(x)\)</span>:
+<span class="math display">\[
+J^\star_0(x(0)) \leq p(x(N)) + \sum_{i=0}^{N-1} q(x(i),u(i)) = p(x(0)) + \sum_{i=0}^{N-1} \left( q(x(i),u(i)) + p(x(i+1)) - p(x(i)) \right),
+\]</span>
+since each <span class="math inline">\(x(i) \in \mathcal{X}_f\)</span>, according to Assumption 4, we can choose <span class="math inline">\(u(i)\)</span> such that
+<span class="math display">\[
+J^\star_0(x(0)) \leq p(x(0))
+\]</span>
+for any <span class="math inline">\(x(0) \in \mathcal{X}_f\)</span>.</p>
+<p>In conclusion, we have shown that <span class="math inline">\(J^\star_t(x_t)\)</span> is a Lyapunov function, and by Lemma <a href="approximatedp.html#lem:lyapunov-stability-discrete-time">3.3</a>, the closed-loop system is asymptotically stable.</p>
+</div>
+</div>
+<p>A function <span class="math inline">\(p(x)\)</span> that satisfies Assumption 4 in Theorem <a href="approximatedp.html#thm:mpc-stability">3.3</a> is typicalled known as a <em>control Lyapunov function</em>.</p>
+<p>Now two natural problems arise:</p>
+<ol style="list-style-type: decimal">
+<li><p>Given <span class="math inline">\(p(x)\)</span>, how to verify if assumption 3 holds in Theorem <a href="approximatedp.html#thm:mpc-stability">3.3</a>?</p></li>
+<li><p>How to synthesize a <span class="math inline">\(p(x)\)</span> that satisfies assumption 3 in Theorem <a href="approximatedp.html#thm:mpc-stability">3.3</a>?</p></li>
+</ol>
+<p>Unfortunately, both problems are hard. To see this, suppose we are given a candidate function <span class="math inline">\(p(x) = x^T P x\)</span> with <span class="math inline">\(P \succ 0\)</span> that is clearly positive definite. Assume <span class="math inline">\(q(x,u) = x^T Q x + u^T R u\)</span> with <span class="math inline">\(Q, R \succ 0\)</span> and <span class="math inline">\(\mathcal{U}, \mathcal{X}_f\)</span> are given polyhedral sets. Then verifying if <span class="math inline">\(p(x)\)</span> satisifies Assumption 4 boils down to checking if
+<span class="math display">\[
+\min_{u \in \mathcal{U}, Ax + Bu \in \mathcal{X}_f} x^T Q x + u^T R u + (Ax + Bu)^T P (Ax + Bu) - x^T P x
+\]</span>
+is non-positive for any possible <span class="math inline">\(x \in \mathcal{X}_f\)</span>. Although for each possible <span class="math inline">\(x\)</span>, the above problem is a convex optimization problem, there are an infinite number of points in the set <span class="math inline">\(\mathcal{X}_f\)</span> and enumerating over all points is a daunting task. We will see in Chapter <a href="stability.html#stability">5</a> that convex relaxations, in particular <a href="https://hankyang.seas.harvard.edu/Semidefinite/">semidefinite relaxations</a>, can help us partially solve these hard problems.</p>
 </div>
 <div id="explicit-mpc" class="section level3 hasAnchor" number="3.3.6">
 <h3><span class="header-section-number">3.3.6</span> Explicit MPC<a href="approximatedp.html#explicit-mpc" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -1956,7 +2039,7 @@ By using the _approximation in value space_ methods, we could replace the optima
 
 \begin{align}
 \tilde{J}_k(x_k) &= \min_{u_k \in \mathbb{U}_k (x_k)} \displaystyle \mathbb{E} \displaystyle \left\{g_k(x_k,u_k,w_k) + \tilde J_{k+1} (f_k(x_k,u_k,w_k) ) \right\} \\
-\tilde{\mu}_k(x_k) &= \arg \min_{u_k \in \mathbb{U}_k (x_k)} \displaystyle \mathbb{E} \displaystyle \left\{g_k(x_k,u_k,w_k) + \tilde J_{k+1} (f_k(x_k,u_k,w_k) ) \right\} \tag{3.41}
+\tilde{\mu}_k(x_k) &= \arg \min_{u_k \in \mathbb{U}_k (x_k)} \displaystyle \mathbb{E} \displaystyle \left\{g_k(x_k,u_k,w_k) + \tilde J_{k+1} (f_k(x_k,u_k,w_k) ) \right\} (\#eq:apprinv-dp)
 \end{align}
 
 The major issue in value space approximation is how to compute the approximate cost-to-go functions $\tilde J_{k+1}$ in \@ref(eq:apprinv-dp). We will consider three types of methods: 
@@ -1993,10 +2076,10 @@ In order to train those weights, we can use some cost functions to measure the a
 Value iteration could be viewed as a special form of dynamic programming, where the parameter vectors $r_k$ are determined sequentially, starting from the end of the horizon and proceeding backward. The algorithm samples the state space for each stage $k$ and generates a large number of states $x_k^s$, $s=1,...,q$. It then determines sequentially the parameter vectors $r_k$ to obtain a good "least square fit" to the DP algorithm. 
 
 \begin{equation}
-\beta_k^s=\min_{u \in \mathbb U_k(x_k^s)} E \displaystyle \left\{g(x_k^s,u,w_k) + \tilde J_{k+1} (f_k(x_k^s,u,w_k),r_{k+1}) \right\} \tag{3.42}
+\beta_k^s=\min_{u \in \mathbb U_k(x_k^s)} E \displaystyle \left\{g(x_k^s,u,w_k) + \tilde J_{k+1} (f_k(x_k^s,u,w_k),r_{k+1}) \right\} (\#eq:apprinv-fvi-1)
 \end{equation}
 \begin{equation}
-r_k = \arg \min_r \sum_{s=1}^q (\tilde J_k(x_k^s,r) - \beta_k^s)^2 \tag{3.43}
+r_k = \arg \min_r \sum_{s=1}^q (\tilde J_k(x_k^s,r) - \beta_k^s)^2 (\#eq:apprinv-fvi-2)
 \end{equation}
 
 The next question is how to choose the most suitable class of functions, which is called _approximation architecture_. It is obvious that approximation architecture can greatly affect the performance of the approximation and the difficulty of training. The most popular architecture is _neural networks_, which are widely used in _reinforcement learning_, but the optimization process is difficult and the optimality is not guaranteed. We will start with a simpler linear feature-based approximation architecture. 
@@ -2016,13 +2099,13 @@ The policy $\bar \pi=\{\bar\mu_0,...,\bar\mu_{N-1}\}$ thus obtained is called th
 **Definition 3.1 (One-step Rollout Algorithm)** We can get an improved policy from the base policy $\pi$
 
 \begin{equation}
-\bar\mu_k(x_k) = \arg\min_{u_k\in\mathbb U_k(x_k)} E\left\{g_k(x_k,u_k,w_k)+\tilde J_{k+1}(f_k(x_k,u_k,w_k))\right\} \tag{3.44}
+\bar\mu_k(x_k) = \arg\min_{u_k\in\mathbb U_k(x_k)} E\left\{g_k(x_k,u_k,w_k)+\tilde J_{k+1}(f_k(x_k,u_k,w_k))\right\} (\#eq:apprinv-rollout)
 \end{equation}
 
 where $\tilde J_{k+1}$ is the corresponding cost-to-go function of the base policy $\pi$. If we use $H_{k+1}$ to represent the cost-to-go function of the base policy $\pi$, the rollout algorithm will be: 
 
 \begin{equation}
-\bar\mu_k(x_k) = \arg\min_{u_k\in\mathbb U_k(x_k)} E\left\{g_k(x_k,u_k,w_k)+H_{k+1}(f_k(x_k,u_k,w_k))\right\} \tag{3.45}
+\bar\mu_k(x_k) = \arg\min_{u_k\in\mathbb U_k(x_k)} E\left\{g_k(x_k,u_k,w_k)+H_{k+1}(f_k(x_k,u_k,w_k))\right\} (\#eq:apprinv-rollout-2)
 \end{equation}
 
 In the control system, after the current state $x_k$ is revealed, we calculate the cost-to-go function $H_{k+1}$ of the known base policy $\pi$ and conduct one-step lookahead minimization to find $\bar\mu_k(x_k)$ and feed it into the system immediately. 
@@ -2052,7 +2135,7 @@ so now the sequential improvement property could also be written as:
 We will now show that the rollout algorithm obtained with a base policy with sequential improvement property yields no worse cost than the base policy. In particular, consider the rollout policy $\tilde \pi = \{\tilde \mu_0, ..., \tilde \mu_{N-1}\}$, and let $J_{k, \tilde \pi} (x_k)$ denote the cost obtained with $\tilde \pi$ starting from $x_k$. We claim that 
 
 \begin{equation}
-J_{k,\tilde \pi} (x_k) \leq H_k(x_k), for \ all \ x_k \ and \ k \tag{3.46}
+J_{k,\tilde \pi} (x_k) \leq H_k(x_k), for \ all \ x_k \ and \ k (\#eq:apprinv-cost-improvement)
 \end{equation}
 :::
 :::
@@ -2087,7 +2170,7 @@ This completes the induction proof of the cost improvement property \@ref(eq:app
 In most cases, we will use the approximate version of the cost-to-go $\tilde H_{k+1}$ to simplify the calculation. So the rollout algorithm will be: 
 
 \begin{equation}
-\bar\mu_k(x_k) = \arg\min_{u_k\in\mathbb U_k(x_k)} E\left\{g_k(x_k,u_k,w_k)+\tilde H_{k+1}(f_k(x_k,u_k,w_k))\right\} \tag{3.47}
+\bar\mu_k(x_k) = \arg\min_{u_k\in\mathbb U_k(x_k)} E\left\{g_k(x_k,u_k,w_k)+\tilde H_{k+1}(f_k(x_k,u_k,w_k))\right\} (\#eq:apprinv-rollout-3)
 \end{equation}
 
 There are two variants to handle the computational difficulties, deterministic case, and stochastic case. 

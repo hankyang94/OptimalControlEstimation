@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-10-07" />
+<meta name="date" content="2023-10-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -208,7 +208,7 @@ div.csl-indent {
 <li class="chapter" data-level="3.3.2" data-path="approximatedp.html"><a href="approximatedp.html#controllability-reachability-and-invariance"><i class="fa fa-check"></i><b>3.3.2</b> Controllability, Reachability, and Invariance</a></li>
 <li class="chapter" data-level="3.3.3" data-path="approximatedp.html"><a href="approximatedp.html#basic-formulation-for-linear-systems"><i class="fa fa-check"></i><b>3.3.3</b> Basic Formulation for Linear Systems</a></li>
 <li class="chapter" data-level="3.3.4" data-path="approximatedp.html"><a href="approximatedp.html#persistent-feasibility"><i class="fa fa-check"></i><b>3.3.4</b> Persistent Feasibility</a></li>
-<li class="chapter" data-level="3.3.5" data-path="approximatedp.html"><a href="approximatedp.html#stability"><i class="fa fa-check"></i><b>3.3.5</b> Stability</a></li>
+<li class="chapter" data-level="3.3.5" data-path="approximatedp.html"><a href="approximatedp.html#mpc-stability"><i class="fa fa-check"></i><b>3.3.5</b> Stability</a></li>
 <li class="chapter" data-level="3.3.6" data-path="approximatedp.html"><a href="approximatedp.html#explicit-mpc"><i class="fa fa-check"></i><b>3.3.6</b> Explicit MPC</a></li>
 </ul></li>
 <li class="chapter" data-level="3.4" data-path="approximatedp.html"><a href="approximatedp.html#policy-gradient"><i class="fa fa-check"></i><b>3.4</b> Policy Gradient</a></li>
@@ -222,9 +222,9 @@ div.csl-indent {
 <li class="chapter" data-level="4.5" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#infinite-horizon-problems"><i class="fa fa-check"></i><b>4.5</b> Infinite-Horizon Problems</a></li>
 <li class="chapter" data-level="4.6" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#viscosity-solution"><i class="fa fa-check"></i><b>4.6</b> Viscosity Solution</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="approximatedp.html"><a href="approximatedp.html#stability"><i class="fa fa-check"></i><b>5</b> Stability Analysis</a>
+<li class="chapter" data-level="5" data-path="stability.html"><a href="stability.html"><i class="fa fa-check"></i><b>5</b> Stability Analysis</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="stability.html"><a href="stability.html"><i class="fa fa-check"></i><b>5.1</b> Autonomous Systems</a>
+<li class="chapter" data-level="5.1" data-path="stability.html"><a href="stability.html#autonomous-systems"><i class="fa fa-check"></i><b>5.1</b> Autonomous Systems</a>
 <ul>
 <li class="chapter" data-level="5.1.1" data-path="stability.html"><a href="stability.html#concepts-of-stability"><i class="fa fa-check"></i><b>5.1.1</b> Concepts of Stability</a></li>
 <li class="chapter" data-level="5.1.2" data-path="stability.html"><a href="stability.html#stability-by-linearization"><i class="fa fa-check"></i><b>5.1.2</b> Stability by Linearization</a></li>
@@ -371,7 +371,7 @@ div.csl-indent {
 <div id="continuous-time-optimal-control" class="section level1 hasAnchor" number="4">
 <h1><span class="header-section-number">Chapter 4</span> Continuous-time Optimal Control<a href="continuous-time-optimal-control.html#continuous-time-optimal-control" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>So far we have been focusing on stochastic and discrete-time optimal control problems. In this Chapter, we will switch gear to deterministic and continuous-time optimal control (still with continuous state and action space).</p>
-<p>The goal of a continuous-time introduction is threefold. (1) Real-world systems are natively continuous-time. (2) We will see the continuous-time analog of the Bellman principle of optimality in discrete-time (cf. Theorem <a href="formulation.html#thm:bellmanoptimality">1.1</a>). (3) The continuous-time setup is more natural and popular for stability analysis to be introduced in Chapter <a href="approximatedp.html#stability">3.3.5</a>.</p>
+<p>The goal of a continuous-time introduction is threefold. (1) Real-world systems are natively continuous-time. (2) We will see the continuous-time analog of the Bellman principle of optimality in discrete-time (cf. Theorem <a href="formulation.html#thm:bellmanoptimality">1.1</a>). (3) The continuous-time setup is more natural and popular for stability analysis to be introduced in Chapter <a href="stability.html#stability">5</a>.</p>
 <div id="the-basic-problem-1" class="section level2 hasAnchor" number="4.1">
 <h2><span class="header-section-number">4.1</span> The Basic Problem<a href="continuous-time-optimal-control.html#the-basic-problem-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Consider a continuous-time dynamical system
@@ -461,7 +461,7 @@ Then <span class="math inline">\(V(t,x)\)</span> is equal to the optimal cost-to
 </div>
 <div class="proofbox">
 <div class="proof">
-<p><span id="unlabeled-div-11" class="proof"><em>Proof</em>. </span>Let <span class="math inline">\(\{\hat{u}(t) \mid t \in [0,T] \}\)</span> be any admissible control trajectory and let <span class="math inline">\(\hat{x}(t)\)</span> be the resulting state trajectory. From the “<span class="math inline">\(\min\)</span>” in <a href="continuous-time-optimal-control.html#eq:hjb-eqution-formal-1">(4.6)</a>, we know
+<p><span id="unlabeled-div-12" class="proof"><em>Proof</em>. </span>Let <span class="math inline">\(\{\hat{u}(t) \mid t \in [0,T] \}\)</span> be any admissible control trajectory and let <span class="math inline">\(\hat{x}(t)\)</span> be the resulting state trajectory. From the “<span class="math inline">\(\min\)</span>” in <a href="continuous-time-optimal-control.html#eq:hjb-eqution-formal-1">(4.6)</a>, we know
 <span class="math display">\[
 0 \leq g(\hat{x},\hat{u}) + \nabla_t V(t,\hat{x}) + \nabla_x V(t,\hat{x})^T f(\hat{x},\hat{u}) = g(\hat{x},\hat{u}) + \frac{d}{dt} V(t,\hat{x}).
 \]</span>

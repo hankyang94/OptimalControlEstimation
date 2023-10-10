@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-10-07" />
+<meta name="date" content="2023-10-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -208,7 +208,7 @@ div.csl-indent {
 <li class="chapter" data-level="3.3.2" data-path="approximatedp.html"><a href="approximatedp.html#controllability-reachability-and-invariance"><i class="fa fa-check"></i><b>3.3.2</b> Controllability, Reachability, and Invariance</a></li>
 <li class="chapter" data-level="3.3.3" data-path="approximatedp.html"><a href="approximatedp.html#basic-formulation-for-linear-systems"><i class="fa fa-check"></i><b>3.3.3</b> Basic Formulation for Linear Systems</a></li>
 <li class="chapter" data-level="3.3.4" data-path="approximatedp.html"><a href="approximatedp.html#persistent-feasibility"><i class="fa fa-check"></i><b>3.3.4</b> Persistent Feasibility</a></li>
-<li class="chapter" data-level="3.3.5" data-path="approximatedp.html"><a href="approximatedp.html#stability"><i class="fa fa-check"></i><b>3.3.5</b> Stability</a></li>
+<li class="chapter" data-level="3.3.5" data-path="approximatedp.html"><a href="approximatedp.html#mpc-stability"><i class="fa fa-check"></i><b>3.3.5</b> Stability</a></li>
 <li class="chapter" data-level="3.3.6" data-path="approximatedp.html"><a href="approximatedp.html#explicit-mpc"><i class="fa fa-check"></i><b>3.3.6</b> Explicit MPC</a></li>
 </ul></li>
 <li class="chapter" data-level="3.4" data-path="approximatedp.html"><a href="approximatedp.html#policy-gradient"><i class="fa fa-check"></i><b>3.4</b> Policy Gradient</a></li>
@@ -222,9 +222,9 @@ div.csl-indent {
 <li class="chapter" data-level="4.5" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#infinite-horizon-problems"><i class="fa fa-check"></i><b>4.5</b> Infinite-Horizon Problems</a></li>
 <li class="chapter" data-level="4.6" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#viscosity-solution"><i class="fa fa-check"></i><b>4.6</b> Viscosity Solution</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="approximatedp.html"><a href="approximatedp.html#stability"><i class="fa fa-check"></i><b>5</b> Stability Analysis</a>
+<li class="chapter" data-level="5" data-path="stability.html"><a href="stability.html"><i class="fa fa-check"></i><b>5</b> Stability Analysis</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="stability.html"><a href="stability.html"><i class="fa fa-check"></i><b>5.1</b> Autonomous Systems</a>
+<li class="chapter" data-level="5.1" data-path="stability.html"><a href="stability.html#autonomous-systems"><i class="fa fa-check"></i><b>5.1</b> Autonomous Systems</a>
 <ul>
 <li class="chapter" data-level="5.1.1" data-path="stability.html"><a href="stability.html#concepts-of-stability"><i class="fa fa-check"></i><b>5.1.1</b> Concepts of Stability</a></li>
 <li class="chapter" data-level="5.1.2" data-path="stability.html"><a href="stability.html#stability-by-linearization"><i class="fa fa-check"></i><b>5.1.2</b> Stability by Linearization</a></li>
@@ -377,7 +377,7 @@ div.csl-indent {
 y(t) = h(x(t),u(t))
 \]</span>
 potentially plus some noise. In Chapter <a href="output-feedback.html#output-feedback">6</a>, we studied the case where <span class="math inline">\(y\)</span> is part of the state <span class="math inline">\(x\)</span>, often the position <span class="math inline">\(q\)</span> of a second-order system <span class="math inline">\(x=[q;\dot{q}]\)</span>. For example, in the pendulm swing-up example, we assume the angular position <span class="math inline">\(\theta\)</span> is observed, but not the angular velocity <span class="math inline">\(\dot{\theta}\)</span>. However, in many practical applications, the measurement signal <span class="math inline">\(y\)</span> does not directly tell us the position <span class="math inline">\(q\)</span>, and we need to estimate <span class="math inline">\(q\)</span> from <span class="math inline">\(y\)</span>. For instance, a quadcopter needs to estimate its position from its onboard cameras. Once we obtain an estimated <span class="math inline">\(q\)</span> from <span class="math inline">\(y\)</span>, we can use the observer synthesis methods in Chapter <a href="output-feedback.html#output-feedback">6</a> to obtain the full state estimation.</p></li>
-<li><p>The estimation community and the control community are a bit separated (at least in my opinion), despite that they share a lot of common tools, especially <em>optimization</em>. We will see that estimating <span class="math inline">\(q\)</span> from <span class="math inline">\(y\)</span>, where <span class="math inline">\(y\)</span> could be a high-dimensional image, is often formulated as an optimization problem that is difficult to solve. However, using the SOS tool we developed in Chapter <a href="approximatedp.html#stability">3.3.5</a>, we can actually solve the optimization problem to global optimality.</p></li>
+<li><p>The estimation community and the control community are a bit separated (at least in my opinion), despite that they share a lot of common tools, especially <em>optimization</em>. We will see that estimating <span class="math inline">\(q\)</span> from <span class="math inline">\(y\)</span>, where <span class="math inline">\(y\)</span> could be a high-dimensional image, is often formulated as an optimization problem that is difficult to solve. However, using the SOS tool we developed in Chapter <a href="stability.html#stability">5</a>, we can actually solve the optimization problem to global optimality.</p></li>
 </ol>
 <div id="d-rotations-and-poses" class="section level2 hasAnchor" number="7.1">
 <h2><span class="header-section-number">7.1</span> 3D Rotations and Poses<a href="geometric-vision.html#d-rotations-and-poses" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -404,7 +404,7 @@ potentially plus some noise. In Chapter <a href="output-feedback.html#output-fee
 </div>
 <div class="proofbox">
 <div class="proof">
-<p><span id="unlabeled-div-16" class="proof"><em>Proof</em>. </span>We only offer the proof of the last property. Consider any eigenvalue <span class="math inline">\(\lambda\)</span> of <span class="math inline">\(A\)</span>, and <span class="math inline">\(x\)</span> be its eigenvector.
+<p><span id="unlabeled-div-17" class="proof"><em>Proof</em>. </span>We only offer the proof of the last property. Consider any eigenvalue <span class="math inline">\(\lambda\)</span> of <span class="math inline">\(A\)</span>, and <span class="math inline">\(x\)</span> be its eigenvector.
 We have <span class="math inline">\(&lt;x,x&gt; = &lt;A^TAx,x&gt;=&lt;Ax,Ax&gt; = |\lambda|^2&lt;x,x&gt;\)</span>, thus <span class="math inline">\(|\lambda|=1\)</span>.</p>
 </div>
 </div>
@@ -421,7 +421,7 @@ We have <span class="math inline">\(&lt;x,x&gt; = &lt;A^TAx,x&gt;=&lt;Ax,Ax&gt; 
 </div>
 <div class="proofbox">
 <div class="proof">
-<p><span id="unlabeled-div-17" class="proof"><em>Proof</em>. </span>We can only prove the last property.</p>
+<p><span id="unlabeled-div-18" class="proof"><em>Proof</em>. </span>We can only prove the last property.</p>
 <p>From the property of orthogonal matrix, we know that all eigenvalues have modulus one. First, note that there must exist at least one real eigenvalue. Because eigenvalues with nonzero imaginary parts always come in pair and 3 is an odd number.</p>
 <p>Then there are two possible cases: (1) All the eigenvalues are real; (2) There is only one eigenvalue.</p>
 <p>For case one, note that the determinant of a matrix is the product of all eigenvalues, then rotation matrix can’t have all the eigenvalues -1.</p>
@@ -662,7 +662,7 @@ Figure 7.2: Sphere and tangent space
 </div>
 <div class="proofbox">
 <div class="proof">
-<p><span id="unlabeled-div-18" class="proof"><em>Proof</em>. </span>Consider a <span class="math inline">\(3\times 3\)</span> skew symmetric matrix <span class="math inline">\(A = \begin{bmatrix} 0 &amp;-c &amp;b\\c &amp;0 &amp;-a\\-b &amp;a &amp;0 \end{bmatrix}\)</span>, define <span class="math inline">\(w = \begin{bmatrix} a\\b\\c \end{bmatrix}, \hat{w} = w/\|w\|, \theta=\|w\|\)</span>. Then <span class="math inline">\(A = w_\times\)</span>. Consider <span class="math inline">\(\hat{w}_\times\)</span>, using the properties of the cross product, we have:<span class="math inline">\(\hat{w}^3_\times = -\hat{w}_\times\)</span>. Thus we can know that:
+<p><span id="unlabeled-div-19" class="proof"><em>Proof</em>. </span>Consider a <span class="math inline">\(3\times 3\)</span> skew symmetric matrix <span class="math inline">\(A = \begin{bmatrix} 0 &amp;-c &amp;b\\c &amp;0 &amp;-a\\-b &amp;a &amp;0 \end{bmatrix}\)</span>, define <span class="math inline">\(w = \begin{bmatrix} a\\b\\c \end{bmatrix}, \hat{w} = w/\|w\|, \theta=\|w\|\)</span>. Then <span class="math inline">\(A = w_\times\)</span>. Consider <span class="math inline">\(\hat{w}_\times\)</span>, using the properties of the cross product, we have:<span class="math inline">\(\hat{w}^3_\times = -\hat{w}_\times\)</span>. Thus we can know that:
 <span class="math display">\[\begin{align}
     \exp(A) &amp;= I + (1-\frac{\theta^3}{3!}+\frac{\theta^5}{5!}+\dots)\hat{w}_\times + (\frac{\theta^2}{2!}-\frac{\theta^4}{4!}+\frac{\theta^6}{6!})\hat{w}_\times^2\\
     &amp;= I + \frac{\sin\theta}{\theta}A + \frac{1-\cos\theta}{\theta^2}A^2
