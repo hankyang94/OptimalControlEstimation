@@ -1349,7 +1349,7 @@ This shows that \@ref(eq:positive-invariant-geometric) is a sufficient and neces
 
 Theorem \@ref(thm:geometric-condition-for-invariance) immediately suggests an algoithm for computing (control) invariant sets, as we will describe in the next section.
 
-#### Computation of Invariant Sets 
+#### Computation of Invariant Sets {#mpc-compute-control-invariant-set}
 
 Observe that the geometric conditions \@ref(eq:positive-invariant-geometric) and \@ref(eq:control-invariant-geometric) are equivalent to the following conditions 
 $$
@@ -1679,6 +1679,8 @@ knitr::include_graphics('images/mpc_linear_effect_parameter.png')
 ### Persistent Feasibility
 Under what conditions can we guarantee the RHC subproblem \@ref(eq:linear-mpc-subroutine) is always feasible? 
 
+Intuitively, we will show that, by designing the terminal constraint set $\mathcal{X}_f$, we can guarantee the configuration of the feasible sets will look like choice 2 in Example \@ref(exm:compute-calXi-double-integrator).
+
 There are various sets here of interest for answering this question.
 
 - $\mathcal{C}_{\infty}$: The maximal control invariant set $\mathcal{C}_{\infty}$ is only affected by the system dynamics \@ref(eq:mpc-linear-system) and the constraint sets $\mathcal{X} \times \mathcal{U}$. It is the largest set over which we can expect _any_ controller to work, because otherwise the system trajectory will blow up.
@@ -1769,7 +1771,7 @@ This shows $\mathcal{X}_i$ is control invariant.
 
 Persistent feasibility does not guarantee the closed-loop system will converge to the origin. In fact, from Theorem \@ref(thm:sufficient-feasibility-terminal), it is clear that if the system starts at $x_0 \in \mathcal{X}_0$, then we can only guarantee $x_t \in \mathcal{X}_1$ for all $t \geq 0$. 
 
-### Stability
+### Stability {#mpc-stability}
 
 We now answer the question of how can we guarantee the RHC controller will drive the system to the desired origin. 
 
@@ -1794,9 +1796,106 @@ Then, the origin of the closed-loop system \@ref(eq:mpc-closed-loop) is asymptot
 :::
 :::
 
-Let us interpret Theorem \@ref(thm:mpc-stability) before proving it. It should be clear that the first three assumptions are easy to satisfy. For example, if we choose $p(x) = x^T P x$ and $q(x,u) = x^T Q x + u^T R u$ with $P, Q, R \succ 0$, then assumption 1 is satisfied. Usually $\mathcal{X}$ and $\mathcal{U}$ are both polyhedral sets containing the origin in the interior, so assumption 2 also holds naturally. Finding a control invariant set $\mathcal{X}_f$ is not a trivial task but there exists numerical algorithms for this task. After we find a control invariant $\mathcal{X}_f$, by Theorem \@ref(thm:sufficient-feasibility-terminal), we know persistent feasibility will hold.
+Let us interpret Theorem \@ref(thm:mpc-stability) before proving it. It should be clear that the first three assumptions are easy to satisfy. For example, if we choose $p(x) = x^T P x$ and $q(x,u) = x^T Q x + u^T R u$ with $P, Q, R \succ 0$, then assumption 1 is satisfied. Usually $\mathcal{X}$ and $\mathcal{U}$ are both polyhedral sets containing the origin in the interior, so assumption 2 also holds naturally. Finding a control invariant set $\mathcal{X}_f$ is not a trivial task but there exists numerical algorithms for this task (e.g., using the algorithms introduced in Section \@ref(mpc-compute-control-invariant-set)). After we find a control invariant $\mathcal{X}_f$, by Theorem \@ref(thm:sufficient-feasibility-terminal), we know persistent feasibility will hold.
 
-Assumption 4 needs some work. 
+We now prove the theorem by showing that Assumption 4 guarantees stability. Before we show the proof, we need the concept of a _Lyapunov function_. Below we introduce Lyapunov function for a discrete-time dynamical system, but we will study more details of Lyapunov function for continuous-time dynamical systems in Chapter \@ref(stability).
+
+::: {.theorembox}
+::: {.lemma #lyapunov-stability-discrete-time name="Discrete-time Lyapunov Function"}
+Consider the discrete-time autonomous system \@ref(eq:mpc-autonomous-system), restated below for convenience:
+$$
+x_{t+1} = f_a(x_t),
+$$
+and assume $x=0$ is an equilibrium point of the system, i.e., $0 = f_a (0)$ (if the system starts at the origin, it stays at the origin). Let $\Omega \subset \mathbb{R}^n$ be a closed and bounded set containing the origin.
+If there exists a function $V: \mathbb{R}^n \rightarrow \mathbb{R}$ that is (a) continuous at the origin, (b) finite for every $x \in \Omega$, and (c) satisfies 
+
+1. $V$ is positive definite: $V(0) = 0$ and $V(x) > 0,\forall x \in \Omega \backslash \{ 0\}$,
+
+2. $V(x_{t+1}) - V(x_t) \leq - \alpha(x_t) < 0$ for any $x_t \in \Omega \backslash \{ 0\}$,
+
+where $\alpha: \mathbb{R}^n \rightarrow \mathbb{R}$ is a continuous positive definite function. Then $x=0$ is asymptotically stable in $\Omega$, i.e, if the system starts within $\Omega$, then its trajectory tends to $0$ as $t \rightarrow \infty$.
+
+A function $V$ satisfying the conditions above is called a Lyapunov function for the system.
+:::
+:::
+
+One can think of the Lyapunov function $V$ as an energy function for the system \@ref(eq:mpc-autonomous-system) that maps a system state to a single scalar. Condition 1 in Lemma \@ref(lem:lyapunov-stability-discrete-time) states that $V$ (the energy function) is strictly positive except at the origin. Condition 2 in Lemma \@ref(lem:lyapunov-stability-discrete-time) states that, the system energy $V$ is strictly decreasing along any system trajectory. Therefore, we conclude that $V$ must converge to $V=0$, and hence any state trajectory must converge to the origin.
+
+We will now use Lemma \@ref(lem:lyapunov-stability-discrete-time) to prove RHC stability under Theorem \@ref(thm:mpc-stability).
+
+::: {.proofbox}
+::: {.proof}
+Our goal is to prove that the optimal cost of the RHC problem \@ref(eq:linear-mpc-subroutine), $J_t^\star(x_t)$, is a Lyapunov function for the closed-loop system \@ref(eq:mpc-closed-loop) on the domain $\mathcal{X}_0$. Then using Lemma \@ref(lem:lyapunov-stability-discrete-time) we can conclude that the closed-loop system \@ref(eq:mpc-closed-loop) will converge to the origin.
+
+**Positive definite**. Clearly, we have $J_t^\star(0) = 0$ by the positive definiteness of $p$ and $q$ and the fact that $x=0$ is an equilibrium point of the linear system \@ref(eq:mpc-linear-system). For $x_t \neq 0$, it is also clear that $J_t^\star(x) > 0$. Therefore, $J_t^\star(x)$ is positive definite on $\mathcal{X}_0$.
+
+**Strictly decrease**. It suffices to show $J_1^\star(x_1) - J_0^\star(x_0) < 0$ because the constraints of the RHC problem \@ref(eq:linear-mpc-subroutine) is time-invariant. Pick any $x_0 \in \mathcal{X}_0$, and let 
+\begin{equation}
+\left( u^\star(0),u^\star(1),\dots,u^\star(N-1) \right)
+(\#eq:mpc-stability-proof-control-1)
+\end{equation}
+be an optimal control trajectory to problem \@ref(eq:linear-mpc-subroutine). Denote 
+\begin{equation}
+\left( x_0,x(1),\dots,x(N) \right)
+(\#eq:mpc-stability-proof-state-1)
+\end{equation} 
+as the associated optimal state trajectory for problem \@ref(eq:linear-mpc-subroutine). The RHC controller will apply $u^\star(0)$ to the system, leading to the next state 
+$$
+x_1 = x(1) = A x_0 + B u^\star(0).
+$$
+Then we will solve problem \@ref(eq:linear-mpc-subroutine) to get $J^\star_1(x_1)$, and we want to show $J^\star_1(x_1) < J^\star_0(x_0)$. Towards this, we will construct a feasible solution to \@ref(eq:linear-mpc-subroutine) starting at $x_1$, and hence an upper bound on $J^\star_1(x_1)$. Consider the control sequence 
+\begin{equation}
+\left( u^\star(1),\dots,u^\star(N-1),v \right)
+(\#eq:mpc-stability-proof-control-2)
+\end{equation}
+which is different from the control sequence in \@ref(eq:mpc-stability-proof-control-1) by removing $u^\star(0)$ and appending $v$. The corresponding state trajectory to \@ref(eq:mpc-stability-proof-control-2) is 
+\begin{equation}
+\left( x_1 = x(1), x(2),\dots,x(N), Ax(N) + Bv \right)
+(\#eq:mpc-stability-proof-state-2)
+\end{equation}
+which is different from the state trajectory in \@ref(eq:mpc-stability-proof-state-1) by removing $x_0$ and appending $A x(N) + Bv$. Since $x(N) \in \mathcal{X}_f$ and $\mathcal{X}_f$ is control invariant, there exists $v$ such that $Ax(N) + Bv \in \mathcal{X}_f$ and the corresponding control trajectory \@ref(eq:mpc-stability-proof-control-2) is feasible. Applying the control trajectory \@ref(eq:mpc-stability-proof-control-2) to the optimization problem \@ref(eq:linear-mpc-subroutine) will lead to the total cost
+$$
+J_1(x_1) = J_0^\star(x_0) - q(x_0,u^\star(0)) \underbrace{- p(x(N)) + q(x(N),v) + p(Ax(N) + Bv)}_{s(x(N),v)}.
+$$
+Now by assumption 4 in Theorem \@ref(thm:mpc-stability), we can choose $v$ such that the sum $s(x(N),v) \leq 0$. Consequently, we have
+$$
+J_1^\star(x_1) \leq J_1(x_1) \leq J_0^\star(x_0) - q(x_0,u^\star(0)),
+$$
+which leads to 
+$$
+J_1^\star(x_1) - J_0^\star(x_0) \leq - q(x_0,u^\star(0)).
+$$
+Because the choice of $x_0$ was arbitrary, we conclude that $J_t^\star(x_t)$ strictly decreases along any system trajectory that starts within $\mathcal{X}_0$.
+
+**Continuity at the origin**. We will show that $J_0^\star(x) \leq p(x)$ for any $x \in \mathcal{X}_f$. With this argument, since $p(x)$ is positive definite and continuous, then $J_0^\star(x)$ must be continuous at the origin. We now prove $J_0^\star(x) \leq p(x)$ for any $x \in \mathcal{X}_f$. Since $\mathcal{X}_f$ is control invariant, pick any $x \in \mathcal{X}_f$, there exists a sequence of controls $(u(0),u(1),\dots,u(N-1))$ such that the state trajectory $(x(0)=x,x(1),\dots,x(N))$ stays in $\mathcal{X}_f$. Such a control sequence lead to an upper bound on $J^\star_0(x)$:
+$$
+J^\star_0(x(0)) \leq p(x(N)) + \sum_{i=0}^{N-1} q(x(i),u(i)) = p(x(0)) + \sum_{i=0}^{N-1} \left( q(x(i),u(i)) + p(x(i+1)) - p(x(i)) \right),
+$$
+since each $x(i) \in \mathcal{X}_f$, according to Assumption 4, we can choose $u(i)$ such that 
+$$
+J^\star_0(x(0)) \leq p(x(0))
+$$
+for any $x(0) \in \mathcal{X}_f$.
+
+In conclusion, we have shown that $J^\star_t(x_t)$ is a Lyapunov function, and by Lemma \@ref(lem:lyapunov-stability-discrete-time), the closed-loop system is asymptotically stable.
+
+:::
+:::
+
+A function $p(x)$ that satisfies Assumption 4 in Theorem \@ref(thm:mpc-stability) is typicalled known as a _control Lyapunov function_.
+
+Now two natural problems arise:
+
+1. Given $p(x)$, how to verify if assumption 3 holds in Theorem \@ref(thm:mpc-stability)?
+
+2. How to synthesize a $p(x)$ that satisfies assumption 3 in Theorem \@ref(thm:mpc-stability)?
+
+Unfortunately, both problems are hard. To see this, suppose we are given a candidate function $p(x) = x^T P x$ with $P \succ 0$ that is clearly positive definite. Assume $q(x,u) = x^T Q x + u^T R u$ with $Q, R \succ 0$ and $\mathcal{U}, \mathcal{X}_f$ are given polyhedral sets. Then verifying if $p(x)$ satisifies Assumption 4 boils down to checking if
+$$
+\min_{u \in \mathcal{U}, Ax + Bu \in \mathcal{X}_f} x^T Q x + u^T R u + (Ax + Bu)^T P (Ax + Bu) - x^T P x
+$$
+is non-positive for any possible $x \in \mathcal{X}_f$. Although for each possible $x$, the above problem is a convex optimization problem, there are an infinite number of points in the set $\mathcal{X}_f$ and enumerating over all points is a daunting task. We will see in Chapter \@ref(stability) that convex relaxations, in particular [semidefinite relaxations](https://hankyang.seas.harvard.edu/Semidefinite/), can help us partially solve these hard problems.
+
 
 ### Explicit MPC
 
