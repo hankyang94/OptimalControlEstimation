@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-10-10" />
+<meta name="date" content="2023-10-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -2023,6 +2023,23 @@ for any <span class="math inline">\(x(0) \in \mathcal{X}_f\)</span>.</p>
 \min_{u \in \mathcal{U}, Ax + Bu \in \mathcal{X}_f} x^T Q x + u^T R u + (Ax + Bu)^T P (Ax + Bu) - x^T P x
 \]</span>
 is non-positive for any possible <span class="math inline">\(x \in \mathcal{X}_f\)</span>. Although for each possible <span class="math inline">\(x\)</span>, the above problem is a convex optimization problem, there are an infinite number of points in the set <span class="math inline">\(\mathcal{X}_f\)</span> and enumerating over all points is a daunting task. We will see in Chapter <a href="stability.html#stability">5</a> that convex relaxations, in particular <a href="https://hankyang.seas.harvard.edu/Semidefinite/">semidefinite relaxations</a>, can help us partially solve these hard problems.</p>
+<p><strong>A simple control lyapunov function</strong>. One can solve the infinite-horizon unconstrained LQR problem
+<span class="math display">\[
+\min_{u_t} \sum_{t=0}^{\infty}x_t ^T Q x_t + u_t^T R u_t,
+\]</span>
+for which the optimal cost-to-go is
+<span class="math display">\[
+J_{\infty}(x) = x^T S x,
+\]</span>
+with <span class="math inline">\(S\)</span> the solution to the algebraic Riccati equation <a href="exactdp.html#eq:algebraic-riccati">(2.13)</a>. Denote
+<span class="math display">\[
+u_t = \Pi_{\mathcal{U}} (- K x_t)
+\]</span>
+as the optimal controller (<span class="math inline">\(\Pi_{\mathcal{U}}\)</span> is the projection of the controller to the feasible set <span class="math inline">\(\mathcal{U}\)</span>), and use <span class="math inline">\(\mathcal{X}_f\)</span> as the maximal positive invariant set of the closed-loop system
+<span class="math display">\[
+x_{t+1} = A x_t + B u_t.
+\]</span>
+Then <span class="math inline">\(S\)</span> is a control Lyapunov function over the set <span class="math inline">\(\mathcal{X}_f\)</span>.</p>
 </div>
 <div id="explicit-mpc" class="section level3 hasAnchor" number="3.3.6">
 <h3><span class="header-section-number">3.3.6</span> Explicit MPC<a href="approximatedp.html#explicit-mpc" class="anchor-section" aria-label="Anchor link to header"></a></h3>
