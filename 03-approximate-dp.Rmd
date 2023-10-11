@@ -1896,6 +1896,24 @@ $$
 $$
 is non-positive for any possible $x \in \mathcal{X}_f$. Although for each possible $x$, the above problem is a convex optimization problem, there are an infinite number of points in the set $\mathcal{X}_f$ and enumerating over all points is a daunting task. We will see in Chapter \@ref(stability) that convex relaxations, in particular [semidefinite relaxations](https://hankyang.seas.harvard.edu/Semidefinite/), can help us partially solve these hard problems.
 
+**A simple control lyapunov function**. One can solve the infinite-horizon unconstrained LQR problem
+$$
+\min_{u_t} \sum_{t=0}^{\infty}x_t ^T Q x_t + u_t^T R u_t,
+$$
+for which the optimal cost-to-go is
+$$
+J_{\infty}(x) = x^T S x, 
+$$
+with $S$ the solution to the algebraic Riccati equation \@ref(eq:algebraic-riccati). Denote
+$$
+u_t = \Pi_{\mathcal{U}} (- K x_t)
+$$
+as the optimal controller ($\Pi_{\mathcal{U}}$ is the projection of the controller to the feasible set $\mathcal{U}$), and use $\mathcal{X}_f$ as the maximal positive invariant set of the closed-loop system 
+$$
+x_{t+1} = A x_t + B u_t.
+$$
+Then $S$ is a control Lyapunov function over the set $\mathcal{X}_f$.
+
 
 ### Explicit MPC
 
