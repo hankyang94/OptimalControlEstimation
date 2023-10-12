@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-10-11" />
+<meta name="date" content="2023-10-12" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -645,6 +645,37 @@ x_1
 <li><p>(Bonus) Beyond iterative algorithms, there is another formulation of the problem in linear programming. Try to implement the following problem:
 <span class="math display">\[\max_{J} \sum_{x}J(x),\quad s.t. J(x)\le g(x,u) + \gamma\sum_{x&#39;}P(x&#39;|x,u)J(x&#39;),\ \forall x,u.\]</span>
 What can you find? (Hint: formulate the problem as a linear programming problem.)</p></li>
+</ol>
+</div>
+</div>
+<p> </p>
+<div class="exercisebox">
+<div class="exercise">
+<p><span id="exr:double-integrator-mpc" class="exercise"><strong>Exercise 9.6  (Stability of Receding Horizon Controller for the Double Integrator) </strong></span>Consider the following discrete-time double integrator dynamics
+<span class="math display">\[
+x_{t+1} = \underbrace{\begin{bmatrix} 1 &amp; 1 \\ 0 &amp; 1 \end{bmatrix}}_{A} x_t + \underbrace{\begin{bmatrix} 0 \\ 1 \end{bmatrix}}_{B} u_t,
+\]</span>
+with control constraints
+<span class="math display">\[
+u \in \mathcal{U} = [-1, 1].
+\]</span>
+We do not enforce any state constraint on <span class="math inline">\(x\)</span>, that is <span class="math inline">\(\mathcal{X} = \mathbb{R}^2\)</span>.</p>
+<p><strong>Receding horizon controller</strong>. We aim to regulate the system at the origin, and design the following receding horizon controller (RHC) with horizon <span class="math inline">\(N=3\)</span>
+<span class="math display" id="eq:double-integrator-rhc-exercise">\[\begin{equation}
+\begin{split}
+\min_{u(0),\dots,u(N-1)} &amp; \quad x(N)^T P x(N) + \sum_{k=0}^{N-1} x(k)^T Q x(k) + u(k)^T R u(k) \\
+\text{subject to} &amp; \quad u(k) \in \mathcal{U}, \forall k=0,\dots,N-1 \\
+&amp; \quad x(k+1) = A x(k) + B u(k), \forall k = 0,\dots,N-1 \\
+&amp; \quad x(0) = x_t,
+\end{split}
+\tag{9.8}
+\end{equation}\]</span>
+where <span class="math inline">\(x_t\)</span> is the system state at time <span class="math inline">\(t\)</span>, and <span class="math inline">\(P,Q,R\)</span> matrices are designed as follows
+<span class="math display">\[
+Q = \begin{bmatrix} 1 &amp; 0 \\ 0 &amp; 0 \end{bmatrix}, \quad R = 1, \quad P = \begin{bmatrix} 0.1 &amp; 0 \\ 0 &amp; 0.1 \end{bmatrix}.
+\]</span></p>
+<ol style="list-style-type: lower-alpha">
+<li>Implement the RHC in <a href="psets.html#eq:double-integrator-rhc-exercise">(9.8)</a>, and run the RHC with initial system state <span class="math inline">\(x_0 = [2;1]\)</span>. Plot the system trajectory on a 2D plane like Fig. <a href="approximatedp.html#fig:double-integrator-mpc-two-initial-states">3.24</a>.</li>
 </ol>
 </div>
 </div>
