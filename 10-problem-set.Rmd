@@ -321,6 +321,42 @@ What can you find? (Hint: formulate the problem as a linear programming problem.
 :::
 :::
 
+&nbsp;
+
+::: {.exercisebox}
+::: {.exercise #double-integrator-mpc name="Stability of Receding Horizon Controller for the Double Integrator"}
+Consider the following discrete-time double integrator dynamics
+$$
+x_{t+1} = \underbrace{\begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix}}_{A} x_t + \underbrace{\begin{bmatrix} 0 \\ 1 \end{bmatrix}}_{B} u_t, 
+$$
+with control constraints
+$$
+u \in \mathcal{U} = [-1, 1].
+$$
+We do not enforce any state constraint on $x$, that is $\mathcal{X} = \mathbb{R}^2$.
+
+**Receding horizon controller**. We aim to regulate the system at the origin, and design the following receding horizon controller (RHC) with horizon $N=3$
+\begin{equation}
+\begin{split}
+\min_{u(0),\dots,u(N-1)} & \quad x(N)^T P x(N) + \sum_{k=0}^{N-1} x(k)^T Q x(k) + u(k)^T R u(k) \\
+\text{subject to} & \quad u(k) \in \mathcal{U}, \forall k=0,\dots,N-1 \\
+& \quad x(k+1) = A x(k) + B u(k), \forall k = 0,\dots,N-1 \\
+& \quad x(0) = x_t,
+\end{split}
+(\#eq:double-integrator-rhc-exercise)
+\end{equation}
+where $x_t$ is the system state at time $t$, and $P,Q,R$ matrices are designed as follows
+$$
+Q = \begin{bmatrix} 1 & 0 \\ 0 & 0 \end{bmatrix}, \quad R = 1, \quad P = \begin{bmatrix} 0.1 & 0 \\ 0 & 0.1 \end{bmatrix}.
+$$
+
+a. Implement the RHC in \@ref(eq:double-integrator-rhc-exercise), and run the RHC with initial system state $x_0 = [2;1]$. Plot the system trajectory on a 2D plane like Fig. \@ref(fig:double-integrator-mpc-two-initial-states).
+
+
+:::
+:::
+
+
 
 
 # Acknowledgement {-}

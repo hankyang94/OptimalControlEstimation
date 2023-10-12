@@ -1912,7 +1912,7 @@ as the optimal controller ($\Pi_{\mathcal{U}}$ is the projection of the controll
 $$
 x_{t+1} = A x_t + B u_t.
 $$
-Then $S$ is a control Lyapunov function over the set $\mathcal{X}_f$.
+Then $J_{\infty}(x) = x^T S x$ is a control Lyapunov function over the set $\mathcal{X}_f$.
 
 
 ### Explicit MPC
