@@ -426,7 +426,7 @@ e. From the above questions, we get the intuition of how the MPT compute control
 
 &nbsp;&nbsp;&nbsp;&nbsp; $f^*\leftarrow\max_x H_i x,\ s.t. H_{\mathcal{I}}x\le h_{\mathcal{I}}, H_i x\le h_i + 1$
 
-&nbsp;&nbsp;&nbsp;&nbsp; *%% $H_i$ is the $i$-th row of $H$, $H_\mathcal{I}$ concatenates rows of $H$ with index in $\mathcal{I}$*
+&nbsp;&nbsp;&nbsp;&nbsp; *%% $H_i$ is the $i$-th row of $H$, $H_{\mathcal{I}}$ concatenates rows of $H$ with index in $\mathcal{I}$*
 
 &nbsp;&nbsp;&nbsp;&nbsp; **If $f^* > h_i$ Then **$\mathcal{I}\leftarrow \mathcal{I}\cup \{i\}$
 
