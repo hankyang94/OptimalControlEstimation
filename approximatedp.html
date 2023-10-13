@@ -1486,7 +1486,7 @@ Figure 3.19: Computation of controllable sets using MPT. The bottom plot shifts 
 </div>
 <p><strong>Reachable sets</strong>. We have Definition <a href="approximatedp.html#def:reachable-set">3.4</a> the recursion
 <span class="math display">\[
-\mathcal{R}_0(\mathcal{X}_0) = \mathcal{X}_0, \quad \mathcal{X}_i(\mathcal{X}_0) = \text{Suc}(\mathcal{R}_{i-1}(\mathcal{X}_0)) \cap \mathcal{X}.
+\mathcal{R}_0(\mathcal{X}_0) = \mathcal{X}_0, \quad \mathcal{R}_i(\mathcal{X}_0) = \text{Suc}(\mathcal{R}_{i-1}(\mathcal{X}_0)) \cap \mathcal{X}.
 \]</span>
 To implement the recursion above, we need “<span class="math inline">\(\cap\)</span>” set intersection, which is available via <code>intersect(P,S)</code>, and the “<span class="math inline">\(\text{Suc}(\cdot)\)</span>” successor set operation, which is available as</p>
 <ul>
