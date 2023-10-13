@@ -1244,7 +1244,7 @@ knitr::include_graphics('images/controllable_set_shift.png')
 
 **Reachable sets**. We have Definition \@ref(def:reachable-set) the recursion
 $$
-\mathcal{R}_0(\mathcal{X}_0) = \mathcal{X}_0, \quad \mathcal{X}_i(\mathcal{X}_0) = \text{Suc}(\mathcal{R}_{i-1}(\mathcal{X}_0)) \cap \mathcal{X}.
+\mathcal{R}_0(\mathcal{X}_0) = \mathcal{X}_0, \quad \mathcal{R}_i(\mathcal{X}_0) = \text{Suc}(\mathcal{R}_{i-1}(\mathcal{X}_0)) \cap \mathcal{X}.
 $$
 To implement the recursion above, we need "$\cap$" set intersection, which is available via `intersect(P,S)`, and the "$\text{Suc}(\cdot)$" successor set operation, which is available as
 
