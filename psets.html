@@ -696,6 +696,47 @@ where <span class="math inline">\(S\)</span> can be computed by solving the alge
 </ol>
 </div>
 </div>
+<p> </p>
+<div class="exercisebox">
+<div class="exercise">
+<p><span id="exr:polyhedral" class="exercise"><strong>Exercise 9.7  (Polyhedral Controllable and Reachable Sets) </strong></span>In this exercise, we aim to compute controllable and reachable sets explicitly, rather than implementing MPT.</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>A bounded polyhedron in <span class="math inline">\(\mathbb{R}^n\)</span> can be expressed as the convex hull of a finite set of points (vertices) <span class="math inline">\(V = \{V_1, \ldots, V_k\}\subset \mathbb{R}^n\)</span>. Show that a linear transform of such a polyhedron is simply tranforming its vertices, namely, <span class="math display">\[A\text{conv}(V)+b = \text{conv}(AV)+b,\]</span> where <span class="math inline">\(A\in\mathbb{R}^{m\times n},\ b\in\mathbb{R}^m\)</span>.</p></li>
+<li><p>The exact definition of a (closed) polyhedron <span class="math inline">\(\mathcal{P}\)</span> is a set defined by finite number of linear inequalities <span class="math inline">\(\mathcal{P} = \{x\in\mathbb{R}^n\mid Hx\le h \}\)</span> where <span class="math inline">\(H\in\mathbb{R}^{m\times n},\ h\in\mathbb{R}^m\)</span>. Let <span class="math inline">\(A\in\mathbb{R}^{n\times n}\)</span> be an invertible matrix, <span class="math inline">\(b\in\mathbb{R}^n\)</span>. Suppose the linear transformed polyhedron <span class="math inline">\(A\mathcal{P}+b\)</span> has representation <span class="math display">\[\{y\in\mathbb{R}^n\mid H^\prime y\le h^\prime \}.\]</span> What are <span class="math inline">\(H^\prime\)</span> and <span class="math inline">\(h^\prime\)</span>?</p></li>
+<li><p>With the same setting as Example <a href="approximatedp.html#exm:compute-controllable-reachable-sets">3.10</a>, consider linear system
+<span class="math display">\[
+x_{t+1} = \begin{bmatrix} 1.5 &amp; 0 \\ 1 &amp; -1.5 \end{bmatrix} x_t + \begin{bmatrix} 1 \\ 0 \end{bmatrix} u_t
+\]</span>
+with state and control constraints
+<span class="math display">\[
+\mathcal{X} = [-10,10]^2, \quad \mathcal{U} = [-5,5].
+\]</span>
+Compute <span class="math inline">\(\text{Pre}(\mathcal{X})\)</span> and <span class="math inline">\(\text{Suc}(\mathcal{X})\)</span> in the form of <span class="math inline">\(\{x\in\mathbb{R}^n\mid Hx\le h \}\)</span>. What are the vertices of two sets respectively? <br>
+(Hint: Use the conclusion in (b).)</p></li>
+<li><p>Continued with the results in (c), compute one-step controllable set <span class="math inline">\(\mathcal{K}_1(\mathcal{X}) = \text{Pre}(\mathcal{X}) \cap \mathcal{X}\)</span>.<br>
+(Hint: There are 4 inequalities for each of the two sets. Any redundancy in those 8 inequalities when combining them together?)</p></li>
+<li><p>From the above questions, we get the intuition of how the MPT compute controllable set:</p></li>
+</ol>
+<ol style="list-style-type: lower-roman">
+<li>Obtain the representation of precursor set;</li>
+<li>Intersect the precursor set with the feasible domain <span class="math inline">\(\mathcal{X}\)</span>;</li>
+<li>Remove redundant (useless) inequalities.</li>
+</ol>
+<p>       Provided the following algorithm that removes redundancy of a polyhedral representation, write the codes to find <span class="math inline">\(\mathcal{K}_1(\mathcal{X})\)</span> without using MPT. Does the outcome match your results in (d)?</p>
+<hr />
+<p><strong>Algorithm</strong>: Find redundacy-free representation of a polyhedron</p>
+<hr />
+<p><strong>Input:</strong> <span class="math inline">\(H\in\mathbb{R}^{m\times n}\)</span> and <span class="math inline">\(h\in\mathbb{R}^m\)</span> that represents <span class="math inline">\(\mathcal{P} = \{x\in\mathbb{R}^n\mid Hx\le h \}\)</span></p>
+<p><strong>Output:</strong> <span class="math inline">\(H_0\in\mathbb{R}^{m_0\times n}\)</span> and <span class="math inline">\(h_0\in\mathbb{R}^{m_0}\)</span> that represents <span class="math inline">\(\mathcal{P}\)</span> without redundancy</p>
+<p>   <span class="math inline">\(\mathcal{I} \leftarrow \{1,\ldots, m\}\)</span></p>
+<p>   <strong>For <span class="math inline">\(i=1\)</span> to <span class="math inline">\(m\)</span></strong></p>
+<p>     <span class="math inline">\(\mathcal{I}\leftarrow \mathcal{I}\setminus\{i\}\)</span></p>
+<p>     <span class="math inline">\(f^*\leftarrow\max_x H_i x,\ s.t. H_{\mathcal{I}}x\le h_{\mathcal{I}}, H_i x\le h_i + 1\)</span></p>
+<p>     <em>%% <span class="math inline">\(H_i\)</span> is the <span class="math inline">\(i\)</span>-th row of <span class="math inline">\(H\)</span>, <span class="math inline">\(H_{\mathcal{I}}\)</span> concatenates rows of <span class="math inline">\(H\)</span> with index in <span class="math inline">\(\mathcal{I}\)</span></em></p>
+<p>     <strong>If <span class="math inline">\(f^* &gt; h_i\)</span> Then </strong><span class="math inline">\(\mathcal{I}\leftarrow \mathcal{I}\cup \{i\}\)</span></p>
+<p>   <span class="math inline">\(H_0\leftarrow H_{\mathcal{I}}, h_0\rightarrow h_{\mathcal{I}}\)</span></p>
+</div>
+</div>
 </div>
 <h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div id="refs" class="references csl-bib-body hanging-indent">

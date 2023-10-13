@@ -6629,6 +6629,73 @@ Q = \begin{bmatrix} 1 & 0 \\ 0 & 0 \end{bmatrix}, \quad R = 1, \quad P = \begin{
 
 \end{exercise}
 
+~
+
+\begin{exercise}[Polyhedral Controllable and Reachable Sets]
+\protect\hypertarget{exr:polyhedral}{}\label{exr:polyhedral}In this exercise, we aim to compute controllable and reachable sets explicitly, rather than implementing MPT.
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\item
+  A bounded polyhedron in \(\mathbb{R}^n\) can be expressed as the convex hull of a finite set of points (vertices) \(V = \{V_1, \ldots, V_k\}\subset \mathbb{R}^n\). Show that a linear transform of such a polyhedron is simply tranforming its vertices, namely, \[A\text{conv}(V)+b = \text{conv}(AV)+b,\] where \(A\in\mathbb{R}^{m\times n},\ b\in\mathbb{R}^m\).
+\item
+  The exact definition of a (closed) polyhedron \(\mathcal{P}\) is a set defined by finite number of linear inequalities \(\mathcal{P} = \{x\in\mathbb{R}^n\mid Hx\le h \}\) where \(H\in\mathbb{R}^{m\times n},\ h\in\mathbb{R}^m\). Let \(A\in\mathbb{R}^{n\times n}\) be an invertible matrix, \(b\in\mathbb{R}^n\). Suppose the linear transformed polyhedron \(A\mathcal{P}+b\) has representation \[\{y\in\mathbb{R}^n\mid H^\prime y\le h^\prime \}.\] What are \(H^\prime\) and \(h^\prime\)?
+\item
+  With the same setting as Example \ref{exm:compute-controllable-reachable-sets}, consider linear system
+  \[
+  x_{t+1} = \begin{bmatrix} 1.5 & 0 \\ 1 & -1.5 \end{bmatrix} x_t + \begin{bmatrix} 1 \\ 0 \end{bmatrix} u_t
+  \]
+  with state and control constraints
+  \[
+  \mathcal{X} = [-10,10]^2, \quad \mathcal{U} = [-5,5].
+  \]
+  Compute \(\text{Pre}(\mathcal{X})\) and \(\text{Suc}(\mathcal{X})\) in the form of \(\{x\in\mathbb{R}^n\mid Hx\le h \}\). What are the vertices of two sets respectively?
+  (Hint: Use the conclusion in (b).)
+\item
+  Continued with the results in (c), compute one-step controllable set \(\mathcal{K}_1(\mathcal{X}) = \text{Pre}(\mathcal{X}) \cap \mathcal{X}\).
+  (Hint: There are 4 inequalities for each of the two sets. Any redundancy in those 8 inequalities when combining them together?)
+\item
+  From the above questions, we get the intuition of how the MPT compute controllable set:
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{(\roman{enumi})}
+\tightlist
+\item
+  Obtain the representation of precursor set;
+\item
+  Intersect the precursor set with the feasible domain \(\mathcal{X}\);
+\item
+  Remove redundant (useless) inequalities.
+\end{enumerate}
+
+~~~~~~ Provided the following algorithm that removes redundancy of a polyhedral representation, write the codes to find \(\mathcal{K}_1(\mathcal{X})\) without using MPT. Does the outcome match your results in (d)?
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\textbf{Algorithm}: Find redundacy-free representation of a polyhedron
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\textbf{Input:} \(H\in\mathbb{R}^{m\times n}\) and \(h\in\mathbb{R}^m\) that represents \(\mathcal{P} = \{x\in\mathbb{R}^n\mid Hx\le h \}\)
+
+\textbf{Output:} \(H_0\in\mathbb{R}^{m_0\times n}\) and \(h_0\in\mathbb{R}^{m_0}\) that represents \(\mathcal{P}\) without redundancy
+
+~~ \(\mathcal{I} \leftarrow \{1,\ldots, m\}\)
+
+~~ \textbf{For \(i=1\) to \(m\)}
+
+~~~~ \(\mathcal{I}\leftarrow \mathcal{I}\setminus\{i\}\)
+
+~~~~ \(f^*\leftarrow\max_x H_i x,\ s.t. H_{\mathcal{I}}x\le h_{\mathcal{I}}, H_i x\le h_i + 1\)
+
+~~~~ \emph{\%\% \(H_i\) is the \(i\)-th row of \(H\), \(H_{\mathcal{I}}\) concatenates rows of \(H\) with index in \(\mathcal{I}\)}
+
+~~~~ \textbf{If \(f^* > h_i\) Then }\(\mathcal{I}\leftarrow \mathcal{I}\cup \{i\}\)
+
+~~ \(H_0\leftarrow H_{\mathcal{I}}, h_0\rightarrow h_{\mathcal{I}}\)
+\end{exercise}
+
 \hypertarget{acknowledgement}{%
 \chapter*{Acknowledgement}\label{acknowledgement}}
 \addcontentsline{toc}{chapter}{Acknowledgement}
