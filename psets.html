@@ -712,9 +712,13 @@ with state and control constraints
 \mathcal{X} = [-10,10]^2, \quad \mathcal{U} = [-5,5].
 \]</span>
 Compute <span class="math inline">\(\text{Pre}(\mathcal{X})\)</span> and <span class="math inline">\(\text{Suc}(\mathcal{X})\)</span> in the form of <span class="math inline">\(\{x\in\mathbb{R}^n\mid Hx\le h \}\)</span>. What are the vertices of two sets respectively? <br>
-(Hint: Use the conclusion in (b).)</p></li>
+(Hints: Denote the dynamics as <span class="math inline">\(x_{t+1} = Ax_t+Bu_t\)</span>. For the successor set, <span class="math display">\[\text{Suc}(\mathcal{X}) = \cup_{u\in\mathcal{U}}\{x:\exists x&#39;\in\mathcal{X},\text{ s.t., }Ax&#39;+Bu = x\} = \cup_{u\in\mathcal{U}}(A\mathcal{X} + Bu).\]</span>
+What is <span class="math inline">\(A\mathcal{X} + Bu\)</span> for each <span class="math inline">\(u\)</span>? Will the shape of <span class="math inline">\(A\mathcal{X} + Bu\)</span> change when changing <span class="math inline">\(u\)</span>? The conclusion in (b) might help.<br>
+Similarly, for the precursor set,
+<span class="math display">\[\text{Pre}(\mathcal{X}) = \cup_{u\in\mathcal{U}}\{x:Ax+Bu \in \mathcal{X}\} = \cup_{u\in\mathcal{U}}A^{-1}(\mathcal{X} - Bu).\]</span>
+Mimic the computation of the successor set.)</p></li>
 <li><p>Continued with the results in (c), compute one-step controllable set <span class="math inline">\(\mathcal{K}_1(\mathcal{X}) = \text{Pre}(\mathcal{X}) \cap \mathcal{X}\)</span>.<br>
-(Hint: There are 4 inequalities for each of the two sets. Any redundancy in those 8 inequalities when combining them together?)</p></li>
+(Hints: There are 4 inequalities for each of the two sets. Any redundancy in those 8 inequalities when combining them together?)</p></li>
 <li><p>From the above questions, we get the intuition of how the MPT compute controllable set:</p></li>
 </ol>
 <ol style="list-style-type: lower-roman">

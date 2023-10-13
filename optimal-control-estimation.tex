@@ -6650,10 +6650,14 @@ Q = \begin{bmatrix} 1 & 0 \\ 0 & 0 \end{bmatrix}, \quad R = 1, \quad P = \begin{
   \mathcal{X} = [-10,10]^2, \quad \mathcal{U} = [-5,5].
   \]
   Compute \(\text{Pre}(\mathcal{X})\) and \(\text{Suc}(\mathcal{X})\) in the form of \(\{x\in\mathbb{R}^n\mid Hx\le h \}\). What are the vertices of two sets respectively?
-  (Hint: Use the conclusion in (b).)
+  (Hints: Denote the dynamics as \(x_{t+1} = Ax_t+Bu_t\). For the successor set, \[\text{Suc}(\mathcal{X}) = \cup_{u\in\mathcal{U}}\{x:\exists x'\in\mathcal{X},\text{ s.t., }Ax'+Bu = x\} = \cup_{u\in\mathcal{U}}(A\mathcal{X} + Bu).\]
+  What is \(A\mathcal{X} + Bu\) for each \(u\)? Will the shape of \(A\mathcal{X} + Bu\) change when changing \(u\)? The conclusion in (b) might help.
+  Similarly, for the precursor set,
+  \[\text{Pre}(\mathcal{X}) = \cup_{u\in\mathcal{U}}\{x:Ax+Bu \in \mathcal{X}\} = \cup_{u\in\mathcal{U}}A^{-1}(\mathcal{X} - Bu).\]
+  Mimic the computation of the successor set.)
 \item
   Continued with the results in (c), compute one-step controllable set \(\mathcal{K}_1(\mathcal{X}) = \text{Pre}(\mathcal{X}) \cap \mathcal{X}\).
-  (Hint: There are 4 inequalities for each of the two sets. Any redundancy in those 8 inequalities when combining them together?)
+  (Hints: There are 4 inequalities for each of the two sets. Any redundancy in those 8 inequalities when combining them together?)
 \item
   From the above questions, we get the intuition of how the MPT compute controllable set:
 \end{enumerate}
