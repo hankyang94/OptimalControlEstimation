@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-10-13" />
+<meta name="date" content="2023-10-15" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -559,6 +559,58 @@ and any <span class="math inline">\(u \in \mathbb{U}\)</span> would attain the m
 </div>
 <div id="linear-quadratic-regulator" class="section level2 hasAnchor" number="4.3">
 <h2><span class="header-section-number">4.3</span> Linear Quadratic Regulator<a href="continuous-time-optimal-control.html#linear-quadratic-regulator" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Let us apply the HJB sufficiency Theorem <a href="continuous-time-optimal-control.html#thm:hjbsufficient">4.1</a> to the continuous-time linear quadratic regulator (LQR).</p>
+<p>Consider the linear system
+<span class="math display">\[
+\dot{x}(t) = A x(t) + B u(t),
+\]</span>
+with <span class="math inline">\(x \in \mathbb{R}^n\)</span>, <span class="math inline">\(u \in \mathbb{R}^m\)</span>, and the optimal control problem
+<span class="math display">\[
+\min_{u(t),t\in [0,T]} x(T)^T P x(T) + \int_{t=0}^T (x(t)^T Q x(t) + u(t)^T R u(t)) dt
+\]</span>
+where <span class="math inline">\(P,Q\succeq 0\)</span> and <span class="math inline">\(R \succ 0\)</span>.</p>
+<p>According to Theorem <a href="continuous-time-optimal-control.html#thm:hjbsufficient">4.1</a>, the HJB equation for this problem is
+<span class="math display" id="eq:hjb-finite-horizon-lqr">\[\begin{equation}
+\begin{split}
+0 = \min_{u \in \mathbb{R}^m } \left[ x^T Q x + u^T R u + \nabla_t V(t,x) + \nabla_x V(t,x)^T f(x,u) \right], \quad \forall t,x, \\
+V(T,x) = x^T P x, \quad \forall x.
+\end{split}
+\tag{4.11}
+\end{equation}\]</span></p>
+<p>Let us guess a solution of the following form,
+<span class="math display">\[
+V(t,x) = x^T S(t) x, \quad S(t) \in \mathbb{S}^n,
+\]</span>
+where <span class="math inline">\(\mathbb{S}^n\)</span> is the set of <span class="math inline">\(n \times n\)</span> symmetric matrices.</p>
+<p>The second equation in the HJB <a href="continuous-time-optimal-control.html#eq:hjb-finite-horizon-lqr">(4.11)</a> implies
+<span class="math display" id="eq:finite-horizon-lqr-optimal-value-terminal">\[\begin{equation}
+S(T) = P.
+\tag{4.12}
+\end{equation}\]</span>
+The first equation in the HJB <a href="continuous-time-optimal-control.html#eq:hjb-finite-horizon-lqr">(4.11)</a> requires
+<span class="math display" id="eq:hjb-finite-horizon-lqr-simplify">\[\begin{equation}
+0 = \min_{u \in \mathbb{R}^m} \left[ x^T Q x + u^T R u + x^T \dot{S}(t) x + 2x^T S(t) (A x + Bu)  \right].
+\tag{4.13}
+\end{equation}\]</span>
+The objective function to be minimized in <a href="continuous-time-optimal-control.html#eq:hjb-finite-horizon-lqr-simplify">(4.13)</a> is a convex quadratic function of <span class="math inline">\(u\)</span>, hence the optimal solution satisfies
+<span class="math display">\[
+2 R u^\star + 2B^T S(t) x = 0,
+\]</span>
+solving which yields
+<span class="math display" id="eq:finite-horizon-lqr-optimal-u">\[\begin{equation}
+u^\star = - R^{-1} B^T S(t) x.
+\tag{4.14}
+\end{equation}\]</span>
+Now plugging the solution <a href="continuous-time-optimal-control.html#eq:finite-horizon-lqr-optimal-u">(4.14)</a> back into <a href="continuous-time-optimal-control.html#eq:hjb-finite-horizon-lqr-simplify">(4.13)</a>, we obtain
+<span class="math display">\[
+0 = x^T \left[ \dot{S}(t) + S(t) A + A^T S(t) - S(t)B R^{-1} B^T S(t) + Q \right] x, \quad \forall (t,x),
+\]</span>
+which implies that <span class="math inline">\(\dot{S}(t)\)</span> must satisfy
+<span class="math display" id="eq:finite-horizon-lqr-optimal-value">\[\begin{equation}
+\dot{S}(t) = - S(t) A - A^T S(t) + S(t) B R^{-1} B^T S(t) - Q.
+\tag{4.15}
+\end{equation}\]</span>
+This is known as the <em>continuous-time differential Riccati equation</em>, with the terminal condition given in <a href="continuous-time-optimal-control.html#eq:finite-horizon-lqr-optimal-value-terminal">(4.12)</a>. You should compare <a href="continuous-time-optimal-control.html#eq:finite-horizon-lqr-optimal-value">(4.15)</a> with its discrete-time counterpart <a href="exactdp.html#eq:finite-discrete-lqr-riccati">(2.7)</a> and observable their similarities.</p>
 </div>
 <div id="the-pontryagin-minimum-principle" class="section level2 hasAnchor" number="4.4">
 <h2><span class="header-section-number">4.4</span> The Pontryagin Minimum Principle<a href="continuous-time-optimal-control.html#the-pontryagin-minimum-principle" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -568,7 +620,7 @@ and any <span class="math inline">\(u \in \mathbb{U}\)</span> would attain the m
 <p>Recall the HJB equation in Theorem <a href="continuous-time-optimal-control.html#thm:hjbsufficient">4.1</a> states that, if a control trajectory <span class="math inline">\(u^\star(t)\)</span> and the associated state trajectory <span class="math inline">\(x^\star(t)\)</span> is optimal, then for all <span class="math inline">\(t \in [0,T]\)</span>, the following condition must hold
 <span class="math display" id="eq:pmp-intro-from-hjb">\[\begin{equation}
 u^\star(t) = \arg\min_{u \in \mathbb{U}} \left[ g(x^\star(t),u) + \nabla_x J(t,x^\star(t))^T f(x^\star(t),u)  \right]
-\tag{4.11}.
+\tag{4.16}.
 \end{equation}\]</span>
 The above equation says, in order to compute the optimal control, we do not need to know the value of <span class="math inline">\(\nabla_x J\)</span> at <em>all</em> possible values of <span class="math inline">\(x\)</span> and <span class="math inline">\(t\)</span> (which is what the HJB equation tries to do), and we only need to know the value of <span class="math inline">\(\nabla_x J\)</span> along the <em>optimal</em> trajectory, i.e., to know only <span class="math inline">\(\nabla_x J(t,x^\star(t))\)</span>.</p>
 <p>The Pontryagin minimum principle builds upon this key observation, and it points out that <span class="math inline">\(\nabla_x J(t,x^\star(t))\)</span> (but not <span class="math inline">\(\nabla_x J(t,x)\)</span> for any <span class="math inline">\(x\)</span>) satisfies a certain differential equation called the <em>adjoint equation</em>.</p>
@@ -590,22 +642,22 @@ In words, the partial derivates (with respect to <span class="math inline">\(t\)
 <p>We now start with the HJB equation in <a href="continuous-time-optimal-control.html#eq:hjb-eqution-formal-1">(4.6)</a>, restated below with <span class="math inline">\(V(t,x)\)</span> replaced by the optimal <span class="math inline">\(J(t,x)\)</span> for the reader’s convenience
 <span class="math display" id="eq:hjb-equation-restate-for-pmp">\[\begin{equation}
 0 = \min_{u \in \mathbb{U}} \left[ g(x,u) + \nabla_t J(t,x) + \nabla_x J(t,x)^Tf(x,u)  \right].
-\tag{4.12}
+\tag{4.17}
 \end{equation}\]</span>
 Assume that <span class="math inline">\(\mu^\star(t,x)\)</span> attains the minimum in the equation above and it is also continuously differentiable. Note that we have made the restrictive assumption that <span class="math inline">\(\mathbb{U}\)</span> is convex and <span class="math inline">\(\mu^\star(t,x)\)</span> is continuously differentiable, which are not necessary in a more rigorous derivation of Pontryagin’s principle (cf. Section 7.3.2 in <span class="citation">(<a href="#ref-bertsekas12book-dpocI" role="doc-biblioref">Bertsekas 2012</a>)</span>).</p>
-<p>We differentiate both sides of <a href="continuous-time-optimal-control.html#eq:hjb-equation-restate-for-pmp">(4.12)</a> with respect to <span class="math inline">\(t\)</span> and <span class="math inline">\(x\)</span>. In particular, let
+<p>We differentiate both sides of <a href="continuous-time-optimal-control.html#eq:hjb-equation-restate-for-pmp">(4.17)</a> with respect to <span class="math inline">\(t\)</span> and <span class="math inline">\(x\)</span>. In particular, let
 <span class="math display">\[
 F(t,x,u) = g(x,u) + \nabla_t J(t,x) + \nabla_x J(t,x)^T f(x,u)
 \]</span>
 and invoke Lemma <a href="continuous-time-optimal-control.html#lem:gradientofminimumfunctions">4.1</a>, we can write
 <span class="math display" id="eq:hjb-equation-differentiation-t" id="eq:hjb-equation-differentiation-x">\[\begin{align}
-\tag{4.13}
+\tag{4.18}
 \hspace{-12mm}
 0 = \nabla_x g(x, \mu^\star(t,x)) + \nabla^2_{xt} J(t,x) + \nabla^2_{xx} J(t,x)f(x,\mu^\star(t,x)) + \nabla_x f(x,\mu^\star(t,x)) \nabla_x J(t,x).\\
 \hspace{-12mm} 0 = \nabla^2_{tt}J(t,x) + \nabla_{xt}^2 J(t,x)^T f(x,\mu^\star(t,x))
-\tag{4.14}
+\tag{4.19}
 \end{align}\]</span>
-where the first equation results from differentiation of <a href="continuous-time-optimal-control.html#eq:hjb-equation-restate-for-pmp">(4.12)</a> with respect to <span class="math inline">\(x\)</span>, and the second equation results from differentiation of <a href="continuous-time-optimal-control.html#eq:hjb-equation-restate-for-pmp">(4.12)</a> with respect to <span class="math inline">\(t\)</span>. In <a href="continuous-time-optimal-control.html#eq:hjb-equation-differentiation-x">(4.13)</a>, <span class="math inline">\(\nabla_x f(x,\mu^\star(t,x))\)</span> is
+where the first equation results from differentiation of <a href="continuous-time-optimal-control.html#eq:hjb-equation-restate-for-pmp">(4.17)</a> with respect to <span class="math inline">\(x\)</span>, and the second equation results from differentiation of <a href="continuous-time-optimal-control.html#eq:hjb-equation-restate-for-pmp">(4.17)</a> with respect to <span class="math inline">\(t\)</span>. In <a href="continuous-time-optimal-control.html#eq:hjb-equation-differentiation-x">(4.18)</a>, <span class="math inline">\(\nabla_x f(x,\mu^\star(t,x))\)</span> is
 <span class="math display">\[
 \nabla_f = \begin{bmatrix}
 \frac{\partial f_1}{\partial x_1} &amp; \cdots &amp; \frac{\partial f_n}{x_1} \\
@@ -614,39 +666,39 @@ where the first equation results from differentiation of <a href="continuous-tim
 \end{bmatrix}
 \]</span>
 evaluated at <span class="math inline">\((x,\mu^\star(t,x))\)</span>.
-Equations <a href="continuous-time-optimal-control.html#eq:hjb-equation-differentiation-x">(4.13)</a> and <a href="continuous-time-optimal-control.html#eq:hjb-equation-differentiation-t">(4.14)</a> hold for any <span class="math inline">\((t,x)\)</span> (under the restrictive assumptions we have made).</p>
-<p>We then evaluate the equations <a href="continuous-time-optimal-control.html#eq:hjb-equation-differentiation-x">(4.13)</a> and <a href="continuous-time-optimal-control.html#eq:hjb-equation-differentiation-t">(4.14)</a> only along the optimal control and state trajectory <span class="math inline">\((u^\star(t),x^\star(t))\)</span> that satisfies
+Equations <a href="continuous-time-optimal-control.html#eq:hjb-equation-differentiation-x">(4.18)</a> and <a href="continuous-time-optimal-control.html#eq:hjb-equation-differentiation-t">(4.19)</a> hold for any <span class="math inline">\((t,x)\)</span> (under the restrictive assumptions we have made).</p>
+<p>We then evaluate the equations <a href="continuous-time-optimal-control.html#eq:hjb-equation-differentiation-x">(4.18)</a> and <a href="continuous-time-optimal-control.html#eq:hjb-equation-differentiation-t">(4.19)</a> only along the optimal control and state trajectory <span class="math inline">\((u^\star(t),x^\star(t))\)</span> that satisfies
 <span class="math display" id="eq:pmp-optimal-system-dynamics">\[\begin{equation}
 \dot{x}^\star(t) = f(x^\star(t),u^\star(t)), \quad u^\star(t) = \mu^\star(t,x^\star(t)), \quad t \in [0,T].
-\tag{4.15}
+\tag{4.20}
 \end{equation}\]</span>
 Specifically, along the optimal trajectory, we have
 <span class="math display">\[
 \frac{d}{dt} \left( \nabla_x J(t,x^\star(t)) \right) = \nabla^2_{xt} J(t,x^\star(t)) + \nabla^2_{xx} J(t,x^\star(t))f(x^\star(t),u^\star(t)),
 \]</span>
-where the right-hand side contains terms in the right-hand side of <a href="continuous-time-optimal-control.html#eq:hjb-equation-differentiation-x">(4.13)</a> (when evaluted along the optimal trajectory). Similarly,
+where the right-hand side contains terms in the right-hand side of <a href="continuous-time-optimal-control.html#eq:hjb-equation-differentiation-x">(4.18)</a> (when evaluted along the optimal trajectory). Similarly,
 <span class="math display">\[
 \frac{d}{dt} \left( \nabla_t J(t,x^\star(t)) \right) = \nabla^2_{tt} J(t,x^\star(t)) + \nabla^2_{xt} J(t,x^\star(t))^T f(x^\star(t),u^\star(t)),
 \]</span>
-where the right-hand side is exactly the right-hand side of <a href="continuous-time-optimal-control.html#eq:hjb-equation-differentiation-t">(4.14)</a> (when evaluted along the optimal trajectory). As a result, equations <a href="continuous-time-optimal-control.html#eq:hjb-equation-differentiation-x">(4.13)</a> and <a href="continuous-time-optimal-control.html#eq:hjb-equation-differentiation-t">(4.14)</a>, when evaluated along the optimal trajectory, are equivalent to
+where the right-hand side is exactly the right-hand side of <a href="continuous-time-optimal-control.html#eq:hjb-equation-differentiation-t">(4.19)</a> (when evaluted along the optimal trajectory). As a result, equations <a href="continuous-time-optimal-control.html#eq:hjb-equation-differentiation-x">(4.18)</a> and <a href="continuous-time-optimal-control.html#eq:hjb-equation-differentiation-t">(4.19)</a>, when evaluated along the optimal trajectory, are equivalent to
 <span class="math display" id="eq:hjb-equation-differentiation-along-optimal-t" id="eq:hjb-equation-differentiation-along-optimal-x">\[\begin{align}
-\tag{4.16}
+\tag{4.21}
 0 = \nabla_x g(x^\star(t), u^\star(t)) + \frac{d}{dt}\left( \nabla_x J(t,x^\star(t)) \right) + \nabla_x f(x^\star(t),u^\star(t)) \nabla_x J(t,x^\star(t)).\\
 0 = \frac{d}{dt}\left( \nabla_t J(t,x^\star(t)) \right).
-\tag{4.17}
+\tag{4.22}
 \end{align}\]</span>
 Therefore, if we denote
 <span class="math display">\[
 p(t) = \nabla_x J(t,x^\star(t)), \quad p_0(t) = \nabla_t J(t,x^\star(t)),
 \]</span>
-then equations <a href="continuous-time-optimal-control.html#eq:hjb-equation-differentiation-along-optimal-x">(4.16)</a> and <a href="continuous-time-optimal-control.html#eq:hjb-equation-differentiation-along-optimal-t">(4.17)</a> become
+then equations <a href="continuous-time-optimal-control.html#eq:hjb-equation-differentiation-along-optimal-x">(4.21)</a> and <a href="continuous-time-optimal-control.html#eq:hjb-equation-differentiation-along-optimal-t">(4.22)</a> become
 <span class="math display" id="eq:adjoint-equation-p0" id="eq:adjoint-equation-p">\[\begin{align}
-\tag{4.18}
+\tag{4.23}
 \dot{p}(t) = - \nabla_x f(x^\star(t),u^\star(t)) p(t) - \nabla_x g(x^\star(t),u^\star(t)), \\
 \dot{p}_0(t) = 0.
-\tag{4.19}
+\tag{4.24}
 \end{align}\]</span>
-Equation <a href="continuous-time-optimal-control.html#eq:adjoint-equation-p">(4.18)</a>, which is a system of <span class="math inline">\(n\)</span> first-order differential equations, is known as the adjoint equation and it describes the evolution of <span class="math inline">\(p(t)\)</span>, known as the <em>costate</em>, along the optimal trajectory. To obtain a boundary condition for the adjoint equation <a href="continuous-time-optimal-control.html#eq:adjoint-equation-p">(4.18)</a>, we note that the boundary condition of the HJB equation
+Equation <a href="continuous-time-optimal-control.html#eq:adjoint-equation-p">(4.23)</a>, which is a system of <span class="math inline">\(n\)</span> first-order differential equations, is known as the adjoint equation and it describes the evolution of <span class="math inline">\(p(t)\)</span>, known as the <em>costate</em>, along the optimal trajectory. To obtain a boundary condition for the adjoint equation <a href="continuous-time-optimal-control.html#eq:adjoint-equation-p">(4.23)</a>, we note that the boundary condition of the HJB equation
 <span class="math display">\[
 J(T,x) = h(x),\quad \forall x
 \]</span>
@@ -659,11 +711,11 @@ p(T) = \nabla h(x^\star(T)).
 <span class="math display">\[
 H(x,u,p) = g(x,u) + p^T f(x,u).
 \]</span>
-Note that the dynamics along the optimal trajectory <a href="continuous-time-optimal-control.html#eq:pmp-optimal-system-dynamics">(4.15)</a> can be conveniently written as
+Note that the dynamics along the optimal trajectory <a href="continuous-time-optimal-control.html#eq:pmp-optimal-system-dynamics">(4.20)</a> can be conveniently written as
 <span class="math display">\[
 \dot{x}^\star(t) = \nabla_p H(x^\star(t),u^\star(t),p(t)),
 \]</span>
-and the adjoint equation <a href="continuous-time-optimal-control.html#eq:adjoint-equation-p">(4.18)</a> can be written as
+and the adjoint equation <a href="continuous-time-optimal-control.html#eq:adjoint-equation-p">(4.23)</a> can be written as
 <span class="math display">\[
 \dot{p}(t) = - \nabla_x H(x^\star(t), u^\star(t), p(t)).
 \]</span>
@@ -692,30 +744,30 @@ H(x^\star(t),u^\star(t),p(t)) = C, \quad \forall t \in [0,T].
 \]</span></p>
 </div>
 </div>
-<p>To see why <span class="math inline">\(H(x^\star(t),u^\star(t),p(t))\)</span> is a constant along the optimal trajectory, we observe that from the HJB equation <a href="continuous-time-optimal-control.html#eq:hjb-equation-restate-for-pmp">(4.12)</a>, we obtain
+<p>To see why <span class="math inline">\(H(x^\star(t),u^\star(t),p(t))\)</span> is a constant along the optimal trajectory, we observe that from the HJB equation <a href="continuous-time-optimal-control.html#eq:hjb-equation-restate-for-pmp">(4.17)</a>, we obtain
 <span class="math display">\[\begin{align}
 g(x^\star,u^\star) + \nabla_t J(t,x^\star) + \nabla_x J(t,x^\star)^T f(x^\star, u^\star) = 0 \\
 \Longrightarrow \underbrace{g(x^\star,u^\star) + \nabla_x J(t,x^\star)^T f(x^\star, u^\star)}_{H(x^\star(t),u^\star(t),p(t))} = - \underbrace{\nabla_t J(t,x^\star)}_{p_0(t)}.
 \end{align}\]</span>
-From <a href="continuous-time-optimal-control.html#eq:adjoint-equation-p0">(4.19)</a>, we know <span class="math inline">\(p_0(t)\)</span> is a constant.</p>
+From <a href="continuous-time-optimal-control.html#eq:adjoint-equation-p0">(4.24)</a>, we know <span class="math inline">\(p_0(t)\)</span> is a constant.</p>
 <p><strong>A necessary condition</strong>. It is important to recognize that the Pontryagin Minimum Principle in Theorem <a href="continuous-time-optimal-control.html#thm:pontryaginminimum">4.2</a> is a necessary condition for optimality, i.e., all optimal control and state trajectories must satisfy this condition, but <em>not all</em> trajectories satisfying the condition are optimal. Extra arguments are needed to guarantee optimality. One common strategy is to show that an optimal control trajectory exists, and then verify that there is only one control trajectory satisfying the conditions of the Minimum Principle (or that all trajectories verifying the Minimum Principle have equal costs). A setup where the Minimum Principle is both necessary is sufficient is when <span class="math inline">\(f(x,u)\)</span> is linear in <span class="math inline">\((x,u)\)</span>, the the constraint set <span class="math inline">\(U\)</span> is convex, and the cost functions <span class="math inline">\(h\)</span> and <span class="math inline">\(g\)</span> are convex.</p>
 <p><strong>Two-point boundary problem</strong>. The Pontryagin Minimum Principle is particularly useful when
 <span class="math display" id="eq:pmp-solve-u-from-H">\[\begin{equation}
 u^\star = \arg\min_{u \in \mathbb{U}} H(x^\star,u,p) = \arg\min_{u \in \mathbb{U}} g(x^\star,u) + p^T f(x^\star,u)
-\tag{4.20}
+\tag{4.25}
 \end{equation}\]</span>
-can be solved analytically so that <span class="math inline">\(u^\star\)</span> becomes a function of <span class="math inline">\(x^\star\)</span> and <span class="math inline">\(p\)</span>. For example, this is possible when problem <a href="continuous-time-optimal-control.html#eq:pmp-solve-u-from-H">(4.20)</a> is a convex problem, for which one can invoke the KKT optimality conditions (cf. Appendix <a href="appconvex.html#appconvex-theory-kkt">B.1.4</a>). Once <span class="math inline">\(u^\star(t)\)</span> is expressed as a function of <span class="math inline">\(x^\star(t)\)</span> and <span class="math inline">\(p(t)\)</span>, we can merge the system equation <a href="continuous-time-optimal-control.html#eq:pmp-optimal-system-dynamics">(4.15)</a> and the adjoint equation <a href="continuous-time-optimal-control.html#eq:adjoint-equation-p">(4.18)</a> together and arrive at
+can be solved analytically so that <span class="math inline">\(u^\star\)</span> becomes a function of <span class="math inline">\(x^\star\)</span> and <span class="math inline">\(p\)</span>. For example, this is possible when problem <a href="continuous-time-optimal-control.html#eq:pmp-solve-u-from-H">(4.25)</a> is a convex problem, for which one can invoke the KKT optimality conditions (cf. Appendix <a href="appconvex.html#appconvex-theory-kkt">B.1.4</a>). Once <span class="math inline">\(u^\star(t)\)</span> is expressed as a function of <span class="math inline">\(x^\star(t)\)</span> and <span class="math inline">\(p(t)\)</span>, we can merge the system equation <a href="continuous-time-optimal-control.html#eq:pmp-optimal-system-dynamics">(4.20)</a> and the adjoint equation <a href="continuous-time-optimal-control.html#eq:adjoint-equation-p">(4.23)</a> together and arrive at
 <span class="math display" id="eq:two-point-boundary-problem">\[\begin{equation}
 \begin{cases}
 \dot{x}^\star(t) = f(x^\star(t), u^\star(t)) \\
 \dot{p}(t) = - \nabla_x f(x^\star(t),u^\star(t)) p(t) - \nabla_x g(x^\star(t),u^\star(t))
 \end{cases},
-\tag{4.21}
+\tag{4.26}
 \end{equation}\]</span>
 which is a set of <span class="math inline">\(2n\)</span> first-order differential equations in <span class="math inline">\(x^\star(t)\)</span> and <span class="math inline">\(p(t)\)</span>. The boundary conditions are
 <span class="math display" id="eq:two-point-boundary-problem-boundary">\[\begin{equation}
 x^\star(0) = x_0, \quad p(T) = \nabla h(x^\star(T)).
-\tag{4.22}
+\tag{4.27}
 \end{equation}\]</span>
 The number of boundary conditions is also <span class="math inline">\(2n\)</span>, so generally we expect to be able to solve these differential equations numerically.</p>
 </div>

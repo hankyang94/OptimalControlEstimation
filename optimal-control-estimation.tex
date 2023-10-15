@@ -151,7 +151,7 @@ arc=4pt}
 
 \title{Optimal Control and Estimation}
 \author{Heng Yang}
-\date{2023-10-13}
+\date{2023-10-15}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -3346,6 +3346,63 @@ and any \(u \in \mathbb{U}\) would attain the minimum in \eqref{eq:scalar-system
 
 \hypertarget{linear-quadratic-regulator}{%
 \section{Linear Quadratic Regulator}\label{linear-quadratic-regulator}}
+
+Let us apply the HJB sufficiency Theorem \ref{thm:hjbsufficient} to the continuous-time linear quadratic regulator (LQR).
+
+Consider the linear system
+\[
+\dot{x}(t) = A x(t) + B u(t),
+\]
+with \(x \in \mathbb{R}^n\), \(u \in \mathbb{R}^m\), and the optimal control problem
+\[
+\min_{u(t),t\in [0,T]} x(T)^T P x(T) + \int_{t=0}^T (x(t)^T Q x(t) + u(t)^T R u(t)) dt 
+\]
+where \(P,Q\succeq 0\) and \(R \succ 0\).
+
+According to Theorem \ref{thm:hjbsufficient}, the HJB equation for this problem is
+\begin{equation}
+\begin{split}
+0 = \min_{u \in \mathbb{R}^m } \left[ x^T Q x + u^T R u + \nabla_t V(t,x) + \nabla_x V(t,x)^T f(x,u) \right], \quad \forall t,x, \\
+V(T,x) = x^T P x, \quad \forall x.
+\end{split}
+\label{eq:hjb-finite-horizon-lqr}
+\end{equation}
+
+Let us guess a solution of the following form,
+\[
+V(t,x) = x^T S(t) x, \quad S(t) \in \mathbb{S}^n,
+\]
+where \(\mathbb{S}^n\) is the set of \(n \times n\) symmetric matrices.
+
+The second equation in the HJB \eqref{eq:hjb-finite-horizon-lqr} implies
+\begin{equation}
+S(T) = P.
+\label{eq:finite-horizon-lqr-optimal-value-terminal}
+\end{equation}
+The first equation in the HJB \eqref{eq:hjb-finite-horizon-lqr} requires
+\begin{equation}
+0 = \min_{u \in \mathbb{R}^m} \left[ x^T Q x + u^T R u + x^T \dot{S}(t) x + 2x^T S(t) (A x + Bu)  \right].
+\label{eq:hjb-finite-horizon-lqr-simplify}
+\end{equation}
+The objective function to be minimized in \eqref{eq:hjb-finite-horizon-lqr-simplify} is a convex quadratic function of \(u\), hence the optimal solution satisfies
+\[
+2 R u^\star + 2B^T S(t) x = 0,
+\]
+solving which yields
+\begin{equation}
+u^\star = - R^{-1} B^T S(t) x.
+\label{eq:finite-horizon-lqr-optimal-u}
+\end{equation}
+Now plugging the solution \eqref{eq:finite-horizon-lqr-optimal-u} back into \eqref{eq:hjb-finite-horizon-lqr-simplify}, we obtain
+\[
+0 = x^T \left[ \dot{S}(t) + S(t) A + A^T S(t) - S(t)B R^{-1} B^T S(t) + Q \right] x, \quad \forall (t,x),
+\]
+which implies that \(\dot{S}(t)\) must satisfy
+\begin{equation}
+\dot{S}(t) = - S(t) A - A^T S(t) + S(t) B R^{-1} B^T S(t) - Q.
+\label{eq:finite-horizon-lqr-optimal-value}
+\end{equation}
+This is known as the \emph{continuous-time differential Riccati equation}, with the terminal condition given in \eqref{eq:finite-horizon-lqr-optimal-value-terminal}. You should compare \eqref{eq:finite-horizon-lqr-optimal-value} with its discrete-time counterpart \eqref{eq:finite-discrete-lqr-riccati} and observable their similarities.
 
 \hypertarget{the-pontryagin-minimum-principle}{%
 \section{The Pontryagin Minimum Principle}\label{the-pontryagin-minimum-principle}}
