@@ -151,7 +151,7 @@ arc=4pt}
 
 \title{Optimal Control and Estimation}
 \author{Heng Yang}
-\date{2023-10-15}
+\date{2023-10-16}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -3344,6 +3344,31 @@ However, we can observe that the optimal controller need not be unique. For exam
 and any \(u \in \mathbb{U}\) would attain the minimum in \eqref{eq:scalar-system-hjb} and hence be optimal.
 \end{example}
 
+For simple systems, the HJB equation can be solved numerically.
+
+\begin{example}[Numerical HJB Solution of A Scalar System]
+\protect\hypertarget{exm:solve-scalar-system-numerically}{}\label{exm:solve-scalar-system-numerically}Consider a scalar linear system
+\[
+\dot{x} = x + u,
+\]
+and the optimal control problem with quadratic costs and \(T=0.5\)
+\[
+\min_{u(t),t\in[0,T]} x(T)^T P x(T) + \int_{t=0}^T (x^T Q x + u^T R u ) dt
+\]
+with \(P=Q=R=1\). Solve the HJB equation on a mesh \(x \in [-8,8]\), we obtain the optimal cost-to-go in Fig. \ref{fig:scalar-system-numerical-V}.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.6\linewidth]{images/finite_HJB_numerical_solution} 
+
+}
+
+\caption{Numerical solution of the HJB equation.}\label{fig:scalar-system-numerical-V}
+\end{figure}
+
+You can find code for this problem \href{https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/finite_HJ.m}{here}.
+\end{example}
+
 \hypertarget{linear-quadratic-regulator}{%
 \section{Linear Quadratic Regulator}\label{linear-quadratic-regulator}}
 
@@ -3403,6 +3428,107 @@ which implies that \(\dot{S}(t)\) must satisfy
 \label{eq:finite-horizon-lqr-optimal-value}
 \end{equation}
 This is known as the \emph{continuous-time differential Riccati equation}, with the terminal condition given in \eqref{eq:finite-horizon-lqr-optimal-value-terminal}. You should compare \eqref{eq:finite-horizon-lqr-optimal-value} with its discrete-time counterpart \eqref{eq:finite-discrete-lqr-riccati} and observable their similarities.
+
+\hypertarget{lqr-trajectory-tracking-1}{%
+\subsection{LQR Trajectory Tracking}\label{lqr-trajectory-tracking-1}}
+
+So far we have been talking about LQR in the context of regulating the system to a desired equilibrium point (usually the origin), you can in fact also use LQR for tracking a reference trajectory.
+
+Consider again the linear system
+\[
+\dot{x}(t) = A x (t) + B u(t), \quad x \in \mathbb{R}^n, u \in \mathbb{R}^m.
+\]
+Given a reference state-control trajectory \((x_r(t),u_r(t))_{t \in [0,T]}\), we consider the following optimal control problem to track the reference trajectory
+\[
+\min_{u(t),t \in [0,T]} \Vert x(T) - x_r(T) \Vert_P^2 + \int_{t=0}^T \left( \Vert x(t) - x_r(t) \Vert_Q^2 + \Vert u(t) - u_r(t) \Vert_R^2  \right) dt
+\]
+where \(\Vert v \Vert_A^2 := v^T A v\), \(P,Q\succeq 0\) and \(R \succ 0\).
+
+Let us guess a solution to the HJB of the following form
+\[
+V(t,x) = x^T S_{xx}(t) x + 2 x^T s_x(t) + s_0(t) = \begin{bmatrix} x \\ 1 \end{bmatrix}^T \underbrace{\begin{bmatrix} S_{xx}(t) & s_x(t) \\ s_x^T(t) & s_0(t) \end{bmatrix}}_{=: S(t)} \begin{bmatrix} x \\ 1 \end{bmatrix}, \quad S(t) \succ 0.
+\]
+Differentiating \(V(t,x)\) with respect to \(t\) and \(x\) we obtain
+\begin{equation}
+\begin{split}
+\nabla_t V(t,x) = x^T \dot{S}_{xx}(t) x + 2 x^T \dot{s}_x(t) + \dot{s}_0(t), \\
+\nabla_x V(t,x) = 2 S_{xx}(t) x + 2 s_x(t).
+\end{split}
+\end{equation}
+Plugging the partial derivates into the HJB \eqref{eq:hjb-eqution-formal-1}, we have
+\[
+0 = \min_{u} \left[ \Vert x - x_r \Vert_Q^2 + \Vert u - u_r \Vert_R^2 +  \nabla_x V(t,x)^T (A x + Bu) + \nabla_t V(t,x) \right].
+\]
+The objective to be minimized is convex in \(u\), leading to a closed-form solution
+\begin{equation}
+u^{\star}(t) = u_r(t) - R^{-1}B^T \left[ S_{xx}(t)x + s_x(t) \right].
+\label{eq:lqr-trajectory-tracking-solution-u}
+\end{equation}
+With the solution of \(u\) \eqref{eq:lqr-trajectory-tracking-solution-u} plugged back into the HJB, we can find the differential equations that \(S_{xx}(t)\), \(s_x(t)\) and \(s_0(t)\) need to satisfy
+\begin{equation}
+\begin{split}
+-\dot{S}_{xx}(t) = Q - S_{xx}(t) B R^{-1} B^T S_{xx}(t) + S_{xx}(t)A + A^T S_{xx}(t) \\
+- \dot{s}_x(t) = -Q x_r(t) + [A^T - S_{xx}(t)B R^{-1} B^T]s_x(t) + S_{xx}(t) B u_r(t) \\
+- \dot{s}_0(t) = x_r(t)^T Q x_r(t) - s_x^T(t) B R^{-1} B^T s_x(t) + 2 s_x(t)^T B u_r(t),
+\end{split}
+\label{eq:lqr-trajectory-tracking-solution-value}
+\end{equation}
+with the terminal conditions
+\begin{equation}
+\begin{split}
+S_{xx}(T) = P \\
+s_x(T) = - P x_r(T) \\
+s_0(T) = x_r^T(T) P x_r(T).
+\end{split}
+\end{equation}
+Notice that the differential equation of \(S_{xx}(t)\) in \eqref{eq:lqr-trajectory-tracking-solution-value} is the same as the differential equation in \eqref{eq:finite-horizon-lqr-optimal-value}. Also notice the value of \(s_0(t)\) does not affect the optimal control \eqref{eq:lqr-trajectory-tracking-solution-u} and hence can often be ignored.
+
+\hypertarget{lqr-trajectory-stabilization}{%
+\subsection{LQR Trajectory Stabilization}\label{lqr-trajectory-stabilization}}
+
+Recall that in Example \ref{exm:pendulum-collocation-failure}, we have seen the failure of directly applying open-loop control obtained from trajectory optimization. We then used receding horizon control to turn open-loop trajectory optimization into a close-loop controller.
+
+Another way to stabilize the open-loop trajectory is to perform local LQR stabilization.
+
+Given the nonlinear system
+\[
+\dot{x} = f(x,u),
+\]
+suppose we have computed a nominal state-control reference trajectory \((x_r(t),u_r(t))_{t \in [0,T]}\) (e.g., using trajectory optimization), then we can define a local coordinate system relative to the reference trajectory
+\[
+\bar{x}(t) = x(t) - x_r(t), \quad \bar{u}(t) = u(t) - u_r(t).
+\]
+The \(\bar{x}\) coordinate satisfies the following dynamics
+\begin{equation}
+\dot{\bar{x}} = \dot{x} - \dot{x}_r = f(x,u) - f(x_r, u_r).
+\label{eq:lqr-traj-stabilization-error-dynamics}
+\end{equation}
+We can perform a Taylor expansion of the dynamics in \eqref{eq:lqr-traj-stabilization-error-dynamics}
+\begin{equation}
+\hspace{-10mm} \dot{\bar{x}} \approx f(x_r, u_r) + \frac{\partial f(x_r,u_r)}{\partial x} (x - x_r) + \frac{\partial f(x_r,u_r)}{\partial u} (u - u_r) - f(x_r, u_r) = A(t) \bar{x} + B(t) \bar{u},
+\label{eq:lqr-traj-stabilization-error-dynamics-linear}
+\end{equation}
+where
+\[
+A(t) = \frac{\partial f(x_r(t),u_r(t))}{\partial x}, \quad B(t) = \frac{\partial f(x_r(t),u_r(t))}{\partial u},
+\]
+are time-varying linear matrices.
+
+We then formulate the LQR problem for the approximate linear time-varying system \eqref{eq:lqr-traj-stabilization-error-dynamics-linear}
+\begin{equation}
+\min_{\bar{u}(t), t \in [0,T]} \bar{x}(T)^T P \bar{x}(T) + \int_{t=0}^T \left( \bar{x}(t)^T Q \bar{x}(t) + \bar{u}(t)^T R \bar{u}(t)  \right) dt
+\label{eq:lqr-traj-stabilization-ocp}
+\end{equation}
+with \(P \succeq 0, Q \succeq 0, R \succ 0\). The solution to \eqref{eq:lqr-traj-stabilization-ocp}, according to \eqref{eq:finite-horizon-lqr-optimal-u} is
+\[
+\bar{u}(t) = - R^{-1} B^T S(t) \bar{x},
+\]
+which implies
+\begin{equation}
+u(t) = u_r(t) - R^{-1} B^T S(t) (x(t) - x_r(t))
+\label{eq:lqr-traj-stabilization-ocp-solution-u-abs}
+\end{equation}
+in the original coordinates. Note that the controller in \eqref{eq:lqr-traj-stabilization-ocp-solution-u-abs} is a feedback controller that ``finetunes'' the open-loop control.
 
 \hypertarget{the-pontryagin-minimum-principle}{%
 \section{The Pontryagin Minimum Principle}\label{the-pontryagin-minimum-principle}}
