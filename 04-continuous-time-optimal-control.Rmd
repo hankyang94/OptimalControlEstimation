@@ -542,7 +542,7 @@ From \@ref(eq:adjoint-equation-p0), we know $p_0(t)$ is a constant.
 
 **A necessary condition**. It is important to recognize that the Pontryagin Minimum Principle in Theorem \@ref(thm:pontryaginminimum) is a necessary condition for optimality, i.e., all optimal control and state trajectories must satisfy this condition, but _not all_ trajectories satisfying the condition are optimal. Extra arguments are needed to guarantee optimality. One common strategy is to show that an optimal control trajectory exists, and then verify that there is only one control trajectory satisfying the conditions of the Minimum Principle (or that all trajectories verifying the Minimum Principle have equal costs). A setup where the Minimum Principle is both necessary is sufficient is when $f(x,u)$ is linear in $(x,u)$, the the constraint set $U$ is convex, and the cost functions $h$ and $g$ are convex.
 
-**Two-point boundary problem**. The Pontryagin Minimum Principle is particularly useful when 
+**Two-point boundary value problem** (TPBVP). The Pontryagin Minimum Principle is particularly useful when 
 \begin{equation}
 u^\star = \arg\min_{u \in \mathbb{U}} H(x^\star,u,p) = \arg\min_{u \in \mathbb{U}} g(x^\star,u) + p^T f(x^\star,u)
 (\#eq:pmp-solve-u-from-H)
@@ -561,6 +561,133 @@ x^\star(0) = x_0, \quad p(T) = \nabla h(x^\star(T)).
 (\#eq:two-point-boundary-problem-boundary)
 \end{equation}
 The number of boundary conditions is also $2n$, so generally we expect to be able to solve these differential equations numerically. 
+
+::: {.examplebox}
+::: {.example #shortest-line name="Shortest Curve"}
+
+In Fig. \@ref(fig:shortest-curve), consider any curve that starts at the point $(0,\alpha)$ and lands on the vertical line that passes through $(T,0)$. What is the curve with minimum length?
+
+We all know the answer is a straight line. 
+
+```{r shortest-curve, out.width='60%', fig.show='hold', fig.cap='Shortest curve between a point and a line.', fig.align='center', echo=FALSE}
+knitr::include_graphics('images/shortest_path.png')
+```
+
+Let us use Pontryagin's minimum principle to prove this. The length of any curve satisfying our condition is
+$$
+\int_{0}^{T} \sqrt{1 + (\dot{x}(t))^2} dt, \quad x(0) = \alpha.
+$$
+To find the curve with minimum length, we can formulate an optimal control problem
+$$
+\min_{u(t)} \int_{t=0}^T \sqrt{ 1 + u^2(t)} dt, \quad \text{subject to} \quad \dot{x}(t) = u(t), x(0) = \alpha.
+$$
+
+To apply Pontryagin's minimum principle, we first formulate the Hamiltonian
+$$
+H(x,u,p) = g(x,u) + p^T f(x,u) = \sqrt{1 + u^2} + pu.
+$$
+The adjoint equation says 
+$$
+\dot{p}(t) = - \nabla_x H(x^\star(t),u^\star(t),p),
+$$
+which simplifies, for our problem, to
+$$
+\dot{p}(t) = 0.
+$$
+The boundary condition of the adjoint equation is
+$$
+p(T) = \nabla h(x^\star(T)) = 0.
+$$
+We conclude that 
+$$
+p(t) = 0, \forall t \in [0,T].
+$$
+The optimal controller thus becomes
+$$
+u^\star(t) = \arg\min_u H(x^\star(t),u,p(t)) = \arg\min_u \sqrt{1 + u^2} = 0, \quad \forall t \in [0,T].
+$$
+Therefore, we have $\dot{x}^\star(t) = u^\star(t) = 0$ for all $t \in [0,T]$, and $x^\star(t) = \alpha$ for all time, which is a straight line.
+:::
+:::
+
+
+### Numerical Solution of the TPBVP
+
+When the optimal control can be solved analytically, we obtain the two-point boundary value problem (TPBVP)
+\begin{equation}
+\begin{cases}
+x^\star(0) = x_0 \\
+p(T) = \nabla h(x^\star(T)) \\
+\dot{x}^\star(t) = f(x^\star(t), u^\star(t)) \\
+\dot{p}(t) = - \nabla_x f(x^\star(t),u^\star(t))p(t) - \nabla_x g(x^\star(t),u^\star(t))
+\end{cases},
+(\#eq:two-point-boundary-value-problem)
+\end{equation}
+where $u^\star(t)$ is a function of $x^\star(t)$ and $p(t)$. Calling
+$$
+z(t) = \begin{bmatrix} x^\star(t) \\ p(t) \end{bmatrix},
+$$
+we can compactly write \@ref(eq:two-point-boundary-value-problem) as
+\begin{equation}
+\begin{cases}
+b(z(0),z(T),x_0) = 0 \\
+\dot{z}(t) - \phi(z(t)) = 0
+\end{cases},
+(\#eq:two-point-boundary-value-problem-simple)
+\end{equation}
+which has $2n$ differential equations and $2n$ boundary conditions and usually well defined.
+
+#### Single Shooting
+The idea of single shooting is straightforward: if $p(0)$ is known in \@ref(eq:two-point-boundary-value-problem), then (i) the entire trajectory of $z$ can be simulated forward in time, and (ii) we only need to enforce the terminal constraint of $p(T) = \nabla h(x^\star(T))$.
+
+Therefore, in single shooting, we denote the terminal residual 
+$$
+r_T = p(T) - \nabla h(x^\star(T)) = r_T(p_0),
+$$
+as a function of $p(0) = p_0$ (note that evaluating this function requires simulating $\dot{z}(t) = \phi(z(t))$). Then we use [Newton's method](https://en.wikipedia.org/wiki/Newton%27s_method) to iteratively update $p_0$ via
+$$
+p_0^{(k+1)} = p_0^{(k)} - \eta_k \left( \frac{\partial r_T}{\partial p_0}(p_0^{(k)}) \right)^{-1} r_T(p_0^{(k)}),
+$$
+where $\eta_k$ is a chosen step size.
+
+In some cases, the forward simulation of the combined ODE might be an ill-conditioned problem so that single shooting cannot be employed. Even if the forward simulation problem is well-defined, the region of attraction of the Newton iteration can be very small, such that a good guess for $p_0$ is often required. 
+
+
+#### Multiple Shooting
+
+The single shooting method also suffers from the nonlinearity and inaccuracy brought by simulating the ODE for a long time duration $T$.
+
+In multiple shooting, we break the time windown $[0,T]$ into $N$ pieces such that 
+$$
+0 = t_0 \leq \dots \leq t_k \leq t_{k+1} \leq \dots \leq t_N = T.
+$$
+We then assign values
+$$
+z_k = z(t_k), k = 0,\dots,N,
+$$
+as the values of $z(t)$ at those breakpoints. The values $z_k$ should satisfy the ODE 
+$$
+z_{k+1} = \Phi(z_k),
+$$
+where $\Phi(\cdot)$ integrates the ODE from time $t_k$ to $t_{k+1}$ with initial condition $z_k$.
+
+We can then form a system of equations on $z=(z_0,\dots,z_N)$ as
+\begin{equation}
+\begin{cases}
+b(z_0,z_N,x_0) = 0 \\
+z_{k+1} - \Phi(s_k) = 0 
+\end{cases}.
+\end{equation}
+Denoting the vector of residuals as
+$$
+R(z,x_0) = \begin{bmatrix} b(z_0,z_N,x_0) \\ z_{k+1} - \Phi(s_k) \end{bmatrix},
+$$
+we can use Newton's method to iteratively solve $z$:
+\begin{equation}
+z^{(k+1)} = z^{(k)} - \eta_k \left( \frac{\partial R}{\partial z}(z^{(k)}) \right)^{-1} R(z^{(k)}).
+\end{equation}
+
+#### Collocation
 
 
 ## Infinite-Horizon Problems 
