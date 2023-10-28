@@ -715,6 +715,49 @@ You should try the code for this example [here](https://github.com/Computational
 
 ## Controlled Systems
 
+We can generalize the notion of a Lyapunov function for an autonomous system to the notion of a _Control Lyapunov Function_ (CLF) for a controlled system [@sontag83sicopt-clf].
+
+Consider a controlled system 
+\begin{equation}
+\dot{x} = f(x,u)
+(\#eq:clf-controlled-system)
+\end{equation}
+where $x \in \mathbb{X} \subseteq \mathbb{R}^n$ the state, $u \in \mathbb{U} \subseteq \mathbb{R}^m$ the control, and $f$ is continuously differentiable. Let $x = 0, u=0$ be an equilibrium point, i.e., $f(0,0) = 0$. The existence of a CLF guarantees that we can design a controller to stabilize the equilibrium point.
+
+::: {.theorembox}
+::: {.theorem #control-lyapunov name="Control Lyapunov Function"}
+Let $V(x): \mathbb{X} \rightarrow \mathbb{R}$ be a continuously differentiable positive definite function, i.e., $V(0) = 0$ and $V(x) > 0, \forall x \in \mathbb{X} \backslash \{ 0 \}$. If there exists $\rho > 0$ such that
+\begin{equation}
+\min_{u \in \mathbb{U}} \dot{V}(x) = \frac{\partial V}{\partial x} f(x,u) < 0, \quad \forall x \in \Omega := \{ x \in \mathbb{X} \mid V(x) \leq \rho \},
+(\#eq:clf-derivative-condition)
+\end{equation}
+then $V(x)$ is called a control Lyapunov function.
+
+In this case, if the system starts within the set $\Omega$, then there exists a controller $u(t)$ that drives the system towards the equilibrium point $0$.
+:::
+:::
+
+In Theorem \@ref(thm:control-lyapunov), it is clear that $Omega$ is a control invariant set. In fact, $Omega$ is an inner approximation of the _region of attraction_ to the equilibrium point $0$.
+
+**Deploying a CLF**. Now we observe that, when a CLF $V(x)$ is given, it can help us design an asymptotically stablizing controller. Consider a special instance of the controlled system \@ref(eq:clf-controlled-system) that is _control-affine_
+\begin{equation}
+\dot{x} = f_1(x) + f_2(x)u.
+(\#eq:control-affine-system-clf)
+\end{equation}
+Clearly, the dynamics \@ref(eq:control-affine-system-clf) is affine in the control $u$. Almost all robotics systems are control affine, so \@ref(eq:control-affine-system-clf) is quite general. Suppose we are given an arbitrary controller $u_d(t)$, which may or may not stabilize the system towards the equilibrium point (e.g., $u_d(t)$ may be obtained from neural networks). We can use the CLF $V(x)$ to correct $u_d(t)$ so that we always obtain a stabilizing feedback controller
+\begin{equation}
+\begin{split}
+u(x(t)) = \arg\min_{u \in \mathbb{U}} & \quad \Vert u - u_d(t) \Vert^2 \\
+\text{subject to} & \quad \dot{V}(x) = \frac{\partial V}{\partial x} (f_1(x) + f_2(x) u) < 0.
+\end{split}
+(\#eq:deploy-clf)
+\end{equation}
+Note that the optimization \@ref(eq:deploy-clf) is actually a convex optimization problem! Since we are minimizing over $u$ (the state $x(t)$ is given), the objective in \@ref(eq:deploy-clf) is quadratic in $u$ and the constraint in \@ref(eq:deploy-clf) is linear in $u$, implying \@ref(eq:deploy-clf) is a quadratic optimization problem. The CLF condition \@ref(eq:clf-derivative-condition) ensures that \@ref(eq:deploy-clf) is always feasible. Intuitively, optimization \@ref(eq:deploy-clf) seeks to find the feedback controller that (a) minimally modifies the given arbitrary controller $u_d(t)$, and (b) guarantees stabilization towards the equilibrium.
+
+**Verification and Synthesis of a CLF**. When a CLF is given, deploying it to compute a stablizing controller is easy. However, verifying if a candidate function is indeed a control Lyapunov function is a highly nontrivial task. In fact, it is an active area of research. The interested reader can refer to [@kang23cdc-verification] and [@dai23acc-convex].
+
+
+
 
 ## Non-autonomous Systems
 
