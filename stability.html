@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-10-18" />
+<meta name="date" content="2023-10-28" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -968,6 +968,40 @@ Figure 5.3: Derivative of the Lyapunov local stability certificate computed via 
 </div>
 <div id="controlled-systems" class="section level2 hasAnchor" number="5.2">
 <h2><span class="header-section-number">5.2</span> Controlled Systems<a href="stability.html#controlled-systems" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We can generalize the notion of a Lyapunov function for an autonomous system to the notion of a <em>Control Lyapunov Function</em> (CLF) for a controlled system <span class="citation">(<a href="#ref-sontag83sicopt-clf" role="doc-biblioref">Sontag 1983</a>)</span>.</p>
+<p>Consider a controlled system
+<span class="math display" id="eq:clf-controlled-system">\[\begin{equation}
+\dot{x} = f(x,u)
+\tag{5.19}
+\end{equation}\]</span>
+where <span class="math inline">\(x \in \mathbb{X} \subseteq \mathbb{R}^n\)</span> the state, <span class="math inline">\(u \in \mathbb{U} \subseteq \mathbb{R}^m\)</span> the control, and <span class="math inline">\(f\)</span> is continuously differentiable. Let <span class="math inline">\(x = 0, u=0\)</span> be an equilibrium point, i.e., <span class="math inline">\(f(0,0) = 0\)</span>. The existence of a CLF guarantees that we can design a controller to stabilize the equilibrium point.</p>
+<div class="theorembox">
+<div class="theorem">
+<p><span id="thm:control-lyapunov" class="theorem"><strong>Theorem 5.6  (Control Lyapunov Function) </strong></span>Let <span class="math inline">\(V(x): \mathbb{X} \rightarrow \mathbb{R}\)</span> be a continuously differentiable positive definite function, i.e., <span class="math inline">\(V(0) = 0\)</span> and <span class="math inline">\(V(x) &gt; 0, \forall x \in \mathbb{X} \backslash \{ 0 \}\)</span>. If there exists <span class="math inline">\(\rho &gt; 0\)</span> such that
+<span class="math display" id="eq:clf-derivative-condition">\[\begin{equation}
+\min_{u \in \mathbb{U}} \dot{V}(x) = \frac{\partial V}{\partial x} f(x,u) &lt; 0, \quad \forall x \in \Omega := \{ x \in \mathbb{X} \mid V(x) \leq \rho \},
+\tag{5.20}
+\end{equation}\]</span>
+then <span class="math inline">\(V(x)\)</span> is called a control Lyapunov function.</p>
+<p>In this case, if the system starts within the set <span class="math inline">\(\Omega\)</span>, then there exists a controller <span class="math inline">\(u(t)\)</span> that drives the system towards the equilibrium point <span class="math inline">\(0\)</span>.</p>
+</div>
+</div>
+<p>In Theorem <a href="stability.html#thm:control-lyapunov">5.6</a>, it is clear that <span class="math inline">\(Omega\)</span> is a control invariant set. In fact, <span class="math inline">\(Omega\)</span> is an inner approximation of the <em>region of attraction</em> to the equilibrium point <span class="math inline">\(0\)</span>.</p>
+<p><strong>Deploying a CLF</strong>. Now we observe that, when a CLF <span class="math inline">\(V(x)\)</span> is given, it can help us design an asymptotically stablizing controller. Consider a special instance of the controlled system <a href="stability.html#eq:clf-controlled-system">(5.19)</a> that is <em>control-affine</em>
+<span class="math display" id="eq:control-affine-system-clf">\[\begin{equation}
+\dot{x} = f_1(x) + f_2(x)u.
+\tag{5.21}
+\end{equation}\]</span>
+Clearly, the dynamics <a href="stability.html#eq:control-affine-system-clf">(5.21)</a> is affine in the control <span class="math inline">\(u\)</span>. Almost all robotics systems are control affine, so <a href="stability.html#eq:control-affine-system-clf">(5.21)</a> is quite general. Suppose we are given an arbitrary controller <span class="math inline">\(u_d(t)\)</span>, which may or may not stabilize the system towards the equilibrium point (e.g., <span class="math inline">\(u_d(t)\)</span> may be obtained from neural networks). We can use the CLF <span class="math inline">\(V(x)\)</span> to correct <span class="math inline">\(u_d(t)\)</span> so that we always obtain a stabilizing feedback controller
+<span class="math display" id="eq:deploy-clf">\[\begin{equation}
+\begin{split}
+u(x(t)) = \arg\min_{u \in \mathbb{U}} &amp; \quad \Vert u - u_d(t) \Vert^2 \\
+\text{subject to} &amp; \quad \dot{V}(x) = \frac{\partial V}{\partial x} (f_1(x) + f_2(x) u) &lt; 0.
+\end{split}
+\tag{5.22}
+\end{equation}\]</span>
+Note that the optimization <a href="stability.html#eq:deploy-clf">(5.22)</a> is actually a convex optimization problem! Since we are minimizing over <span class="math inline">\(u\)</span> (the state <span class="math inline">\(x(t)\)</span> is given), the objective in <a href="stability.html#eq:deploy-clf">(5.22)</a> is quadratic in <span class="math inline">\(u\)</span> and the constraint in <a href="stability.html#eq:deploy-clf">(5.22)</a> is linear in <span class="math inline">\(u\)</span>, implying <a href="stability.html#eq:deploy-clf">(5.22)</a> is a quadratic optimization problem. The CLF condition <a href="stability.html#eq:clf-derivative-condition">(5.20)</a> ensures that <a href="stability.html#eq:deploy-clf">(5.22)</a> is always feasible. Intuitively, optimization <a href="stability.html#eq:deploy-clf">(5.22)</a> seeks to find the feedback controller that (a) minimally modifies the given arbitrary controller <span class="math inline">\(u_d(t)\)</span>, and (b) guarantees stabilization towards the equilibrium.</p>
+<p><strong>Verification and Synthesis of a CLF</strong>. When a CLF is given, deploying it to compute a stablizing controller is easy. However, verifying if a candidate function is indeed a control Lyapunov function is a highly nontrivial task. In fact, it is an active area of research. The interested reader can refer to <span class="citation">(<a href="#ref-kang23cdc-verification" role="doc-biblioref">Kang et al. 2023</a>)</span> and <span class="citation">(<a href="#ref-dai23acc-convex" role="doc-biblioref">Dai and Permenter 2023</a>)</span>.</p>
 </div>
 <div id="non-autonomous-systems" class="section level2 hasAnchor" number="5.3">
 <h2><span class="header-section-number">5.3</span> Non-autonomous Systems<a href="stability.html#non-autonomous-systems" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -984,7 +1018,7 @@ Figure 5.3: Derivative of the Lyapunov local stability certificate computed via 
 </div>
 <div class="theorembox">
 <div class="theorem">
-<p><span id="thm:BarbalatStability" class="theorem"><strong>Theorem 5.6  (Barbalat's Stability Certificate) </strong></span>If a scalar function <span class="math inline">\(V(x,t)\)</span> satisfies</p>
+<p><span id="thm:BarbalatStability" class="theorem"><strong>Theorem 5.7  (Barbalat's Stability Certificate) </strong></span>If a scalar function <span class="math inline">\(V(x,t)\)</span> satisfies</p>
 <ul>
 <li><p><span class="math inline">\(V(x,t)\)</span> is lower bounded,</p></li>
 <li><p><span class="math inline">\(\dot{V}(x,t)\)</span> is negative semidefinite</p></li>
@@ -1006,8 +1040,14 @@ Figure 5.3: Derivative of the Lyapunov local stability certificate computed via 
 <div id="ref-blekherman12book-semidefinite" class="csl-entry">
 Blekherman, Grigoriy, Pablo A Parrilo, and Rekha R Thomas. 2012. <em>Semidefinite Optimization and Convex Algebraic Geometry</em>. SIAM.
 </div>
+<div id="ref-dai23acc-convex" class="csl-entry">
+Dai, Hongkai, and Frank Permenter. 2023. <span>“Convex Synthesis and Verification of Control-Lyapunov and Barrier Functions with Input Constraints.”</span> In <em>2023 American Control Conference (ACC)</em>, 4116–23. IEEE.
+</div>
 <div id="ref-dawson23tro-safe" class="csl-entry">
 Dawson, Charles, Sicun Gao, and Chuchu Fan. 2023. <span>“Safe Control with Learned Certificates: A Survey of Neural Lyapunov, Barrier, and Contraction Methods for Robotics and Control.”</span> <em>IEEE Transactions on Robotics</em>.
+</div>
+<div id="ref-kang23cdc-verification" class="csl-entry">
+Kang, Shucheng, Yuxiao Chen, Heng Yang, and Marco Pavone. 2023. <span>“Verification and Synthesis of Robust Control Barrier Functions: Multilevel Polynomial Optimization and Semidefinite Relaxation.”</span> In <em>2023 62nd IEEE Conference on Decision and Control (CDC)</em>.
 </div>
 <div id="ref-lasserre01siopt-global" class="csl-entry">
 Lasserre, Jean B. 2001. <span>“Global Optimization with Polynomials and the Problem of Moments.”</span> <em>SIAM Journal on Optimization</em> 11 (3): 796–817.
@@ -1023,6 +1063,9 @@ Murray, Riley, Venkat Chandrasekaran, and Adam Wierman. 2021. <span>“Signomial
 </div>
 <div id="ref-nie23book-moment" class="csl-entry">
 Nie, Jiawang. 2023. <em>Moment and Polynomial Optimization</em>. SIAM.
+</div>
+<div id="ref-sontag83sicopt-clf" class="csl-entry">
+Sontag, Eduardo D. 1983. <span>“A Lyapunov-Like Characterization of Asymptotic Controllability.”</span> <em>SIAM Journal on Control and Optimization</em> 21 (3): 462–71.
 </div>
 <div id="ref-vinograd57-inapplicability" class="csl-entry">
 Vinograd, Robert Èlyukimovich. 1957. <span>“Inapplicability of the Method of Characteristic Exponents to the Study of Non-Linear Differential Equations.”</span> <em>Matematicheskii Sbornik</em> 83 (4): 431–38.

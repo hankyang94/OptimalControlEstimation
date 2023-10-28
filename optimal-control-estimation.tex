@@ -151,7 +151,7 @@ arc=4pt}
 
 \title{Optimal Control and Estimation}
 \author{Heng Yang}
-\date{2023-10-18}
+\date{2023-10-28}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -4584,6 +4584,45 @@ You should try the code for this example \href{https://github.com/ComputationalR
 
 \hypertarget{controlled-systems}{%
 \section{Controlled Systems}\label{controlled-systems}}
+
+We can generalize the notion of a Lyapunov function for an autonomous system to the notion of a \emph{Control Lyapunov Function} (CLF) for a controlled system \citep{sontag83sicopt-clf}.
+
+Consider a controlled system
+\begin{equation}
+\dot{x} = f(x,u)
+\label{eq:clf-controlled-system}
+\end{equation}
+where \(x \in \mathbb{X} \subseteq \mathbb{R}^n\) the state, \(u \in \mathbb{U} \subseteq \mathbb{R}^m\) the control, and \(f\) is continuously differentiable. Let \(x = 0, u=0\) be an equilibrium point, i.e., \(f(0,0) = 0\). The existence of a CLF guarantees that we can design a controller to stabilize the equilibrium point.
+
+\begin{theorem}[Control Lyapunov Function]
+\protect\hypertarget{thm:control-lyapunov}{}\label{thm:control-lyapunov}Let \(V(x): \mathbb{X} \rightarrow \mathbb{R}\) be a continuously differentiable positive definite function, i.e., \(V(0) = 0\) and \(V(x) > 0, \forall x \in \mathbb{X} \backslash \{ 0 \}\). If there exists \(\rho > 0\) such that
+\begin{equation}
+\min_{u \in \mathbb{U}} \dot{V}(x) = \frac{\partial V}{\partial x} f(x,u) < 0, \quad \forall x \in \Omega := \{ x \in \mathbb{X} \mid V(x) \leq \rho \},
+\label{eq:clf-derivative-condition}
+\end{equation}
+then \(V(x)\) is called a control Lyapunov function.
+
+In this case, if the system starts within the set \(\Omega\), then there exists a controller \(u(t)\) that drives the system towards the equilibrium point \(0\).
+\end{theorem}
+
+In Theorem \ref{thm:control-lyapunov}, it is clear that \(Omega\) is a control invariant set. In fact, \(Omega\) is an inner approximation of the \emph{region of attraction} to the equilibrium point \(0\).
+
+\textbf{Deploying a CLF}. Now we observe that, when a CLF \(V(x)\) is given, it can help us design an asymptotically stablizing controller. Consider a special instance of the controlled system \eqref{eq:clf-controlled-system} that is \emph{control-affine}
+\begin{equation}
+\dot{x} = f_1(x) + f_2(x)u.
+\label{eq:control-affine-system-clf}
+\end{equation}
+Clearly, the dynamics \eqref{eq:control-affine-system-clf} is affine in the control \(u\). Almost all robotics systems are control affine, so \eqref{eq:control-affine-system-clf} is quite general. Suppose we are given an arbitrary controller \(u_d(t)\), which may or may not stabilize the system towards the equilibrium point (e.g., \(u_d(t)\) may be obtained from neural networks). We can use the CLF \(V(x)\) to correct \(u_d(t)\) so that we always obtain a stabilizing feedback controller
+\begin{equation}
+\begin{split}
+u(x(t)) = \arg\min_{u \in \mathbb{U}} & \quad \Vert u - u_d(t) \Vert^2 \\
+\text{subject to} & \quad \dot{V}(x) = \frac{\partial V}{\partial x} (f_1(x) + f_2(x) u) < 0.
+\end{split}
+\label{eq:deploy-clf}
+\end{equation}
+Note that the optimization \eqref{eq:deploy-clf} is actually a convex optimization problem! Since we are minimizing over \(u\) (the state \(x(t)\) is given), the objective in \eqref{eq:deploy-clf} is quadratic in \(u\) and the constraint in \eqref{eq:deploy-clf} is linear in \(u\), implying \eqref{eq:deploy-clf} is a quadratic optimization problem. The CLF condition \eqref{eq:clf-derivative-condition} ensures that \eqref{eq:deploy-clf} is always feasible. Intuitively, optimization \eqref{eq:deploy-clf} seeks to find the feedback controller that (a) minimally modifies the given arbitrary controller \(u_d(t)\), and (b) guarantees stabilization towards the equilibrium.
+
+\textbf{Verification and Synthesis of a CLF}. When a CLF is given, deploying it to compute a stablizing controller is easy. However, verifying if a candidate function is indeed a control Lyapunov function is a highly nontrivial task. In fact, it is an active area of research. The interested reader can refer to \citep{kang23cdc-verification} and \citep{dai23acc-convex}.
 
 \hypertarget{non-autonomous-systems}{%
 \section{Non-autonomous Systems}\label{non-autonomous-systems}}
