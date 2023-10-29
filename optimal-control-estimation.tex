@@ -151,7 +151,7 @@ arc=4pt}
 
 \title{Optimal Control and Estimation}
 \author{Heng Yang}
-\date{2023-10-28}
+\date{2023-10-29}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -4595,9 +4595,9 @@ Consider a controlled system
 where \(x \in \mathbb{X} \subseteq \mathbb{R}^n\) the state, \(u \in \mathbb{U} \subseteq \mathbb{R}^m\) the control, and \(f\) is continuously differentiable. Let \(x = 0, u=0\) be an equilibrium point, i.e., \(f(0,0) = 0\). The existence of a CLF guarantees that we can design a controller to stabilize the equilibrium point.
 
 \begin{theorem}[Control Lyapunov Function]
-\protect\hypertarget{thm:control-lyapunov}{}\label{thm:control-lyapunov}Let \(V(x): \mathbb{X} \rightarrow \mathbb{R}\) be a continuously differentiable positive definite function, i.e., \(V(0) = 0\) and \(V(x) > 0, \forall x \in \mathbb{X} \backslash \{ 0 \}\). If there exists \(\rho > 0\) such that
+\protect\hypertarget{thm:control-lyapunov}{}\label{thm:control-lyapunov}Let \(V(x): \mathbb{X} \rightarrow \mathbb{R}\) be a continuously differentiable positive definite function, i.e., \(V(0) = 0\) and \(V(x) > 0, \forall x \in \mathbb{X} \backslash \{ 0 \}\). If there exists \(\rho > 0\) such that \(\Omega := \{ x \in \mathbb{X} \mid V(x) \leq \rho \}\) is bounded and
 \begin{equation}
-\min_{u \in \mathbb{U}} \dot{V}(x) = \frac{\partial V}{\partial x} f(x,u) < 0, \quad \forall x \in \Omega := \{ x \in \mathbb{X} \mid V(x) \leq \rho \},
+\min_{u \in \mathbb{U}} \dot{V}(x) = \frac{\partial V}{\partial x} f(x,u) < 0, \quad \forall x \in \Omega \backslash \{ 0 \},
 \label{eq:clf-derivative-condition}
 \end{equation}
 then \(V(x)\) is called a control Lyapunov function.
@@ -4674,6 +4674,81 @@ y &= h(x,u)
 \label{eq:output-feedback-system}
 \end{equation}
 where \(x(t) \in \mathbb{X} \subseteq \mathbb{R}^n\) the state of the system, \(u(t) \in \mathbb{U} \subseteq \mathbb{R}^m\) the control (or input), \(y(t) \in \mathbb{Y} \subseteq \mathbb{R}^{d}\) the output (i.e., measurement) of the state and control, and \(f,g\) the evolution and measurement functions (which are sufficiently smooth).
+
+\hypertarget{least-squares-estimation}{%
+\section{Least-Squares Estimation}\label{least-squares-estimation}}
+
+Suppose we are given two random variables \(x \in \mathbb{R}^n\) and \(y \in \mathbb{R}^m\), where \(y\) is a measurement that provides some information about the model \(x\). We are interested in finding an \emph{estimator}, i.e., a function \(x(y)\), that minimizes
+\[
+\mathbb{E}_{x,y} \left\{ \Vert x - x(y) \Vert^2 \right\}.
+\]
+The optimal estimator, \(x^\star(y)\), is called a \emph{least-squares estimator}:
+\[
+x^\star(y) = \arg\min_{x(\cdot)} \mathbb{E}_{x,y} \left\{ \Vert x - x(y) \Vert^2 \right\}.
+\]
+Note that \(x^\star(y)\) is a function with input \(y\).
+Since
+\begin{equation}
+\mathbb{E}_{x,y}\left\{ \Vert x - x(y) \Vert^2 \right\} = \mathbb{E}_y \left\{ \mathbb{E}_x \left\{ \Vert x - x(y) \Vert^2 \mid y\right\} \right\},
+\label{eq:expand-conditional-expectation}
+\end{equation}
+it is clear that \(x^\star(y)\) is a least-squares estimator if \(x^\star(y)\) minimizes the conditional expectation in \eqref{eq:expand-conditional-expectation} for every \(y \in \mathbb{R}^m\), that is,
+\begin{equation}
+x^\star(y) = \arg\min_{z \in \mathbb{R}^n} \mathbb{E}_x \left\{ \Vert x - z \Vert^2 \mid y \right\}, \quad \forall y \in \mathbb{R}^m.
+\label{eq:rewrite-least-squares-conditional}
+\end{equation}
+With this observation, we have the following proposition.
+
+\begin{proposition}[Least Squares Estimator]
+\protect\hypertarget{prp:least-squares-estimator}{}\label{prp:least-squares-estimator}The least squares estimator \(x^\star(y)\) is given by
+\begin{equation}
+x^\star(y) = \mathbb{E}_x \left\{ x \mid y \right\}, \quad \forall y \in \mathbb{R}^m,
+\label{eq:conditional-mean}
+\end{equation}
+i.e., \(x^\star(y)\) returns the conditional mean of \(x\) given \(y\).
+\end{proposition}
+
+\begin{proof}
+We expand the objective in \eqref{eq:rewrite-least-squares-conditional}
+\[
+\mathbb{E}_x \left\{ \Vert x - z \Vert^2 \mid y \right\} = \mathbb{E}_x \left\{ \Vert x \Vert^2 \mid y \right\} - 2 z^T \mathbb{E}_x \left\{x \mid y \right\} + \Vert z \Vert^2.
+\]
+Observe that problem \eqref{eq:rewrite-least-squares-conditional} is an unconstrained quadratic optimization, whose optimal solution can be obtained by setting the gradient of objective (w.r.t. \(z\)) to zero:
+\[
+z = \mathbb{E}_x \left\{ x \mid y \right\},
+\]
+concluding the proof.
+\end{proof}
+
+Depending on the joint distribution of \((x,y)\), the least-squares estimator can be very complicated (due to \(\mathbb{E}_x\left\{ x \mid y\right\}\) being complicated) and in general does not admit a clean solution. We now turn to the family of linear estimators.
+
+\hypertarget{linear-least-squares-estimation}{%
+\subsection{Linear Least-Squares Estimation}\label{linear-least-squares-estimation}}
+
+A linear estimator \(x(y)\) takes the following form
+\[
+x(y) = Ay + b, \quad A \in \mathbb{R}^{n \times m}, b \in \mathbb{R}^n.
+\]
+The optimal linear estimator
+\begin{equation}
+(A^\star, b^\star) = \arg\min_{A,b} \mathbb{E}_{x,y} \left\{ \Vert x - Ay - b \Vert^2 \right\}
+\label{eq:linear-least-squares-estimator}
+\end{equation}
+is called a \emph{linear least-squares estimator}.
+
+In the special case where \(x\) and \(y\) are jointly Gaussian random variables, the conditional expectation \(\mathbb{E}_{x} \{x \mid y \}\) is indeed linear, and hence a linear least-squares estimator is also the true least-squares estimator.
+
+\begin{proposition}[Linear Least-Squares Estimator]
+\protect\hypertarget{prp:linear-least-squares-estimator}{}\label{prp:linear-least-squares-estimator}If the random variables \((x,y)\) are jointly Gaussian, then the conditional expectation \(\mathbb{E}_x \{x \mid y \}\) is linear in \(y\). Therefore, the linear least-squares estimator \eqref{eq:linear-least-squares-estimator} is also the least-squares estimator.
+\end{proposition}
+
+Now let us turn to characterize the linear least-squares estimator.
+
+\hypertarget{kalman-filter}{%
+\section{Kalman Filter}\label{kalman-filter}}
+
+\hypertarget{linear-quadratic-gaussian-control}{%
+\section{Linear Quadratic Gaussian Control}\label{linear-quadratic-gaussian-control}}
 
 \hypertarget{state-observer}{%
 \section{State Observer}\label{state-observer}}
