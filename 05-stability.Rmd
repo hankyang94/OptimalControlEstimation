@@ -726,9 +726,9 @@ where $x \in \mathbb{X} \subseteq \mathbb{R}^n$ the state, $u \in \mathbb{U} \su
 
 ::: {.theorembox}
 ::: {.theorem #control-lyapunov name="Control Lyapunov Function"}
-Let $V(x): \mathbb{X} \rightarrow \mathbb{R}$ be a continuously differentiable positive definite function, i.e., $V(0) = 0$ and $V(x) > 0, \forall x \in \mathbb{X} \backslash \{ 0 \}$. If there exists $\rho > 0$ such that
+Let $V(x): \mathbb{X} \rightarrow \mathbb{R}$ be a continuously differentiable positive definite function, i.e., $V(0) = 0$ and $V(x) > 0, \forall x \in \mathbb{X} \backslash \{ 0 \}$. If there exists $\rho > 0$ such that $\Omega := \{ x \in \mathbb{X} \mid V(x) \leq \rho \}$ is bounded and
 \begin{equation}
-\min_{u \in \mathbb{U}} \dot{V}(x) = \frac{\partial V}{\partial x} f(x,u) < 0, \quad \forall x \in \Omega := \{ x \in \mathbb{X} \mid V(x) \leq \rho \},
+\min_{u \in \mathbb{U}} \dot{V}(x) = \frac{\partial V}{\partial x} f(x,u) < 0, \quad \forall x \in \Omega \backslash \{ 0 \},
 (\#eq:clf-derivative-condition)
 \end{equation}
 then $V(x)$ is called a control Lyapunov function.

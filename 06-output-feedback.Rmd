@@ -11,6 +11,81 @@ y &= h(x,u)
 \end{equation}
 where $x(t) \in \mathbb{X} \subseteq \mathbb{R}^n$ the state of the system, $u(t) \in \mathbb{U} \subseteq \mathbb{R}^m$ the control (or input), $y(t) \in \mathbb{Y} \subseteq \mathbb{R}^{d}$ the output (i.e., measurement) of the state and control, and $f,g$ the evolution and measurement functions (which are sufficiently smooth).
 
+## Least-Squares Estimation 
+
+Suppose we are given two random variables $x \in \mathbb{R}^n$ and $y \in \mathbb{R}^m$, where $y$ is a measurement that provides some information about the model $x$. We are interested in finding an _estimator_, i.e., a function $x(y)$, that minimizes 
+$$
+\mathbb{E}_{x,y} \left\{ \Vert x - x(y) \Vert^2 \right\}.
+$$
+The optimal estimator, $x^\star(y)$, is called a _least-squares estimator_:
+$$
+x^\star(y) = \arg\min_{x(\cdot)} \mathbb{E}_{x,y} \left\{ \Vert x - x(y) \Vert^2 \right\}.
+$$
+Note that $x^\star(y)$ is a function with input $y$. 
+Since
+\begin{equation}
+\mathbb{E}_{x,y}\left\{ \Vert x - x(y) \Vert^2 \right\} = \mathbb{E}_y \left\{ \mathbb{E}_x \left\{ \Vert x - x(y) \Vert^2 \mid y\right\} \right\},
+(\#eq:expand-conditional-expectation)
+\end{equation}
+it is clear that $x^\star(y)$ is a least-squares estimator if $x^\star(y)$ minimizes the conditional expectation in \@ref(eq:expand-conditional-expectation) for every $y \in \mathbb{R}^m$, that is,
+\begin{equation}
+x^\star(y) = \arg\min_{z \in \mathbb{R}^n} \mathbb{E}_x \left\{ \Vert x - z \Vert^2 \mid y \right\}, \quad \forall y \in \mathbb{R}^m.
+(\#eq:rewrite-least-squares-conditional)
+\end{equation}
+With this observation, we have the following proposition.
+
+::: {.theorembox}
+::: {.proposition #least-squares-estimator name="Least Squares Estimator"}
+The least squares estimator $x^\star(y)$ is given by
+\begin{equation}
+x^\star(y) = \mathbb{E}_x \left\{ x \mid y \right\}, \quad \forall y \in \mathbb{R}^m,
+(\#eq:conditional-mean)
+\end{equation}
+i.e., $x^\star(y)$ returns the conditional mean of $x$ given $y$.
+:::
+:::
+::: {.proofbox}
+::: {.proof}
+We expand the objective in \@ref(eq:rewrite-least-squares-conditional)
+$$
+\mathbb{E}_x \left\{ \Vert x - z \Vert^2 \mid y \right\} = \mathbb{E}_x \left\{ \Vert x \Vert^2 \mid y \right\} - 2 z^T \mathbb{E}_x \left\{x \mid y \right\} + \Vert z \Vert^2.
+$$
+Observe that problem \@ref(eq:rewrite-least-squares-conditional) is an unconstrained quadratic optimization, whose optimal solution can be obtained by setting the gradient of objective (w.r.t. $z$) to zero:
+$$
+z = \mathbb{E}_x \left\{ x \mid y \right\},
+$$
+concluding the proof.
+:::
+:::
+
+Depending on the joint distribution of $(x,y)$, the least-squares estimator can be very complicated (due to $\mathbb{E}_x\left\{ x \mid y\right\}$ being complicated) and in general does not admit a clean solution. We now turn to the family of linear estimators.
+
+### Linear Least-Squares Estimation
+
+A linear estimator $x(y)$ takes the following form
+$$
+x(y) = Ay + b, \quad A \in \mathbb{R}^{n \times m}, b \in \mathbb{R}^n.
+$$
+The optimal linear estimator
+\begin{equation}
+(A^\star, b^\star) = \arg\min_{A,b} \mathbb{E}_{x,y} \left\{ \Vert x - Ay - b \Vert^2 \right\}
+(\#eq:linear-least-squares-estimator)
+\end{equation}
+is called a _linear least-squares estimator_.
+
+In the special case where $x$ and $y$ are jointly Gaussian random variables, the conditional expectation $\mathbb{E}_{x} \{x \mid y \}$ is indeed linear, and hence a linear least-squares estimator is also the true least-squares estimator.
+
+::: {.theorembox}
+::: {.proposition #linear-least-squares-estimator name="Linear Least-Squares Estimator"}
+If the random variables $(x,y)$ are jointly Gaussian, then the conditional expectation $\mathbb{E}_x \{x \mid y \}$ is linear in $y$. Therefore, the linear least-squares estimator \@ref(eq:linear-least-squares-estimator) is also the least-squares estimator.
+:::
+:::
+
+Now let us turn to characterize the linear least-squares estimator. 
+
+## Kalman Filter
+
+## Linear Quadratic Gaussian Control 
 
 
 ## State Observer {#state-observer}
