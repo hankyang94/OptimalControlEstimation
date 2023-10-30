@@ -81,7 +81,159 @@ If the random variables $(x,y)$ are jointly Gaussian, then the conditional expec
 :::
 :::
 
-Now let us turn to characterize the linear least-squares estimator. 
+Now let us turn to characterize the linear least-squares estimator.
+
+::: {.theorembox}
+::: {.proposition #linear-least-squares-solution name="Solution of Linear Least-Squares Estimator"}
+Let $x,y$ be random variables in $\mathbb{R}^n$ and $\mathbb{R}^m$ drawn from some underlying distribution. The means and covariances of $x$ and $y$ are given by
+\begin{equation}
+\begin{split}
+\mathbb{E}\{ x\} = \bar{x}, \quad \mathbb{E} \{ y \} = \bar{y}. \\
+\mathbb{E}\{ (x - \bar{x})(x - \bar{x})^T \} = \Sigma_{xx}, \quad \mathbb{E}\{ (y - \bar{y})(y-\bar{y})^T \} = \Sigma_{yy}, \\
+\mathbb{E}\{ (x - \bar{x})(y - \bar{y})^T \} = \Sigma_{xy}, \quad \mathbb{E}\{ (y - \bar{y})(x - \bar{x})^T \} = \Sigma^T_{xy},
+\end{split}
+\end{equation}
+and assume $\Sigma_{yy}$ is invertible (positive definite). Then the linear least-squares estimator $x^\star(y)$, i.e., solution of \@ref(eq:linear-least-squares-estimator), is given by 
+\begin{equation}
+x^\star(y) = \bar{x} + \Sigma_{xy} \Sigma^{-1}_{yy} (y - \bar{y}).
+(\#eq:linear-least-squares-solution)
+\end{equation}
+The corresponding error covariance matrix is given by
+\begin{equation}
+\mathbb{E}_{x,y} \left\{ (x - x^\star(y))(x - x^\star(y))^T \right\} = \Sigma_{xx} - \Sigma_{xy} \Sigma^{-1}_{yy} \Sigma^T_{xy}.
+(\#eq:linear-least-squares-solution-covariance)
+\end{equation}
+:::
+:::
+::: {.proofbox}
+::: {.proof}
+Problem \@ref(eq:linear-least-squares-estimator) is an unconstrained quadratic optimization in $(A,b)$. Therefore, its optimal solution can be computed by taking the derivative of the objective, i.e., $f(A,b) = \mathbb{E}_{x,y} \{ \Vert x - Ay - b \Vert^2 \}$ , w.r.t. $(A,b)$ and setting them to zero
+\begin{equation}
+\begin{split}
+0 = \frac{\partial f}{\partial A} = 2 \mathbb{E}_{x,y} \{ (b + Ay -x) y^T \}, \\
+0 = \frac{\partial f}{\partial b} = 2 \mathbb{E}_{x,y} \{ b + Ay - x \}.
+\end{split}
+(\#eq:linear-least-squares-derivative-zero)
+\end{equation}
+The second equation gives us the solution of $b^\star$
+\begin{equation}
+b^\star = \bar{x} - A \bar{y}.
+(\#eq:linear-least-squares-proof-solution-b)
+\end{equation}
+Plug the solution \@ref(eq:linear-least-squares-proof-solution-b) back into the first equation in \@ref(eq:linear-least-squares-derivative-zero), we obtain 
+\begin{equation}
+\mathbb{E}_{x,y} \{ (A(y - \bar{y}) - (x - \bar{x})) y^T\} = 0.
+(\#eq:linear-least-squares-proof-simplify-first-equation)
+\end{equation}
+On the other hand, we have
+\begin{equation}
+\left( \mathbb{E}_{x,y} \{ A (y - \bar{y}) - (x - \bar{x})\} \right) \bar{y}^T = 0.
+(\#eq:linear-least-squares-proof-simplify-first-equation-other)
+\end{equation}
+Subtracting \@ref(eq:linear-least-squares-proof-simplify-first-equation-other) from \@ref(eq:linear-least-squares-proof-simplify-first-equation), we have
+$$
+\mathbb{E}_{x,y} \left\{ (A(y-\bar{y}) - (x - \bar{x})) (y - \bar{y})^T \right\} = 0,
+$$
+which is exactly
+$$
+A \Sigma_{yy} - \Sigma_{xy} = 0.
+$$
+Therefore, we obtain the optimal $A$
+\begin{equation}
+A^\star = \Sigma_{xy} \Sigma^{-1}_{yy}.
+(\#eq:linear-least-squares-proof-solution-A)
+\end{equation}
+Combining \@ref(eq:linear-least-squares-proof-solution-A) and \@ref(eq:linear-least-squares-proof-solution-b), we get the optimal linear least-squares estimator 
+$$
+x^\star(y) = \Sigma_{xy} \Sigma^{-1}_{yy} y + \left( \bar{x} -  \Sigma_{xy} \Sigma^{-1}_{yy} \bar{y} \right) = \bar{x} + \Sigma_{xy} \Sigma^{-1}_{yy} (y - \bar{y}).
+$$
+The error covariance \@ref(eq:linear-least-squares-solution-covariance) follows by direct computation.
+:::
+:::
+
+We next list a few useful properties of the linear least-squares estimator.
+
+::: {.theorembox}
+::: {.corollary #properties-linear-least-squares-estimator name="Properties of the Linear Least-Squares Estimator"}
+The linear least-squares estimator $x^\star(y)$ in \@ref(eq:linear-least-squares-solution) is unbiased, i.e., 
+$$
+\mathbb{E}_y \{ x^\star(y) \} = \bar{x}.
+$$
+
+The estimation error $x - x^\star(y)$ is uncorrelated with both $y$ and $x^\star(y)$, i.e., 
+\begin{equation}
+\begin{split}
+\mathbb{E}_{x,y} \{ y^T (x - x^\star(y)) \} = 0. \\
+\mathbb{E}_{x,y} \{ (x^\star(y))^T (x - x^\star(y)) \} = 0.
+\end{split}
+(\#eq:linear-least-squares-orthogonal-projection)
+\end{equation}
+:::
+:::
+Equation \@ref(eq:linear-least-squares-orthogonal-projection) is known as the _orthogonal projection principle_.
+
+The next corollary considers the linear least-squares estimator of a new variable $z$ that is a linear function of $x$.
+
+::: {.theorembox}
+::: {.corollary #linear-least-squares-z}
+Consider in addition to $x$ and $y$, the random vector $z$ defined by
+$$
+z = Cx,
+$$
+where $C \in \mathbb{R}^{p \times n}$ is given. Then the linear least-squares estimator of $z$ given $y$ is 
+$$
+z^\star(y) = C x^\star(y),
+$$
+and the corresponding error covariance matrix is 
+$$
+\mathbb{E}_{z,y}\left\{ (z - z^\star(y))(z - z^\star(y))^T \right\} = C \mathbb{E}_{x,y} \left\{ (x - x^\star(y))(x - x^\star(y))^T \right\} C^T,
+$$
+where $\mathbb{E}_{x,y} \left\{ (x - x^\star(y))(x - x^\star(y))^T \right\}$ is given in \@ref(eq:linear-least-squares-solution-covariance).
+:::
+:::
+::: {.proofbox}
+::: {.proof}
+Since $z = Cx$, we have $\mathbb{E} \{ z \} = C \bar{x} = \bar{z}$, and 
+$$
+\Sigma_{zz} = \mathbb{E} \{ (z - \bar{z})(z - \bar{z})^T \} = C \Sigma_{xx} C^T, \\
+\Sigma_{zy} = \mathbb{E} \{ (z - \bar{z})(y - \bar{y})^T \} = C \Sigma_{xy}, \\
+\Sigma_{yz} = \mathbb{E} \{ (y - \bar{y}) (z - \bar{z})^T \} = \Sigma^T_{xy} C^T.
+$$
+The result then follows by applying Proposition \@ref(prp:linear-least-squares-solution) to $z$ and $y$.
+:::
+:::
+
+The next corollary considers the linear least-squares estimator of $x$ given $z$, a random vector that is a linear function of $y$.
+
+::: {.theorembox}
+::: {.corollary #linear-least-squares-x-z}
+Consider in addition to $x$ and $y$, an additional random variable $z$
+$$
+z = C y + u,
+$$
+where $C \in \mathbb{R}^{p \times m}$, with rank $p$, and $u \in \mathbb{R}^p$ are given. Then the linear least-squares estimator of $x$ given $z$ is
+$$
+x^\star(z) = \bar{x} + \Sigma_{xy} C^T (C \Sigma_{yy} C^T)^{-1} (z - C \bar{y} - u),
+$$
+and the corresponding error covariance matrix is 
+$$
+\mathbb{E}_{x,z}\left\{ (x - x^\star(z))(x - x^\star(z))^T \right\} = \Sigma_{xx} - \Sigma_{xy} C^T (C \Sigma_{yy} C^T)^{-1} C \Sigma_{xy}^T.
+$$
+:::
+:::
+::: {.proofbox}
+::: {.proof}
+Since $z = Cy + u$, we have $\bar{z} = \mathbb{E}\{ z \} = C \bar{y} + u$, and 
+$$
+\Sigma_{zz} = \mathbb{E}\{ (z - \bar{z})(z - \bar{z})^T \} = C \Sigma_{yy} C^T, \\
+\Sigma_{zx} = \mathbb{E}\{ (z - \bar{z})(x - \bar{x})^T \} = C \Sigma_{xy}^T, \\
+\Sigma_{xz} = \mathbb{E}\{ (x - \bar{x})(z - \bar{z})^T \} = \Sigma_{xy}C^T.
+$$
+The result then follows by applying Proposition \@ref(prp:linear-least-squares-solution).
+:::
+:::
+
+Frequently, we want to 
 
 ## Kalman Filter
 
