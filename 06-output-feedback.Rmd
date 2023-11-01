@@ -1,15 +1,29 @@
 
 # Output Feedback {#output-feedback}
 
-Consider a continuous-time dynamical system
+We have presented many algorithms for optimal control of dynamical systems. These algorithms, however, have a strict assumption, i.e., the state of the system is directly available. These controllers are called _state-feedback_ controllers.
+
+In many applications, the state of the system is not readily available but measured via sensors. Therefore, a more realistic model of the dynamical system is
 \begin{equation}
 \begin{split}
-\dot{x} &= f(x,u)  \\
-y &= h(x,u)
+\dot{x} &= f(x,u) + w  \\
+y &= h(x,u) + v
 \end{split} 
 (\#eq:output-feedback-system)
 \end{equation}
-where $x(t) \in \mathbb{X} \subseteq \mathbb{R}^n$ the state of the system, $u(t) \in \mathbb{U} \subseteq \mathbb{R}^m$ the control (or input), $y(t) \in \mathbb{Y} \subseteq \mathbb{R}^{d}$ the output (i.e., measurement) of the state and control, and $f,g$ the evolution and measurement functions (which are sufficiently smooth).
+where $x(t) \in \mathbb{X} \subseteq \mathbb{R}^n$ the state of the system, $u(t) \in \mathbb{U} \subseteq \mathbb{R}^m$ the control (or input), $y(t) \in \mathbb{Y} \subseteq \mathbb{R}^{d}$ the output (i.e., measurement) of the state and control, and $f,g$ the evolution and measurement functions (which are sufficiently smooth). $w(t)$ and $v(t)$ denote disturbance and measurement noise, respectively. The discrete-time analog of \@ref(eq:output-feedback-system) is
+\begin{equation}
+\begin{split}
+x_{k+1} &= f(x_k,u_k) + w_k  \\
+y_k &= h(x_k,u_k) + v_k
+\end{split},
+(\#eq:output-feedback-system-discrete-time)
+\end{equation}
+with $k$ denoting the discrete timestep. When faced with systems like \@ref(eq:output-feedback-system) and \@ref(eq:output-feedback-system-discrete-time), the controller typically needs to use the history of all measurements, also known as _output feedback_
+$$
+u(t) = \pi(\{y(\tau)\}_{\tau=0}^t), \quad u_k = \pi (\{y_0,\dots,y_k\}).
+$$
+
 
 ## Least-Squares Estimation 
 
@@ -233,9 +247,328 @@ The result then follows by applying Proposition \@ref(prp:linear-least-squares-s
 :::
 :::
 
-Frequently, we want to 
+Frequently, we want to estimate a vector of parameters $x \in \mathbb{R}^n$ given a measurement vector $z \in \mathbb{R}^m$ of the form $z = C x + v$ with $C \in \mathbb{R}^{m \times n}$ a given matrix and $v \in \mathbb{R}^m$ a noise vector. The following corollary gives the linear least squares estimator $x^\star(z)$ and its error covariance.
+
+::: {.theorembox}
+::: {.corollary #linear-least-squares-noise name="Linear Least-Squares Estimator with Noise"}
+Let 
+$$
+z = C x + v,
+$$
+where $C \in \mathbb{R}^{m \times n}$ is a given matrix, and the random variable $x$ and $v$ are uncorrelated. Denote
+$$
+\mathbb{E}\{x \} = \bar{x}, \quad \mathbb{E}\{ (x - \bar{x})(x - \bar{x})^T \} = \Sigma_{xx}, \\
+\mathbb{E}\{ v\} = \bar{v}, \quad \mathbb{E}\{ (v - \bar{v})(v - \bar{v})^T \} = \Sigma_{vv},
+$$
+and assume $\Sigma_{vv}$ is positive definite. Then the linear least-squares estimator of $x$ given $z$ is 
+$$
+x^\star(z) = \bar{x} + \Sigma_{xx} C^T (C \Sigma_{xx} C^T + \Sigma_{vv})^{-1} (z - C \bar{x} - \bar{v}),
+$$
+and the corresponding error covariance is
+$$
+\mathbb{E}_{x,v} \{ (x - x^\star(z))(x - x^\star(z))^T \} = \Sigma_{xx} - \Sigma_{xx}C^T (C \Sigma_{xx} C^T + \Sigma_{vv})^{-1} C \Sigma_{xx}.
+$$
+:::
+:::
+::: {.proofbox}
+::: {.proof}
+Denote 
+$$
+y = \begin{bmatrix} x \\ v \end{bmatrix}, \quad \bar{y} = \begin{bmatrix} \bar{x} \\ \bar{v} \end{bmatrix},
+$$
+then clearly we have
+$$
+x = \underbrace{ \begin{bmatrix} I & 0 \end{bmatrix}}_{C_x} y,
+$$
+and
+$$
+z = \underbrace{\begin{bmatrix} C & I \end{bmatrix}}_{\tilde{C}} y.
+$$
+Using Corollary \@ref(cor:linear-least-squares-z), we have
+$$
+x^\star(z) = C_x y^\star(z) \\
+\mathbb{E}\{ (x - x^\star(z))(x - x^\star(z))^T \} = C_x \mathbb{E}\{(y - y^\star(z))(y - y^\star(z))^T \} C_x^T,
+$$
+where $y^\star(z)$ is the linear least-sqaures estimator of $y$ given $z$. 
+
+To obtain $y^\star(z)$, we can apply Corollary \@ref(cor:linear-least-squares-x-z) with $u=0$ and $x=y$, leading to 
+$$
+y^\star(z) = \bar{y} + \Sigma_{yy} \tilde{C}^T (\tilde{C} \Sigma_{yy} \tilde{C}^T)^{-1} (z - \tilde{C}\bar{y}),
+$$
+and the error covariance
+$$
+\mathbb{E}\{(y - y^\star(z))(y - y^\star(z))^T \} = \Sigma_{yy} - \Sigma_{yy} \tilde{C}^T (\tilde{C}\Sigma_{yy}\tilde{C}^T)^{-1} \tilde{C} \Sigma_{yy}.
+$$
+The result then follows by noting 
+$$
+\Sigma_{yy} = \begin{bmatrix} \Sigma_{xx} & 0 \\ 0 & \Sigma_{vv} \end{bmatrix}
+$$
+because $x$ and $v$ are uncorrelated.
+:::
+:::
+
+The next two corollaries deal with least-squares estimators involving multiple measurements arriving sequentially. In particular, the corollaries show how to modify an existing least-squares estimate $x^\star(y)$ to obtain $x^\star(y,z)$ once an additional measurement $z$ becomes available. This is a central operation in Kalman filtering.
+
+::: {.theorembox}
+::: {.corollary #linear-least-squares-correction-uncorrelated name="Linear Least-Squares Estimator of Uncorrelated Measurements"}
+Consider in addition to $x$ and $y$, an additional random vector $z \in \mathbb{R}^p$ that is uncorrelated with $y$. Then the linear least-squares estimator $x^\star(y,z)$ of $x$ given both $y$ and $z$ has the form 
+$$
+x^\star(y,z) = x^\star(y) + x^\star(z) - \bar{x},
+$$ 
+where $x^\star(y)$ and $x^\star(z)$ are the linear least-squares estimates of $x$ given $y$ and given $z$, respectively. Furthermore, the error covariance matrix is 
+$$
+\mathbb{E}_{x,y,z} \{ (x - x^\star(y,z))(x - x^\star(y,z))^T \} = \Sigma_{xx} - \Sigma_{xy} \Sigma^{-1}_{yy} \Sigma^T_{xy} - \Sigma_{xz} \Sigma^{-1}_{zz} \Sigma_{xz}^T,
+$$
+where 
+$$
+\Sigma_{xz} = \mathbb{E}_{x,z}\{ (x - \bar{x})(z - \bar{z})^T \}, \quad \Sigma_{zz} = \mathbb{E}_{z} \{ (z - \bar{z})(z - \bar{z})^T \}, \quad \bar{z} = \mathbb{E}_z \{ z \},
+$$
+and it is assumed that $\Sigma_{zz}$ and $\Sigma_{yy}$ are both invertible.
+:::
+:::
+::: {.proofbox}
+::: {.proof}
+Let
+$$
+w = \begin{bmatrix} y \\ z \end{bmatrix}, \quad \bar{w} = \begin{bmatrix} \bar{y} \\ \bar{z} \end{bmatrix}.
+$$
+Then we can apply Proposition \@ref(prp:linear-least-squares-solution) to compute the linear least-squares estimator of $x$ given $w$
+$$
+x^\star(w) = \bar{x} + \Sigma_{xw} \Sigma^{-1}_{ww} (w - \bar{w}).
+$$
+On the other hand, we have 
+$$
+\Sigma_{xw} = \mathbb{E}\{ (x - \bar{x}) \begin{bmatrix} (y - \bar{y})^T & ( z - \bar{z} )^T \end{bmatrix} \} = \begin{bmatrix} \Sigma_{xy} & \Sigma_{xz} \end{bmatrix},
+$$
+and since $y$ and $z$ are uncorrelated, we have
+$$
+\Sigma_{ww} = \begin{bmatrix} \Sigma_{yy} & 0 \\ 0 & \Sigma_{zz} \end{bmatrix}.
+$$
+The result then follows by direct computation.
+:::
+:::
+
+The next corollary generalizes the previous result to the case where $y$ and $z$ are correlated.
+
+::: {.theorembox}
+::: {.corollary #linear-least-squares-correction-correlated name="Linear Least-Squares Estimator of Correlated Measurements"}
+Consider the situation in Corollary \@ref(cor:linear-least-squares-correction-uncorrelated), but with $z$ and $y$ being correlated
+$$
+\Sigma_{yz} = \mathbb{E}_{y,z} \{ (y - \bar{y})(z - \bar{z})^T \} \neq 0.
+$$
+Then $x^\star(y,z)$ has the following form 
+$$
+x^\star(y,z) = x^\star(y) + x^\star(z - z^\star(y)) - \bar{x},
+$$
+where $x^\star(z - z^\star(y))$ denotes the linear least-squares estimate of $x$ given the random vector $z - z^\star(y)$ and $z^\star(y)$ is the linear least-squares estimate of $z$ given $y$. Furthermore, the error covariance matrix is 
+$$
+\mathbb{E}_{x,y,z} \{ (x - x^\star(y,z))(x - x^\star(y,z))^T \} = \Sigma_{xx} - \Sigma_{xy} \Sigma^{-1}_{yy} \Sigma^T_{xy} - \hat{\Sigma}_{xz} \hat{\Sigma}^{-1}_{zz} \hat{\Sigma}^T_{xz},
+$$
+where 
+$$
+\hat{\Sigma}_{xz} = \mathbb{E}_{x,y,z} \{ (x - \bar{x})(z - z^\star(y))^T \}, \quad \hat{\Sigma}_{zz} = \mathbb{E}_{y,z} \{ (z - z^\star(y))(z - z^\star(y))^T \}.
+$$
+:::
+:::
+::: {.proofbox}
+::: {.proof}
+By Proposition \@ref(prp:linear-least-squares-solution), we know $z^\star(y)$ is linear in $y$ as 
+$$
+z^\star(y) = \bar{z} + \Sigma_{zy} \Sigma^{-1}_{yy} (y - \bar{y}) := B y + c,
+$$
+where $B = \Sigma_{zy} \Sigma^{-1}_{yy}$ and $c = \bar{z} - \Sigma_{zy} \Sigma^{-1}_{yy} \bar{y}$. The linear least-squares estimate of $x$ given $(y,z)$ has the form 
+\begin{equation}
+x = \begin{bmatrix} A_y^\star & A_z^\star \end{bmatrix} \begin{bmatrix} y \\ z \end{bmatrix} + b^\star,
+(\#eq:linear-least-squares-solution-A-b)
+\end{equation}
+where $(A_y^\star, A_z^\star, b^\star)$ is solution to
+\begin{equation}
+(A_y^\star, A_z^\star, b^\star) = \arg\min_{A_y,A_z,b} \mathbb{E}_{x,y,z} \left\{ \Vert x - A_y y - A_z z - b  \Vert^2 \right\}.
+(\#eq:correlated-A-b)
+\end{equation}
+The linear least-squares estimate of $x$ given $(y, z - z^\star(y))$ has the form
+\begin{equation}
+x = \begin{bmatrix} G_y^\star & G_z^\star \end{bmatrix} \begin{bmatrix} y \\ z - By - c \end{bmatrix} + h^\star,
+(\#eq:linear-least-squares-solution-G-h)
+\end{equation}
+where $(G_y^\star,G_z^\star,h^\star)$ is solution to
+\begin{equation}
+(G_y^\star,G_z^\star,h^\star) = \arg\min_{G_y,G_z,h} \mathbb{E}_{x,y,z} \left\{ \Vert x - G_y y - G_z (z - By - c) - h \Vert^2 \right\}.
+(\#eq:correlated-G-h)
+\end{equation}
+Observe that the objective in \@ref(eq:correlated-G-h) can be rewritten as
+$$
+\mathbb{E}_{x,y,z} \left\{ \Vert x - (G_y - G_z B) y - G_z z - (h - G_z c) \Vert^2 \right\},
+$$
+when matched with the objective of \@ref(eq:correlated-A-b) we have
+$$
+A_y^\star = G_y^\star - G_z^\star B, \quad  A_z^\star = G_z^\star, \quad b^\star = h^\star - G_z^\star c.
+$$
+As a result, the linear least-squares estimator in \@ref(eq:linear-least-squares-solution-G-h) becomes 
+$$
+x = (A_y^\star + A_z^\star B) y + A_z^\star (z - By - c) + b^\star + A_z^\star c = A^\star_y y + A^\star_z z + b^\star,
+$$
+which is the same as \@ref(eq:linear-least-squares-solution-A-b). Therefore, we have 
+$$
+x^\star(y,z) = x^\star(y, z - z^\star(y)).
+$$
+
+From Corollary \@ref(cor:properties-linear-least-squares-estimator), we know $y$ and $z - z^\star(y)$ is uncorrelated. Consequently, we reduce to the uncorrelated setup in Corollary \@ref(cor:linear-least-squares-correction-uncorrelated) and the result follows.
+:::
+:::
 
 ## Kalman Filter
+
+Consider now a linear dynamical system without control
+$$
+\begin{cases}
+x_{k+1} = A_k x_k + w_k \\
+y_k = C_k x_k + v_k
+\end{cases}, k=0,1,\dots,N-1,
+$$
+where $x_k \in \mathbb{R}^n$ the state, $w_k \in \mathbb{R}^n$ the random disturbance, $y_k \in \mathbb{R}^d$ the measurement (output), and $v_k \in \mathbb{R}^d$ the measurement noise.
+
+We assume $x_0,w_0,\dots,w_{N-1},v_0,\dots,v_{N-1}$ are independent random vectors with means
+$$
+\mathbb{E}\{ w_k \} = \mathbb{E} \{ v_k \} = 0, \quad k=0,\dots,N-1,
+$$
+and covariances
+$$
+\mathbb{E} \{ w_k w_k^T \} = M_k, \quad \mathbb{E} \{ v_k v_k^T \} = N_k, \quad k=0,\dots,N-1,
+$$
+with $N_k$ positive definite for all $k$. We assume the initial state $x_0$ has mean $\mathbb{E}\{ x_0 \}$ and covariance
+$$
+S = \mathbb{E} \{ (x_0 - \mathbb{E}\{x_0 \} ) (x_0 - \mathbb{E}\{x_0 \} )^T \}.
+$$
+Let
+$$
+Y_k = (y_0,\dots,y_k)
+$$
+be the set of measurements up to time $k$, our goal is to obtain the linear least-squares estimate of $x_k$ given $Y_k$, denoted as
+$$
+x^\star_{k \mid k} := x^\star_k (Y_k),
+$$
+and its error covariance matrix 
+$$
+\Sigma_{k \mid k} := \mathbb{E} \{ (x_k - x^\star_{k \mid k}) (x_k - x^\star_{k \mid k})^T\}.
+$$
+By definition, we have 
+\begin{equation}
+x^\star_{0 \mid -1} = \mathbb{E}\{ x_0 \}, \quad \Sigma_{0 \mid -1} = S.
+(\#eq:kalman-filter-initial-condition)
+\end{equation}
+
+The Kalman filter [@kalman60new] will derive a recursion to update $x^\star_{k \mid k}$ and $\Sigma_{k \mid k}$.
+
+**Road map**. Towards this, let us assume we have computed $x^\star_{k \mid k-1}$ and its error covariance $\Sigma_{k \mid k-1}$ (the initial condition is given by \@ref(eq:kalman-filter-initial-condition)). Our goal is to compute $x^\star_{k+1 \mid k}$ and its error covariance $\Sigma_{k+1\mid k}$. We will see that, to compute $x^\star_{k+1 \mid k}$, we compute $x^\star_{k \mid k}$ first, and to compute $\Sigma_{k+1 \mid k}$, we compute $\Sigma_{k\mid k}$ first, as illustrated below.
+\begin{equation}
+\begin{split}
+\text{Update estimate:}\quad x^\star_{k \mid k-1} \longrightarrow x^\star_{k \mid k} \longrightarrow x^\star_{k+1 \mid k}. \\
+\text{Update covariance:}\quad \Sigma_{k \mid k-1} \longrightarrow \Sigma_{k \mid k} \longrightarrow \Sigma_{k+1 \mid k}.
+\end{split}
+\end{equation}
+
+
+**Using the measurement**. At time $k$, we receive a new measurement
+$$
+y_k = C_k x_k + v_k.
+$$
+We have
+$$
+x^\star_{k\mid k} = x^\star_k (Y_k) = x^\star_k(Y_{k-1},y_k),
+$$
+by Corollary \@ref(cor:linear-least-squares-correction-correlated), we have
+\begin{equation}
+x^\star_{k \mid k} = x^\star_{k \mid k-1} + x^\star_k (y_k - y_k^\star(Y_{k-1})) - \mathbb{E}\{ x_k \},
+(\#eq:kalman-filter-derivation-1)
+\end{equation}
+where $y_k^\star(Y_{k-1})$ is the linear least-squares estimate of $y_k$ given $Y_{k-1}$. 
+
+**Simplify \@ref(eq:kalman-filter-derivation-1)**. First note that by Corollary \@ref(cor:linear-least-squares-z) and independence of $v_k$, we have
+$$
+y_k^\star(Y_{k-1}) = C_k x^\star_{k \mid k-1}.
+$$
+We now need to compute $x_k^\star(y_k - y_k^\star(Y_{k-1}))$. We do so by Proposition \@ref(prp:linear-least-squares-solution). The covariance matrix of $y_k - y_k^\star(Y_{k-1})$ is, by Corollary \@ref(cor:linear-least-squares-z),
+$$
+\mathbb{E} \{ (y_k - y_k^\star(Y_{k-1}))(y_k - y_k^\star(Y_{k-1}))^T \} = C_k \Sigma_{k \mid k-1} C_k^T + N_k.
+$$
+The correlation between $x_k$ and $y_k - y_k^\star(Y_{k-1})$ is 
+\begin{equation}
+\begin{split}
+\mathbb{E}\{ x_k (y_k - y_k^\star(Y_{k-1}))^T \} = \mathbb{E} \{ x_k(C_k (x_k - x^\star_{k\mid k-1}))^T \} + \underbrace{ \mathbb{E}\{ x_k v_k^T \} }_{=0 \text{ by independence of } v_k} \\
+= \mathbb{E}\{(x_k - x^\star_{k \mid k-1}) (x_k - x^\star_{k \mid k-1})^T \}C_k^T + \underbrace{\mathbb{E}\{ x^\star_{k \mid k-1}(x_k - x^\star_{k \mid k-1})^T \}}_{=0 \text{ by the orthogonal projection principle}}C_k^T \\
+= \Sigma_{k \mid k-1} C_k^T.
+\end{split}
+\end{equation}
+As a result, by Proposition \@ref(prp:linear-least-squares-solution), we have 
+$$
+x_k^\star(y_k - y_k^\star(Y_{k-1})) = \mathbb{E}\{x_k \} + \Sigma_{k \mid k-1} C_k^T (C_k \Sigma_{k \mid k-1} C_k^T + N_k)^{-1} (y_k - C_k x^\star_{k \mid k-1}).
+$$
+
+**Update the estimate**. Thus, \@ref(eq:kalman-filter-derivation-1) is simplified as
+\begin{equation}
+x^\star_{k\mid k} = x^\star_{k \mid k-1} + \Sigma_{k \mid k-1} C_k^T (C_k \Sigma_{k \mid k-1} C_k^T + N_k)^{-1} (y_k - C_k x^\star_{k \mid k-1}),
+(\#eq:kalman-filter-update-1)
+\end{equation}
+which describes the update from $x^\star_{k \mid k-1}$ to $x^\star_{k \mid k}$.
+
+To update $x^\star_{k+1 \mid k}$ from $x^\star_{k \mid k}$, by Corollary \@ref(cor:linear-least-squares-z), we have 
+\begin{equation}
+x^\star_{k+1 \mid k} = A_k x^\star_{k \mid k}.
+(\#eq:kalman-filter-update-2)
+\end{equation}
+
+**Update the covariance**. The error covariance $\Sigma_{k \mid k}$, by Corollary \@ref(cor:linear-least-squares-correction-correlated), can be written as 
+\begin{equation}
+\Sigma_{k \mid k} = \Sigma_{k \mid k-1} - \Sigma_{k\mid k-1} C_k^T (C_k \Sigma_{k \mid k-1} C_k^T + N_k)^{-1} C_k \Sigma_{k \mid k-1}.
+(\#eq:kalman-filter-update-3)
+\end{equation}
+(This requires just a little bit thinking.) To update $\Sigma_{k+1 \mid k}$ from $\Sigma_{k \mid k}$, we can use Corollary \@ref(cor:linear-least-squares-z) and the independence of $w_k$ to obtain 
+\begin{equation}
+\Sigma_{k+1 \mid k} = A_k \Sigma_{k \mid k} A_k^T + M_k.
+(\#eq:kalman-filter-update-4)
+\end{equation}
+
+Equations \@ref(eq:kalman-filter-update-1)-\@ref(eq:kalman-filter-update-4) forms the Kalman Filter.
+
+**Including controls**. When the dynamics includes control
+$$
+x_{k+1} = A_k x_k + B_k u_k + w_k,
+$$
+the only change that needs to be made to the Kalman Filter is that \@ref(eq:kalman-filter-update-2) should be replaced by 
+\begin{equation}
+x^\star_{k+1 \mid k} = A_k x^\star_{k \mid k} + B_k u_k.
+(\#eq:kalman-filter-update-5)
+\end{equation}
+
+### Steady-State Kalman Filter
+
+Combining the two updates on covariance matrices \@ref(eq:kalman-filter-update-3) and \@ref(eq:kalman-filter-update-4), we obtain
+\begin{equation}
+\Sigma_{k+1 \mid k} = A_k (\Sigma_{k \mid k-1} - \Sigma_{k \mid k-1} C_k^T (C_k \Sigma_{k \mid k-1} C_k^T + N_k)^{-1} C_k \Sigma_{k \mid k-1}  ) A_k^T + M_k,
+(\#eq:kalman-filter-covariance-recursion)
+\end{equation}
+which is the same as the discrete-time Riccati equation \@ref(eq:finite-discrete-lqr-riccati) when we study the solution of the finite-horizon LQR problem in Proposition \@ref(prp:discretetimefinitehorizonlqrsolution). 
+
+When $A_k, C_k, M_k, N_k$ are constant matrices
+$$
+A_k = A, \quad C_k = C, \quad, M_k = M, \quad N_k = N,
+$$
+the recursion \@ref(eq:kalman-filter-covariance-recursion) tends to the algebraic Riccati equation
+\begin{equation}
+\Sigma = A(\Sigma - \Sigma C^T(C \Sigma C^T + N)^{-1}C \Sigma)A^T + M,
+(\#eq:kalman-filter-algebraic-riccati-equation)
+\end{equation}
+for which a unique positive definite solution $\Sigma$ exists if $(A,C)$ is observable and $(A,D)$ is controllable with $M = D D^T$. Then, using equation \@ref(eq:kalman-filter-update-3), we have that $\Sigma_{k \mid k}$ tends to 
+$$
+\bar{\Sigma} = \Sigma - \Sigma C^T (C \Sigma C^T + N)^{-1} C \Sigma.
+$$
+This leads to the simple steady-state Kalman filter
+\begin{equation}
+x^\star_{k \mid k} = \underbrace{A x^\star_{k-1 \mid k-1}}_{\text{prediction}} + \underbrace{\Sigma C^T(C \Sigma C^T + N)^{-1} (y_k - CA x_{k-1 \mid k-1})}_{\text{feedback correction}}.
+(\#eq:steady-state-kalman-filter)
+\end{equation}
+
 
 ## Linear Quadratic Gaussian Control 
 
