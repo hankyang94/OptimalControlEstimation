@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-10-30" />
+<meta name="date" content="2023-11-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -248,7 +248,10 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="6.1.1" data-path="output-feedback.html"><a href="output-feedback.html#linear-least-squares-estimation"><i class="fa fa-check"></i><b>6.1.1</b> Linear Least-Squares Estimation</a></li>
 </ul></li>
-<li class="chapter" data-level="6.2" data-path="output-feedback.html"><a href="output-feedback.html#kalman-filter"><i class="fa fa-check"></i><b>6.2</b> Kalman Filter</a></li>
+<li class="chapter" data-level="6.2" data-path="output-feedback.html"><a href="output-feedback.html#kalman-filter"><i class="fa fa-check"></i><b>6.2</b> Kalman Filter</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="output-feedback.html"><a href="output-feedback.html#steady-state-kalman-filter"><i class="fa fa-check"></i><b>6.2.1</b> Steady-State Kalman Filter</a></li>
+</ul></li>
 <li class="chapter" data-level="6.3" data-path="output-feedback.html"><a href="output-feedback.html#linear-quadratic-gaussian-control"><i class="fa fa-check"></i><b>6.3</b> Linear Quadratic Gaussian Control</a></li>
 <li class="chapter" data-level="6.4" data-path="output-feedback.html"><a href="output-feedback.html#state-observer"><i class="fa fa-check"></i><b>6.4</b> State Observer</a>
 <ul>
@@ -417,7 +420,7 @@ potentially plus some noise. In Chapter <a href="output-feedback.html#output-fee
 </div>
 <div class="proofbox">
 <div class="proof">
-<p><span id="unlabeled-div-21" class="proof"><em>Proof</em>. </span>We only offer the proof of the last property. Consider any eigenvalue <span class="math inline">\(\lambda\)</span> of <span class="math inline">\(A\)</span>, and <span class="math inline">\(x\)</span> be its eigenvector.
+<p><span id="unlabeled-div-24" class="proof"><em>Proof</em>. </span>We only offer the proof of the last property. Consider any eigenvalue <span class="math inline">\(\lambda\)</span> of <span class="math inline">\(A\)</span>, and <span class="math inline">\(x\)</span> be its eigenvector.
 We have <span class="math inline">\(&lt;x,x&gt; = &lt;A^TAx,x&gt;=&lt;Ax,Ax&gt; = |\lambda|^2&lt;x,x&gt;\)</span>, thus <span class="math inline">\(|\lambda|=1\)</span>.</p>
 </div>
 </div>
@@ -434,7 +437,7 @@ We have <span class="math inline">\(&lt;x,x&gt; = &lt;A^TAx,x&gt;=&lt;Ax,Ax&gt; 
 </div>
 <div class="proofbox">
 <div class="proof">
-<p><span id="unlabeled-div-22" class="proof"><em>Proof</em>. </span>We can only prove the last property.</p>
+<p><span id="unlabeled-div-25" class="proof"><em>Proof</em>. </span>We can only prove the last property.</p>
 <p>From the property of orthogonal matrix, we know that all eigenvalues have modulus one. First, note that there must exist at least one real eigenvalue. Because eigenvalues with nonzero imaginary parts always come in pair and 3 is an odd number.</p>
 <p>Then there are two possible cases: (1) All the eigenvalues are real; (2) There is only one eigenvalue.</p>
 <p>For case one, note that the determinant of a matrix is the product of all eigenvalues, then rotation matrix can’t have all the eigenvalues -1.</p>
@@ -675,7 +678,7 @@ Figure 7.2: Sphere and tangent space
 </div>
 <div class="proofbox">
 <div class="proof">
-<p><span id="unlabeled-div-23" class="proof"><em>Proof</em>. </span>Consider a <span class="math inline">\(3\times 3\)</span> skew symmetric matrix <span class="math inline">\(A = \begin{bmatrix} 0 &amp;-c &amp;b\\c &amp;0 &amp;-a\\-b &amp;a &amp;0 \end{bmatrix}\)</span>, define <span class="math inline">\(w = \begin{bmatrix} a\\b\\c \end{bmatrix}, \hat{w} = w/\|w\|, \theta=\|w\|\)</span>. Then <span class="math inline">\(A = w_\times\)</span>. Consider <span class="math inline">\(\hat{w}_\times\)</span>, using the properties of the cross product, we have:<span class="math inline">\(\hat{w}^3_\times = -\hat{w}_\times\)</span>. Thus we can know that:
+<p><span id="unlabeled-div-26" class="proof"><em>Proof</em>. </span>Consider a <span class="math inline">\(3\times 3\)</span> skew symmetric matrix <span class="math inline">\(A = \begin{bmatrix} 0 &amp;-c &amp;b\\c &amp;0 &amp;-a\\-b &amp;a &amp;0 \end{bmatrix}\)</span>, define <span class="math inline">\(w = \begin{bmatrix} a\\b\\c \end{bmatrix}, \hat{w} = w/\|w\|, \theta=\|w\|\)</span>. Then <span class="math inline">\(A = w_\times\)</span>. Consider <span class="math inline">\(\hat{w}_\times\)</span>, using the properties of the cross product, we have:<span class="math inline">\(\hat{w}^3_\times = -\hat{w}_\times\)</span>. Thus we can know that:
 <span class="math display">\[\begin{align}
     \exp(A) &amp;= I + (1-\frac{\theta^3}{3!}+\frac{\theta^5}{5!}+\dots)\hat{w}_\times + (\frac{\theta^2}{2!}-\frac{\theta^4}{4!}+\frac{\theta^6}{6!})\hat{w}_\times^2\\
     &amp;= I + \frac{\sin\theta}{\theta}A + \frac{1-\cos\theta}{\theta^2}A^2
