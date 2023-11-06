@@ -420,12 +420,13 @@ From Corollary \@ref(cor:properties-linear-least-squares-estimator), we know $y$
 ## Kalman Filter
 
 Consider now a linear dynamical system without control
-$$
+\begin{equation}
 \begin{cases}
 x_{k+1} = A_k x_k + w_k \\
 y_k = C_k x_k + v_k
 \end{cases}, k=0,1,\dots,N-1,
-$$
+(\#eq:kalman-filter-linear-system-discrete)
+\end{equation}
 where $x_k \in \mathbb{R}^n$ the state, $w_k \in \mathbb{R}^n$ the random disturbance, $y_k \in \mathbb{R}^d$ the measurement (output), and $v_k \in \mathbb{R}^d$ the measurement noise.
 
 We assume $x_0,w_0,\dots,w_{N-1},v_0,\dots,v_{N-1}$ are independent random vectors with means
@@ -568,6 +569,43 @@ This leads to the simple steady-state Kalman filter
 x^\star_{k \mid k} = \underbrace{A x^\star_{k-1 \mid k-1}}_{\text{prediction}} + \underbrace{\Sigma C^T(C \Sigma C^T + N)^{-1} (y_k - CA x_{k-1 \mid k-1})}_{\text{feedback correction}}.
 (\#eq:steady-state-kalman-filter)
 \end{equation}
+
+### Continuous-time Kalman Filter
+Consider the continuous-time analog of the linear system in \@ref(eq:kalman-filter-linear-system-discrete)
+\begin{equation}
+\begin{cases}
+\dot{x} = A x + Bu + w \\
+y = C x + v
+\end{cases}
+(\#eq:kalman-filter-linear-system-continuous)
+\end{equation}
+where $x \in \mathbb{R}^n$ the state, $u \in \mathbb{R}^m$ the control, $y \in \mathbb{R}^d$ the measurement, and $w,v$ are white noises with 
+$$
+\mathbb{E}\{w\}=0, \quad \mathbb{E}\{ w w^T \} = M, \quad \mathbb{E}\{v\} = 0, \quad  \mathbb{E}\{ v v^T\} = N.
+$$
+
+Suppose the initial state $x(0)$ satisfies 
+$$
+\mathbb{E}\{ x(0) \} = \hat{x}_0, \quad \mathbb{E}\{ (x(0) - \hat{x}_0) (x(0) - \hat{x}_0)^T \} = \Sigma_0.
+$$
+Then the continuous-time Kalman Filter updates the state estimate as
+\begin{equation}
+\dot{\hat{x}} = \underbrace{A \hat{x} + Bu}_{\text{prediction}} + \underbrace{K (y - C \hat{x})}_{\text{feedback correction}},
+(\#eq:continuous-time-kalman-filter-state)
+\end{equation}
+where $K$ is a feedback gain computed by 
+$$
+K = \Sigma C^T N^{-1},
+$$
+with $\Sigma$ satisfying the following differential equation 
+\begin{equation}
+\dot{\Sigma} = A \Sigma + \Sigma A^T + M - \Sigma C^T N^{-1} C \Sigma.
+(\#eq:continuous-time-kalman-filter-covariance)
+\end{equation}
+Similarly, at steady state, the differential equation \@ref(eq:continuous-time-kalman-filter-covariance) tends to the continuous-time algebraic Riccati equation
+$$
+0 = A \Sigma + \Sigma A^T + M - \Sigma C^T N^{-1} C \Sigma.
+$$
 
 
 ## Linear Quadratic Gaussian Control 
