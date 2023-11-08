@@ -5348,7 +5348,7 @@ S = Q + A^T \left[  S - SB (R + B^T S B)^{-1} B^T S \right]A,
 \]
 and \(x^\star_{k\mid k}\) comes from the steady-state Kalman filter
 \[
-x_{k \mid k}^\star = A x^\star_{k-1\mid k-1} + B u_{k-1} + \Sigma C^T (C \Sigma C^T + N)^{-1} (y_k - CA (x^\star_{k-1\mid k-1} + B u_{k-1})),
+x_{k \mid k}^\star = A x^\star_{k-1\mid k-1} + B u_{k-1} + \Sigma C^T (C \Sigma C^T + N)^{-1} (y_k - C(A x^\star_{k-1\mid k-1} + B u_{k-1})),
 \]
 with \(\Sigma\) the solution to another discrete-time algebraic Riccati equation
 \[
@@ -5395,6 +5395,47 @@ We start with the true initial state \(x_0 = [2;-2]\), but with a noisy estimate
 
 You can find code for this example \href{https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/pendulum_stabilization_lqg.m}{here}.
 \end{example}
+
+\textbf{Closed-loop analysis}. Now that we have the Kalman filter and LQR controller implemented, let us take a look at the closed-loop response of the system. To ease our notation, let us denote \(\hat{x}_k := x^\star_{k \mid k}\) as the Kalman estimate of state. Then we can write the LQG controller as
+\begin{equation}
+\begin{cases}
+\hat{x}_{k+1} = A \hat{x}_k + B u_k + L (y_{k+1} - C(A \hat{x}_k + B u_k) ) & \text{Kalman filter}\\
+x_{k+1} = A x_k + B u_k + w_k & \text{Original dynamics}
+\end{cases},
+\label{eq:lqg-closed-loop-1}
+\end{equation}
+where \(L\) is the Kalman gain. The first equation can be simplified as
+\[
+\hat{x}_{k+1} = A \hat{x}_k  + Bu_k + L( C\underbrace{(A x_k + B u_k + w_k)}_{x_{k+1}} + v_{k+1} - CA\hat{x}_k - CB u_k   )\\
+= A \hat{x}_k + Bu_k + L (CA x_k - CA \hat{x}_k + C w_k + v_{k+1})
+\]
+Let us denote the estimation error as \(e_k = x_k - \hat{x}_k\), the above equation becomes
+\[
+\hat{x}_{k+1} = A \hat{x}_k + B u_k + LCA e_k + LC w_k + L v_{k+1}
+\]
+Subtracting the equation above from the second equation of \eqref{eq:lqg-closed-loop-1}, we have
+\begin{equation}
+e_{k+1} = (A - LCA) e_k + (I - LC) w_k - L v_{k+1},
+\label{eq:lqg-closed-loop-2}
+\end{equation}
+which describes the evolution of the error dynamics. Now with
+\[
+u_k = - K \hat{x}_k = -K (x_k - e_k) = K e_k - K x_k
+\]
+inserted into the second equation of \eqref{eq:lqg-closed-loop-1}, we have
+\begin{equation}
+x_{k+1} = (A - BK) x_k + BK e_k + w_k,
+\label{eq:lqg-closed-loop-3}
+\end{equation}
+which describes the evolution of the true state dynamics.
+Combining \eqref{eq:lqg-closed-loop-2} and \eqref{eq:lqg-closed-loop-3}, we have the closed-loop system
+\begin{equation}
+\begin{bmatrix} x_{k+1} \\ e_{k+1} \end{bmatrix} = \underbrace{\begin{bmatrix}
+A - BK & BK \\
+0 & A - LCA \end{bmatrix}}_{A_{\mathrm{cl}}} \begin{bmatrix} x_k \\ e_k \end{bmatrix} + \begin{bmatrix} w_k \\ (I - LC) w_k - L v_{k+1} \end{bmatrix}.
+\label{eq:lqg-closed-loop-4}
+\end{equation}
+Now observe that if the Kalman gain \(L\) is stable, then \(e_{k}\) tends to zero with some noise. In this case, if the LQR gain \(K\) is stable, then the state \(x_k\) also tends to zero with some noise. In fact, since \(A_{\mathrm{cl}}\) is block-diagonal, we know the eigenvalues of \(A_{\mathrm{cl}}\) contains those of \(A - BK\) and those of \(A - LC A\).
 
 \hypertarget{state-observer}{%
 \section{State Observer}\label{state-observer}}
