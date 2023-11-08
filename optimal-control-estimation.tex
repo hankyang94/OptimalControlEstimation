@@ -151,7 +151,7 @@ arc=4pt}
 
 \title{Optimal Control and Estimation}
 \author{Heng Yang}
-\date{2023-11-06}
+\date{2023-11-08}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -5253,6 +5253,148 @@ Similarly, at steady state, the differential equation \eqref{eq:continuous-time-
 
 \hypertarget{linear-quadratic-gaussian-control}{%
 \section{Linear Quadratic Gaussian Control}\label{linear-quadratic-gaussian-control}}
+
+With our knowledge about the Kalman filter, we are ready to solve a particular instance of output-feedback control, known as the Linear Quadratic Gaussian (LQG) control.
+
+Consider the discrete-time linear dynamical system:
+\begin{equation}
+\begin{cases}
+x_{k+1} = A_k x_k + B_k u_k + w_k \\
+y_k = C_k x_k + v_k
+\end{cases}, \quad k=0,\dots,N-1,
+\label{eq:lqg-linear-dynamical-system}
+\end{equation}
+where \(w_k\) and \(v_k\) are white noises with
+\[
+\mathbb{E}\{ w_k \} = 0, \mathbb{E}\{ v_k \} = 0, \quad k=0,\dots,N-1, \\
+\mathbb{E} \{ w_k w_k^T \} = M_k, \mathbb{E} \{ v_k v_k^T \} = N_k, \quad k=0,\dots,N-1.
+\]
+Assume the initial state \(x_0\) follows a Gaussian distribution \(x_0 \sim \mathcal{N}(\bar{x}_0, S)\). This is the same setup as Section \ref{kalman-filter} Kalman filter.
+
+The goal of the LQG control is
+\begin{equation}
+\min_{u_k,k=0,\dots,N-1} \mathbb{E} \left\{ x_N^T Q_N x_N + \sum_{k=0}^{N-1} (x_k^T Q_k x_k + u_k^T R_k u_k)  \right\},
+\label{eq:lqg-cost-to-go}
+\end{equation}
+where the expectation is taken over the randomness of both \(w_k\) and \(v_k\). The LQG cost function \eqref{eq:lqg-cost-to-go} reads exactly the same as the LQR problem in \eqref{eq:lqr-formulation}. However, the key difference between the LQG problem \eqref{eq:lqg-cost-to-go} and the LQR problem \eqref{eq:lqr-formulation} is that in LQR the controller has full access to the state \(x_k\) of the system, while in LQG the controller only has access to a sequence of measurements
+\[
+Y_k = \{y_0,\dots,y_k \}.
+\]
+
+We will now show that the Kalman filter brings us back to the setup of LQR.
+
+Let us rewrite the cost
+\[
+\mathbb{E}\{x_k^T Q_k x_k \} = \mathbb{E} \left\{ \mathbb{E} \{ x_k^T Q_k x_k \mid Y_k \} \right\} = \mathbb{E} \left\{ \mathbb{E} \{ (x_k - x^\star_{k \mid k} + x^\star_{k \mid k})^T Q_k (x_k - x^\star_{k \mid k} + x^\star_{k \mid k}) \mid Y_k \}  \right\} \\
+= \mathbb{E}\left\{ \mathbb{E}\{ (x_k - x^\star_{k \mid k})^T Q_k (x_k - x^\star_{k \mid k}) + 2 (x^\star_{k \mid k})^T Q_k (x_k - x^\star_{k \mid k}) + (x^\star_{k \mid k})^T Q_k  x^\star_{k \mid k}  \mid Y_k\} \right\} \\
+= \mathbb{E}\{ (x^\star_{k \mid k})^T Q_k  x^\star_{k \mid k} \} + 
+\underbrace{\mathbb{E}\{ \mathbb{E}\{ 2 (x^\star_{k \mid k})^T Q_k (x_k - x^\star_{k \mid k}) \mid Y_k \} \}}_{=0 \text{ due to orthogonal projection principle}} 
++ \underbrace{\mathbb{E}\{ (x_k - x^\star_{k \mid k})^T Q_k (x_k - x^\star_{k \mid k}) \}}_{=\text{tr}(Q_k \Sigma_{k \mid k})},
+\]
+where \(x^\star_{k\mid k}\) is the Kalman filter estimate of the state (i.e., the linear least squares estimate, or the conditional expectation). Note that from the Kalman filter we know the error covariance \(\Sigma_{k \mid k}\) (and hence \(\text{tr}(Q_k \Sigma_{k \mid k})\)) is independent from the control. Therefore, the LQG problem \eqref{eq:lqg-cost-to-go} is equivalent to the following LQR problem
+\begin{equation}
+\min_{u_k, k=0,\dots,N-1} \mathbb{E} \left\{ (x^\star_{N\mid N})^T Q_N x^\star_{N\mid N} + \sum_{k=0}^{N-1} (x^\star_{k \mid k})^T Q_k x^\star_{k \mid k} + u_k^T R_k u_k \right\},
+\label{eq:lqg-to-lqr}
+\end{equation}
+for which we know the optimal control is (according to Proposition \ref{prp:discretetimefinitehorizonlqrsolution})
+\begin{equation}
+u_k^\star = - \underbrace{(R_k + B_k^T S_{k+1} B_k)^{-1} B_k^T S_{k+1} A_k}_{K_k} x^\star_{k \mid k},
+\label{eq:lqg-lqr-solution-u}
+\end{equation}
+with \(S_k\) computed backwards as \(S_N = Q_N\),
+\begin{equation}
+S_k = Q_k + A_k^T \left[ S_{k+1} - S_{k+1} B_k (R_k + B_k^T S_{k+1} B_k)^{-1} B_k^T S_{k+1}  \right] A_k.
+\label{eq:lqg-lqr-solution-S}
+\end{equation}
+
+In summary, to implement the optimal controller for LQR problem, we need to
+
+\begin{itemize}
+\item
+  Compute \(S_k\) backwards in time according to \eqref{eq:lqg-lqr-solution-S}
+\item
+  Run the Kalman filter \eqref{eq:kalman-filter-update-1} and \eqref{eq:kalman-filter-update-2} to obtain \(x^\star_{k \mid k}\)
+\item
+  Compute control according to \eqref{eq:lqg-lqr-solution-u}
+\end{itemize}
+
+\textbf{Separation theorem}. Our derivation above shows that the optimal output-feedback control for LQG consists of (i) an optimal estimator, the Kalman filter, and (ii) an optimal state-feedback controller, the LQR controller.
+
+\hypertarget{steady-state-lqg}{%
+\subsection{Steady-state LQG}\label{steady-state-lqg}}
+
+In steady-state LQG, we consider the dynamical system
+\begin{equation}
+\begin{cases}
+x_{k+1} = A x_k + B u_k + w_k \\
+y_k = C x_k + v_k
+\end{cases}, \quad k=0,\dots
+\end{equation}
+where \(\mathbb{E}\{ w_k\} =0, \mathbb{E}\{ v_k\} = 0\), and
+\[
+\mathbb{E}\{w_k w_k^T \} = M, \quad \mathbb{E}\{v_k v_k^T \} = N.
+\]
+The LQG control problem is
+\begin{equation}
+\min \mathbb{E} \left\{ \sum_{k=0}^{\infty} (x_k^T Q_k x_k + u_k^T R_k u_k) \right\}.
+\end{equation}
+The optimal controller is
+\[
+u^\star_k = - \left[ (R + B^T S B)^{-1} B^T S A \right]x^\star_{k \mid k},
+\]
+where \(S\) is the solution to the discrete-time algebraic Riccati equation
+\[
+S = Q + A^T \left[  S - SB (R + B^T S B)^{-1} B^T S \right]A,
+\]
+and \(x^\star_{k\mid k}\) comes from the steady-state Kalman filter
+\[
+x_{k \mid k}^\star = A x^\star_{k-1\mid k-1} + B u_{k-1} + \Sigma C^T (C \Sigma C^T + N)^{-1} (y_k - CA (x^\star_{k-1\mid k-1} + B u_{k-1})),
+\]
+with \(\Sigma\) the solution to another discrete-time algebraic Riccati equation
+\[
+\Sigma = M + A\left[ \Sigma - \Sigma C^T (N + C \Sigma C^T)^{-1} C \Sigma \right]A^T.
+\]
+
+\begin{example}[LQG Stabilization of Simple Pendulum]
+\protect\hypertarget{exm:lqg-control-pendulum}{}\label{exm:lqg-control-pendulum}Consider the pendulm dynamics that has already been shifted such that \(x=[\theta,\dot{\theta}]=0\) represents the upright position that we want to stabilize (cf.~Example \ref{exm:lqr-pendulum-stabilization})
+\[
+\dot{x} = \begin{bmatrix}
+x_2 \\
+\frac{1}{ml^2} (u - b x_2 + mgl \sin x_1)
+\end{bmatrix} + \begin{bmatrix} 0 \\ w \end{bmatrix},
+\]
+where \(w\) is a random white noise.
+
+Linearizing the dynamics around \(x=0\) we have
+\[
+\dot{x} \approx \underbrace{\begin{bmatrix} 0 & 1 \\ \frac{g}{l} & - \frac{b}{ml^2} \end{bmatrix}}_{A_c} x + \underbrace{\begin{bmatrix} 0 \\ \frac{1}{ml^2} \end{bmatrix}}_{B_c} u + \begin{bmatrix} 0 \\ w \end{bmatrix}.
+\]
+
+We convert the continuous-time dynamics to discrete time with a fixed discretization \(h\)
+\[
+x_{k+1} = \dot{x}_k \cdot h + x_k = (h \cdot A_c + I) x_k + (h\cdot B_c) u_k + h \begin{bmatrix} 0 \\ w \end{bmatrix}  \\
+= A x_k + B u_k + w_k.
+\]
+
+We assume we can only observe the angular position of the pendulum
+\[
+y_k = \underbrace{\begin{bmatrix} 1 & 0 \end{bmatrix}}_{C} x_k + v_k,
+\]
+with \(v_k\) some white noise.
+
+We start with the true initial state \(x_0 = [2;-2]\), but with a noisy estimate \(x^\star_{0 \mid 0} = [0;0]\). Implementing the steady-state LQG controller produces the following result.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.8\linewidth]{images/pendulum_lqg} 
+
+}
+
+\caption{LQG Stabilization of Simple Pendulum.}\label{fig:pendulum-lqg}
+\end{figure}
+
+You can find code for this example \href{https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/pendulum_stabilization_lqg.m}{here}.
+\end{example}
 
 \hypertarget{state-observer}{%
 \section{State Observer}\label{state-observer}}

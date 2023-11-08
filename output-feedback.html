@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-11-06" />
+<meta name="date" content="2023-11-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -253,7 +253,10 @@ div.csl-indent {
 <li class="chapter" data-level="6.2.1" data-path="output-feedback.html"><a href="output-feedback.html#steady-state-kalman-filter"><i class="fa fa-check"></i><b>6.2.1</b> Steady-State Kalman Filter</a></li>
 <li class="chapter" data-level="6.2.2" data-path="output-feedback.html"><a href="output-feedback.html#continuous-time-kalman-filter"><i class="fa fa-check"></i><b>6.2.2</b> Continuous-time Kalman Filter</a></li>
 </ul></li>
-<li class="chapter" data-level="6.3" data-path="output-feedback.html"><a href="output-feedback.html#linear-quadratic-gaussian-control"><i class="fa fa-check"></i><b>6.3</b> Linear Quadratic Gaussian Control</a></li>
+<li class="chapter" data-level="6.3" data-path="output-feedback.html"><a href="output-feedback.html#linear-quadratic-gaussian-control"><i class="fa fa-check"></i><b>6.3</b> Linear Quadratic Gaussian Control</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="output-feedback.html"><a href="output-feedback.html#steady-state-lqg"><i class="fa fa-check"></i><b>6.3.1</b> Steady-state LQG</a></li>
+</ul></li>
 <li class="chapter" data-level="6.4" data-path="output-feedback.html"><a href="output-feedback.html#state-observer"><i class="fa fa-check"></i><b>6.4</b> State Observer</a>
 <ul>
 <li class="chapter" data-level="6.4.1" data-path="output-feedback.html"><a href="output-feedback.html#general-design-strategy"><i class="fa fa-check"></i><b>6.4.1</b> General Design Strategy</a></li>
@@ -959,6 +962,129 @@ Similarly, at steady state, the differential equation <a href="output-feedback.h
 </div>
 <div id="linear-quadratic-gaussian-control" class="section level2 hasAnchor" number="6.3">
 <h2><span class="header-section-number">6.3</span> Linear Quadratic Gaussian Control<a href="output-feedback.html#linear-quadratic-gaussian-control" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>With our knowledge about the Kalman filter, we are ready to solve a particular instance of output-feedback control, known as the Linear Quadratic Gaussian (LQG) control.</p>
+<p>Consider the discrete-time linear dynamical system:
+<span class="math display" id="eq:lqg-linear-dynamical-system">\[\begin{equation}
+\begin{cases}
+x_{k+1} = A_k x_k + B_k u_k + w_k \\
+y_k = C_k x_k + v_k
+\end{cases}, \quad k=0,\dots,N-1,
+\tag{6.33}
+\end{equation}\]</span>
+where <span class="math inline">\(w_k\)</span> and <span class="math inline">\(v_k\)</span> are white noises with
+<span class="math display">\[
+\mathbb{E}\{ w_k \} = 0, \mathbb{E}\{ v_k \} = 0, \quad k=0,\dots,N-1, \\
+\mathbb{E} \{ w_k w_k^T \} = M_k, \mathbb{E} \{ v_k v_k^T \} = N_k, \quad k=0,\dots,N-1.
+\]</span>
+Assume the initial state <span class="math inline">\(x_0\)</span> follows a Gaussian distribution <span class="math inline">\(x_0 \sim \mathcal{N}(\bar{x}_0, S)\)</span>. This is the same setup as Section <a href="output-feedback.html#kalman-filter">6.2</a> Kalman filter.</p>
+<p>The goal of the LQG control is
+<span class="math display" id="eq:lqg-cost-to-go">\[\begin{equation}
+\min_{u_k,k=0,\dots,N-1} \mathbb{E} \left\{ x_N^T Q_N x_N + \sum_{k=0}^{N-1} (x_k^T Q_k x_k + u_k^T R_k u_k)  \right\},
+\tag{6.34}
+\end{equation}\]</span>
+where the expectation is taken over the randomness of both <span class="math inline">\(w_k\)</span> and <span class="math inline">\(v_k\)</span>. The LQG cost function <a href="output-feedback.html#eq:lqg-cost-to-go">(6.34)</a> reads exactly the same as the LQR problem in <a href="exactdp.html#eq:lqr-formulation">(2.2)</a>. However, the key difference between the LQG problem <a href="output-feedback.html#eq:lqg-cost-to-go">(6.34)</a> and the LQR problem <a href="exactdp.html#eq:lqr-formulation">(2.2)</a> is that in LQR the controller has full access to the state <span class="math inline">\(x_k\)</span> of the system, while in LQG the controller only has access to a sequence of measurements
+<span class="math display">\[
+Y_k = \{y_0,\dots,y_k \}.
+\]</span></p>
+<p>We will now show that the Kalman filter brings us back to the setup of LQR.</p>
+<p>Let us rewrite the cost
+<span class="math display">\[
+\mathbb{E}\{x_k^T Q_k x_k \} = \mathbb{E} \left\{ \mathbb{E} \{ x_k^T Q_k x_k \mid Y_k \} \right\} = \mathbb{E} \left\{ \mathbb{E} \{ (x_k - x^\star_{k \mid k} + x^\star_{k \mid k})^T Q_k (x_k - x^\star_{k \mid k} + x^\star_{k \mid k}) \mid Y_k \}  \right\} \\
+= \mathbb{E}\left\{ \mathbb{E}\{ (x_k - x^\star_{k \mid k})^T Q_k (x_k - x^\star_{k \mid k}) + 2 (x^\star_{k \mid k})^T Q_k (x_k - x^\star_{k \mid k}) + (x^\star_{k \mid k})^T Q_k  x^\star_{k \mid k}  \mid Y_k\} \right\} \\
+= \mathbb{E}\{ (x^\star_{k \mid k})^T Q_k  x^\star_{k \mid k} \} +
+\underbrace{\mathbb{E}\{ \mathbb{E}\{ 2 (x^\star_{k \mid k})^T Q_k (x_k - x^\star_{k \mid k}) \mid Y_k \} \}}_{=0 \text{ due to orthogonal projection principle}}
++ \underbrace{\mathbb{E}\{ (x_k - x^\star_{k \mid k})^T Q_k (x_k - x^\star_{k \mid k}) \}}_{=\text{tr}(Q_k \Sigma_{k \mid k})},
+\]</span>
+where <span class="math inline">\(x^\star_{k\mid k}\)</span> is the Kalman filter estimate of the state (i.e., the linear least squares estimate, or the conditional expectation). Note that from the Kalman filter we know the error covariance <span class="math inline">\(\Sigma_{k \mid k}\)</span> (and hence <span class="math inline">\(\text{tr}(Q_k \Sigma_{k \mid k})\)</span>) is independent from the control. Therefore, the LQG problem <a href="output-feedback.html#eq:lqg-cost-to-go">(6.34)</a> is equivalent to the following LQR problem
+<span class="math display" id="eq:lqg-to-lqr">\[\begin{equation}
+\min_{u_k, k=0,\dots,N-1} \mathbb{E} \left\{ (x^\star_{N\mid N})^T Q_N x^\star_{N\mid N} + \sum_{k=0}^{N-1} (x^\star_{k \mid k})^T Q_k x^\star_{k \mid k} + u_k^T R_k u_k \right\},
+\tag{6.35}
+\end{equation}\]</span>
+for which we know the optimal control is (according to Proposition <a href="exactdp.html#prp:discretetimefinitehorizonlqrsolution">2.1</a>)
+<span class="math display" id="eq:lqg-lqr-solution-u">\[\begin{equation}
+u_k^\star = - \underbrace{(R_k + B_k^T S_{k+1} B_k)^{-1} B_k^T S_{k+1} A_k}_{K_k} x^\star_{k \mid k},
+\tag{6.36}
+\end{equation}\]</span>
+with <span class="math inline">\(S_k\)</span> computed backwards as <span class="math inline">\(S_N = Q_N\)</span>,
+<span class="math display" id="eq:lqg-lqr-solution-S">\[\begin{equation}
+S_k = Q_k + A_k^T \left[ S_{k+1} - S_{k+1} B_k (R_k + B_k^T S_{k+1} B_k)^{-1} B_k^T S_{k+1}  \right] A_k.
+\tag{6.37}
+\end{equation}\]</span></p>
+<p>In summary, to implement the optimal controller for LQR problem, we need to</p>
+<ul>
+<li><p>Compute <span class="math inline">\(S_k\)</span> backwards in time according to <a href="output-feedback.html#eq:lqg-lqr-solution-S">(6.37)</a></p></li>
+<li><p>Run the Kalman filter <a href="output-feedback.html#eq:kalman-filter-update-1">(6.22)</a> and <a href="output-feedback.html#eq:kalman-filter-update-2">(6.23)</a> to obtain <span class="math inline">\(x^\star_{k \mid k}\)</span></p></li>
+<li><p>Compute control according to <a href="output-feedback.html#eq:lqg-lqr-solution-u">(6.36)</a></p></li>
+</ul>
+<p><strong>Separation theorem</strong>. Our derivation above shows that the optimal output-feedback control for LQG consists of (i) an optimal estimator, the Kalman filter, and (ii) an optimal state-feedback controller, the LQR controller.</p>
+<div id="steady-state-lqg" class="section level3 hasAnchor" number="6.3.1">
+<h3><span class="header-section-number">6.3.1</span> Steady-state LQG<a href="output-feedback.html#steady-state-lqg" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>In steady-state LQG, we consider the dynamical system
+<span class="math display">\[\begin{equation}
+\begin{cases}
+x_{k+1} = A x_k + B u_k + w_k \\
+y_k = C x_k + v_k
+\end{cases}, \quad k=0,\dots
+\end{equation}\]</span>
+where <span class="math inline">\(\mathbb{E}\{ w_k\} =0, \mathbb{E}\{ v_k\} = 0\)</span>, and
+<span class="math display">\[
+\mathbb{E}\{w_k w_k^T \} = M, \quad \mathbb{E}\{v_k v_k^T \} = N.
+\]</span>
+The LQG control problem is
+<span class="math display">\[\begin{equation}
+\min \mathbb{E} \left\{ \sum_{k=0}^{\infty} (x_k^T Q_k x_k + u_k^T R_k u_k) \right\}.
+\end{equation}\]</span>
+The optimal controller is
+<span class="math display">\[
+u^\star_k = - \left[ (R + B^T S B)^{-1} B^T S A \right]x^\star_{k \mid k},
+\]</span>
+where <span class="math inline">\(S\)</span> is the solution to the discrete-time algebraic Riccati equation
+<span class="math display">\[
+S = Q + A^T \left[  S - SB (R + B^T S B)^{-1} B^T S \right]A,
+\]</span>
+and <span class="math inline">\(x^\star_{k\mid k}\)</span> comes from the steady-state Kalman filter
+<span class="math display">\[
+x_{k \mid k}^\star = A x^\star_{k-1\mid k-1} + B u_{k-1} + \Sigma C^T (C \Sigma C^T + N)^{-1} (y_k - CA (x^\star_{k-1\mid k-1} + B u_{k-1})),
+\]</span>
+with <span class="math inline">\(\Sigma\)</span> the solution to another discrete-time algebraic Riccati equation
+<span class="math display">\[
+\Sigma = M + A\left[ \Sigma - \Sigma C^T (N + C \Sigma C^T)^{-1} C \Sigma \right]A^T.
+\]</span></p>
+<div class="examplebox">
+<div class="example">
+<p><span id="exm:lqg-control-pendulum" class="example"><strong>Example 6.1  (LQG Stabilization of Simple Pendulum) </strong></span>Consider the pendulm dynamics that has already been shifted such that <span class="math inline">\(x=[\theta,\dot{\theta}]=0\)</span> represents the upright position that we want to stabilize (cf. Example <a href="exactdp.html#exm:lqr-pendulum-stabilization">2.1</a>)
+<span class="math display">\[
+\dot{x} = \begin{bmatrix}
+x_2 \\
+\frac{1}{ml^2} (u - b x_2 + mgl \sin x_1)
+\end{bmatrix} + \begin{bmatrix} 0 \\ w \end{bmatrix},
+\]</span>
+where <span class="math inline">\(w\)</span> is a random white noise.</p>
+<p>Linearizing the dynamics around <span class="math inline">\(x=0\)</span> we have
+<span class="math display">\[
+\dot{x} \approx \underbrace{\begin{bmatrix} 0 &amp; 1 \\ \frac{g}{l} &amp; - \frac{b}{ml^2} \end{bmatrix}}_{A_c} x + \underbrace{\begin{bmatrix} 0 \\ \frac{1}{ml^2} \end{bmatrix}}_{B_c} u + \begin{bmatrix} 0 \\ w \end{bmatrix}.
+\]</span></p>
+<p>We convert the continuous-time dynamics to discrete time with a fixed discretization <span class="math inline">\(h\)</span>
+<span class="math display">\[
+x_{k+1} = \dot{x}_k \cdot h + x_k = (h \cdot A_c + I) x_k + (h\cdot B_c) u_k + h \begin{bmatrix} 0 \\ w \end{bmatrix}  \\
+= A x_k + B u_k + w_k.
+\]</span></p>
+<p>We assume we can only observe the angular position of the pendulum
+<span class="math display">\[
+y_k = \underbrace{\begin{bmatrix} 1 &amp; 0 \end{bmatrix}}_{C} x_k + v_k,
+\]</span>
+with <span class="math inline">\(v_k\)</span> some white noise.</p>
+<p>We start with the true initial state <span class="math inline">\(x_0 = [2;-2]\)</span>, but with a noisy estimate <span class="math inline">\(x^\star_{0 \mid 0} = [0;0]\)</span>. Implementing the steady-state LQG controller produces the following result.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:pendulum-lqg"></span>
+<img src="images/pendulum_lqg.png" alt="LQG Stabilization of Simple Pendulum." width="80%" />
+<p class="caption">
+Figure 6.1: LQG Stabilization of Simple Pendulum.
+</p>
+</div>
+<p>You can find code for this example <a href="https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/pendulum_stabilization_lqg.m">here</a>.</p>
+</div>
+</div>
+</div>
 </div>
 <div id="state-observer" class="section level2 hasAnchor" number="6.4">
 <h2><span class="header-section-number">6.4</span> State Observer<a href="output-feedback.html#state-observer" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -983,29 +1109,29 @@ Similarly, at steady state, the differential equation <a href="output-feedback.h
 <li><p>For any <span class="math inline">\(u \in \mathcal{U}\)</span>, any <span class="math inline">\(z_0 \in \mathbb{R}^l\)</span>, and any <span class="math inline">\(x_0 \in \mathcal{X}_0\)</span> such that <span class="math inline">\(\sigma^+_{\mathbb{X}}(x_0;u) = +\infty\)</span>, any solution <span class="math inline">\(Z(z_0;t;u,y_{x_0,u})\)</span><a href="#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a> to
 <span class="math display" id="eq:observer-definition-1">\[\begin{equation}
 \dot{z} = \mathcal{F}(z,u,y_{x_0,u})
-\tag{6.33}
+\tag{6.38}
 \end{equation}\]</span>
 initialized at <span class="math inline">\(z_0\)</span> at time <span class="math inline">\(0\)</span> with input <span class="math inline">\(u\)</span> and <span class="math inline">\(y_{x_0,u}\)</span> exists on <span class="math inline">\([0,+\infty)\)</span> and satisfies
 <span class="math display" id="eq:observer-definition-2">\[\begin{equation}
 \lim_{t \rightarrow \infty} \Vert \hat{X}(x_0,z_0;t;u) - X(x_0;t;u) \Vert = 0,
-\tag{6.34}
+\tag{6.39}
 \end{equation}\]</span>
 with
 <span class="math display" id="eq:observer-definition-3">\[\begin{equation}
 \hat{X}(x_0,z_0;t;u) = \mathcal{T}_u(Z(z_0;t;u,y_{x_0,u}),t).
-\tag{6.35}
+\tag{6.40}
 \end{equation}\]</span>
-In words, (i) the state observer maintains an internal state (or latent state) <span class="math inline">\(z \in \mathbb{R}^l\)</span> that evolves according to the latent dynamics <span class="math inline">\(\mathcal{F}\)</span> in <a href="output-feedback.html#eq:observer-definition-1">(6.33)</a>, where <span class="math inline">\(u\)</span> and <span class="math inline">\(y_{x_0,u}\)</span> are inputs; (ii) an estimated state can be reconstructed from the internal state using <span class="math inline">\(\mathcal{T}_u\)</span> as in <a href="output-feedback.html#eq:observer-definition-3">(6.35)</a>; and (iii) the error between the estimated state and the true state (defined by a proper distance function <span class="math inline">\(\Vert \cdot \Vert\)</span> on <span class="math inline">\(\mathbb{X}\)</span>) converges to zero.</p></li>
+In words, (i) the state observer maintains an internal state (or latent state) <span class="math inline">\(z \in \mathbb{R}^l\)</span> that evolves according to the latent dynamics <span class="math inline">\(\mathcal{F}\)</span> in <a href="output-feedback.html#eq:observer-definition-1">(6.38)</a>, where <span class="math inline">\(u\)</span> and <span class="math inline">\(y_{x_0,u}\)</span> are inputs; (ii) an estimated state can be reconstructed from the internal state using <span class="math inline">\(\mathcal{T}_u\)</span> as in <a href="output-feedback.html#eq:observer-definition-3">(6.40)</a>; and (iii) the error between the estimated state and the true state (defined by a proper distance function <span class="math inline">\(\Vert \cdot \Vert\)</span> on <span class="math inline">\(\mathbb{X}\)</span>) converges to zero.</p></li>
 </ol>
-<p>If <span class="math inline">\(\mathcal{T}_u\)</span> is the same for any <span class="math inline">\(u \in \mathcal{U}\)</span> and is also time independent, then we say <span class="math inline">\(\mathcal{T}\)</span> is <em>stationary</em>.<a href="#fn9" class="footnote-ref" id="fnref9"><sup>9</sup></a> In this case, we can simply write the observer <a href="output-feedback.html#eq:observer-definition-1">(6.33)</a> and <a href="output-feedback.html#eq:observer-definition-3">(6.35)</a> as
+<p>If <span class="math inline">\(\mathcal{T}_u\)</span> is the same for any <span class="math inline">\(u \in \mathcal{U}\)</span> and is also time independent, then we say <span class="math inline">\(\mathcal{T}\)</span> is <em>stationary</em>.<a href="#fn9" class="footnote-ref" id="fnref9"><sup>9</sup></a> In this case, we can simply write the observer <a href="output-feedback.html#eq:observer-definition-1">(6.38)</a> and <a href="output-feedback.html#eq:observer-definition-3">(6.40)</a> as
 <span class="math display" id="eq:observer-definition-simple">\[\begin{equation}
 \begin{split}
 \dot{z} &amp;= \mathcal{F}(z,u,y) \\
 \hat{x} &amp;= \mathcal{T}(z).
 \end{split}
-\tag{6.36}
+\tag{6.41}
 \end{equation}\]</span></p>
-<p>If <span class="math inline">\(\hat{x}\)</span> can be read off directly from <span class="math inline">\(z\)</span>, then we say the observer <a href="output-feedback.html#eq:observer-definition-simple">(6.36)</a> is <em>in the given coordinates</em>. A special case of this is when <span class="math inline">\(\hat{x} = z\)</span>, i.e., the internal state of the observer is the same as the system state.</p>
+<p>If <span class="math inline">\(\hat{x}\)</span> can be read off directly from <span class="math inline">\(z\)</span>, then we say the observer <a href="output-feedback.html#eq:observer-definition-simple">(6.41)</a> is <em>in the given coordinates</em>. A special case of this is when <span class="math inline">\(\hat{x} = z\)</span>, i.e., the internal state of the observer is the same as the system state.</p>
 </div>
 </div>
 <div id="general-design-strategy" class="section level3 hasAnchor" number="6.4.1">
@@ -1015,20 +1141,20 @@ In words, (i) the state observer maintains an internal state (or latent state) <
 <p><span id="thm:observerdesignmeta" class="theorem"><strong>Theorem 6.1  (Meta Observer) </strong></span>Let <span class="math inline">\(F: \mathbb{R}^p \times \mathbb{R}^m \times \mathbb{R}^d \rightarrow \mathbb{R}^p\)</span>, <span class="math inline">\(H: \mathbb{R}^p \times \mathbb{R}^m \rightarrow \mathbb{R}^d\)</span> and <span class="math inline">\(\mathcal{F}: \mathbb{R}^p \times \mathbb{R}^m \times \mathbb{R}^d \rightarrow \mathbb{R}^p\)</span> be continuous functions such that
 <span class="math display" id="eq:meta-observer-zeta-hat">\[\begin{equation}
 \dot{\hat{\xi}} = \mathcal{F}(\hat{\xi}, u, \tilde{y})
-\tag{6.37}
+\tag{6.42}
 \end{equation}\]</span>
 is an observer for
 <span class="math display" id="eq:meta-observer-zeta">\[\begin{equation}
 \dot{\xi} = F(\xi,u,H(\xi,u)), \quad \tilde{y} = H(\xi,u),
-\tag{6.38}
+\tag{6.43}
 \end{equation}\]</span>
-i.e., for any <span class="math inline">\(\xi_0,\hat{\xi}_0 \in \mathbb{R}^p\)</span> and any <span class="math inline">\(u \in \mathcal{U}\)</span>, the solution of the observer <a href="output-feedback.html#eq:meta-observer-zeta-hat">(6.37)</a>,
-denoted by <span class="math inline">\(\hat{\Xi}(\hat{\xi}_0;t;u;\tilde{y}_{\xi_0,u})\)</span>, and the solution of the true system <a href="output-feedback.html#eq:meta-observer-zeta">(6.38)</a>, denoted by <span class="math inline">\(\Xi(\xi_0;t;u)\)</span>, satisfy
+i.e., for any <span class="math inline">\(\xi_0,\hat{\xi}_0 \in \mathbb{R}^p\)</span> and any <span class="math inline">\(u \in \mathcal{U}\)</span>, the solution of the observer <a href="output-feedback.html#eq:meta-observer-zeta-hat">(6.42)</a>,
+denoted by <span class="math inline">\(\hat{\Xi}(\hat{\xi}_0;t;u;\tilde{y}_{\xi_0,u})\)</span>, and the solution of the true system <a href="output-feedback.html#eq:meta-observer-zeta">(6.43)</a>, denoted by <span class="math inline">\(\Xi(\xi_0;t;u)\)</span>, satisfy
 <span class="math display" id="eq:meta-observer-zeta-converge">\[\begin{equation}
 \lim_{t \rightarrow \infty} \Vert \hat{\Xi}(\hat{\xi}_0;t;u;\tilde{y}_{\xi_0,u}) - \Xi(\xi_0;t;u) \Vert = 0.
-\tag{6.39}
+\tag{6.44}
 \end{equation}\]</span>
-Note that the observer <a href="output-feedback.html#eq:meta-observer-zeta-hat">(6.37)</a> is stationary and in the given coordinates for system <a href="output-feedback.html#eq:meta-observer-zeta">(6.38)</a>. Indeed the internal state of the observer is the same as the system state.</p>
+Note that the observer <a href="output-feedback.html#eq:meta-observer-zeta-hat">(6.42)</a> is stationary and in the given coordinates for system <a href="output-feedback.html#eq:meta-observer-zeta">(6.43)</a>. Indeed the internal state of the observer is the same as the system state.</p>
 <p>Now suppose for any <span class="math inline">\(u \in \mathcal{U}\)</span>, there exists a continuous function (i.e., coordinate transformation) <span class="math inline">\(T_u: \mathbb{R}^n \times \mathbb{R} \rightarrow \mathbb{R}^p\)</span> and a subset <span class="math inline">\(\mathcal{X}\)</span> of <span class="math inline">\(\mathbb{X}\)</span> such that</p>
 <ol style="list-style-type: decimal">
 <li><p>For any <span class="math inline">\(x_0 \in \mathcal{X}_0\)</span> such that <span class="math inline">\(\sigma^+_{\mathbb{X}}(x_0;u) = + \infty\)</span>, <span class="math inline">\(X(x_0;\cdot;u)\)</span> remains in <span class="math inline">\(\mathcal{X}\)</span></p></li>
@@ -1037,10 +1163,10 @@ Note that the observer <a href="output-feedback.html#eq:meta-observer-zeta-hat">
 \Vert x_a - x_b \Vert \leq \rho (| T_u(x_a,t) - T_u(x_b,t) |), \quad \forall x_a,x_b \in \mathcal{X}, t \geq \bar{t},
 \]</span>
 i.e., <span class="math inline">\(x \mapsto T_u(x,t)\)</span> becomes injective on <span class="math inline">\(\mathcal{X}\)</span>,<a href="#fn11" class="footnote-ref" id="fnref11"><sup>11</sup></a> uniformly in time and space, after a certain time <span class="math inline">\(\bar{t}\)</span>.</p></li>
-<li><p><span class="math inline">\(T_u\)</span> transforms the system <a href="output-feedback.html#eq:output-feedback-system">(6.1)</a> into the system <a href="output-feedback.html#eq:meta-observer-zeta">(6.38)</a>, i.e., for all <span class="math inline">\(x \in \mathcal{X}\)</span> and all <span class="math inline">\(t \geq 0\)</span>, we have
+<li><p><span class="math inline">\(T_u\)</span> transforms the system <a href="output-feedback.html#eq:output-feedback-system">(6.1)</a> into the system <a href="output-feedback.html#eq:meta-observer-zeta">(6.43)</a>, i.e., for all <span class="math inline">\(x \in \mathcal{X}\)</span> and all <span class="math inline">\(t \geq 0\)</span>, we have
 <span class="math display" id="eq:meta-observer-transform">\[\begin{equation}
 L_{(f,1)} T_u(x,t) = F(T_u(x,t),u,h(x,u)), \quad h(x,u) = H(T_u(x,t),u),
-\tag{6.40}
+\tag{6.45}
 \end{equation}\]</span>
 where <span class="math inline">\(L_{(f,1)} T_u(x,t)\)</span> is the Lie derivative of <span class="math inline">\(T_u\)</span> along the vector field <span class="math inline">\((f,1)\)</span>
 <span class="math display">\[
@@ -1064,12 +1190,12 @@ Moreover, denoting <span class="math inline">\(\mathcal{T}\)</span> the family o
 <p>A simpler version of Theorem <a href="output-feedback.html#thm:observerdesignmeta">6.1</a> where the coordinate transformation <span class="math inline">\(T_u\)</span> is stationary and fixed for all <span class="math inline">\(u\)</span> is stated below as a corollary.</p>
 <div class="theorembox">
 <div class="corollary">
-<p><span id="cor:observerdesignmetafixedT" class="corollary"><strong>Corollary 6.7  (Meta Observer with Fixed Transformation) </strong></span>Let <span class="math inline">\(F: \mathbb{R}^p \times \mathbb{R}^m \times \mathbb{R}^d \rightarrow \mathbb{R}^p\)</span>, <span class="math inline">\(H: \mathbb{R}^p \times \mathbb{R}^m \rightarrow \mathbb{R}^d\)</span> and <span class="math inline">\(\mathcal{F}: \mathbb{R}^p \times \mathbb{R}^m \times \mathbb{R}^d \rightarrow \mathbb{R}^p\)</span> be continuous functions such that <a href="output-feedback.html#eq:meta-observer-zeta-hat">(6.37)</a> is an observer for <a href="output-feedback.html#eq:meta-observer-zeta">(6.38)</a>.</p>
+<p><span id="cor:observerdesignmetafixedT" class="corollary"><strong>Corollary 6.7  (Meta Observer with Fixed Transformation) </strong></span>Let <span class="math inline">\(F: \mathbb{R}^p \times \mathbb{R}^m \times \mathbb{R}^d \rightarrow \mathbb{R}^p\)</span>, <span class="math inline">\(H: \mathbb{R}^p \times \mathbb{R}^m \rightarrow \mathbb{R}^d\)</span> and <span class="math inline">\(\mathcal{F}: \mathbb{R}^p \times \mathbb{R}^m \times \mathbb{R}^d \rightarrow \mathbb{R}^p\)</span> be continuous functions such that <a href="output-feedback.html#eq:meta-observer-zeta-hat">(6.42)</a> is an observer for <a href="output-feedback.html#eq:meta-observer-zeta">(6.43)</a>.</p>
 <p>Suppose there exists a continuous coordinate transformation <span class="math inline">\(T: \mathbb{R}^p \rightarrow \mathbb{R}^n\)</span> and a compact subset <span class="math inline">\(\Omega\)</span> of <span class="math inline">\(\mathbb{R}^n\)</span> such that</p>
 <ol style="list-style-type: decimal">
 <li><p>For any <span class="math inline">\(x_0 \in \mathcal{X}_0\)</span> such that <span class="math inline">\(\sigma^+_{\mathbb{X}}(x_0;u) = + \infty\)</span>, <span class="math inline">\(X(x_0;\cdot;u)\)</span> remains in <span class="math inline">\(\Omega\)</span></p></li>
 <li><p><span class="math inline">\(x \mapsto T(x)\)</span> is injective on <span class="math inline">\(\Omega\)</span></p></li>
-<li><p><span class="math inline">\(T\)</span> transforms the system <a href="output-feedback.html#eq:output-feedback-system">(6.1)</a> into system <a href="output-feedback.html#eq:meta-observer-zeta">(6.38)</a>
+<li><p><span class="math inline">\(T\)</span> transforms the system <a href="output-feedback.html#eq:output-feedback-system">(6.1)</a> into system <a href="output-feedback.html#eq:meta-observer-zeta">(6.43)</a>
 <span class="math display">\[
 L_f T(x) = F(T(x),u,h(x,u)), \quad h(x,u) = H(T(x),u),
 \]</span>
@@ -1087,11 +1213,11 @@ and <span class="math inline">\((\mathcal{F},\mathcal{T})\)</span> is an observe
 </div>
 <p>Theorem <a href="output-feedback.html#thm:observerdesignmeta">6.1</a> and Corollary <a href="output-feedback.html#cor:observerdesignmetafixedT">6.7</a> suggest the following general observer design strategy:</p>
 <ol style="list-style-type: decimal">
-<li><p>Find an injective coordinate transformation <span class="math inline">\(T_u\)</span> (that may be time-varying and also dependent on <span class="math inline">\(u\)</span>) that transforms the original system <a href="output-feedback.html#eq:output-feedback-system">(6.1)</a> with coordinate <span class="math inline">\(x\)</span> into a new system <a href="output-feedback.html#eq:meta-observer-zeta">(6.38)</a> with coordinate <span class="math inline">\(\xi\)</span></p></li>
-<li><p>Design an observer <a href="output-feedback.html#eq:meta-observer-zeta-hat">(6.37)</a>, <span class="math inline">\(\hat{\xi}\)</span>, for the new system</p></li>
+<li><p>Find an injective coordinate transformation <span class="math inline">\(T_u\)</span> (that may be time-varying and also dependent on <span class="math inline">\(u\)</span>) that transforms the original system <a href="output-feedback.html#eq:output-feedback-system">(6.1)</a> with coordinate <span class="math inline">\(x\)</span> into a new system <a href="output-feedback.html#eq:meta-observer-zeta">(6.43)</a> with coordinate <span class="math inline">\(\xi\)</span></p></li>
+<li><p>Design an observer <a href="output-feedback.html#eq:meta-observer-zeta-hat">(6.42)</a>, <span class="math inline">\(\hat{\xi}\)</span>, for the new system</p></li>
 <li><p>Compute a left inverse, <span class="math inline">\(\mathcal{T}_u\)</span>, of the transformation <span class="math inline">\(T_u\)</span> to recover a state estimation <span class="math inline">\(\hat{x}\)</span> of the original system.</p></li>
 </ol>
-<p>The transformed systems <a href="output-feedback.html#eq:meta-observer-zeta">(6.38)</a> are typically referred to as <em>normal forms</em>, or in my opinion, <em>templates</em>.</p>
+<p>The transformed systems <a href="output-feedback.html#eq:meta-observer-zeta">(6.43)</a> are typically referred to as <em>normal forms</em>, or in my opinion, <em>templates</em>.</p>
 <p>Of course, the general design strategy is rather conceptual, and in order for it to be practical, we have to answer three questions.</p>
 <ul>
 <li><p>What templates do we have, what are their associated observers, and what are the conditions for the observers to be asymptotically converging?</p></li>
@@ -1126,10 +1252,10 @@ y_{x_a,u}(t) = y_{x_b,u}(t), \forall t \in (\max\left\{\sigma^{-}_{\mathcal{L}}(
 </div>
 <div id="luenberger-template" class="section level3 hasAnchor" number="6.4.2">
 <h3><span class="header-section-number">6.4.2</span> Luenberger Template<a href="output-feedback.html#luenberger-template" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>Consider an instance of the normal form <a href="output-feedback.html#eq:meta-observer-zeta">(6.38)</a> as follows:
+<p>Consider an instance of the normal form <a href="output-feedback.html#eq:meta-observer-zeta">(6.43)</a> as follows:
 <span class="math display" id="eq:Luenberger-linear-template">\[\begin{equation}
 \dot{\xi} = A \xi + B(u,y), \quad y = C \xi,
-\tag{6.41}
+\tag{6.46}
 \end{equation}\]</span>
 where <span class="math inline">\(A,C\)</span> are constant matrices, and <span class="math inline">\(B(u,y)\)</span> can depend nonlinearly on <span class="math inline">\(u\)</span> and <span class="math inline">\(y\)</span>.</p>
 <p>For this template, we have the well-known Luenberger observer.</p>
@@ -1138,9 +1264,9 @@ where <span class="math inline">\(A,C\)</span> are constant matrices, and <span 
 <p><span id="thm:LuenbergerLinear" class="theorem"><strong>Theorem 6.2  (Luenberger Observer) </strong></span>If the pair <span class="math inline">\((A,C)\)</span> is detectable (see Theorem <a href="app-lti-system-theory.html#thm:ltidetectable">C.9</a>), then there exists a matrix <span class="math inline">\(K\)</span> such that <span class="math inline">\(A-KC\)</span> is Hurwitz and the system
 <span class="math display" id="eq:Luenberger-Linear">\[\begin{equation}
 \dot{\hat{\xi}} = A \hat{\xi} + B(u,y) + K(y - C \hat{\xi})
-\tag{6.42}
+\tag{6.47}
 \end{equation}\]</span>
-is an observer for <a href="output-feedback.html#eq:Luenberger-linear-template">(6.41)</a>.</p>
+is an observer for <a href="output-feedback.html#eq:Luenberger-linear-template">(6.46)</a>.</p>
 </div>
 </div>
 <div class="proofbox">
@@ -1148,9 +1274,9 @@ is an observer for <a href="output-feedback.html#eq:Luenberger-linear-template">
 <p><span id="unlabeled-div-22" class="proof"><em>Proof</em>. </span>Define <span class="math inline">\(e(t) = \xi(t) - \hat{\xi}(t)\)</span>. In that case,
 <span class="math display" id="eq:Luenberger-error">\[\begin{equation}
     \dot{e}(t) = [A - KC] e(t)
-    \tag{6.43}
+    \tag{6.48}
 \end{equation}\]</span></p>
-<p>Solving <a href="output-feedback.html#eq:Luenberger-error">(6.43)</a>, we obtain</p>
+<p>Solving <a href="output-feedback.html#eq:Luenberger-error">(6.48)</a>, we obtain</p>
 <p><span class="math display">\[\begin{equation}
     e(t) = \mathrm{exp}[(A - KC)t] e(0)
 \end{equation}\]</span></p>
@@ -1162,11 +1288,11 @@ is an observer for <a href="output-feedback.html#eq:Luenberger-linear-template">
 to obtain <span class="math inline">\(P\)</span>. Then the convergence rate of <span class="math inline">\(\Vert e \Vert\)</span> towards zero is <span class="math inline">\(\frac{0.5}{\lambda_{\max}(P)}\)</span>.</p>
 </div>
 </div>
-<p>The Luenberger observer is an elegant result in observer design (and even in control theory) that has far-reaching impact. In my opinion, the essence of observer design is twofold: (i) to simulate the dynamics when the state estimation is correct, and (ii) to correct the state estimation from observation when it is off. These two pieces of ideas are evident in <a href="output-feedback.html#eq:Luenberger-Linear">(6.42)</a>: the observer is a copy of the original dynamics (<span class="math inline">\(A \hat{\xi} + B(u,y)\)</span>) plus a feedback correction from the difference between the “imagined” observation <span class="math inline">\(C\hat{\xi}\)</span> and the true observation <span class="math inline">\(y\)</span>.</p>
+<p>The Luenberger observer is an elegant result in observer design (and even in control theory) that has far-reaching impact. In my opinion, the essence of observer design is twofold: (i) to simulate the dynamics when the state estimation is correct, and (ii) to correct the state estimation from observation when it is off. These two pieces of ideas are evident in <a href="output-feedback.html#eq:Luenberger-Linear">(6.47)</a>: the observer is a copy of the original dynamics (<span class="math inline">\(A \hat{\xi} + B(u,y)\)</span>) plus a feedback correction from the difference between the “imagined” observation <span class="math inline">\(C\hat{\xi}\)</span> and the true observation <span class="math inline">\(y\)</span>.</p>
 <p>You may think the Luenberger template is restricting because it requires the system to be linear (up to the only nonlinearly in <span class="math inline">\(B(u,y)\)</span>). However, it turns out the Luenberger template is already quite useful, as I will show in the following pendulum example.</p>
 <div class="examplebox">
 <div class="example">
-<p><span id="exm:pendulumLuenberger" class="example"><strong>Example 6.1  (Luenberger Observer for A Simple Pendulum) </strong></span>Consider a simple pendulum dynamics model
+<p><span id="exm:pendulumLuenberger" class="example"><strong>Example 6.2  (Luenberger Observer for A Simple Pendulum) </strong></span>Consider a simple pendulum dynamics model
 <span class="math display" id="eq:kbobserver-pendulum">\[\begin{equation}
 x = \begin{bmatrix}
 \theta \\ \dot{\theta}
@@ -1179,11 +1305,11 @@ x = \begin{bmatrix}
 0 \\
 \frac{1}{ml^2}
 \end{bmatrix} u, \quad y = \theta,
-\tag{6.44}
+\tag{6.49}
 \end{equation}\]</span>
 where <span class="math inline">\(\theta\)</span> the angular position of the pendulum from the vertical line, <span class="math inline">\(m &gt; 0\)</span> the mass of the pendulum, <span class="math inline">\(l &gt; 0\)</span> the length, <span class="math inline">\(g\)</span> the gravitational constant, <span class="math inline">\(b &gt; 0\)</span> the dampling coefficient, and <span class="math inline">\(u\)</span> the control input (torque).</p>
-<p>We assume we can only observe the angular position of the pendulum in <a href="output-feedback.html#eq:kbobserver-pendulum">(6.44)</a>, e.g., using a camera, but not the angular velocity. Our goal is to construct an observer that can provide a full state estimation.</p>
-<p>We first note that the pendulum dynamics <a href="output-feedback.html#eq:kbobserver-pendulum">(6.44)</a> can actually be written in the (linear) Luenberger template <a href="output-feedback.html#eq:Luenberger-linear-template">(6.41)</a> as<a href="#fn12" class="footnote-ref" id="fnref12"><sup>12</sup></a>
+<p>We assume we can only observe the angular position of the pendulum in <a href="output-feedback.html#eq:kbobserver-pendulum">(6.49)</a>, e.g., using a camera, but not the angular velocity. Our goal is to construct an observer that can provide a full state estimation.</p>
+<p>We first note that the pendulum dynamics <a href="output-feedback.html#eq:kbobserver-pendulum">(6.49)</a> can actually be written in the (linear) Luenberger template <a href="output-feedback.html#eq:Luenberger-linear-template">(6.46)</a> as<a href="#fn12" class="footnote-ref" id="fnref12"><sup>12</sup></a>
 <span class="math display" id="eq:pendulum-Luenberger-Linear">\[\begin{equation}
 \begin{split}
 \dot{x} &amp; = \underbrace{\begin{bmatrix}
@@ -1198,7 +1324,7 @@ y &amp; = \underbrace{\begin{bmatrix}
 1 &amp; 0
 \end{bmatrix}}_{=:C} x
 \end{split}.
-\tag{6.45}
+\tag{6.50}
 \end{equation}\]</span></p>
 <p>In order for us to use the Luenberger observer, we need to check if the pair <span class="math inline">\((A,C)\)</span> is detectable. We can easily find the eigenvalues and eigenvectors of <span class="math inline">\(A\)</span>:
 <span class="math display">\[
@@ -1276,20 +1402,20 @@ and <span class="math inline">\(\gamma = \frac{0.5}{\lambda_{\max}(P)}\)</span> 
 \text{subject to} &amp; \quad (A - KC)^T P + P (A - KC) = -I \\
 &amp; \quad P \succeq 0
 \end{split}
-\tag{6.46}
+\tag{6.51}
 \end{equation}\]</span>
 The above formulation seeks the best possible <span class="math inline">\(K\)</span> that minimizes <span class="math inline">\(\lambda_{\max}(P)\)</span> which, according to <span class="math inline">\(\gamma = 0.5 / \lambda_{\max}(P)\)</span>, also maximizes <span class="math inline">\(\gamma\)</span>.</p>
-<p>However, problem <a href="output-feedback.html#eq:pendulumLuenbergerMaxgammaNonCVX">(6.46)</a> is not a convex formulation due to the bilinear term <span class="math inline">\(PK\)</span>. Nevertheless, via a simple change of variable <span class="math inline">\(H = PK\)</span>, we arrive at the following convex formulation
+<p>However, problem <a href="output-feedback.html#eq:pendulumLuenbergerMaxgammaNonCVX">(6.51)</a> is not a convex formulation due to the bilinear term <span class="math inline">\(PK\)</span>. Nevertheless, via a simple change of variable <span class="math inline">\(H = PK\)</span>, we arrive at the following convex formulation
 <span class="math display" id="eq:pendulumLuenbergerMaxgammaCVX">\[\begin{equation}
 \begin{split}
 \min_{P,H} &amp; \quad \lambda_{\max}(P) \\
 \text{subject to} &amp; \quad A^T P - C^T H^T + PA - H C = - I \\
 &amp; \quad P \succeq 0
 \end{split}
-\tag{6.47}
+\tag{6.52}
 \end{equation}\]</span>
-Problem <a href="output-feedback.html#eq:pendulumLuenbergerMaxgammaCVX">(6.47)</a> is a semidefinite programming problem (SDP), that can be modeled and solved by off-the-shelf tools. We can recover <span class="math inline">\(K = P^{-1} H\)</span> from <a href="output-feedback.html#eq:pendulumLuenbergerMaxgammaCVX">(6.47)</a> after it is solved.</p>
-<p>Interestingly, solving problem <a href="output-feedback.html#eq:pendulumLuenbergerMaxgammaCVX">(6.47)</a> verifies that the minimum <span class="math inline">\(\lambda_{\max}(P)\)</span> is <span class="math inline">\(5\)</span> and the maximum converge rate is <span class="math inline">\(0.1\)</span>. An optimal solution of <a href="output-feedback.html#eq:pendulumLuenbergerMaxgammaCVX">(6.47)</a> is
+Problem <a href="output-feedback.html#eq:pendulumLuenbergerMaxgammaCVX">(6.52)</a> is a semidefinite programming problem (SDP), that can be modeled and solved by off-the-shelf tools. We can recover <span class="math inline">\(K = P^{-1} H\)</span> from <a href="output-feedback.html#eq:pendulumLuenbergerMaxgammaCVX">(6.52)</a> after it is solved.</p>
+<p>Interestingly, solving problem <a href="output-feedback.html#eq:pendulumLuenbergerMaxgammaCVX">(6.52)</a> verifies that the minimum <span class="math inline">\(\lambda_{\max}(P)\)</span> is <span class="math inline">\(5\)</span> and the maximum converge rate is <span class="math inline">\(0.1\)</span>. An optimal solution of <a href="output-feedback.html#eq:pendulumLuenbergerMaxgammaCVX">(6.52)</a> is
 <span class="math display">\[
 P^\star = \begin{bmatrix}
 2.4923 &amp; 0 \\ 0 &amp; 5 \end{bmatrix}, \quad
@@ -1302,12 +1428,12 @@ You should check out the Matlab code of this example <a href="https://github.com
 </div>
 <div id="state-affine-template" class="section level3 hasAnchor" number="6.4.3">
 <h3><span class="header-section-number">6.4.3</span> State-affine Template<a href="output-feedback.html#state-affine-template" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>Consider an instance of the normal form <a href="output-feedback.html#eq:meta-observer-zeta">(6.38)</a> where the dynamics is linear in <span class="math inline">\(\xi\)</span>, but the coefficients are time-varying and dependent on the input and output
+<p>Consider an instance of the normal form <a href="output-feedback.html#eq:meta-observer-zeta">(6.43)</a> where the dynamics is linear in <span class="math inline">\(\xi\)</span>, but the coefficients are time-varying and dependent on the input and output
 <span class="math display" id="eq:state-affine-template">\[\begin{equation}
 \dot{\xi} = A(u,y) \xi + B(u,y), \quad y = C(u) \xi.
-\tag{6.48}
+\tag{6.53}
 \end{equation}\]</span>
-The difference between the state-affine template <a href="output-feedback.html#eq:state-affine-template">(6.48)</a> and the Luenberger template <a href="output-feedback.html#eq:Luenberger-linear-template">(6.41)</a> is that the linear matrices <span class="math inline">\(A,C\)</span> are allowed to depend nonlinearly on the input <span class="math inline">\((u,y)\)</span>.</p>
+The difference between the state-affine template <a href="output-feedback.html#eq:state-affine-template">(6.53)</a> and the Luenberger template <a href="output-feedback.html#eq:Luenberger-linear-template">(6.46)</a> is that the linear matrices <span class="math inline">\(A,C\)</span> are allowed to depend nonlinearly on the input <span class="math inline">\((u,y)\)</span>.</p>
 <p>Kalman and Bucy originally proposed an observer for linear time-varying systems <span class="citation">(<a href="#ref-kalman61-new" role="doc-biblioref">Rudolph E. Kalman and Bucy 1961</a>)</span>. The result is later extened by <span class="citation">(<a href="#ref-besanccon96ejc-observer" role="doc-biblioref">Besançon, Bornard, and Hammouri 1996</a>)</span> and <span class="citation">(<a href="#ref-hammouri90cdc-observer" role="doc-biblioref">Hammouri and Leon Morales 1990</a>)</span> to deal with coefficient matrices dependent on the control. The following theorem is a direct extension of the result from <span class="citation">(<a href="#ref-besanccon96ejc-observer" role="doc-biblioref">Besançon, Bornard, and Hammouri 1996</a>)</span> and <span class="citation">(<a href="#ref-hammouri90cdc-observer" role="doc-biblioref">Hammouri and Leon Morales 1990</a>)</span> by considering <span class="math inline">\((u,y)\)</span> as an augmented control input.</p>
 <p>Before presenting the theorem, we need to introduce the following terminology.</p>
 <div class="definitionbox">
@@ -1315,7 +1441,7 @@ The difference between the state-affine template <a href="output-feedback.html#e
 <p><span id="def:lineartimevarying" class="definition"><strong>Definition 6.3  (Linear Time-Varying System) </strong></span>For a linear time-varying system of the form
 <span class="math display" id="eq:linear-time-varying">\[\begin{equation}
 \dot{\chi} = A(\nu) \chi, \quad y = C(\nu) \chi,
-\tag{6.49}
+\tag{6.54}
 \end{equation}\]</span>
 with input <span class="math inline">\(\nu\)</span> and output <span class="math inline">\(y\)</span>, we define</p>
 <ul>
@@ -1323,7 +1449,7 @@ with input <span class="math inline">\(\nu\)</span> and output <span class="math
 <span class="math display">\[
 \Psi_\nu (t,t) = I, \quad \frac{\partial \Psi_\nu}{\partial \tau}(\tau,t) = A(\nu(\tau)) \Psi_\nu (\tau, t).
 \]</span>
-Note that the transition matrix is used to express the solution to <a href="output-feedback.html#eq:linear-time-varying">(6.49)</a> because it satisfies
+Note that the transition matrix is used to express the solution to <a href="output-feedback.html#eq:linear-time-varying">(6.54)</a> because it satisfies
 <span class="math display">\[
 \chi(\chi_0,t_0;t;\nu) = \Psi_\nu (t,t_0) \chi_0.
 \]</span></p></li>
@@ -1338,27 +1464,27 @@ Note that the transition matrix is used to express the solution to <a href="outp
 </ul>
 </div>
 </div>
-<p>We now introduce the Kalman-Bucy Observer for the state-affine template <a href="output-feedback.html#eq:state-affine-template">(6.48)</a>.</p>
+<p>We now introduce the Kalman-Bucy Observer for the state-affine template <a href="output-feedback.html#eq:state-affine-template">(6.53)</a>.</p>
 <div class="theorembox">
 <div class="theorem">
-<p><span id="thm:kalmanbucystateaffine" class="theorem"><strong>Theorem 6.3  (Kalman-Bucy Observer) </strong></span>Let <span class="math inline">\(y_{\xi_0,u}(t) = C(u(t)) \Xi (\xi_0;t;u)\)</span> be the output of system <a href="output-feedback.html#eq:state-affine-template">(6.48)</a> at time <span class="math inline">\(t\)</span> with initialization <span class="math inline">\(\xi_0\)</span> and control <span class="math inline">\(u\)</span>. Suppose the control <span class="math inline">\(u\)</span> satisfies</p>
+<p><span id="thm:kalmanbucystateaffine" class="theorem"><strong>Theorem 6.3  (Kalman-Bucy Observer) </strong></span>Let <span class="math inline">\(y_{\xi_0,u}(t) = C(u(t)) \Xi (\xi_0;t;u)\)</span> be the output of system <a href="output-feedback.html#eq:state-affine-template">(6.53)</a> at time <span class="math inline">\(t\)</span> with initialization <span class="math inline">\(\xi_0\)</span> and control <span class="math inline">\(u\)</span>. Suppose the control <span class="math inline">\(u\)</span> satisfies</p>
 <ul>
 <li><p>For any <span class="math inline">\(\xi_0\)</span>, <span class="math inline">\(t \mapsto A(u(t),y_{\xi_0,u}(t))\)</span> is bounded by <span class="math inline">\(A_{\max}\)</span></p></li>
 <li><p>For any <span class="math inline">\(\xi_0\)</span>, the augmented input <span class="math inline">\(\nu = (u,y_{\xi_0,u})\)</span> is <em>regularly persistent</em> for the dynamics
 <span class="math display" id="eq:kbobserver-auxilarydynamics">\[\begin{equation}
 \dot{\chi} = A(\nu) \chi , \quad y = C(\nu) \chi
-\tag{6.50}
+\tag{6.55}
 \end{equation}\]</span>
 uniformly with respect to <span class="math inline">\(\xi_0\)</span>. That is, there exist strictly positive numbers <span class="math inline">\(t_0,\bar{t}\)</span>, and <span class="math inline">\(\alpha\)</span> such that for any <span class="math inline">\(\xi_0\)</span> and any time <span class="math inline">\(t \geq t_0 \geq \bar{t}\)</span>,
 <span class="math display">\[
 \Gamma_v^b (t-\bar{t}, t) \succeq \alpha I,
 \]</span>
-where <span class="math inline">\(\Gamma_v^b\)</span> is the <em>backward observability grammian</em> associated with system <a href="output-feedback.html#eq:kbobserver-auxilarydynamics">(6.50)</a>.</p></li>
+where <span class="math inline">\(\Gamma_v^b\)</span> is the <em>backward observability grammian</em> associated with system <a href="output-feedback.html#eq:kbobserver-auxilarydynamics">(6.55)</a>.</p></li>
 </ul>
 <p>Then, given any positive definite matrix <span class="math inline">\(P_0\)</span>, there exist <span class="math inline">\(\alpha_1,\alpha_2 &gt; 0\)</span> such that for any <span class="math inline">\(\lambda \geq 2 A_{\max}\)</span> and any <span class="math inline">\(\xi_0 \in \mathbb{R}^p\)</span>, the matrix differential equation
 <span class="math display" id="eq:kbobserver-matrixdifferential">\[\begin{equation}
 \dot{P} = -\lambda P - A(u,y)^T P - P A(u,y) + C(u)^T C(u)
-\tag{6.51}
+\tag{6.56}
 \end{equation}\]</span>
 initialized at <span class="math inline">\(P(0) = P_0\)</span> admits a unique solution satisfying <span class="math inline">\(P(t)=P(t)^T\)</span> and
 <span class="math display">\[
@@ -1367,21 +1493,21 @@ initialized at <span class="math inline">\(P(0) = P_0\)</span> admits a unique s
 Moreover, the system
 <span class="math display" id="eq:kbobserver-observer">\[\begin{equation}
 \dot{\hat{\xi}} = A(u,y) \hat{\xi} + B(u,y) + K (y - C(u)\hat{\xi})
-\tag{6.52}
+\tag{6.57}
 \end{equation}\]</span>
 with a time-varying gain matrix
 <span class="math display" id="eq:kbobserver-gain">\[\begin{equation}
 K = P^{-1} C(u)^T
-\tag{6.53}
+\tag{6.58}
 \end{equation}\]</span>
-is an observer for the state-affine system <a href="output-feedback.html#eq:state-affine-template">(6.48)</a>.</p>
+is an observer for the state-affine system <a href="output-feedback.html#eq:state-affine-template">(6.53)</a>.</p>
 </div>
 </div>
 <p>Let us work out an example of the Kalman-Bucy Observer for nonlinear systems.</p>
 <div class="examplebox">
 <div class="example">
-<p><span id="exm:pendulumkbobserver" class="example"><strong>Example 6.2  (Kalman-Bucy Observer for A Simple Pendulum) </strong></span>Let us reconsider the pendulum dynamics <a href="output-feedback.html#eq:kbobserver-pendulum">(6.44)</a> but this time try to design a Kalman-Bucy observer.</p>
-<p>We first write the pendulum dynamics in a new coordinate system so that it is in the state-affine normal form <a href="output-feedback.html#eq:state-affine-template">(6.48)</a>. We choose <span class="math inline">\(\xi = [\mathfrak{s},\mathfrak{c},\dot{\theta}]^T\)</span> with <span class="math inline">\(\mathfrak{s} = \sin \theta\)</span> and <span class="math inline">\(\mathfrak{c} = \cos \theta\)</span>. Clearly, we will be able to observe <span class="math inline">\(y = [\mathfrak{s},\mathfrak{c}]^T\)</span> in this new coordinate. The state-affine normal form of the pendulum dynamics reads
+<p><span id="exm:pendulumkbobserver" class="example"><strong>Example 6.3  (Kalman-Bucy Observer for A Simple Pendulum) </strong></span>Let us reconsider the pendulum dynamics <a href="output-feedback.html#eq:kbobserver-pendulum">(6.49)</a> but this time try to design a Kalman-Bucy observer.</p>
+<p>We first write the pendulum dynamics in a new coordinate system so that it is in the state-affine normal form <a href="output-feedback.html#eq:state-affine-template">(6.53)</a>. We choose <span class="math inline">\(\xi = [\mathfrak{s},\mathfrak{c},\dot{\theta}]^T\)</span> with <span class="math inline">\(\mathfrak{s} = \sin \theta\)</span> and <span class="math inline">\(\mathfrak{c} = \cos \theta\)</span>. Clearly, we will be able to observe <span class="math inline">\(y = [\mathfrak{s},\mathfrak{c}]^T\)</span> in this new coordinate. The state-affine normal form of the pendulum dynamics reads
 <span class="math display" id="eq:pendulum-state-affine">\[\begin{equation}
 \begin{split}
 \dot{\xi} = \begin{bmatrix}
@@ -1402,17 +1528,17 @@ y &amp; = \underbrace{\begin{bmatrix}
 0 &amp; 1 &amp; 0
 \end{bmatrix}}_{=:C(u)} \xi
 \end{split}.
-\tag{6.54}
+\tag{6.59}
 \end{equation}\]</span>
-Note that <span class="math inline">\(C(u)\)</span> is in fact time-invariant, and <span class="math inline">\(B(u,y)\)</span> only depends on <span class="math inline">\(u\)</span>; but we adopt the same notation as the general state-affine template <a href="output-feedback.html#eq:state-affine-template">(6.48)</a>.</p>
-<p>In order to use the Kalman-Bucy observer in Theorem <a href="output-feedback.html#thm:kalmanbucystateaffine">6.3</a>, we need to verify the boundedness of <span class="math inline">\(A(u,y)\)</span>, and the regular persistence of <a href="output-feedback.html#eq:kbobserver-auxilarydynamics">(6.50)</a>.</p>
+Note that <span class="math inline">\(C(u)\)</span> is in fact time-invariant, and <span class="math inline">\(B(u,y)\)</span> only depends on <span class="math inline">\(u\)</span>; but we adopt the same notation as the general state-affine template <a href="output-feedback.html#eq:state-affine-template">(6.53)</a>.</p>
+<p>In order to use the Kalman-Bucy observer in Theorem <a href="output-feedback.html#thm:kalmanbucystateaffine">6.3</a>, we need to verify the boundedness of <span class="math inline">\(A(u,y)\)</span>, and the regular persistence of <a href="output-feedback.html#eq:kbobserver-auxilarydynamics">(6.55)</a>.</p>
 <p><strong>Boundedness of <span class="math inline">\(A(u,y)\)</span></strong>. We can easily show the boundedness of <span class="math inline">\(A(u,y)\)</span> by writing
 <span class="math display">\[
 \Vert A(u,y) \xi \Vert = \Vert \xi_3 (\mathfrak{c} - \mathfrak{s} - b/ml^2) \Vert  \leq |\xi_3| \sqrt{3} \sqrt{\mathfrak{c}^2 + \mathfrak{s}^2 + b^2 / m^2 l^4} \leq \Vert \xi \Vert \sqrt{3 + 3b^2 / m^2 l^4}.
 \]</span>
 Therefore, we can take <span class="math inline">\(A_{\max} = \sqrt{3 + 3b^2 / m^2 l^4}\)</span>.
 <!-- <span style="color:red">Does the $A_{\max}$ in Theorem \@ref(thm:kalmanbucystateaffine) refer to the bound in operator norm?</span> --></p>
-<p><strong>Regular persistence</strong>. We write the backward observability grammian of system <a href="output-feedback.html#eq:kbobserver-auxilarydynamics">(6.50)</a>
+<p><strong>Regular persistence</strong>. We write the backward observability grammian of system <a href="output-feedback.html#eq:kbobserver-auxilarydynamics">(6.55)</a>
 <span class="math display">\[
 \Gamma_\nu^b(t - \bar{t},t) = \int_{t - \bar{t}}^t \Psi_\nu(\tau,t)^T C^T C \Psi_\nu (\tau, t) d \tau = \int_{t - \bar{t}}^t \Psi_\nu(\tau,t)^T \underbrace{\begin{bmatrix}
 1 &amp; 0 &amp; 0 \\
@@ -1431,13 +1557,13 @@ With this, we develop <span class="math inline">\(w^T \Gamma_\nu^b(t - \bar{t},t
 w^T \Gamma_\nu^b(t - \bar{t},t) w &amp;= \int_{t - \bar{t}}^t s^T \tilde{C} s d\tau, \\
 &amp; = \int_{t - \bar{t}}^t \left( s_1^2 + s_2^2 \right) d\tau, \quad s = \Psi_\nu (\tau, t) w
 \end{split}
-\tag{6.55}
+\tag{6.60}
 \end{equation}\]</span>
 and observe that <span class="math inline">\(s = \Psi_\nu (\tau,t) w\)</span> is equivalent to
 <span class="math display">\[
 w = (\Psi_\nu (\tau,t))^{-1} s = \Psi_\nu (t,\tau) s,
 \]</span>
-that is, <span class="math inline">\(w\)</span> is the solution of <span class="math inline">\(\dot{\xi} = A(\nu) \xi\)</span> at time <span class="math inline">\(t\)</span> with initial condition <span class="math inline">\(s\)</span> at time <span class="math inline">\(\tau \leq t\)</span>. Equivalently, this is saying <span class="math inline">\(s\)</span> is the initial condition of <span class="math inline">\(\dot{\xi} = A(\nu) \xi\)</span> at time <span class="math inline">\(\tau \leq t\)</span> such that its solution at time <span class="math inline">\(t\)</span> is <span class="math inline">\(w\)</span>. Note that from <a href="output-feedback.html#eq:pendulm-regular-persistence-1">(6.55)</a> it is clearly that <span class="math inline">\(\int_{t - \bar{t}}^t \left( s_1^2 + s_2^2 \right) d\tau \geq 0\)</span>, and <span class="math inline">\(\int_{t - \bar{t}}^t \left( s_1^2 + s_2^2 \right) d\tau = 0\)</span> if and only if <span class="math inline">\(s_1^2 + s_2^2 = 0\)</span>, or equivalently <span class="math inline">\(s_1 = s_2 = 0\)</span> for any <span class="math inline">\(\tau \in [t - \bar{t}, t]\)</span>.</p>
+that is, <span class="math inline">\(w\)</span> is the solution of <span class="math inline">\(\dot{\xi} = A(\nu) \xi\)</span> at time <span class="math inline">\(t\)</span> with initial condition <span class="math inline">\(s\)</span> at time <span class="math inline">\(\tau \leq t\)</span>. Equivalently, this is saying <span class="math inline">\(s\)</span> is the initial condition of <span class="math inline">\(\dot{\xi} = A(\nu) \xi\)</span> at time <span class="math inline">\(\tau \leq t\)</span> such that its solution at time <span class="math inline">\(t\)</span> is <span class="math inline">\(w\)</span>. Note that from <a href="output-feedback.html#eq:pendulm-regular-persistence-1">(6.60)</a> it is clearly that <span class="math inline">\(\int_{t - \bar{t}}^t \left( s_1^2 + s_2^2 \right) d\tau \geq 0\)</span>, and <span class="math inline">\(\int_{t - \bar{t}}^t \left( s_1^2 + s_2^2 \right) d\tau = 0\)</span> if and only if <span class="math inline">\(s_1^2 + s_2^2 = 0\)</span>, or equivalently <span class="math inline">\(s_1 = s_2 = 0\)</span> for any <span class="math inline">\(\tau \in [t - \bar{t}, t]\)</span>.</p>
 <p>We then take a closer look at the system <span class="math inline">\(\dot{\xi} = A(\nu) \xi\)</span>:
 <span class="math display" id="eq:pendulm-state-affine-auxiliarysystem">\[\begin{equation}
 \begin{split}
@@ -1445,7 +1571,7 @@ that is, <span class="math inline">\(w\)</span> is the solution of <span class="
 \dot{\xi}_2 &amp;= -\mathfrak{s} \xi_3 \\
 \dot{\xi}_3 &amp;= - \frac{b}{ml^2} \xi_3.
 \end{split}
-\tag{6.56}
+\tag{6.61}
 \end{equation}\]</span></p>
 <p>If the solution of <span class="math inline">\(\xi_3\)</span> at time <span class="math inline">\(t\)</span> is <span class="math inline">\(w_3\)</span>, then
 <span class="math display">\[
@@ -1459,7 +1585,7 @@ We can now claim it is impossible that <span class="math inline">\(s_1 = s_2 = 0
 <p><span id="exr:kbobserverpendulumcounterexample" class="exercise"><strong>Exercise 6.1  (Counterexample for Kalman-Bucy Observer) </strong></span>Show that, if the control <span class="math inline">\(u\)</span> is unbounded, then for any <span class="math inline">\(\alpha &gt; 0\)</span>, <span class="math inline">\(t_0 \geq \bar{t} &gt; 0\)</span>, there exists <span class="math inline">\(t \geq t_0\)</span> such that <span class="math inline">\(\Gamma_\nu^b(t - \bar{t},t) \prec \alpha I\)</span>. (Hint: consider a controller that spins the pendulum faster and faster such that in time <span class="math inline">\(\bar{t}\)</span> it has rotated <span class="math inline">\(2k\pi\)</span>, in this case the angular velocity becomes unobservable because we are not sure how many rounds the pendulum has rotated.)</p>
 </div>
 <p>Fortunately, if the control <span class="math inline">\(u\)</span> is bounded, then we can prove the uniform positive define condition holds for <span class="math inline">\(\Gamma_\nu^b(t - \bar{t},t)\)</span>. The following proof is given by <a href="https://scholar.harvard.edu/weiyuli/home">Weiyu Li</a>.</p>
-<p>Without loss of generality, let <span class="math inline">\(\frac{b}{ml^2} = 1\)</span>. Assume <span class="math inline">\(u\)</span> is bounded such that the third entry of <span class="math inline">\(B(u,y)\)</span> in <a href="output-feedback.html#eq:pendulum-state-affine">(6.54)</a> is bounded by <span class="math inline">\(\beta &gt; 0\)</span>
+<p>Without loss of generality, let <span class="math inline">\(\frac{b}{ml^2} = 1\)</span>. Assume <span class="math inline">\(u\)</span> is bounded such that the third entry of <span class="math inline">\(B(u,y)\)</span> in <a href="output-feedback.html#eq:pendulum-state-affine">(6.59)</a> is bounded by <span class="math inline">\(\beta &gt; 0\)</span>
 <span class="math display">\[
 \left| \frac{u - mgl \mathfrak{s}}{ml^2} \right| \leq \beta.
 \]</span>
@@ -1467,10 +1593,10 @@ Assuming the initial velocity of the pendulum is <span class="math inline">\(\do
 <span class="math display">\[
 \dot{\theta}(t) \in \left[ c_1(1-\beta)e^{-t} - \beta  , c_2(1-\beta)e^{-t} + \beta \right],
 \]</span>
-where <span class="math inline">\(c_1,c_2\)</span> are constants chosen to satisfy the initial condition. Clearly, for all <span class="math inline">\(t &gt; 0\)</span>, we see <span class="math inline">\(\dot{\theta}(t)\)</span> is bounded, and hence we know <span class="math inline">\(\dot{\mathfrak{c}}\)</span> and <span class="math inline">\(\dot{\mathfrak{s}}\)</span> are bounded (due to <span class="math inline">\(\mathfrak{c}\)</span> and <span class="math inline">\(\mathfrak{s}\)</span> are bounded). Intuitively, what we have just shown says that when the control is bounded, the measurements <span class="math inline">\(\mathfrak{c}\)</span> and <span class="math inline">\(\mathfrak{s}\)</span> will have bounded time derivatives. (This will help us analyze the auxiliary system <a href="output-feedback.html#eq:pendulm-state-affine-auxiliarysystem">(6.56)</a>.)</p>
-<p>Now back to checking regular persistence of the auxilary system <a href="output-feedback.html#eq:pendulm-state-affine-auxiliarysystem">(6.56)</a>. We will discuss two cases: (1) <span class="math inline">\(w_3^2 &gt; 1 - \delta\)</span>, and (2) <span class="math inline">\(w_3^2 \leq 1 - \delta\)</span>, for some constant <span class="math inline">\(\delta &lt; 0.5\)</span> determined later.</p>
+where <span class="math inline">\(c_1,c_2\)</span> are constants chosen to satisfy the initial condition. Clearly, for all <span class="math inline">\(t &gt; 0\)</span>, we see <span class="math inline">\(\dot{\theta}(t)\)</span> is bounded, and hence we know <span class="math inline">\(\dot{\mathfrak{c}}\)</span> and <span class="math inline">\(\dot{\mathfrak{s}}\)</span> are bounded (due to <span class="math inline">\(\mathfrak{c}\)</span> and <span class="math inline">\(\mathfrak{s}\)</span> are bounded). Intuitively, what we have just shown says that when the control is bounded, the measurements <span class="math inline">\(\mathfrak{c}\)</span> and <span class="math inline">\(\mathfrak{s}\)</span> will have bounded time derivatives. (This will help us analyze the auxiliary system <a href="output-feedback.html#eq:pendulm-state-affine-auxiliarysystem">(6.61)</a>.)</p>
+<p>Now back to checking regular persistence of the auxilary system <a href="output-feedback.html#eq:pendulm-state-affine-auxiliarysystem">(6.61)</a>. We will discuss two cases: (1) <span class="math inline">\(w_3^2 &gt; 1 - \delta\)</span>, and (2) <span class="math inline">\(w_3^2 \leq 1 - \delta\)</span>, for some constant <span class="math inline">\(\delta &lt; 0.5\)</span> determined later.</p>
 <ol style="list-style-type: decimal">
-<li><p><span class="math inline">\(w_3^2 &gt; 1 - \delta &gt; 0.5\)</span>. In this case we have <span class="math inline">\(w_1^2 + w_2^2 = 1 - w_3^2 &lt; \delta\)</span>, and hence <span class="math inline">\(w_1^2 &lt; \delta\)</span>, <span class="math inline">\(w_2^2 &lt; \delta\)</span>. On the other hand, from <a href="output-feedback.html#eq:pendulm-state-affine-auxiliarysystem">(6.56)</a> we have
+<li><p><span class="math inline">\(w_3^2 &gt; 1 - \delta &gt; 0.5\)</span>. In this case we have <span class="math inline">\(w_1^2 + w_2^2 = 1 - w_3^2 &lt; \delta\)</span>, and hence <span class="math inline">\(w_1^2 &lt; \delta\)</span>, <span class="math inline">\(w_2^2 &lt; \delta\)</span>. On the other hand, from <a href="output-feedback.html#eq:pendulm-state-affine-auxiliarysystem">(6.61)</a> we have
 <span class="math display">\[
 \dot{\xi}_1^2(\tau) + \dot{\xi}_2^2(\tau) = \xi_3^2 = w_3^2 e^{2 (t - \tau)} &gt; w_3^2 &gt; 1 - \delta, \quad \forall \tau &lt; t.
 \]</span>
@@ -1512,13 +1638,13 @@ On the other hand,
 into a Hurwitz form
 <span class="math display" id="eq:kkl-history-dynamics">\[\begin{equation}
 \dot{\xi} = A \xi + B y
-\tag{6.57}
+\tag{6.62}
 \end{equation}\]</span>
 with <span class="math inline">\(A\)</span> a Hurwitz (stable) matrix. If such a transformation is available, then the following system
 <span class="math display">\[
 \dot{\hat{\xi}} = A \hat{\xi} + B y,
 \]</span>
-which is nothing but a copy of the dynamics <a href="output-feedback.html#eq:kkl-history-dynamics">(6.57)</a>, is in fact an observer. This is because the error <span class="math inline">\(e = \hat{\xi} - \xi\)</span> evolves as
+which is nothing but a copy of the dynamics <a href="output-feedback.html#eq:kkl-history-dynamics">(6.62)</a>, is in fact an observer. This is because the error <span class="math inline">\(e = \hat{\xi} - \xi\)</span> evolves as
 <span class="math display">\[
 \dot{e} = A e,
 \]</span>
@@ -1531,29 +1657,29 @@ known as the Sylvester equation, admits a unique and invertible solution <span c
 <p>A natural extension of Luenberger’s original idea is to find a transformation that converts the nonlinear system <a href="output-feedback.html#eq:output-feedback-system">(6.1)</a> into the following form
 <span class="math display" id="eq:kkl-template">\[\begin{equation}
 \dot{\xi} = A \xi + B(u,y), \quad y = H(\xi,u),
-\tag{6.58}
+\tag{6.63}
 \end{equation}\]</span>
-with <span class="math inline">\(A\)</span> a Hurwitz matrix (but <span class="math inline">\(H\)</span> can be nonlinear, as opposed to the Luenberger template in Theorem <a href="output-feedback.html#thm:LuenbergerLinear">6.2</a>). If such a transformation can be found, then we can design a similar observer that copies the dynamics <a href="output-feedback.html#eq:kkl-template">(6.58)</a>
+with <span class="math inline">\(A\)</span> a Hurwitz matrix (but <span class="math inline">\(H\)</span> can be nonlinear, as opposed to the Luenberger template in Theorem <a href="output-feedback.html#thm:LuenbergerLinear">6.2</a>). If such a transformation can be found, then we can design a similar observer that copies the dynamics <a href="output-feedback.html#eq:kkl-template">(6.63)</a>
 <span class="math display" id="eq:kkl-observer">\[\begin{equation}
 \dot{\hat{\xi}} = A \hat{\xi} + B(u,y).
-\tag{6.59}
+\tag{6.64}
 \end{equation}\]</span>
 We refer to such a nonlinear Luenberger template the Kazantzis-Kravaris-Luenberger (KKL) template, due to the seminal work <span class="citation">(<a href="#ref-kazantzis98scl-kkl" role="doc-biblioref">Kazantzis and Kravaris 1998</a>)</span>.</p>
-<p>The KKL template, once found, is nice in the sense that (i) the observer <a href="output-feedback.html#eq:kkl-observer">(6.59)</a> is a simple copy of the dynamics and also very easy to implement (as opposed to the Kalman-Bucy observer); and (ii) checking if the matrix <span class="math inline">\(A\)</span> is Hurwitz is easy, at least when <span class="math inline">\(A\)</span> has reasonable size, (e.g., compared to checking the regular persistence condition in the state-affine template in Theorem <a href="output-feedback.html#thm:kalmanbucystateaffine">6.3</a>).</p>
-<p>However, the KKL template is difficult to realize in the sense that (i) what kind of nonlinear systems can be converted to <a href="output-feedback.html#eq:kkl-template">(6.58)</a>, and (ii) for those systems, how do we find the coordinate transformation?</p>
+<p>The KKL template, once found, is nice in the sense that (i) the observer <a href="output-feedback.html#eq:kkl-observer">(6.64)</a> is a simple copy of the dynamics and also very easy to implement (as opposed to the Kalman-Bucy observer); and (ii) checking if the matrix <span class="math inline">\(A\)</span> is Hurwitz is easy, at least when <span class="math inline">\(A\)</span> has reasonable size, (e.g., compared to checking the regular persistence condition in the state-affine template in Theorem <a href="output-feedback.html#thm:kalmanbucystateaffine">6.3</a>).</p>
+<p>However, the KKL template is difficult to realize in the sense that (i) what kind of nonlinear systems can be converted to <a href="output-feedback.html#eq:kkl-template">(6.63)</a>, and (ii) for those systems, how do we find the coordinate transformation?</p>
 <p>Recent works have leveraged deep learning to learn the coordinate transformation, for example in <span class="citation">(<a href="#ref-janny21cdc-deepkkl" role="doc-biblioref">Janny et al. 2021</a>)</span>, <span class="citation">(<a href="#ref-niazi23lacc-earning" role="doc-biblioref">Niazi et al. 2023</a>)</span>, <span class="citation">(<a href="#ref-miao23ll4dc-earning" role="doc-biblioref">Miao and Gatsis 2023</a>)</span>. Before hammering the problem with deep learning, let us look at the fundamentals of the KKL observer.</p>
 <div id="autonomous-systems-1" class="section level4 hasAnchor" number="6.4.4.1">
 <h4><span class="header-section-number">6.4.4.1</span> Autonomous Systems<a href="output-feedback.html#autonomous-systems-1" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>Consider the autonomous version of system <a href="output-feedback.html#eq:output-feedback-system">(6.1)</a> without control
 <span class="math display" id="eq:kkl-autonomous-system">\[\begin{equation}
 \dot{x} = f(x), \quad y = h(x),
-\tag{6.60}
+\tag{6.65}
 \end{equation}\]</span>
 where <span class="math inline">\(x \in \mathbb{X} \subseteq \mathbb{R}^n, y \in \mathbb{Y} \subseteq \mathbb{R}^d\)</span>.</p>
 <p>The following result, established by <span class="citation">(<a href="#ref-andrieu06sicopt-kkl" role="doc-biblioref">Andrieu and Praly 2006</a>)</span>, states that the KKL observer exists under mild conditions.</p>
 <div class="theorembox">
 <div class="theorem">
-<p><span id="thm:kklautonomous" class="theorem"><strong>Theorem 6.4  (KKL Observer for Autonomous Systems) </strong></span>Assum <span class="math inline">\(\mathcal{X}\)</span> and <span class="math inline">\(\mathcal{L}\)</span> are open bounded sets in <span class="math inline">\(\mathbb{X}\)</span> (the state space) such that <span class="math inline">\(\mathrm{cl}(\mathcal{X})\)</span> is contained in <span class="math inline">\(\mathcal{L}\)</span> and the system <a href="output-feedback.html#eq:kkl-autonomous-system">(6.60)</a> is backward <span class="math inline">\(\mathcal{L}\)</span>-distinguishable on <span class="math inline">\(\mathcal{X}\)</span> (cf. Definition <a href="output-feedback.html#def:observability">6.2</a>). Then there exists a strictly positive number <span class="math inline">\(\gamma\)</span> and a set <span class="math inline">\(\mathcal{S}\)</span> of zero Lebesgue measure in <span class="math inline">\(\mathbb{C}^{n+1}\)</span> such that denoting <span class="math inline">\(\Omega = \{ \lambda \in \mathbb{C} \mid \mathrm{Re}(\lambda) &lt; - \gamma \}\)</span>, for any <span class="math inline">\((\lambda_1,\dots,\lambda_{n+1}) \in \Omega^{n+1} \backslash \mathcal{S}\)</span>, there exists a function <span class="math inline">\(T: \mathbb{R}^n \rightarrow \mathbb{R}^{(n+1)d}\)</span> uniformly injective on <span class="math inline">\(\mathcal{X}\)</span> satisfying
+<p><span id="thm:kklautonomous" class="theorem"><strong>Theorem 6.4  (KKL Observer for Autonomous Systems) </strong></span>Assum <span class="math inline">\(\mathcal{X}\)</span> and <span class="math inline">\(\mathcal{L}\)</span> are open bounded sets in <span class="math inline">\(\mathbb{X}\)</span> (the state space) such that <span class="math inline">\(\mathrm{cl}(\mathcal{X})\)</span> is contained in <span class="math inline">\(\mathcal{L}\)</span> and the system <a href="output-feedback.html#eq:kkl-autonomous-system">(6.65)</a> is backward <span class="math inline">\(\mathcal{L}\)</span>-distinguishable on <span class="math inline">\(\mathcal{X}\)</span> (cf. Definition <a href="output-feedback.html#def:observability">6.2</a>). Then there exists a strictly positive number <span class="math inline">\(\gamma\)</span> and a set <span class="math inline">\(\mathcal{S}\)</span> of zero Lebesgue measure in <span class="math inline">\(\mathbb{C}^{n+1}\)</span> such that denoting <span class="math inline">\(\Omega = \{ \lambda \in \mathbb{C} \mid \mathrm{Re}(\lambda) &lt; - \gamma \}\)</span>, for any <span class="math inline">\((\lambda_1,\dots,\lambda_{n+1}) \in \Omega^{n+1} \backslash \mathcal{S}\)</span>, there exists a function <span class="math inline">\(T: \mathbb{R}^n \rightarrow \mathbb{R}^{(n+1)d}\)</span> uniformly injective on <span class="math inline">\(\mathcal{X}\)</span> satisfying
 <span class="math display">\[
 L_f T(x) = A T(x) + B(h(x))
 \]</span>
@@ -1570,7 +1696,7 @@ A = \tilde{A} \otimes I_d, \quad B(y) = (\tilde{B} \otimes I_d ) y \\
 Moreover, if <span class="math inline">\(\mathcal{X}\)</span> is backward invariant, then <span class="math inline">\(T\)</span> is unique and defined by
 <span class="math display" id="eq:kkl-autonomous-T">\[\begin{equation}
 T(x) = \int_{-\infty}^0 e^{-A\tau} B(h(X(x,\tau))) d\tau.
-\tag{6.61}
+\tag{6.66}
 \end{equation}\]</span></p>
 </div>
 </div>
@@ -1589,7 +1715,7 @@ one needs to implement in real numbers, for each <span class="math inline">\(\la
 \]</span>
 Therefore, the dimension of the observer is <span class="math inline">\(2 \times d (n+1)\)</span>.</p>
 </div>
-<p>Theorem <a href="output-feedback.html#thm:kklautonomous">6.4</a> states that as long as the system <a href="output-feedback.html#eq:kkl-autonomous-system">(6.60)</a> is backward distinguishable, then there exists a stationary transformation <span class="math inline">\(T\)</span> that can transform the system to a new coordinate system <span class="math inline">\(\xi\)</span> such that the dynamics in <span class="math inline">\(\xi\)</span> is Hurwitz. A closer look at the structure of <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> reveals that the coordinate transformation needs to satisfy <span class="math inline">\(n+1\)</span> differential equations of the form
+<p>Theorem <a href="output-feedback.html#thm:kklautonomous">6.4</a> states that as long as the system <a href="output-feedback.html#eq:kkl-autonomous-system">(6.65)</a> is backward distinguishable, then there exists a stationary transformation <span class="math inline">\(T\)</span> that can transform the system to a new coordinate system <span class="math inline">\(\xi\)</span> such that the dynamics in <span class="math inline">\(\xi\)</span> is Hurwitz. A closer look at the structure of <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> reveals that the coordinate transformation needs to satisfy <span class="math inline">\(n+1\)</span> differential equations of the form
 <span class="math display">\[
 \frac{\partial T_{\lambda}}{\partial x}(x) \dot{x} = \lambda T_{\lambda} (x) + y
 \]</span>
@@ -1598,10 +1724,10 @@ where each <span class="math inline">\(T_{\lambda}\)</span> transforms the state
 T = (T_{\lambda_1},\dots,T_{\lambda_{n+1}}),
 \]</span>
 the uniform injectivity of <span class="math inline">\(T\)</span> is ensured.</p>
-<p>However, the difficulty lies in the computation of <span class="math inline">\(T\)</span> (and <span class="math inline">\(T_\lambda\)</span>), let alone its inverse (that recovers <span class="math inline">\(x\)</span> from <span class="math inline">\(\xi\)</span>). Even though <span class="math inline">\(\mathcal{X}\)</span> is backward invariant, the formulation <a href="output-feedback.html#eq:kkl-autonomous-T">(6.61)</a> is difficult to compute. I tried very hard to find a coordinate transformation <span class="math inline">\(T\)</span> that can convert the non-controlled pendulum dynamics into the KKL form but did not succeed. <strong>You should let me know if you were able to find one!</strong> Nevertheless, the following example shows you the flavor of how such a transformation may look like for a different system.</p>
+<p>However, the difficulty lies in the computation of <span class="math inline">\(T\)</span> (and <span class="math inline">\(T_\lambda\)</span>), let alone its inverse (that recovers <span class="math inline">\(x\)</span> from <span class="math inline">\(\xi\)</span>). Even though <span class="math inline">\(\mathcal{X}\)</span> is backward invariant, the formulation <a href="output-feedback.html#eq:kkl-autonomous-T">(6.66)</a> is difficult to compute. I tried very hard to find a coordinate transformation <span class="math inline">\(T\)</span> that can convert the non-controlled pendulum dynamics into the KKL form but did not succeed. <strong>You should let me know if you were able to find one!</strong> Nevertheless, the following example shows you the flavor of how such a transformation may look like for a different system.</p>
 <div class="examplebox">
 <div class="example">
-<p><span id="exm:kklOscillator" class="example"><strong>Example 6.3  (KKL Observer for an Oscillator with Unknown Frequency) </strong></span>Consider a harmonic oscillator with unknown frequency
+<p><span id="exm:kklOscillator" class="example"><strong>Example 6.4  (KKL Observer for an Oscillator with Unknown Frequency) </strong></span>Consider a harmonic oscillator with unknown frequency
 <span class="math display">\[
 \begin{cases}
 \dot{x}_1 = x_2 \\
@@ -1658,16 +1784,16 @@ which may be quite expensive.</p>
 <p>Consider a nonlinear system
 <span class="math display" id="eq:observerdesignconvex">\[\begin{equation}
 \dot{x} = f(x) + \psi(u,y), \quad y = Cx
-\tag{6.62}
+\tag{6.67}
 \end{equation}\]</span>
-where <span class="math inline">\(x \in \mathbb{X} \subseteq \mathbb{R}^n\)</span>, <span class="math inline">\(y \in \mathbb{R}^d\)</span>, <span class="math inline">\(C\)</span> a constant matrix, and <span class="math inline">\(\psi(u,y)\)</span> a nonlinear function. We assume that <span class="math inline">\(f(x)\)</span> is a polynomial vector map (i.e., each entry of <span class="math inline">\(f\)</span> is a polynomial function in <span class="math inline">\(x\)</span>). Certainly the formulation in <a href="output-feedback.html#eq:observerdesignconvex">(6.62)</a> is not as general as <a href="output-feedback.html#eq:output-feedback-system">(6.1)</a>, but it is general enough to include many examples in robotics.</p>
-<p>Recall that I said the essence of observer design is to (i) simulate the dynamics when the state estimation is correct, and (ii) to correct the state estimation from observation when it is off. Therefore, we wish to design an observer for <a href="output-feedback.html#eq:observerdesignconvex">(6.62)</a> in the following form
+where <span class="math inline">\(x \in \mathbb{X} \subseteq \mathbb{R}^n\)</span>, <span class="math inline">\(y \in \mathbb{R}^d\)</span>, <span class="math inline">\(C\)</span> a constant matrix, and <span class="math inline">\(\psi(u,y)\)</span> a nonlinear function. We assume that <span class="math inline">\(f(x)\)</span> is a polynomial vector map (i.e., each entry of <span class="math inline">\(f\)</span> is a polynomial function in <span class="math inline">\(x\)</span>). Certainly the formulation in <a href="output-feedback.html#eq:observerdesignconvex">(6.67)</a> is not as general as <a href="output-feedback.html#eq:output-feedback-system">(6.1)</a>, but it is general enough to include many examples in robotics.</p>
+<p>Recall that I said the essence of observer design is to (i) simulate the dynamics when the state estimation is correct, and (ii) to correct the state estimation from observation when it is off. Therefore, we wish to design an observer for <a href="output-feedback.html#eq:observerdesignconvex">(6.67)</a> in the following form
 <span class="math display" id="eq:sos-observer">\[\begin{equation}
 \dot{\hat{x}} = \underbrace{f(\hat{x}) + \psi(u,y)}_{\text{dynamics simulation}} + \underbrace{K(y - \hat{y},y)(C \hat{x} - y)}_{\text{feedback correction}},
-\tag{6.63}
+\tag{6.68}
 \end{equation}\]</span>
-where, compared to the Luenberger observer <a href="output-feedback.html#eq:Luenberger-Linear">(6.42)</a>, we allow the gain matrix <span class="math inline">\(K\)</span> to be nonlinear functions of the true observation <span class="math inline">\(y\)</span> and the estimated observation <span class="math inline">\(\hat{y}\)</span>.</p>
-<p>With the observer <a href="output-feedback.html#eq:sos-observer">(6.63)</a>, the dynamics on the estimation error <span class="math inline">\(e = \hat{x} - x\)</span> becomes
+where, compared to the Luenberger observer <a href="output-feedback.html#eq:Luenberger-Linear">(6.47)</a>, we allow the gain matrix <span class="math inline">\(K\)</span> to be nonlinear functions of the true observation <span class="math inline">\(y\)</span> and the estimated observation <span class="math inline">\(\hat{y}\)</span>.</p>
+<p>With the observer <a href="output-feedback.html#eq:sos-observer">(6.68)</a>, the dynamics on the estimation error <span class="math inline">\(e = \hat{x} - x\)</span> becomes
 <span class="math display">\[
 \dot{e} = f(x + e) - f(x) + K(Ce,Cx)C e.
 \]</span></p>
@@ -1679,10 +1805,10 @@ where, compared to the Luenberger observer <a href="output-feedback.html#eq:Luen
 &amp; \quad \dot{V}(e) = \frac{\partial V}{\partial e} \left( f(x + e) - f(x) + K(Ce,Cx)C e \right) &lt; 0, \forall e \neq 0, \forall x \in \mathbb{X} \\
 &amp; \quad V(e) \geq \epsilon \Vert e \Vert^2, \forall e
 \end{split}
-\tag{6.64}
+\tag{6.69}
 \end{equation}\]</span>
 where the last constraint is added to make sure <span class="math inline">\(V(e)\)</span> is radially unbounded. Furthermore, if we replace the second constraint by <span class="math inline">\(\dot{V}(e) \leq - \lambda V(e)\)</span>, then we can guarantee <span class="math inline">\(V(e)\)</span> converges to zero exponentially.</p>
-<p>Problem <a href="output-feedback.html#eq:sos-observer-nonconvex">(6.64)</a>, however, is not a convex optimization problem, due to the term <span class="math inline">\(\frac{\partial V}{\partial e} K\)</span> being bilinear in the coefficients of <span class="math inline">\(V\)</span> and <span class="math inline">\(K\)</span>. Nevertheless, as shown in <span class="citation">(<a href="#ref-ebenbauer05cdc-polynomial" role="doc-biblioref">Ebenbauer, Renz, and Allgower 2005</a>)</span>, we can use a reparameterization trick to formulate a stronger version of <a href="output-feedback.html#eq:sos-observer-nonconvex">(6.64)</a> as follows.
+<p>Problem <a href="output-feedback.html#eq:sos-observer-nonconvex">(6.69)</a>, however, is not a convex optimization problem, due to the term <span class="math inline">\(\frac{\partial V}{\partial e} K\)</span> being bilinear in the coefficients of <span class="math inline">\(V\)</span> and <span class="math inline">\(K\)</span>. Nevertheless, as shown in <span class="citation">(<a href="#ref-ebenbauer05cdc-polynomial" role="doc-biblioref">Ebenbauer, Renz, and Allgower 2005</a>)</span>, we can use a reparameterization trick to formulate a stronger version of <a href="output-feedback.html#eq:sos-observer-nonconvex">(6.69)</a> as follows.
 <span class="math display" id="eq:sos-observer-convex-formulation">\[\begin{equation}
 \begin{split}
 \text{find} &amp; \quad V, Q(Ce), M(Ce,Cx) \\
@@ -1691,17 +1817,17 @@ where the last constraint is added to make sure <span class="math inline">\(V(e)
 &amp; \quad e^T Q(Ce) \left( f(x + e) - f(x) \right) + e^T M(Ce,Cx) C e &lt; 0, \forall e \neq 0, \forall x \in \mathbb{X} \\
 &amp; \quad V(e) \geq \epsilon \Vert e \Vert^2, \forall e
 \end{split}
-\tag{6.65}
+\tag{6.70}
 \end{equation}\]</span>
-Clearly, if we can solve problem <a href="output-feedback.html#eq:sos-observer-convex-formulation">(6.65)</a>, then
+Clearly, if we can solve problem <a href="output-feedback.html#eq:sos-observer-convex-formulation">(6.70)</a>, then
 <span class="math display">\[
 K = Q(Ce)^{-1} M(Ce,Cx)
 \]</span>
-is the right gain matrix for the formulation <a href="output-feedback.html#eq:sos-observer-nonconvex">(6.64)</a>.</p>
+is the right gain matrix for the formulation <a href="output-feedback.html#eq:sos-observer-nonconvex">(6.69)</a>.</p>
 <p>Let us bring this idea to action in our pendulum example.</p>
 <div class="examplebox">
 <div class="example">
-<p><span id="exm:pendulumobserverconvex" class="example"><strong>Example 6.4  (Pendulum Observer with Convex Optimization) </strong></span>With <span class="math inline">\(x = [\mathfrak{s}, \mathfrak{c}, \dot{\theta}]^T\)</span> (<span class="math inline">\(\mathfrak{s} = \sin \theta, \mathfrak{c} = \cos \theta\)</span>), we can write the pendulum dynamics as
+<p><span id="exm:pendulumobserverconvex" class="example"><strong>Example 6.5  (Pendulum Observer with Convex Optimization) </strong></span>With <span class="math inline">\(x = [\mathfrak{s}, \mathfrak{c}, \dot{\theta}]^T\)</span> (<span class="math inline">\(\mathfrak{s} = \sin \theta, \mathfrak{c} = \cos \theta\)</span>), we can write the pendulum dynamics as
 <span class="math display">\[
 \dot{x} = \underbrace{\begin{bmatrix}
 \mathfrak{c} \dot{\theta} \\
@@ -1713,7 +1839,7 @@ is the right gain matrix for the formulation <a href="output-feedback.html#eq:so
 1 &amp; 0 &amp; 0 \\
 0 &amp; 1 &amp; 0 \end{bmatrix}}_{=:C} x
 \]</span>
-Clearly <span class="math inline">\(f(x)\)</span> is a polynomial. Solving the convex optimization problem <a href="output-feedback.html#eq:sos-observer-convex-formulation">(6.65)</a>, we obtain a solution
+Clearly <span class="math inline">\(f(x)\)</span> is a polynomial. Solving the convex optimization problem <a href="output-feedback.html#eq:sos-observer-convex-formulation">(6.70)</a>, we obtain a solution
 <span class="math display">\[
 V(e) = 0.5954 e_1^2 + 0.5954 e_2^2 + 0.9431 e_3^2
 \]</span>
@@ -1730,12 +1856,12 @@ M(Ce,Cx) = \begin{bmatrix}
 -1.1909 y_2 &amp; 1.1909 y_1
 \end{bmatrix}
 \]</span></p>
-<p>Simulating this observer, we verify that the observer is in fact exponentially converging, as shown in Fig. <a href="output-feedback.html#fig:sos-observer-pendulum-simulation">6.1</a>.</p>
-<p>The Matlab code for formulating and solving the convex optimization <a href="output-feedback.html#eq:sos-observer-convex-formulation">(6.65)</a> can be found <a href="https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/pendulum_sos_observer.m">here</a>. The code for simulating the observer can be found <a href="https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/pendulum_sos_observer_simulation.m">here</a>.</p>
+<p>Simulating this observer, we verify that the observer is in fact exponentially converging, as shown in Fig. <a href="output-feedback.html#fig:sos-observer-pendulum-simulation">6.2</a>.</p>
+<p>The Matlab code for formulating and solving the convex optimization <a href="output-feedback.html#eq:sos-observer-convex-formulation">(6.70)</a> can be found <a href="https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/pendulum_sos_observer.m">here</a>. The code for simulating the observer can be found <a href="https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/pendulum_sos_observer_simulation.m">here</a>.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:sos-observer-pendulum-simulation"></span>
 <img src="images/pendulum-simulation-sos-observer.png" alt="Simulation of the pendulum observer design from convex optimization" width="80%" />
 <p class="caption">
-Figure 6.1: Simulation of the pendulum observer design from convex optimization
+Figure 6.2: Simulation of the pendulum observer design from convex optimization
 </p>
 </div>
 </div>
@@ -1747,7 +1873,7 @@ Figure 6.1: Simulation of the pendulum observer design from convex optimization
 <p>Now that we have good ways to design a state observer, we will see how we can use the observer for feedback control.</p>
 <div class="examplebox">
 <div class="example">
-<p><span id="exm:pendulumLuenbergerFeedback" class="example"><strong>Example 6.5  (Pendulum Stabilization with A Luenberger Observer) </strong></span>In Example <a href="output-feedback.html#exm:pendulumLuenberger">6.1</a>, we have written the dynamics of a pendulum, and the dynamics of a Luenberger observer as
+<p><span id="exm:pendulumLuenbergerFeedback" class="example"><strong>Example 6.6  (Pendulum Stabilization with A Luenberger Observer) </strong></span>In Example <a href="output-feedback.html#exm:pendulumLuenberger">6.2</a>, we have written the dynamics of a pendulum, and the dynamics of a Luenberger observer as
 <span class="math display">\[\begin{align}
 \dot{x} &amp;= A x + B(u,y) \\
 \dot{\hat{x}} &amp;= A \hat{x} + B(u,y) + KC (x - \hat{x})
@@ -1851,7 +1977,7 @@ Niazi, Muhammad Umar B, John Cao, Xudong Sun, Amritam Das, and Karl Henrik Johan
 <div class="footnotes">
 <hr />
 <ol start="8">
-<li id="fn8"><p>We say “any solution” because there may be several solutions to the observer <a href="output-feedback.html#eq:observer-definition-1">(6.33)</a> due to <span class="math inline">\(\mathcal{F}\)</span> only being continuous. This is not a problem as long as any such solution satisfies the required convergence property.<a href="output-feedback.html#fnref8" class="footnote-back">↩︎</a></p></li>
+<li id="fn8"><p>We say “any solution” because there may be several solutions to the observer <a href="output-feedback.html#eq:observer-definition-1">(6.38)</a> due to <span class="math inline">\(\mathcal{F}\)</span> only being continuous. This is not a problem as long as any such solution satisfies the required convergence property.<a href="output-feedback.html#fnref8" class="footnote-back">↩︎</a></p></li>
 <li id="fn9"><p>The time dependence of <span class="math inline">\(\mathcal{T}_u\)</span> enables us to cover the case where the knowledge of the <span class="math inline">\(u\)</span> and <span class="math inline">\(y_{x_0,u}\)</span> is used to construct the estimate from the observer state. In particular, using the output sometimes can reduce the dimension of the observer state (and thus alleviate the computations), thus obtaining a reduced-order observer. For example, see <span class="citation">(<a href="#ref-karagiannis05cdc-nonlinear" role="doc-biblioref">Karagiannis and Astolfi 2005</a>)</span> and <span class="citation">(<a href="#ref-astolfi03tac-immersion" role="doc-biblioref">Astolfi and Ortega 2003</a>)</span>.<a href="output-feedback.html#fnref9" class="footnote-back">↩︎</a></p></li>
 <li id="fn10"><p>A function <span class="math inline">\(\rho: \mathbb{R}_+ \rightarrow \mathbb{R}_+\)</span> is a <span class="math inline">\(\mathcal{K}\)</span> function if <span class="math inline">\(\rho(0) = 0\)</span>, <span class="math inline">\(\rho\)</span> is continuous, and <span class="math inline">\(\rho\)</span> is increasing.<a href="output-feedback.html#fnref10" class="footnote-back">↩︎</a></p></li>
 <li id="fn11"><p>An injective function is a function <span class="math inline">\(f\)</span> that maps distinct elements of its domain to distinct elements. That is, <span class="math inline">\(f(x_a) = f(x_b)\)</span> implies <span class="math inline">\(x_a = x_b\)</span>, or equivalently, <span class="math inline">\(x_a \neq x_b\)</span> implies <span class="math inline">\(f(x_a) \neq f(x_b)\)</span>.<a href="output-feedback.html#fnref11" class="footnote-back">↩︎</a></p></li>
