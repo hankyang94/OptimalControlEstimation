@@ -228,7 +228,7 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="4.5" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#infinite-horizon-problems"><i class="fa fa-check"></i><b>4.5</b> Infinite-Horizon Problems</a>
 <ul>
-<li class="chapter" data-level="4.5.1" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#infinite-horizon-lqr-1"><i class="fa fa-check"></i><b>4.5.1</b> Infinite-Horizon LQR</a></li>
+<li class="chapter" data-level="4.5.1" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#continuous-time-infinite-horizon-lqr"><i class="fa fa-check"></i><b>4.5.1</b> Infinite-Horizon LQR</a></li>
 </ul></li>
 <li class="chapter" data-level="4.6" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#viscosity-solution"><i class="fa fa-check"></i><b>4.6</b> Viscosity Solution</a></li>
 </ul></li>
@@ -1032,8 +1032,26 @@ z^{(k+1)} = z^{(k)} - \eta_k \left( \frac{\partial R}{\partial z}(z^{(k)}) \righ
 </div>
 <div id="infinite-horizon-problems" class="section level2 hasAnchor" number="4.5">
 <h2><span class="header-section-number">4.5</span> Infinite-Horizon Problems<a href="continuous-time-optimal-control.html#infinite-horizon-problems" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div id="infinite-horizon-lqr-1" class="section level3 hasAnchor" number="4.5.1">
-<h3><span class="header-section-number">4.5.1</span> Infinite-Horizon LQR<a href="continuous-time-optimal-control.html#infinite-horizon-lqr-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="continuous-time-infinite-horizon-lqr" class="section level3 hasAnchor" number="4.5.1">
+<h3><span class="header-section-number">4.5.1</span> Infinite-Horizon LQR<a href="continuous-time-optimal-control.html#continuous-time-infinite-horizon-lqr" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Consider a linear time-invariant system
+<span class="math display">\[
+\dot{x} = Ax + Bu,
+\]</span>
+and the infinite-horizon optimal control problem
+<span class="math display">\[
+\min \int_{t=0}^{\infty} (x(t)^T Q x(t) + u(t)^T R u(t)) dt, \quad x(0) = x_0.
+\]</span>
+with <span class="math inline">\(Q \succeq 0, R \succ 0\)</span>.
+The optimal controller takes the following linear feedback form
+<span class="math display">\[
+u = - R^{-1}B^T S x,
+\]</span>
+with <span class="math inline">\(S\)</span> the solution to the continuous-time algebraic Riccati equation
+<span class="math display">\[
+0 = SA + A^T S - SBR^{-1} B^T S + Q.
+\]</span>
+In Matlab, given <span class="math inline">\(A,B,Q,R\)</span>, you can use <a href="https://www.mathworks.com/help/control/ref/lti.lqr.html"><code>lqr</code></a> to compute <span class="math inline">\(K\)</span> and <span class="math inline">\(S\)</span>.</p>
 </div>
 </div>
 <div id="viscosity-solution" class="section level2 hasAnchor" number="4.6">

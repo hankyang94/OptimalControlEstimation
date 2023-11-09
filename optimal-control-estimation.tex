@@ -3836,8 +3836,27 @@ z^{(k+1)} = z^{(k)} - \eta_k \left( \frac{\partial R}{\partial z}(z^{(k)}) \righ
 \hypertarget{infinite-horizon-problems}{%
 \section{Infinite-Horizon Problems}\label{infinite-horizon-problems}}
 
-\hypertarget{infinite-horizon-lqr-1}{%
-\subsection{Infinite-Horizon LQR}\label{infinite-horizon-lqr-1}}
+\hypertarget{continuous-time-infinite-horizon-lqr}{%
+\subsection{Infinite-Horizon LQR}\label{continuous-time-infinite-horizon-lqr}}
+
+Consider a linear time-invariant system
+\[
+\dot{x} = Ax + Bu,
+\]
+and the infinite-horizon optimal control problem
+\[
+\min \int_{t=0}^{\infty} (x(t)^T Q x(t) + u(t)^T R u(t)) dt, \quad x(0) = x_0.
+\]
+with \(Q \succeq 0, R \succ 0\).
+The optimal controller takes the following linear feedback form
+\[
+u = - R^{-1}B^T S x,
+\]
+with \(S\) the solution to the continuous-time algebraic Riccati equation
+\[
+0 = SA + A^T S - SBR^{-1} B^T S + Q.
+\]
+In Matlab, given \(A,B,Q,R\), you can use \href{https://www.mathworks.com/help/control/ref/lti.lqr.html}{\texttt{lqr}} to compute \(K\) and \(S\).
 
 \hypertarget{viscosity-solution}{%
 \section{Viscosity Solution}\label{viscosity-solution}}
@@ -7846,6 +7865,7 @@ We then solve an infinite-horizon LQR problem
 \[
 \min \int_{t=0}^{\infty} x(t)^T Q x(t) + u(t)^T R u(t) dt, \quad \text{subject to} \quad x(0) = x_0.
 \]
+The solution to this LQR problem can be written in closed form, see Section \ref{continuous-time-infinite-horizon-lqr}.
 Calling the Matlab \texttt{lqr} function (which is for continuous-time LQR), we can get a feedback controller
 \begin{equation}
 u(x) = - Kx,
@@ -7952,7 +7972,7 @@ Essentially, \eqref{eq:pendulum-lqr-clipped-roa-sos-condition-2} breaks the SOS 
 
 }
 
-\caption{Example of stabilized and non-stabilized initial states.}\label{fig:pendulum-sat-control-random-samples-certificate}
+\caption{Certified Region of Attraction.}\label{fig:pendulum-sat-control-random-samples-certificate}
 \end{figure}
 
 \begin{enumerate}

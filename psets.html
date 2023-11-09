@@ -228,7 +228,7 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="4.5" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#infinite-horizon-problems"><i class="fa fa-check"></i><b>4.5</b> Infinite-Horizon Problems</a>
 <ul>
-<li class="chapter" data-level="4.5.1" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#infinite-horizon-lqr-1"><i class="fa fa-check"></i><b>4.5.1</b> Infinite-Horizon LQR</a></li>
+<li class="chapter" data-level="4.5.1" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#continuous-time-infinite-horizon-lqr"><i class="fa fa-check"></i><b>4.5.1</b> Infinite-Horizon LQR</a></li>
 </ul></li>
 <li class="chapter" data-level="4.6" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#viscosity-solution"><i class="fa fa-check"></i><b>4.6</b> Viscosity Solution</a></li>
 </ul></li>
@@ -784,6 +784,7 @@ We then solve an infinite-horizon LQR problem
 <span class="math display">\[
 \min \int_{t=0}^{\infty} x(t)^T Q x(t) + u(t)^T R u(t) dt, \quad \text{subject to} \quad x(0) = x_0.
 \]</span>
+The solution to this LQR problem can be written in closed form, see Section <a href="continuous-time-optimal-control.html#continuous-time-infinite-horizon-lqr">4.5.1</a>.
 Calling the Matlab <code>lqr</code> function (which is for continuous-time LQR), we can get a feedback controller
 <span class="math display" id="eq:pendulum-lqr-clipped-roa-lqr-control">\[\begin{equation}
 u(x) = - Kx,
@@ -863,9 +864,9 @@ Essentially, <a href="psets.html#eq:pendulum-lqr-clipped-roa-sos-condition-2">(9
 <li>Choose <span class="math inline">\(\rho = 1\)</span>, and implement the SOS conditions in <a href="psets.html#eq:pendulum-lqr-clipped-roa-sos-condition-2">(9.16)</a> with a chosen relaxation order <span class="math inline">\(\kappa\)</span> (in the code I choose <span class="math inline">\(\kappa=4\)</span>). Is the SOS program feasible (i.e., does the SOS program produce a certificate)? If so, plot the boundary of <span class="math inline">\(\Omega_\rho\)</span> on top of the samples plot in Fig. <a href="psets.html#fig:pendulum-sat-control-random-samples">9.4</a>. Does <span class="math inline">\(\Omega_\rho\)</span> agree with the samples? (Hint: you should see a plot similar to Fig. <a href="psets.html#fig:pendulum-sat-control-random-samples-certificate">9.5</a>.)</li>
 </ol>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:pendulum-sat-control-random-samples-certificate"></span>
-<img src="images/pendulum_sat_random_samples_cert.png" alt="Example of stabilized and non-stabilized initial states." width="80%" />
+<img src="images/pendulum_sat_random_samples_cert.png" alt="Certified Region of Attraction." width="80%" />
 <p class="caption">
-Figure 9.5: Example of stabilized and non-stabilized initial states.
+Figure 9.5: Certified Region of Attraction.
 </p>
 </div>
 <ol start="3" style="list-style-type: lower-alpha">
