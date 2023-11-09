@@ -463,6 +463,7 @@ We then solve an infinite-horizon LQR problem
 $$
 \min \int_{t=0}^{\infty} x(t)^T Q x(t) + u(t)^T R u(t) dt, \quad \text{subject to} \quad x(0) = x_0.
 $$
+The solution to this LQR problem can be written in closed form, see Section \@ref(continuous-time-infinite-horizon-lqr).
 Calling the Matlab `lqr` function (which is for continuous-time LQR), we can get a feedback controller
 \begin{equation}
 u(x) = - Kx,
@@ -547,7 +548,7 @@ Essentially, \@ref(eq:pendulum-lqr-clipped-roa-sos-condition-2) breaks the SOS c
 
 b. Choose $\rho = 1$, and implement the SOS conditions in \@ref(eq:pendulum-lqr-clipped-roa-sos-condition-2) with a chosen relaxation order $\kappa$ (in the code I choose $\kappa=4$). Is the SOS program feasible (i.e., does the SOS program produce a certificate)? If so, plot the boundary of $\Omega_\rho$ on top of the samples plot in Fig. \@ref(fig:pendulum-sat-control-random-samples). Does $\Omega_\rho$ agree with the samples? (Hint: you should see a plot similar to Fig. \@ref(fig:pendulum-sat-control-random-samples-certificate).)
 
-```{r pendulum-sat-control-random-samples-certificate, out.width='80%', fig.show='hold', fig.cap='Example of stabilized and non-stabilized initial states.', fig.align='center', echo=FALSE}
+```{r pendulum-sat-control-random-samples-certificate, out.width='80%', fig.show='hold', fig.cap='Certified Region of Attraction.', fig.align='center', echo=FALSE}
 knitr::include_graphics('images/pendulum_sat_random_samples_cert.png')
 ```
 

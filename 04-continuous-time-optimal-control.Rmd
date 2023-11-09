@@ -692,7 +692,27 @@ z^{(k+1)} = z^{(k)} - \eta_k \left( \frac{\partial R}{\partial z}(z^{(k)}) \righ
 
 ## Infinite-Horizon Problems 
 
-### Infinite-Horizon LQR 
+### Infinite-Horizon LQR {#continuous-time-infinite-horizon-lqr}
+
+Consider a linear time-invariant system
+$$
+\dot{x} = Ax + Bu,
+$$
+and the infinite-horizon optimal control problem
+$$
+\min \int_{t=0}^{\infty} (x(t)^T Q x(t) + u(t)^T R u(t)) dt, \quad x(0) = x_0.
+$$
+with $Q \succeq 0, R \succ 0$. 
+The optimal controller takes the following linear feedback form
+$$
+u = - R^{-1}B^T S x,
+$$
+with $S$ the solution to the continuous-time algebraic Riccati equation
+$$
+0 = SA + A^T S - SBR^{-1} B^T S + Q.
+$$
+In Matlab, given $A,B,Q,R$, you can use [`lqr`](https://www.mathworks.com/help/control/ref/lti.lqr.html) to compute $K$ and $S$.
+
 
 
 
