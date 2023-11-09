@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-11-08" />
+<meta name="date" content="2023-11-09" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -226,7 +226,10 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="4.4.1" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#numerical-solution-of-the-tpbvp"><i class="fa fa-check"></i><b>4.4.1</b> Numerical Solution of the TPBVP</a></li>
 </ul></li>
-<li class="chapter" data-level="4.5" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#infinite-horizon-problems"><i class="fa fa-check"></i><b>4.5</b> Infinite-Horizon Problems</a></li>
+<li class="chapter" data-level="4.5" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#infinite-horizon-problems"><i class="fa fa-check"></i><b>4.5</b> Infinite-Horizon Problems</a>
+<ul>
+<li class="chapter" data-level="4.5.1" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#infinite-horizon-lqr-1"><i class="fa fa-check"></i><b>4.5.1</b> Infinite-Horizon LQR</a></li>
+</ul></li>
 <li class="chapter" data-level="4.6" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#viscosity-solution"><i class="fa fa-check"></i><b>4.6</b> Viscosity Solution</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="stability.html"><a href="stability.html"><i class="fa fa-check"></i><b>5</b> Stability Analysis</a>
@@ -256,6 +259,7 @@ div.csl-indent {
 <li class="chapter" data-level="6.3" data-path="output-feedback.html"><a href="output-feedback.html#linear-quadratic-gaussian-control"><i class="fa fa-check"></i><b>6.3</b> Linear Quadratic Gaussian Control</a>
 <ul>
 <li class="chapter" data-level="6.3.1" data-path="output-feedback.html"><a href="output-feedback.html#steady-state-lqg"><i class="fa fa-check"></i><b>6.3.1</b> Steady-state LQG</a></li>
+<li class="chapter" data-level="6.3.2" data-path="output-feedback.html"><a href="output-feedback.html#continuous-time-lqg"><i class="fa fa-check"></i><b>6.3.2</b> Continuous-time LQG</a></li>
 </ul></li>
 <li class="chapter" data-level="6.4" data-path="output-feedback.html"><a href="output-feedback.html#state-observer"><i class="fa fa-check"></i><b>6.4</b> State Observer</a>
 <ul>
@@ -759,6 +763,114 @@ Mimic the computation of the successor set.)</p></li>
 <p>     <em>%% <span class="math inline">\(H_i\)</span> is the <span class="math inline">\(i\)</span>-th row of <span class="math inline">\(H\)</span>, <span class="math inline">\(H_{\mathcal{I}}\)</span> concatenates rows of <span class="math inline">\(H\)</span> with index in <span class="math inline">\(\mathcal{I}\)</span></em></p>
 <p>     <strong>If <span class="math inline">\(f^* &gt; h_i\)</span> Then </strong><span class="math inline">\(\mathcal{I}\leftarrow \mathcal{I}\cup \{i\}\)</span></p>
 <p>   <span class="math inline">\(H_0\leftarrow H_{\mathcal{I}}, h_0\rightarrow h_{\mathcal{I}}\)</span></p>
+</div>
+</div>
+<p> </p>
+<div class="exercisebox">
+<div class="exercise">
+<p><span id="exr:pendulum-lqr-clipped-roa" class="exercise"><strong>Exercise 9.8  (Certified Region of Attraction of Clipped LQR Controller) </strong></span>In this exercise, let us use the simple pendulum as an example to (i) recognize the difficulty of nonlinear control in the presence of control limits, and (ii) appreciate the power of Lyapunov analysis and Sums-of-Squares (SOS) programming.</p>
+<p>A starting script for this exercise can be found <a href="https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/pendulum_saturated_control.m">here</a>, where you need to fill out some specific details to finish this exercise.</p>
+<p>Let us consider the continuous-time pendulum dynamics
+<span class="math display" id="eq:pendulum-lqr-clipped-roa-dynamics">\[\begin{equation}
+\dot{x} = \begin{bmatrix} x_2 \\ \frac{1}{ml^2} (u - b x_2 + mgl \sin x_1) \end{bmatrix}
+\tag{9.10}
+\end{equation}\]</span>
+where <span class="math inline">\(x_1\)</span> is the angular position of the pendulum, and <span class="math inline">\(x_2\)</span> is the angular velocity. Note that the dynamics above is written such that <span class="math inline">\(x=0\)</span> represents the upright position.</p>
+<p>In the case of no control saturation, i.e., <span class="math inline">\(u \in \mathbb{R}\)</span>, stabilizing the pendulum at <span class="math inline">\(x=0\)</span> is easy, we can linearize the dynamics at <span class="math inline">\(x=0\)</span> and obtain
+<span class="math display">\[
+\dot{x} \approx \underbrace{\begin{bmatrix} 0 &amp; 1 \\ \frac{g}{l} &amp; - \frac{b}{ml^2} \end{bmatrix}}_{A} x + \underbrace{\begin{bmatrix} 0 \\ \frac{1}{ml^2} \end{bmatrix}}_{B} u.
+\]</span>
+We then solve an infinite-horizon LQR problem
+<span class="math display">\[
+\min \int_{t=0}^{\infty} x(t)^T Q x(t) + u(t)^T R u(t) dt, \quad \text{subject to} \quad x(0) = x_0.
+\]</span>
+Calling the Matlab <code>lqr</code> function (which is for continuous-time LQR), we can get a feedback controller
+<span class="math display" id="eq:pendulum-lqr-clipped-roa-lqr-control">\[\begin{equation}
+u(x) = - Kx,
+\tag{9.11}
+\end{equation}\]</span>
+with the optimal cost-to-go
+<span class="math display" id="eq:pendulum-lqr-clipped-roa-lqr-value">\[\begin{equation}
+J(x_0) = x_0^T S x_0,
+\tag{9.12}
+\end{equation}\]</span>
+with <span class="math inline">\(K\)</span> and <span class="math inline">\(S\)</span> constant matrices.</p>
+<p><strong>Control saturation</strong>. Assume now our control has hard bounds, i.e.,
+<span class="math display">\[
+u \in [-u_{\max}, u_{\max}].
+\]</span>
+We wish to keep using the LQR controller <a href="psets.html#eq:pendulum-lqr-clipped-roa-lqr-control">(9.11)</a>. Therefore, our saturated controller will be
+<span class="math display" id="eq:pendulum-lqr-clipped-roa-lqr-control-saturated">\[\begin{equation}
+\bar{u}(x) = \text{clip}(u(x),-u_{\max},u_{\max}) = \text{clip}(-Kx,-u_{\max},u_{\max}),
+\tag{9.13}
+\end{equation}\]</span>
+where the <span class="math inline">\(\text{clip}\)</span> function is defined as
+<span class="math display">\[
+\text{clip}(u,-u_{\max},u_{\max}) = \begin{cases}
+u_{\max} &amp;  \text{if} \quad u \geq u_{\max} \\
+u &amp; \text{if} \quad -u_{\max} \leq u \leq u_{\max} \\
+-u_{\max} &amp; \text{if} \quad u \leq - u_{\max}
+\end{cases}.
+\]</span></p>
+<p>A natural question is: can the saturated controller <span class="math inline">\(\bar{u}(t)\)</span> in <a href="psets.html#eq:pendulum-lqr-clipped-roa-lqr-control-saturated">(9.13)</a> still stabilize the pendulum?</p>
+<p>Let’s simulate the pendulum and the controller to investigate this. We will use the parameter <span class="math inline">\(m=1,g=9.8,l=1,b=0.1\)</span>, and <span class="math inline">\(u_{\max} = 2\)</span>. For the LQR cost matrix, let us use <span class="math inline">\(Q = I\)</span> and <span class="math inline">\(R = 1\)</span>.</p>
+<ol style="list-style-type: lower-alpha">
+<li>Compute the LQR gain <span class="math inline">\(K\)</span> and implement the saturated controller <a href="psets.html#eq:pendulum-lqr-clipped-roa-lqr-control-saturated">(9.13)</a>. In a region <span class="math inline">\(\mathcal{X} = [-0.2\pi, 0.2\pi] \times [-0.2\pi, 0.2\pi]\)</span>, sample <span class="math inline">\(N=1000\)</span> initial states, and for each initial state, simulate the system under the saturated controller using <code>ode45</code> or <code>ode89</code>. There will be some initial states from which the pendulum gets stabilized and others from which the pendulum fails to be stabilized. Plot the stabilized initial states as “circles”, and the non-stabilized initial states as “squares” on a 2D plot. (Hint: you should get something like Fig. <a href="psets.html#fig:pendulum-sat-control-random-samples">9.4</a>.)</li>
+</ol>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:pendulum-sat-control-random-samples"></span>
+<img src="images/pendulum_sat_random_samples.png" alt="Example of stabilized and non-stabilized initial states." width="80%" />
+<p class="caption">
+Figure 9.4: Example of stabilized and non-stabilized initial states.
+</p>
+</div>
+<p>The plot in Fig. <a href="psets.html#fig:pendulum-sat-control-random-samples">9.4</a> intuitively makes sense: when the initial state is very close to <span class="math inline">\(0\)</span>, the saturated controller can still stabilize the pendulum.</p>
+<p>Now our goal is to use Sums-of-Squares and Lyapunov analysis to get a <strong>certified region of stabilization</strong>, also known as the region of attraction (ROA), under the saturated control.</p>
+<p><strong>Approximate polynomial dynamics</strong>. The SOS tool requires the system dynamics to be polynomial. The dynamics in <a href="psets.html#eq:pendulum-lqr-clipped-roa-dynamics">(9.10)</a> is polynomial except the term <span class="math inline">\(\sin x_1\)</span>. Therefore, we perform a Taylor expansion of <span class="math inline">\(\sin x_1\)</span>
+<span class="math display">\[
+\sin x_1 = x_1 - \frac{x_1^3}{3!} + \frac{x_1^5}{5!} + \dots,
+\]</span>
+leading to an approximate polynomial dynamics
+<span class="math display" id="eq:pendulum-lqr-clipped-roa-dynamics-polynomial">\[\begin{equation}
+\dot{x} = \bar{f}(x,u) = \begin{bmatrix} x_2 \\ \frac{1}{ml^2} \left(u - b x_2 + mgl \left(x_1 - \frac{x_1^3}{3!} + \frac{x_1^5}{5!} \right) \right) \end{bmatrix}.
+\tag{9.14}
+\end{equation}\]</span></p>
+<p><strong>Candidate ROA</strong>. We want to certify the following candidate ROA
+<span class="math display">\[
+\Omega_\rho = \{x \in \mathbb{R}^2 \mid J(x) :=x^T S x \leq \rho \}
+\]</span>
+for some <span class="math inline">\(\rho &gt; 0\)</span>, and <span class="math inline">\(S\)</span> is exactly the LQR cost-to-go in <a href="psets.html#eq:pendulum-lqr-clipped-roa-lqr-value">(9.12)</a>. Since <span class="math inline">\(J(x)\)</span> is already positive definite (because <span class="math inline">\(S \succ 0\)</span>), <span class="math inline">\(\Omega_\rho\)</span> will look like an elliptical region around the origin. To certify all initial states inside <span class="math inline">\(\Omega_\rho\)</span> can be stabilized, we need <span class="math inline">\(\dot{J}(x)\)</span> to be negative definite on <span class="math inline">\(\Omega\)</span>, under the saturated LQR controller <a href="psets.html#eq:pendulum-lqr-clipped-roa-lqr-control-saturated">(9.13)</a> (according to Theorem <a href="stability.html#thm:lyapunovlocalstability">5.2</a>), that is to say
+<span class="math display">\[
+\dot{J}(x) = \frac{\partial J}{\partial x} \bar{f}(x, \bar{u}(x)) &lt; 0, \quad \forall x \in \Omega_\rho \backslash \{ 0 \}.
+\]</span>
+A sufficient condition for the above equation to hold is
+<span class="math display" id="eq:pendulum-lqr-clipped-roa-sos-condition-1">\[\begin{equation}
+- \frac{\partial J}{\partial x} \bar{f}(x, \bar{u}(x)) - \epsilon \Vert x \Vert^2 \quad \text{ is SOS on } \Omega_\rho.
+\tag{9.15}
+\end{equation}\]</span>
+for some <span class="math inline">\(\epsilon &gt; 0\)</span> (do you see this?).</p>
+<p>The condition <a href="psets.html#eq:pendulum-lqr-clipped-roa-sos-condition-1">(9.15)</a> is almost ready for us to implement in SOSTOOLS. However, there is one last issue. The saturated controller <span class="math inline">\(\bar{u}(x)\)</span> is not a polynomial!</p>
+<p><strong>The last trick</strong>. Fortunately, we can use a trick here to save us. A closer look at <a href="psets.html#eq:pendulum-lqr-clipped-roa-sos-condition-1">(9.15)</a> and the saturated controller <span class="math inline">\(\bar{u}(x)\)</span> shows that it is equivalent to asking
+<span class="math display" id="eq:pendulum-lqr-clipped-roa-sos-condition-2">\[\begin{equation}
+\begin{split}
+- \frac{\partial J}{\partial x} \bar{f}(x, u_{\max}) - \epsilon \Vert x \Vert^2 \quad \text{ is SOS on } \quad \Omega_\rho \cap \{ x \mid u(x) \geq u_{\max} \} \\
+- \frac{\partial J}{\partial x} \bar{f}(x, u(x)) - \epsilon \Vert x \Vert^2 \quad \text{ is SOS on } \quad \Omega_\rho \cap \{ x \mid -u_{\max} \leq u(x) \leq u_{\max} \} \\
+- \frac{\partial J}{\partial x} \bar{f}(x, - u_{\max}) - \epsilon \Vert x \Vert^2 \quad \text{ is SOS on } \quad \Omega_\rho \cap \{ x \mid u(x) \leq -u_{\max} \}.
+\end{split}
+\tag{9.16}
+\end{equation}\]</span>
+Essentially, <a href="psets.html#eq:pendulum-lqr-clipped-roa-sos-condition-2">(9.16)</a> breaks the SOS condition into three cases, each corresponding to one case in the <span class="math inline">\(\text{clip}\)</span> function. (1) If <span class="math inline">\(u(x) \geq u_{\max}\)</span>, then the first equation takes <span class="math inline">\(u_{\max}\)</span> to be the controller, (2) If <span class="math inline">\(u(x) \leq -u_{\max}\)</span>, then the third equation takes <span class="math inline">\(-u_{\max}\)</span> to be the controller, (3) otherwise, the second equation takes <span class="math inline">\(u(x)=-Kx\)</span> to be the controller. Condition <a href="psets.html#eq:pendulum-lqr-clipped-roa-sos-condition-2">(9.16)</a> has three SOS constraints and can be readily implemented using SOSTOOLS. We will use <span class="math inline">\(\epsilon = 0.01\)</span>.</p>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Choose <span class="math inline">\(\rho = 1\)</span>, and implement the SOS conditions in <a href="psets.html#eq:pendulum-lqr-clipped-roa-sos-condition-2">(9.16)</a> with a chosen relaxation order <span class="math inline">\(\kappa\)</span> (in the code I choose <span class="math inline">\(\kappa=4\)</span>). Is the SOS program feasible (i.e., does the SOS program produce a certificate)? If so, plot the boundary of <span class="math inline">\(\Omega_\rho\)</span> on top of the samples plot in Fig. <a href="psets.html#fig:pendulum-sat-control-random-samples">9.4</a>. Does <span class="math inline">\(\Omega_\rho\)</span> agree with the samples? (Hint: you should see a plot similar to Fig. <a href="psets.html#fig:pendulum-sat-control-random-samples-certificate">9.5</a>.)</li>
+</ol>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:pendulum-sat-control-random-samples-certificate"></span>
+<img src="images/pendulum_sat_random_samples_cert.png" alt="Example of stabilized and non-stabilized initial states." width="80%" />
+<p class="caption">
+Figure 9.5: Example of stabilized and non-stabilized initial states.
+</p>
+</div>
+<ol start="3" style="list-style-type: lower-alpha">
+<li>Now try <span class="math inline">\(\rho = 2,3,4,5\)</span>, for which values of <span class="math inline">\(\rho\)</span> the SOS program is feasible, and for which values of <span class="math inline">\(\rho\)</span> the SOS program becomes infeasible?</li>
+</ol>
 </div>
 </div>
 </div>

@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-11-08" />
+<meta name="date" content="2023-11-09" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -226,7 +226,10 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="4.4.1" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#numerical-solution-of-the-tpbvp"><i class="fa fa-check"></i><b>4.4.1</b> Numerical Solution of the TPBVP</a></li>
 </ul></li>
-<li class="chapter" data-level="4.5" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#infinite-horizon-problems"><i class="fa fa-check"></i><b>4.5</b> Infinite-Horizon Problems</a></li>
+<li class="chapter" data-level="4.5" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#infinite-horizon-problems"><i class="fa fa-check"></i><b>4.5</b> Infinite-Horizon Problems</a>
+<ul>
+<li class="chapter" data-level="4.5.1" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#infinite-horizon-lqr-1"><i class="fa fa-check"></i><b>4.5.1</b> Infinite-Horizon LQR</a></li>
+</ul></li>
 <li class="chapter" data-level="4.6" data-path="continuous-time-optimal-control.html"><a href="continuous-time-optimal-control.html#viscosity-solution"><i class="fa fa-check"></i><b>4.6</b> Viscosity Solution</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="stability.html"><a href="stability.html"><i class="fa fa-check"></i><b>5</b> Stability Analysis</a>
@@ -256,6 +259,7 @@ div.csl-indent {
 <li class="chapter" data-level="6.3" data-path="output-feedback.html"><a href="output-feedback.html#linear-quadratic-gaussian-control"><i class="fa fa-check"></i><b>6.3</b> Linear Quadratic Gaussian Control</a>
 <ul>
 <li class="chapter" data-level="6.3.1" data-path="output-feedback.html"><a href="output-feedback.html#steady-state-lqg"><i class="fa fa-check"></i><b>6.3.1</b> Steady-state LQG</a></li>
+<li class="chapter" data-level="6.3.2" data-path="output-feedback.html"><a href="output-feedback.html#continuous-time-lqg"><i class="fa fa-check"></i><b>6.3.2</b> Continuous-time LQG</a></li>
 </ul></li>
 <li class="chapter" data-level="6.4" data-path="output-feedback.html"><a href="output-feedback.html#state-observer"><i class="fa fa-check"></i><b>6.4</b> State Observer</a>
 <ul>
@@ -553,8 +557,8 @@ The error covariance <a href="output-feedback.html#eq:linear-least-squares-solut
 <p>The estimation error <span class="math inline">\(x - x^\star(y)\)</span> is uncorrelated with both <span class="math inline">\(y\)</span> and <span class="math inline">\(x^\star(y)\)</span>, i.e.,
 <span class="math display" id="eq:linear-least-squares-orthogonal-projection">\[\begin{equation}
 \begin{split}
-\mathbb{E}_{x,y} \{ y^T (x - x^\star(y)) \} = 0. \\
-\mathbb{E}_{x,y} \{ (x^\star(y))^T (x - x^\star(y)) \} = 0.
+\mathbb{E}_{x,y} \{  (x - x^\star(y))y^T \} = 0. \\
+\mathbb{E}_{x,y} \{  (x - x^\star(y)) (x^\star(y))^T \} = 0.
 \end{split}
 \tag{6.14}
 \end{equation}\]</span></p>
@@ -1124,6 +1128,9 @@ A - BK &amp; BK \\
 \tag{6.41}
 \end{equation}\]</span>
 Now observe that if the Kalman gain <span class="math inline">\(L\)</span> is stable, then <span class="math inline">\(e_{k}\)</span> tends to zero with some noise. In this case, if the LQR gain <span class="math inline">\(K\)</span> is stable, then the state <span class="math inline">\(x_k\)</span> also tends to zero with some noise. In fact, since <span class="math inline">\(A_{\mathrm{cl}}\)</span> is block-diagonal, we know the eigenvalues of <span class="math inline">\(A_{\mathrm{cl}}\)</span> contains those of <span class="math inline">\(A - BK\)</span> and those of <span class="math inline">\(A - LC A\)</span>.</p>
+</div>
+<div id="continuous-time-lqg" class="section level3 hasAnchor" number="6.3.2">
+<h3><span class="header-section-number">6.3.2</span> Continuous-time LQG<a href="output-feedback.html#continuous-time-lqg" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 </div>
 </div>
 <div id="state-observer" class="section level2 hasAnchor" number="6.4">
