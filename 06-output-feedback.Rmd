@@ -177,8 +177,8 @@ $$
 The estimation error $x - x^\star(y)$ is uncorrelated with both $y$ and $x^\star(y)$, i.e., 
 \begin{equation}
 \begin{split}
-\mathbb{E}_{x,y} \{ y^T (x - x^\star(y)) \} = 0. \\
-\mathbb{E}_{x,y} \{ (x^\star(y))^T (x - x^\star(y)) \} = 0.
+\mathbb{E}_{x,y} \{  (x - x^\star(y))y^T \} = 0. \\
+\mathbb{E}_{x,y} \{  (x - x^\star(y)) (x^\star(y))^T \} = 0.
 \end{split}
 (\#eq:linear-least-squares-orthogonal-projection)
 \end{equation}
@@ -785,6 +785,7 @@ A - BK & BK \\
 \end{equation}
 Now observe that if the Kalman gain $L$ is stable, then $e_{k}$ tends to zero with some noise. In this case, if the LQR gain $K$ is stable, then the state $x_k$ also tends to zero with some noise. In fact, since $A_{\mathrm{cl}}$ is block-diagonal, we know the eigenvalues of $A_{\mathrm{cl}}$ contains those of $A - BK$ and those of $A - LC A$.
 
+### Continuous-time LQG
 
 ## State Observer {#state-observer}
 

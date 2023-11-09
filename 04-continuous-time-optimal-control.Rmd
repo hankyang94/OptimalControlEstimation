@@ -692,6 +692,8 @@ z^{(k+1)} = z^{(k)} - \eta_k \left( \frac{\partial R}{\partial z}(z^{(k)}) \righ
 
 ## Infinite-Horizon Problems 
 
+### Infinite-Horizon LQR 
+
 
 
 ## Viscosity Solution

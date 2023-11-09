@@ -487,15 +487,15 @@ We wish to keep using the LQR controller \@ref(eq:pendulum-lqr-clipped-roa-lqr-c
 where the $\text{clip}$ function is defined as
 $$
 \text{clip}(u,-u_{\max},u_{\max}) = \begin{cases}
-u_\max &  \text{if} \quad u \geq u_\max \\
-u & \text{if} \quad -u_\max \leq u \leq u_\max \\
--u_\max & \text{if} \quad u \leq - u_\max
+u_{\max} &  \text{if} \quad u \geq u_{\max} \\
+u & \text{if} \quad -u_{\max} \leq u \leq u_{\max} \\
+-u_{\max} & \text{if} \quad u \leq - u_{\max}
 \end{cases}.
 $$
 
 A natural question is: can the saturated controller $\bar{u}(t)$ in \@ref(eq:pendulum-lqr-clipped-roa-lqr-control-saturated) still stabilize the pendulum? 
 
-Let's simulate the pendulum and the controller to investigate this. We will use the parameter $m=1,g=9.8,l=1,b=0.1$, and $u_\max = 2$. For the LQR cost matrix, let us use $Q = I$ and $R = 1$.
+Let's simulate the pendulum and the controller to investigate this. We will use the parameter $m=1,g=9.8,l=1,b=0.1$, and $u_{\max} = 2$. For the LQR cost matrix, let us use $Q = I$ and $R = 1$.
 
 a. Compute the LQR gain $K$ and implement the saturated controller \@ref(eq:pendulum-lqr-clipped-roa-lqr-control-saturated). In a region $\mathcal{X} = [-0.2\pi, 0.2\pi] \times [-0.2\pi, 0.2\pi]$, sample $N=1000$ initial states, and for each initial state, simulate the system under the saturated controller using `ode45` or `ode89`. There will be some initial states from which the pendulum gets stabilized and others from which the pendulum fails to be stabilized. Plot the stabilized initial states as "circles", and the non-stabilized initial states as "squares" on a 2D plot. (Hint: you should get something like Fig. \@ref(fig:pendulum-sat-control-random-samples).)
 
@@ -537,13 +537,13 @@ The condition \@ref(eq:pendulum-lqr-clipped-roa-sos-condition-1) is almost ready
 **The last trick**. Fortunately, we can use a trick here to save us. A closer look at \@ref(eq:pendulum-lqr-clipped-roa-sos-condition-1) and the saturated controller $\bar{u}(x)$ shows that it is equivalent to asking
 \begin{equation}
 \begin{split}
-- \frac{\partial J}{\partial x} \bar{f}(x, u_\max) - \epsilon \Vert x \Vert^2 \quad \text{ is SOS on } \quad \Omega_\rho \cap \{ x \mid u(x) \geq u_\max \} \\
-- \frac{\partial J}{\partial x} \bar{f}(x, u(x)) - \epsilon \Vert x \Vert^2 \quad \text{ is SOS on } \quad \Omega_\rho \cap \{ x \mid -u_\max \leq u(x) \leq u_\max \} \\
-- \frac{\partial J}{\partial x} \bar{f}(x, - u_\max) - \epsilon \Vert x \Vert^2 \quad \text{ is SOS on } \quad \Omega_\rho \cap \{ x \mid u(x) \leq -u_\max \}.
+- \frac{\partial J}{\partial x} \bar{f}(x, u_{\max}) - \epsilon \Vert x \Vert^2 \quad \text{ is SOS on } \quad \Omega_\rho \cap \{ x \mid u(x) \geq u_{\max} \} \\
+- \frac{\partial J}{\partial x} \bar{f}(x, u(x)) - \epsilon \Vert x \Vert^2 \quad \text{ is SOS on } \quad \Omega_\rho \cap \{ x \mid -u_{\max} \leq u(x) \leq u_{\max} \} \\
+- \frac{\partial J}{\partial x} \bar{f}(x, - u_{\max}) - \epsilon \Vert x \Vert^2 \quad \text{ is SOS on } \quad \Omega_\rho \cap \{ x \mid u(x) \leq -u_{\max} \}.
 \end{split}
 (\#eq:pendulum-lqr-clipped-roa-sos-condition-2)
 \end{equation}
-Essentially, \@ref(eq:pendulum-lqr-clipped-roa-sos-condition-2) breaks the SOS condition into three cases, each corresponding to one case in the $\text{clip}$ function. (1) If $u(x) \geq u_\max$, then the first equation takes $u_\max$ to be the controller, (2) If $u(x) \leq -u_\max$, then the third equation takes $-u_\max$ to be the controller, (3) otherwise, the second equation takes $u(x)=-Kx$ to be the controller. Condition \@ref(eq:pendulum-lqr-clipped-roa-sos-condition-2) has three SOS constraints and can be readily implemented using SOSTOOLS. We will use $\epsilon = 0.01$.
+Essentially, \@ref(eq:pendulum-lqr-clipped-roa-sos-condition-2) breaks the SOS condition into three cases, each corresponding to one case in the $\text{clip}$ function. (1) If $u(x) \geq u_{\max}$, then the first equation takes $u_{\max}$ to be the controller, (2) If $u(x) \leq -u_{\max}$, then the third equation takes $-u_{\max}$ to be the controller, (3) otherwise, the second equation takes $u(x)=-Kx$ to be the controller. Condition \@ref(eq:pendulum-lqr-clipped-roa-sos-condition-2) has three SOS constraints and can be readily implemented using SOSTOOLS. We will use $\epsilon = 0.01$.
 
 b. Choose $\rho = 1$, and implement the SOS conditions in \@ref(eq:pendulum-lqr-clipped-roa-sos-condition-2) with a chosen relaxation order $\kappa$ (in the code I choose $\kappa=4$). Is the SOS program feasible (i.e., does the SOS program produce a certificate)? If so, plot the boundary of $\Omega_\rho$ on top of the samples plot in Fig. \@ref(fig:pendulum-sat-control-random-samples). Does $\Omega_\rho$ agree with the samples? (Hint: you should see a plot similar to Fig. \@ref(fig:pendulum-sat-control-random-samples-certificate).)
 
