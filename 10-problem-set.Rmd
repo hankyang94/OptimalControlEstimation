@@ -439,4 +439,121 @@ e. From the above questions, we get the intuition of how the MPT compute control
 :::
 :::
 
+&nbsp;
+
+::: {.exercisebox}
+::: {.exercise #pendulum-lqr-clipped-roa name="Certified Region of Attraction of Clipped LQR Controller"}
+
+In this exercise, let us use the simple pendulum as an example to (i) recognize the difficulty of nonlinear control in the presence of control limits, and (ii) appreciate the power of Lyapunov analysis and Sums-of-Squares (SOS) programming.
+
+A starting script for this exercise can be found [here](https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/pendulum_saturated_control.m), where you need to fill out some specific details to finish this exercise. 
+
+Let us consider the continuous-time pendulum dynamics
+\begin{equation}
+\dot{x} = \begin{bmatrix} x_2 \\ \frac{1}{ml^2} (u - b x_2 + mgl \sin x_1) \end{bmatrix}
+(\#eq:pendulum-lqr-clipped-roa-dynamics)
+\end{equation}
+where $x_1$ is the angular position of the pendulum, and $x_2$ is the angular velocity. Note that the dynamics above is written such that $x=0$ represents the upright position. 
+
+In the case of no control saturation, i.e., $u \in \mathbb{R}$, stabilizing the pendulum at $x=0$ is easy, we can linearize the dynamics at $x=0$ and obtain
+$$
+\dot{x} \approx \underbrace{\begin{bmatrix} 0 & 1 \\ \frac{g}{l} & - \frac{b}{ml^2} \end{bmatrix}}_{A} x + \underbrace{\begin{bmatrix} 0 \\ \frac{1}{ml^2} \end{bmatrix}}_{B} u.
+$$
+We then solve an infinite-horizon LQR problem
+$$
+\min \int_{t=0}^{\infty} x(t)^T Q x(t) + u(t)^T R u(t) dt, \quad \text{subject to} \quad x(0) = x_0.
+$$
+Calling the Matlab `lqr` function (which is for continuous-time LQR), we can get a feedback controller
+\begin{equation}
+u(x) = - Kx,
+(\#eq:pendulum-lqr-clipped-roa-lqr-control)
+\end{equation}
+with the optimal cost-to-go
+\begin{equation}
+J(x_0) = x_0^T S x_0,
+(\#eq:pendulum-lqr-clipped-roa-lqr-value)
+\end{equation}
+with $K$ and $S$ constant matrices.
+
+**Control saturation**. Assume now our control has hard bounds, i.e.,
+$$
+u \in [-u_{\max}, u_{\max}].
+$$
+We wish to keep using the LQR controller \@ref(eq:pendulum-lqr-clipped-roa-lqr-control). Therefore, our saturated controller will be
+\begin{equation}
+\bar{u}(x) = \text{clip}(u(x),-u_{\max},u_{\max}) = \text{clip}(-Kx,-u_{\max},u_{\max}),
+(\#eq:pendulum-lqr-clipped-roa-lqr-control-saturated)
+\end{equation}
+where the $\text{clip}$ function is defined as
+$$
+\text{clip}(u,-u_{\max},u_{\max}) = \begin{cases}
+u_\max &  \text{if} \quad u \geq u_\max \\
+u & \text{if} \quad -u_\max \leq u \leq u_\max \\
+-u_\max & \text{if} \quad u \leq - u_\max
+\end{cases}.
+$$
+
+A natural question is: can the saturated controller $\bar{u}(t)$ in \@ref(eq:pendulum-lqr-clipped-roa-lqr-control-saturated) still stabilize the pendulum? 
+
+Let's simulate the pendulum and the controller to investigate this. We will use the parameter $m=1,g=9.8,l=1,b=0.1$, and $u_\max = 2$. For the LQR cost matrix, let us use $Q = I$ and $R = 1$.
+
+a. Compute the LQR gain $K$ and implement the saturated controller \@ref(eq:pendulum-lqr-clipped-roa-lqr-control-saturated). In a region $\mathcal{X} = [-0.2\pi, 0.2\pi] \times [-0.2\pi, 0.2\pi]$, sample $N=1000$ initial states, and for each initial state, simulate the system under the saturated controller using `ode45` or `ode89`. There will be some initial states from which the pendulum gets stabilized and others from which the pendulum fails to be stabilized. Plot the stabilized initial states as "circles", and the non-stabilized initial states as "squares" on a 2D plot. (Hint: you should get something like Fig. \@ref(fig:pendulum-sat-control-random-samples).)
+
+```{r pendulum-sat-control-random-samples, out.width='80%', fig.show='hold', fig.cap='Example of stabilized and non-stabilized initial states.', fig.align='center', echo=FALSE}
+knitr::include_graphics('images/pendulum_sat_random_samples.png')
+```
+
+The plot in Fig. \@ref(fig:pendulum-sat-control-random-samples) intuitively makes sense: when the initial state is very close to $0$, the saturated controller can still stabilize the pendulum. 
+
+Now our goal is to use Sums-of-Squares and Lyapunov analysis to get a **certified region of stabilization**, also known as the region of attraction (ROA), under the saturated control.
+
+**Approximate polynomial dynamics**. The SOS tool requires the system dynamics to be polynomial. The dynamics in \@ref(eq:pendulum-lqr-clipped-roa-dynamics) is polynomial except the term $\sin x_1$. Therefore, we perform a Taylor expansion of $\sin x_1$
+$$
+\sin x_1 = x_1 - \frac{x_1^3}{3!} + \frac{x_1^5}{5!} + \dots, 
+$$
+leading to an approximate polynomial dynamics 
+\begin{equation}
+\dot{x} = \bar{f}(x,u) = \begin{bmatrix} x_2 \\ \frac{1}{ml^2} \left(u - b x_2 + mgl \left(x_1 - \frac{x_1^3}{3!} + \frac{x_1^5}{5!} \right) \right) \end{bmatrix}.
+(\#eq:pendulum-lqr-clipped-roa-dynamics-polynomial)
+\end{equation}
+
+**Candidate ROA**. We want to certify the following candidate ROA
+$$
+\Omega_\rho = \{x \in \mathbb{R}^2 \mid J(x) :=x^T S x \leq \rho \}
+$$
+for some $\rho > 0$, and $S$ is exactly the LQR cost-to-go in \@ref(eq:pendulum-lqr-clipped-roa-lqr-value). Since $J(x)$ is already positive definite (because $S \succ 0$), $\Omega_\rho$ will look like an elliptical region around the origin. To certify all initial states inside $\Omega_\rho$ can be stabilized, we need $\dot{J}(x)$ to be negative definite on $\Omega$, under the saturated LQR controller \@ref(eq:pendulum-lqr-clipped-roa-lqr-control-saturated)  (according to Theorem \@ref(thm:lyapunovlocalstability)), that is to say
+$$
+\dot{J}(x) = \frac{\partial J}{\partial x} \bar{f}(x, \bar{u}(x)) < 0, \quad \forall x \in \Omega_\rho \backslash \{ 0 \}.
+$$
+A sufficient condition for the above equation to hold is
+\begin{equation}
+- \frac{\partial J}{\partial x} \bar{f}(x, \bar{u}(x)) - \epsilon \Vert x \Vert^2 \quad \text{ is SOS on } \Omega_\rho.
+(\#eq:pendulum-lqr-clipped-roa-sos-condition-1)
+\end{equation}
+for some $\epsilon > 0$ (do you see this?).
+
+The condition \@ref(eq:pendulum-lqr-clipped-roa-sos-condition-1) is almost ready for us to implement in SOSTOOLS. However, there is one last issue. The saturated controller $\bar{u}(x)$ is not a polynomial! 
+
+**The last trick**. Fortunately, we can use a trick here to save us. A closer look at \@ref(eq:pendulum-lqr-clipped-roa-sos-condition-1) and the saturated controller $\bar{u}(x)$ shows that it is equivalent to asking
+\begin{equation}
+\begin{split}
+- \frac{\partial J}{\partial x} \bar{f}(x, u_\max) - \epsilon \Vert x \Vert^2 \quad \text{ is SOS on } \quad \Omega_\rho \cap \{ x \mid u(x) \geq u_\max \} \\
+- \frac{\partial J}{\partial x} \bar{f}(x, u(x)) - \epsilon \Vert x \Vert^2 \quad \text{ is SOS on } \quad \Omega_\rho \cap \{ x \mid -u_\max \leq u(x) \leq u_\max \} \\
+- \frac{\partial J}{\partial x} \bar{f}(x, - u_\max) - \epsilon \Vert x \Vert^2 \quad \text{ is SOS on } \quad \Omega_\rho \cap \{ x \mid u(x) \leq -u_\max \}.
+\end{split}
+(\#eq:pendulum-lqr-clipped-roa-sos-condition-2)
+\end{equation}
+Essentially, \@ref(eq:pendulum-lqr-clipped-roa-sos-condition-2) breaks the SOS condition into three cases, each corresponding to one case in the $\text{clip}$ function. (1) If $u(x) \geq u_\max$, then the first equation takes $u_\max$ to be the controller, (2) If $u(x) \leq -u_\max$, then the third equation takes $-u_\max$ to be the controller, (3) otherwise, the second equation takes $u(x)=-Kx$ to be the controller. Condition \@ref(eq:pendulum-lqr-clipped-roa-sos-condition-2) has three SOS constraints and can be readily implemented using SOSTOOLS. We will use $\epsilon = 0.01$.
+
+b. Choose $\rho = 1$, and implement the SOS conditions in \@ref(eq:pendulum-lqr-clipped-roa-sos-condition-2) with a chosen relaxation order $\kappa$ (in the code I choose $\kappa=4$). Is the SOS program feasible (i.e., does the SOS program produce a certificate)? If so, plot the boundary of $\Omega_\rho$ on top of the samples plot in Fig. \@ref(fig:pendulum-sat-control-random-samples). Does $\Omega_\rho$ agree with the samples? (Hint: you should see a plot similar to Fig. \@ref(fig:pendulum-sat-control-random-samples-certificate).)
+
+```{r pendulum-sat-control-random-samples-certificate, out.width='80%', fig.show='hold', fig.cap='Example of stabilized and non-stabilized initial states.', fig.align='center', echo=FALSE}
+knitr::include_graphics('images/pendulum_sat_random_samples_cert.png')
+```
+
+c. Now try $\rho = 2,3,4,5$, for which values of $\rho$ the SOS program is feasible, and for which values of $\rho$ the SOS program becomes infeasible?
+
+:::
+:::
+
 # Acknowledgement {-}
