@@ -561,7 +561,7 @@ c. Now try $\rho = 2,3,4,5$, for which values of $\rho$ the SOS program is feasi
 
 ::: {.exercisebox}
 ::: {.exercise #energy-pump name="Energy pumping of Clipped LQR Controller"}
-In Exercise \@ref(pendulum-lqr-clipped-roa), we have studied the region of attraction of Clipped LQR Controller. In this exercise, we are going to swing up the pendulum to a stabilizable initial state (the blue circle region in Exercise \@ref(pendulum-lqr-clipped-roa)).
+In Exercise \@ref(exr:pendulum-lqr-clipped-roa), we have studied the region of attraction of Clipped LQR Controller. In this exercise, we are going to swing up the pendulum to a stabilizable initial state (the blue circle region in Exercise \@ref(exr:pendulum-lqr-clipped-roa)).
 
 The total energy of the pendulum is given by 
 $$ E = \frac{1}{2} m l^2 x_2^2 + mgl\cos x_1,$$
@@ -580,7 +580,7 @@ d. However, our controller has saturation as before:
 $$\bar{u}(x) = \text{clip}(u(x),-u_{\max},u_{\max}).$$
 With the same parameter setting as in the previous exercise, simulate the system under the saturated controller with initial state $(x_1,x_2)=(\pi,1).$ Will the state hit the candidate ROA $\Omega_\rho$ with $\rho=2$? If yes, stop the system once it hits the region, and draw the trajectory on the Figure similar to Fig. \@ref(fig:pendulum-sat-control-random-samples-certificate).
 
-With the above exercises, we can swing the pendulum to a stabilizable state, and then switch to the LQR phase as implemented in Exercise \@ref(pendulum-lqr-clipped-roa).
+With the above exercises, we can swing the pendulum to a stabilizable state, and then switch to the LQR phase as implemented in Exercise \@ref(exr:pendulum-lqr-clipped-roa).
 
 :::
 :::
