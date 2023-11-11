@@ -23,7 +23,7 @@
 <meta name="author" content="Heng Yang" />
 
 
-<meta name="date" content="2023-11-09" />
+<meta name="date" content="2023-11-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -872,6 +872,27 @@ Figure 9.5: Certified Region of Attraction.
 <ol start="3" style="list-style-type: lower-alpha">
 <li>Now try <span class="math inline">\(\rho = 2,3,4,5\)</span>, for which values of <span class="math inline">\(\rho\)</span> the SOS program is feasible, and for which values of <span class="math inline">\(\rho\)</span> the SOS program becomes infeasible?</li>
 </ol>
+</div>
+</div>
+<p> </p>
+<div class="exercisebox">
+<div class="exercise">
+<p><span id="exr:energy-pump" class="exercise"><strong>Exercise 9.9  (Energy pumping of Clipped LQR Controller) </strong></span>In Exercise <a href="#pendulum-lqr-clipped-roa"><strong>??</strong></a>, we have studied the region of attraction of Clipped LQR Controller. In this exercise, we are going to swing up the pendulum to a stabilizable initial state (the blue circle region in Exercise <a href="#pendulum-lqr-clipped-roa"><strong>??</strong></a>).</p>
+<p>The total energy of the pendulum is given by
+<span class="math display">\[ E = \frac{1}{2} m l^2 x_2^2 + mgl\cos x_1,\]</span>
+where <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span> are notations in <a href="psets.html#eq:pendulum-lqr-clipped-roa-dynamics">(9.10)</a>.</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>With the dynamics in <a href="psets.html#eq:pendulum-lqr-clipped-roa-dynamics">(9.10)</a>, one can obtain the change of energy over time:
+<span class="math display">\[ \dot E = \color{red}{h(x,u)}\cdot x_2.\]</span>
+Find the expression of <span class="math inline">\(h(x,u)\)</span>.</p></li>
+<li><p>Our desired energy is the one with the upright equilibruim: <span class="math inline">\(E^d = mgl.\)</span> Define the energy of difference <span class="math display">\[\tilde{E} = E - E^d.\]</span> Find the expression of <span class="math inline">\(\dot{\tilde{E}}\)</span>.</p></li>
+<li><p>Now consider the feedback controller of the form
+<span class="math display">\[ u = -k x_2 \tilde{E} + b x_2.\]</span> Find the expression of <span class="math inline">\(\dot{\tilde{E}}\)</span>. (Bonus) Explain heuristically why the controller works.</p></li>
+<li><p>However, our controller has saturation as before:
+<span class="math display">\[\bar{u}(x) = \text{clip}(u(x),-u_{\max},u_{\max}).\]</span>
+With the same parameter setting as in the previous exercise, simulate the system under the saturated controller with initial state <span class="math inline">\((x_1,x_2)=(\pi,1).\)</span> Will the state hit the candidate ROA <span class="math inline">\(\Omega_\rho\)</span> with <span class="math inline">\(\rho=2\)</span>? If yes, stop the system once it hits the region, and draw the trajectory on the Figure similar to Fig. <a href="psets.html#fig:pendulum-sat-control-random-samples-certificate">9.5</a>.</p></li>
+</ol>
+<p>With the above exercises, we can swing the pendulum to a stabilizable state, and then switch to the LQR phase as implemented in Exercise <a href="#pendulum-lqr-clipped-roa"><strong>??</strong></a>.</p>
 </div>
 </div>
 </div>
