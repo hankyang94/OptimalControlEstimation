@@ -151,7 +151,7 @@ arc=4pt}
 
 \title{Optimal Control and Estimation}
 \author{Heng Yang}
-\date{2023-11-11}
+\date{2023-11-14}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -5461,6 +5461,168 @@ Now observe that if the Kalman gain \(L\) is stable, then \(e_{k}\) tends to zer
 
 \hypertarget{continuous-time-lqg}{%
 \subsection{Continuous-time LQG}\label{continuous-time-lqg}}
+
+\hypertarget{nonlinear-filtering}{%
+\section{Nonlinear Filtering}\label{nonlinear-filtering}}
+
+Kalman filter is the optimal filter for linear dynamics, linear measurements, and Gaussian noises. However, interesting real-world systems are often nonlinear
+\begin{equation}
+\begin{cases}
+x_{k+1} = f(x_k) + w_k, \\
+y_k = h(x_k) + v_k
+\end{cases},
+\label{eq:nolinear-filter-system}
+\end{equation}
+where \(w_k\) is white disturbance \(\mathbb{E}\{ w_k\} =0, \mathbb{E}\{ w_k w_k^T\} = M_k\), \(v_k\) is white measurement noise \(\mathbb{E}\{ v_k\} = 0, \mathbb{E} \{v_k v_k^T \} = N_k\), and \(f,g\) are assumed to be differentiable nonlinear functions.
+
+A nonlinear filter follows the general strategy of a Kalman filter
+\begin{equation}
+\begin{split}
+\text{Update estimate:}\quad \hat{x}_{k \mid k-1} \overset{(3)}{\longrightarrow} \hat{x}_{k \mid k} \overset{(1)}{\longrightarrow} \hat{x}_{k+1 \mid k}. \\
+\text{Update covariance:}\quad \Sigma_{k \mid k-1} \overset{(4)}{\longrightarrow} \Sigma_{k \mid k} \overset{(2)}{\longrightarrow} \Sigma_{k+1 \mid k}.
+\end{split}
+\end{equation}
+where I have replaced \(x^\star\) with \(\hat{x}\) because the estimator is often not optimal in the case of nonlinear functions.
+
+\hypertarget{extended-kalman-filter}{%
+\subsection{Extended Kalman Filter}\label{extended-kalman-filter}}
+
+The key idea of extended Kalman filter (EKF) is to linearize the nonlinear functions \(f\) and \(h\).
+
+\textbf{Prediction (1) and (2)}. To perform prediction update according to the dynamics, we linearize \(f\) around \(\hat{x}_{k\mid k}\)
+\[
+x_{k+1} = f(x_k) + w_k = f(\hat{x}_{k\mid k}) + J_f(\hat{x}_{k \mid k})(x_k - \hat{x}_{k \mid k}) + w_k + \text{h.o.t.}, 
+\]
+where \(\text{h.o.t.}\) standards for high-order terms, and \(J_f\) is the Jacobian of the vector function \(f\):
+\[
+J_f = \begin{bmatrix} \frac{\partial f_1}{x_1} & \cdots & \frac{\partial f_1}{\partial x_n} \\
+\vdots & \ddots & \vdots \\
+\frac{\partial f_n}{\partial x_1} & \cdots & \frac{\partial f_n}{\partial x_n}
+\end{bmatrix}.
+\]
+With this linearization, update (1) of EKF is simply
+\begin{equation}
+\hat{x}_{k+1 \mid k} = f(\hat{x}_{k \mid k}),
+\label{eq:ekf-update-1}
+\end{equation}
+and covariance update (2) is
+\begin{equation}
+\Sigma_{k+1\mid k} = M_k + J_f(\hat{x}_{k \mid k}) \Sigma_{k \mid k} J_f^T (\hat{x}_{k \mid k}).
+\label{eq:ekf-update-2}
+\end{equation}
+
+\textbf{Correction (3) and (4)}. To perform measurement correction from \(y_k\), we linearize \(h\) around \(\hat{x}_{k \mid k-1}\)
+\[
+y_{k} = h(x_k) + v_k = h(\hat{x}_{k \mid k-1}) + J_h(\hat{x}_{k \mid k-1}) (x_k - \hat{x}_{k \mid k-1}) + v_k + \text{h.o.t.}.
+\]
+With this linearization, update (3) of EKF is
+\begin{equation}
+\hspace{-10mm} \hat{x}_{k \mid k} = \hat{x}_{k \mid k-1} + \Sigma_{k\mid k-1}J_h^T(\hat{x}_{k\mid k-1}) ( J_h(\hat{x}_{k\mid k-1})\Sigma_{k \mid k-1} J_h^T(\hat{x}_{k\mid k-1}) + N_k  )^{-1}(y_k - h(\hat{x}_{k\mid k-1})),
+\label{eq:ekf-update-3}
+\end{equation}
+and update (4) of EKF is
+\begin{equation}
+\hspace{-10mm}\Sigma_{k \mid k-1} - \Sigma_{k \mid k-1}  \Sigma_{k\mid k-1}J_h^T(\hat{x}_{k\mid k-1}) ( J_h(\hat{x}_{k\mid k-1})\Sigma_{k \mid k-1} J_h^T(\hat{x}_{k\mid k-1}) + N_k  )^{-1} J_h(\hat{x}_{k \mid k-1}) \Sigma_{k \mid k-1}.
+\label{eq:ekf-update-4}
+\end{equation}
+
+Compared with the original Kalman filter in \eqref{eq:kalman-filter-update-1}-\eqref{eq:kalman-filter-update-4}, we can see that EKF \eqref{eq:ekf-update-1}-\eqref{eq:ekf-update-4} (i) replaces \(A_k\) with the Jacobian \(J_f(\hat{x}_{k \mid k})\), (ii) replaces \(C_k\) with the Jacobian \(J_h(\hat{x}_{k \mid k-1})\), and (iii) replaces \(C_k \hat{x}_{k \mid k-1}\) with \(h(\hat{x}_{k \mid k-1})\) (those are the expected measurements).
+
+\textbf{When does EKF perform well?} Since EKF is based on linearization, it performs well when (i) the functions \(f,g\) are locally linear around the linearization points, and (ii) there is less uncertainty in the covariance matrices \(\Sigma_{k \mid k-1},\Sigma_{k \mid k}\). Good illustrations can be found in Fig. 3.5 and Fig. 3.6 of \citep{thrun05book-probabilistic}.
+
+\textbf{Guarantees}. Under the technical conditions in \citep{reif99tac-stochastic}, the estimation error of EKF can be guaranteed to be bounded.
+
+\hypertarget{unscented-kalman-filter}{%
+\subsection{Unscented Kalman Filter}\label{unscented-kalman-filter}}
+
+In nonlinear filtering, usually the distribution of the true state is never a Gaussian distribution. The key idea of unscented Kalman filter is to use a set of so-called ``\emph{Sigma points}'' to capture the most important statistical properties of the true distribution, notably the first and second-order moments (i.e., mean and covariance).
+
+\textbf{Sigma points}. Given a distribution with mean and covariance \((\mu, \Sigma)\) (assume the random variable has dimension \(n\)), it can be shown that \((2n+1)\) Sigma points can be chosen to match the mean and covariance \citep{van04-sigma}
+\begin{equation}
+\begin{split}
+x^0 = \mu, \\
+x^i = \mu + \left[\sqrt{(n+\lambda)\Sigma} \right]_{i}, \quad i = 1,\dots,n, \\
+x^{i} = \mu - \left[\sqrt{(n+\lambda)\Sigma} \right]_{i-n}, \quad i=n+1,\dots,2n,
+\end{split}
+\end{equation}
+where \(\sqrt{(n+\lambda)\Sigma}\) denotes the square root of the matrix \((n+\lambda)\Sigma\), \([\cdot]_i\) denotes the \(i\)-th column of the matrix, and
+\[
+\lambda = \alpha^2(n+\kappa) - n,
+\]
+is a scaling parameter determined by hyperparameters \(\alpha\) and \(\kappa\) (\(\alpha\) usually set between \(10^{-2}\) and \(1\), and \(\kappa\) is usually set to either \(0\) or \(3-n\)). Each of the Sigma point also comes with two weights as
+\[
+w^0_m = \frac{\lambda}{n+\lambda}, w^0_c = \frac{\lambda}{n+\lambda} + (1 - \alpha^2 + \beta), \\
+w^i_m = w^i_c = \frac{1}{2(L + \lambda)}, \quad i=1,\dots,2n,
+\]
+where \(\beta\) is an extra hyperparameter (for Gaussian \(\beta=2\)).
+
+Now we are ready to use the idea of Sigma points to present the unscented Kalman filter (UKF).
+
+\textbf{Prediction (1) and (2)}. To perform the prediction step, we generate \(2n+1\) Sigma points from the distribution \((\hat{x}_{k \mid k}, \Sigma_{k \mid k})\):
+\[
+\bar{x}^0_{k \mid k}, \dots, \bar{x}^{2n}_{k \mid k}.
+\]
+The estimate \(\hat{x}_{k+1\mid k}\) is updated as the sample mean of evaluating \(f\) on all Sigma points
+\begin{equation}
+\hat{x}_{k+1 \mid k} = \sum_{i=0}^{2n} w^i_m f(\bar{x}^{i}_{k \mid k}),
+\label{eq:ukf-update-1}
+\end{equation}
+and the covariance estimate is updated as the sample covariance
+\begin{equation}
+\Sigma_{k+1 \mid k} = M_k + \sum_{i=0}^{2n} w^i_c (f(\bar{x}^{i}_{k \mid k}) - \hat{x}_{k+1 \mid k})(f(\bar{x}^{i}_{k \mid k}) - \hat{x}_{k+1 \mid k})^T,
+\label{eq:ukf-update-2}
+\end{equation}
+where \(M_k\) comes from the disturbance \(w_k\) in the dynamics.
+
+\textbf{Correction (3) and (4)}. To understand the UKF measurement correction, we need to present a key observation of the original Kalman filter. In \eqref{eq:kalman-filter-update-1} and \eqref{eq:kalman-filter-update-3}, the matrix
+\[
+C_k \Sigma_{k \mid k-1} C_k^T + N_k
+\]
+can be interpreted as the covariance of the measurement \(y_k\) (conditioned on all past measurements), i.e., \(\Sigma_{yy,k}\), due to the measurement function \(y_k = C_k x_k + v_k\), while the matrix
+\[
+\Sigma_{k \mid k-1} C_k^T
+\]
+can be interpreted as the correlation between \(x_k\) and \(y_k\), i.e., \(\Sigma_{xy,k}\).
+
+Now that we have Sigma points in UKF, we can use them to approximate \(\Sigma_{yy,k}\) and \(\Sigma_{xy,k}\). To do so, we first generate \((2n+1)\) Sigma points from the distribution \((\hat{x}_{k \mid k-1}, \Sigma_{k \mid k-1})\)
+\[
+\bar{x}^0_{k \mid k-1}, \dots, \bar{x}^{2n}_{k \mid k-1}.
+\]
+We then compute the expected measurements of these Sigma points
+\[
+\bar{y}^i_{k \mid k-1} = h(\bar{x}^i_{k \mid k-1}), i=0,\dots,2n.
+\]
+The sample mean of these measurements is
+\[
+\hat{y}_{k \mid k-1} = \sum_{i=0}^{2n} w^i_m \bar{y}^i_{k \mid k-1},
+\]
+and the sample covariance is
+\[
+\Sigma_{yy,k} = N_k + \sum_{i=0}^{2n} w^i_c (\bar{y}^i_{k \mid k-1} - \hat{y}_{k \mid k-1})(\bar{y}^i_{k \mid k-1} - \hat{y}_{k \mid k-1})^T.
+\]
+The sample correlation between \(x\) and \(y\) can be computed as
+\[
+\Sigma_{xy,k} = \sum_{i=0}^{2n} w^i_c (\bar{x}^i_{k \mid k-1} - \hat{x}_{k \mid k-1}) (\bar{y}^i_{k \mid k-1} - \hat{y}_{k \mid k-1})^T.
+\]
+As a result, the Kalman gain matrix is
+\[
+L_k = \Sigma_{xy,k} \Sigma^{-1}_{yy,k}.
+\]
+The UKF update (3) is therefore
+\begin{equation}
+\hat{x}_{k \mid k} = \hat{x}_{k \mid k-1} + L_k (y_k - \hat{y}_{k \mid k-1}),
+\label{eq:ukf-update-3}
+\end{equation}
+and the update (4) is
+\begin{equation}
+\Sigma_{k \mid k} = \Sigma_{k \mid k-1} - L_k \Sigma_{yy,k} L_k^T.
+\label{eq:ukf-update-4}
+\end{equation}
+
+\textbf{Applications of EKF and UKF}. Perhaps one of the most of well-known applications of EKF and UKF is simultaneous location and mapping (SLAM) in mobile robotics. Matlab has a \href{https://www.mathworks.com/help/nav/ug/ekf-based-landmark-slam.html}{nice demo} that I recommend you to play with.
+
+\hypertarget{particle-filter}{%
+\subsection{Particle Filter}\label{particle-filter}}
 
 \hypertarget{state-observer}{%
 \section{State Observer}\label{state-observer}}
