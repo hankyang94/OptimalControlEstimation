@@ -5624,6 +5624,129 @@ and the update (4) is
 \hypertarget{particle-filter}{%
 \subsection{Particle Filter}\label{particle-filter}}
 
+Kalman filter, EKF, and UKF all represent the uncertainty of the state as Gaussian distributions, specifically as means and covariances. However, as mentioned before, the true distribution of the state is rarely a Gaussian distribution. How can we faithfully represent non-Gaussian distributions?
+
+The UKF does provide us with a possible solution. UKF represents the Gaussian distribution by \(2n+1\) Sigma points. What if we generalize this idea by allowing more points, or in other words, represent a distribution by random samples?
+
+This is the basic idea of a \emph{particle filter}, which is arguably one of the most high-impact nonlinear filtering techniques. The idea of a particle filter is simple to state. Consider the dynamical system \eqref{eq:nolinear-filter-system}, but this time assume we know the distribution of \(w_k\) and \(v_k\). For example, in the case of a Gaussian distribution \(\mathcal{N}(\mu,\Sigma)\) (with dimension \(n\)), we know its probability density function is
+\begin{equation}
+\mathbb{P}(x = \xi) = \frac{\exp\left( -\frac{1}{2} (\xi- \mu)^T \Sigma^{-1} (\xi - \mu) \right)}{\sqrt{(2\pi)^n \det \Sigma}}.
+\label{eq:Gaussian-pdf}
+\end{equation}
+The goal of a nonlinear filter is to estimate the conditional distribution (or sometimes called the \emph{belief}) of \(x_k\) given all previous measurements \(Y_k = (y_0,\dots,y_k)\)
+\[
+p(x_k \mid Y_k).
+\]
+Since the conditional distribution generally cannot be written analytically, a particle filter will represent the conditional distribution as a set of samples, i.e.,
+\[
+\mathcal{X}_{k\mid k} = \{x_{k \mid k}^1,\dots,x_{k\mid k}^M \} \sim p(x_k \mid Y_k),
+\]
+where \(M\) is the total number of samples. The particle filter will then update the set of samples, using a similar prediction-correction two-step approach:
+\[
+\mathcal{X}_{k \mid k} \overset{\text{prediction}}{\longrightarrow} \mathcal{X}_{k+1 \mid k} \overset{\text{correction}}{\longrightarrow} \mathcal{X}_{k+1 \mid k+1},
+\]
+where the prediction step leverages the dynamics, and the correction step leverages the measurement function.
+
+\textbf{Prediction}. The prediction step is straightforward
+\[
+\mathcal{X}_{k+1\mid k} = \{x^i_{k+1\mid k} \}_{i=1}^M, \quad   x_{k+1\mid k}^i = f(x^i_{k\mid k}) + w_k^i, i=1,\dots,M,
+\]
+which basically passes each sample in \(\mathcal{X}_{k\mid k}\) through the nonlinear dynamics \(f\) and then add a random disturbance. Note that \(w_k^i\) follows the known distribution of the noise that we know how to sample from, for example it can be the Gaussian distribution in \eqref{eq:Gaussian-pdf}.
+
+\textbf{Correction}. The correction step will leverage the new measurement, \(y_{k+1}\), to adjust the set of samples. Particularly, we will evaluate the probability of observing \(y_{k+1}\) for each of the samples in the set \(\mathcal{X}_{k+1 \mid k}\), that is
+\[
+\alpha_{k+1}^i = p(y_{k+1} \mid x_{k+1\mid k}^i), i=1,\dots,M.
+\]
+This is simply the probability of
+\[
+\alpha_{k+1}^i = \mathbb{P}(v_{k+1} = y_{k+1} - h(x_{k+1\mid k}^i)),
+\]
+which can be computed since we know the distribution of \(v_{k+1}\). For example, if the distribution of \(v_{k+1}\) is Gaussian, then we can evaluate the probability using \eqref{eq:Gaussian-pdf}. Intuitively, the higher \(\alpha_{k+1}^i\) is, the more likely it is for the true state to be \(x_{k+1\mid k}^i\). Therefore, effectively, we have obtained a set of samples together with their probabilities
+\[
+\{ (x_{k+1\mid k}^i, \alpha_{k+1}^i) \}_{i=1}^M.
+\]
+The next step is to perform \emph{importance sampling}. In particular, we will generate a new set of \(M\) samples by sampling (with replacement) from the population \(\mathcal{X}_{k+1 \mid k}\) with the probability of sampling the \(i\)-th sample being \(\alpha_{k+1}^i\). This leads to the new sample set \(\mathcal{X}_{k+1 \mid k+1}\).
+
+Hopefully you see that the particle filter is very easy to implement. Let us work on a simple example.
+
+\begin{example}[Robot Localization by Nonlinear Filtering]
+\protect\hypertarget{exm:nonlinear-filter-robot-localization}{}\label{exm:nonlinear-filter-robot-localization}Consider a 2D robot with state \(s = (x,y,\theta)\) where \((x,y)\) is the position and \(\theta\) is the heading. The robot has two controls, the first one being the linear velocity \(l\), and the second one being the angular velocity (steering) \(u\). Therefore, the dynamics of the robot is
+\[
+\begin{bmatrix}
+x_{k+1} \\ y_{k+1} \\ \theta_{k+1} \end{bmatrix} = 
+\begin{bmatrix}
+x_k + (l \cos \theta_k)\Delta t \\
+y_k + (l \sin \theta_k)\Delta t \\
+\theta_k + u \Delta t \end{bmatrix} 
++ w_k,
+\]
+where \(w_k\) is assumed to be some Gaussian noise, and \(\Delta t\) is time discretization.
+
+There are a set of \(N\) landmarks in the environment, each with location \[
+(x_{lm,i},y_{lm,i}),i=1,\dots,N.
+\]
+The robot is equipped with a sensor that measures distance from each landmark
+\[
+o_k = \begin{bmatrix}  \vdots \\ o_{k,i} \\ \vdots  \end{bmatrix} + v_k, \quad o_{k,i} = \sqrt{(x_k - x_{lm,i})^2 + (y_k - y_{lm,i})^2}, i=1,\dots,N,
+\]
+where \(v_k\) is assumed to be known Gaussian noise.
+
+We can implement a particle filter for localizing the robot given distance measurements from the landmarks.
+
+We set \(N=20\) landmarks, in the beginning, the prior estimation of the robot location is completely wrong, as shown in Fig. \ref{fig:robot-localization-step-1}.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.8\linewidth]{images/robot_localization_pf_step1} 
+
+}
+
+\caption{Initial estimate of the robot location.}\label{fig:robot-localization-step-1}
+\end{figure}
+
+After 200 steps of particle filter, we can see the particles cluster around the groundtruth robot location.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.8\linewidth]{images/robot_localization_pf_step200} 
+
+}
+
+\caption{Initial estimate of the robot location.}\label{fig:robot-localization-step-200}
+\end{figure}
+
+You can play with the code \href{https://github.com/ComputationalRobotics/OptimalControlEstimation-Examples/blob/main/robot_localization_particle_filter.m}{here}.
+\end{example}
+
+Particle filters have many advantages:
+
+\begin{itemize}
+\item
+  Ability to approximate non-Gaussian distributions
+\item
+  Works for any dynamics model and observation model
+\item
+  Good scalability, they are ``embarassingly parallelizable''
+\item
+  Easy to implement
+\end{itemize}
+
+However, there are several notable issues with particle filters
+
+\begin{itemize}
+\item
+  Lack of diversity: over time, especially with uninformative sensor readings, samples tend to congregate (because the resampling step removes particles)
+\item
+  Measuring Particle Filter performance is difficult
+\item
+  Particle Filters are non-deterministic
+\end{itemize}
+
+\hypertarget{feedback-particle-filter}{%
+\subsection{Feedback Particle Filter}\label{feedback-particle-filter}}
+
+\citep{yang13tac-feedback}
+
 \hypertarget{state-observer}{%
 \section{State Observer}\label{state-observer}}
 
